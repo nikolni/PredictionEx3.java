@@ -1,0 +1,20 @@
+.move-to-page-button{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: GREY;
+}
+
+#load-file-button{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: GREEN;
+}
+
+#queue-man-button{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: BLUE;
+}
