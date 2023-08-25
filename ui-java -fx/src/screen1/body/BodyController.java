@@ -1,29 +1,41 @@
 package screen1.body;
 
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-
-import dto.api.DTODefinitionsForUi;
 import dto.definition.entity.api.EntityDefinitionDTO;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.definition.rule.api.RuleDTO;
 import dto.definition.termination.condition.manager.api.TerminationConditionsDTOManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.text.TextFlow;
 import system.engine.api.SystemEngineAccess;
 import system.engine.impl.SystemEngineAccessImpl;
-
+import dto.api.*;
 import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class BodyController implements Initializable{
     @FXML
     private TreeView<String> detailesTreeView;
+    @FXML
+    private Label valueDefLabel;
+
+    @FXML
+    private Label quantityOfSquaresLabel;
+
+    @FXML
+    private TextFlow valueDefText;
+
+    @FXML
+    private TextFlow quantityOfSquaresText;
+
     SystemEngineAccess systemEngine = new SystemEngineAccessImpl();
 
     public BodyController(){
@@ -44,7 +56,7 @@ public class BodyController implements Initializable{
         TreeItem<String> terminationBranch = new TreeItem<>("Termination conditions");
 
         rootItem.getChildren().addAll(entitiesBranch, ruleBranch,terminationBranch);
-        //treeView.setShowRoot(false);
+        detailesTreeView.setShowRoot(false);
         detailesTreeView.setRoot(rootItem);
     }
     @FXML

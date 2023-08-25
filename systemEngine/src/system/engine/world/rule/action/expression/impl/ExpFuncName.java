@@ -51,8 +51,10 @@ public class ExpFuncName extends AbstractExpressionImpl {
         switch (type) {
             case DECIMAL:
                 value= (new RandomIntegerGenerator(0, number)).generateValue();
+                break;
             case FLOAT:
                 value= (new RandomFloatGenerator((float) 0, (float) number)).generateValue();
+                break;
         }
 
         return value;
