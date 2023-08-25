@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="screen1.body.entity.property.PropertyController">
+   <children>
+      <Label prefHeight="25.0" prefWidth="61.0" text="Property Name" wrapText="true">
+         <VBox.margin>
+            <Insets left="20.0" top="10.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="propertyNameLabel" text="Label">
+         <VBox.margin>
+            <Insets left="150.0" top="-20.0" />
+         </VBox.margin>
+      </Label>
+      <Label prefHeight="43.0" prefWidth="81.0" text="Property Type">
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="propertyTypeLabel" text="Label">
+         <VBox.margin>
+            <Insets left="150.0" top="-30.0" />
+         </VBox.margin>
+      </Label>
+      <Label prefHeight="48.0" prefWidth="82.0" text="Range">
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="propertyRangeLabel" text="Label">
+         <VBox.margin>
+            <Insets left="150.0" top="-35.0" />
+         </VBox.margin>
+      </Label>
+      <Label prefHeight="48.0" prefWidth="72.0" text="Is random">
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="propertyIsRandomLabel" text="Label">
+         <VBox.margin>
+            <Insets left="150.0" top="-30.0" />
+         </VBox.margin>
+      </Label>
+   </children>
+</VBox>
