@@ -2,6 +2,14 @@ package screen1.body;
 
 import dto.definition.entity.api.EntityDefinitionDTO;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import dto.definition.rule.action.KillActionDTO;
+import dto.definition.rule.action.SetActionDTO;
+import dto.definition.rule.action.api.AbstractActionDTO;
+import dto.definition.rule.action.condition.ConditionActionDTO;
+import dto.definition.rule.action.numeric.DecreaseActionDTO;
+import dto.definition.rule.action.numeric.IncreaseActionDTO;
+import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
+import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
 import dto.definition.rule.api.RuleDTO;
 import dto.definition.termination.condition.manager.api.TerminationConditionsDTOManager;
 import javafx.fxml.FXML;
@@ -11,13 +19,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import screen1.body.entity.property.PropertyController;
-import screen1.body.entity.property.PropertyResourceConstants;
+import screen1.body.tile.property.PropertyController;
+import screen1.body.tile.property.PropertyResourceConstants;
+import screen1.body.tile.rule.action.helper.ActionTileCreatorFactory;
+import screen1.body.tile.rule.action.helper.ActionTileCreatorFactoryImpl;
 import system.engine.api.SystemEngineAccess;
 import system.engine.impl.SystemEngineAccessImpl;
 import dto.api.*;
@@ -44,7 +53,7 @@ public class BodyController implements Initializable{
     @FXML
     private TextFlow quantityOfSquaresText;
     @FXML
-    private FlowPane detailesFlowPane;
+    private FlowPane detailsFlowPane;
 
     private SystemEngineAccess systemEngine = new SystemEngineAccessImpl();
 
@@ -59,19 +68,25 @@ public class BodyController implements Initializable{
     }
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        TreeItem<String> rootItem = new TreeItem<>("World");
+        quantityOfSquaresLabel.setVisible(false);
+        quantityOfSquaresText.setVisible(false);
+        valueDefLabel.setVisible(false);
+        valueDefText.setVisible(false);
 
+        TreeItem<String> rootItem = new TreeItem<>("World");
         TreeItem<String> entitiesBranch = createEntitiesSubTree(systemEngine);
-        TreeItem<String> ruleBranch = new TreeItem<>("Rules");
+        TreeItem<String> ruleBranch = createRulesSubTree(systemEngine);
         TreeItem<String> terminationBranch = new TreeItem<>("Termination conditions");
         TreeItem<String> environmentBranch = new TreeItem<>("Environment Variables");
 
         rootItem.getChildren().addAll(entitiesBranch, ruleBranch,terminationBranch,environmentBranch);
-        detailesTreeView.setShowRoot(false);
+        //detailesTreeView.setShowRoot(false);
         detailesTreeView.setRoot(rootItem);
     }
 
     private boolean isBranchExpanded(String branchValue,TreeView<String> detailesTreeView) {
+        if(branchValue.equals("World"))
+            return true;
         TreeItem<String> root = detailesTreeView.getRoot();
         for(TreeItem<String> treeItem:root.getChildren()){
             if (treeItem.getValue().equals(branchValue))
@@ -82,38 +97,58 @@ public class BodyController implements Initializable{
 
     @FXML
     void selectItem(MouseEvent event) {
-        if(isBranchExpanded("Entities",detailesTreeView)){
-            showEntityDefDetailes();
-        }
+        detailesTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.isLeaf()) {
+                quantityOfSquaresLabel.setVisible(false);
+                quantityOfSquaresText.setVisible(false);
+                valueDefLabel.setVisible(false);
+                valueDefText.setVisible(false);
+                if(isBranchExpanded("World",detailesTreeView)){
+                    if(isBranchExpanded("Entities",detailesTreeView)){
+                        handleEntitySelection();
+                        //detailesTreeView.getRoot().setExpanded(false);
+                    }
+                    else if(isBranchExpanded("Rules",detailesTreeView)){
+                        handleRulesSelection();
+                        //detailesTreeView.getRoot().setExpanded(false);
+                    }
+
+                }
+            }
+        });
     }
 
-    public void showEntityDefDetailes(){
-        quantityOfSquaresLabel.setVisible(false);
-        quantityOfSquaresText.setVisible(false);
+    public void handleEntitySelection(){
         detailesTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             valueDefText.getChildren().clear(); // Clear existing text
+            quantityOfSquaresLabel.setVisible(false);
+            quantityOfSquaresText.setVisible(false);
             if (newValue != null) {
                 String selectedValue = newValue.getValue();
                 DTODefinitionsForUi dtoDefinitionsForUi = systemEngine.getDefinitionsDataFromSE();
                 List<EntityDefinitionDTO> entities = dtoDefinitionsForUi.getEntitiesDTO();
                 for(EntityDefinitionDTO entityDefinitionDTO : entities){
+                    detailsFlowPane.getChildren().clear();
                     if(entityDefinitionDTO.getUniqueName().equals(selectedValue)){
+                        valueDefLabel.setVisible(true);
+                        valueDefText.setVisible(true);
                         //population
                         valueDefLabel.setText("entity's population:");
                         Text entityPopulation = new Text(String.valueOf(entityDefinitionDTO.getPopulation()));
                         valueDefText.getChildren().add(entityPopulation);
                         //property list
                         for(PropertyDefinitionDTO propertyDefinitionDTO:entityDefinitionDTO.getProps()){
-                            showPropertyDetailes(propertyDefinitionDTO);
+                            createPropertyChildrenInFlowPane(propertyDefinitionDTO);
                         }
 
                     }
                 }
             }
         });
+        //detailesTreeView.getRoot().setExpanded(false);
     }
 
-    public void showPropertyDetailes(PropertyDefinitionDTO propertyDefinitionDTO){
+    public void createPropertyChildrenInFlowPane(PropertyDefinitionDTO propertyDefinitionDTO){
         try{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(PropertyResourceConstants.PROPERTY_FXML_RESOURCE);
@@ -122,9 +157,10 @@ public class BodyController implements Initializable{
             PropertyController propertyController = loader.getController();
             propertyController.setPropertyNameLabel(propertyDefinitionDTO.getUniqueName());
             propertyController.setPropertyTypeLabel(propertyDefinitionDTO.getType());
-            propertyController.setPropertyRangeLabel(propertyDefinitionDTO.getRange());
+            propertyController.setPropertyRangeLabel((propertyDefinitionDTO.doesHaveRange() ? " range: from " +
+                    propertyDefinitionDTO.getRange().get(0) + " to " + propertyDefinitionDTO.getRange().get(1) : " no range"));
             propertyController.setPropertyIsRandomLabel(String.valueOf(propertyDefinitionDTO.isRandomInitialized()));
-            detailesFlowPane.getChildren().add(singleProperty);
+            detailsFlowPane.getChildren().add(singleProperty);
         }
         catch (IOException e) {
             throw new RuntimeException(e);
@@ -132,12 +168,6 @@ public class BodyController implements Initializable{
 
     }
 
-    public void showEnvironmentVarsDetailes(){
-        quantityOfSquaresLabel.setVisible(false);
-        quantityOfSquaresText.setVisible(false);
-        valueDefLabel.setVisible(false);
-        valueDefText.setVisible(false);
-    }
 
     public TreeItem<String> createEntitiesSubTree(SystemEngineAccess systemEngineAccess){
         DTODefinitionsForUi dtoDefinitionsForUi = systemEngineAccess.getDefinitionsDataFromSE();
@@ -163,34 +193,117 @@ public class BodyController implements Initializable{
         return entityBranch;
     }
 
-    public TreeItem<String> createPropertiesSubTree(List<PropertyDefinitionDTO> properties){
-        List<TreeItem<String>> propertiesBrunches = new ArrayList<>();
-
-        for(PropertyDefinitionDTO propertyDefinitionDTO : properties){
-            propertiesBrunches.add(createSinglePropertySubTree(propertyDefinitionDTO));
-        }
-        TreeItem<String> propertiesBranch = new TreeItem<>("properties");
-        propertiesBranch.getChildren().addAll(propertiesBrunches);
-        return propertiesBranch;
-    }
-
-    public TreeItem<String> createSinglePropertySubTree(PropertyDefinitionDTO propertyDefinitionDTO){
-        TreeItem<String> leafName = new TreeItem<>("type: " + propertyDefinitionDTO.getType());
-
-        TreeItem<String> leafRange = new TreeItem<>((propertyDefinitionDTO.doesHaveRange() ? " range: from " +
-                propertyDefinitionDTO.getRange().get(0) + " to " + propertyDefinitionDTO.getRange().get(1) : " no range"));
-        TreeItem<String> leafRandomInitialize = new TreeItem<>("random initialize: " +propertyDefinitionDTO.isRandomInitialized().toString());
-
-        TreeItem<String> propertyBranch = new TreeItem<>("name: " + propertyDefinitionDTO.getUniqueName());
-        propertyBranch.getChildren().addAll(leafName, leafRange, leafRandomInitialize);
-        return propertyBranch;
-    }
-
-    public void createRulesSubTree(TreeItem<String> branchItem1, SystemEngineAccess systemEngineAccess){
+    public TreeItem<String> createRulesSubTree(SystemEngineAccess systemEngineAccess){
         DTODefinitionsForUi dtoDefinitionsForUi = systemEngineAccess.getDefinitionsDataFromSE();
         List<RuleDTO> rules = dtoDefinitionsForUi.getRulesDTO();
+        List<TreeItem<String>> rulesBrunches = new ArrayList<>();
+
+        for(RuleDTO ruleDTO : rules){
+            rulesBrunches.add(new TreeItem<>( ruleDTO.getName()));
+        }
+
+        TreeItem<String> rulesBrunch = new TreeItem<>("Rules");
+        rulesBrunch.getChildren().addAll(rulesBrunches);
+        return rulesBrunch;
     }
 
+
+    private void handleRulesSelection() {
+        detailesTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            valueDefText.getChildren().clear(); // Clear existing text
+            quantityOfSquaresText.getChildren().clear(); // Clear existing text
+            //detailsFlowPane.getChildren().clear();
+            if (newValue != null) {
+                String selectedRuleName = newValue.getValue();
+                DTODefinitionsForUi dtoDefinitionsForUi = systemEngine.getDefinitionsDataFromSE();
+                List<RuleDTO> rules = dtoDefinitionsForUi.getRulesDTO();
+                for (RuleDTO ruleDTO : rules) {
+                    detailsFlowPane.getChildren().clear();
+                    if (ruleDTO.getName().equals(selectedRuleName)) {
+                        valueDefLabel.setVisible(true);
+                        valueDefText.setVisible(true);
+                        quantityOfSquaresLabel.setVisible(true);
+                        quantityOfSquaresText.setVisible(true);
+                        // RuleDTO rule = searchName(ruleName, rules);
+
+                        valueDefLabel.setText("Activation:");
+                        Text ruleActivation = new Text("active every " + ruleDTO.getActivation().getTicks() +
+                                "ticks with probability of: " + ruleDTO.getActivation().getProbability());
+                        valueDefText.getChildren().add(ruleActivation);
+                        quantityOfSquaresLabel.setText("Actions number:");
+                        Text actionNumber = new Text(((Integer) ruleDTO.getNumOfActions()).toString());
+                        quantityOfSquaresText.getChildren().add(actionNumber);
+                        /*for(AbstractActionDTO abstractActionDTO:ruleDTO.getActions()){
+                            createPropertyChildrenInFlowPane(propertyDefinitionDTO);
+                        }*/
+                        createActionChildrenInFlowPane(ruleDTO);
+                    }
+                }
+            }
+        });
+        //detailesTreeView.getRoot().setExpanded(false);
+    }
+
+
+    private void createActionChildrenInFlowPane(RuleDTO rule){
+        List <AbstractActionDTO> actionDTOS = rule.getActions();
+        ActionTileCreatorFactory actionTileCreatorFactory = new ActionTileCreatorFactoryImpl();
+
+        for(AbstractActionDTO action : actionDTOS){
+            switch(action.getActionType()){
+                case INCREASE:
+                    IncreaseActionDTO increaseAction = (IncreaseActionDTO)action;
+                    actionTileCreatorFactory.createIncreaseActionChildren(increaseAction, detailsFlowPane);
+                    break;
+                case DECREASE:
+                    DecreaseActionDTO decreaseAction = (DecreaseActionDTO)action;
+                    actionTileCreatorFactory.createDecreaseActionChildren(decreaseAction, detailsFlowPane);
+                    break;
+                case SET:
+                    SetActionDTO setActionDTO = (SetActionDTO) action;
+                    actionTileCreatorFactory.createSetActionChildren(setActionDTO, detailsFlowPane);
+                    break;
+                case CALCULATION:
+                    if(action instanceof DivideActionDTO) {
+                        DivideActionDTO divideAction = (DivideActionDTO) action;
+                        actionTileCreatorFactory.createDivideActionChildren(divideAction, detailsFlowPane);
+                    }
+                    else{
+                        MultiplyActionDTO multiplyAction = (MultiplyActionDTO) action;
+                        actionTileCreatorFactory.createMultiplyActionChildren(multiplyAction, detailsFlowPane);
+                    }
+                    break;
+                case CONDITION:
+                    ConditionActionDTO conditionAction = (ConditionActionDTO) action;
+                    actionTileCreatorFactory.createConditionActionChildren(conditionAction, detailsFlowPane);
+                    break;
+                case KILL:
+                    KillActionDTO killAction = (KillActionDTO)action;
+                    actionTileCreatorFactory.createKillActionChildren(killAction, detailsFlowPane);
+                    break;
+            }
+        }
+    }
+
+
+
+    public RuleDTO searchName(String searchName, List<RuleDTO> rules) {
+        for (RuleDTO rule : rules) {
+            if (searchName.equalsIgnoreCase(rule.getName())) {
+                return rule;
+            }
+        }
+        return null;
+    }
+
+
+
+    public void showEnvironmentVarsDetailes(){
+        quantityOfSquaresLabel.setVisible(false);
+        quantityOfSquaresText.setVisible(false);
+        valueDefLabel.setVisible(false);
+        valueDefText.setVisible(false);
+    }
     public void createTeminationConditionsSubTree(TreeItem<String> branchItem1, SystemEngineAccess systemEngineAccess){
         DTODefinitionsForUi dtoDefinitionsForUi = systemEngineAccess.getDefinitionsDataFromSE();
         TerminationConditionsDTOManager terminationConditionsDTOManager = dtoDefinitionsForUi.getTerminationConditionsDTOManager();

@@ -1,4 +1,4 @@
-package screen1.body.entity.property;
+package screen1.body.tile.property;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

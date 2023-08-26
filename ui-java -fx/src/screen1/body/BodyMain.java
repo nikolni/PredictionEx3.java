@@ -12,8 +12,8 @@ public class BodyMain extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Predictions");
 
-        Parent load = FXMLLoader.load(getClass().getResource("body.fxml"));
-        Scene scene = new Scene(load, 600, 400);
+        Parent load = FXMLLoader.load(getClass().getResource("/screen1/body/body.fxml"));
+        Scene scene = new Scene(load, 1000, 800);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
