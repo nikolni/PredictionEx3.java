@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="200.0" styleClass="tile" stylesheets="@../../../tile.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen1.tile.rule.action.kill.KillActionController">
+   <children>
+      <Label id="action-type-label" prefHeight="25.0" prefWidth="96.0" text="Action type" wrapText="true">
+         <VBox.margin>
+            <Insets left="20.0" top="30.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="actionTypeLabel" prefHeight="17.0" prefWidth="56.0" text="Label" textFill="#f7f6f6">
+         <VBox.margin>
+            <Insets left="100.0" top="-20.0" />
+         </VBox.margin>
+      </Label>
+      <Label id="primary-entity-label" prefHeight="133.0" prefWidth="106.0" text="Primary entity">
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="primaryEntityLabel" prefHeight="17.0" prefWidth="62.0" text="Label" textFill="#fdfcfc">
+         <VBox.margin>
+            <Insets left="100.0" top="-75.0" />
+         </VBox.margin>
+      </Label>
+   </children>
+</VBox>

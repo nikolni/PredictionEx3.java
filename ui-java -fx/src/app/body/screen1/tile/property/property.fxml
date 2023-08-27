@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="200.0" styleClass="tile" stylesheets="@../tile.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen1.tile.property.PropertyController">
+   <children>
+      <Label id="property-name-label" prefHeight="25.0" prefWidth="108.0" text="Property Name" textFill="#fdfdfd" wrapText="true" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets left="20.0" top="10.0" />
+         </VBox.margin>
+         <padding>
+            <Insets left="-15.0" />
+         </padding>
+      </Label>
+      <Label fx:id="propertyNameLabel" alignment="TOP_LEFT" prefHeight="34.0" prefWidth="86.0" text="Label" textFill="WHITE" wrapText="true" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets left="130.0" top="-20.0" />
+         </VBox.margin>
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <Label id="property-type-label" prefHeight="43.0" prefWidth="81.0" text="Property Type" textFill="WHITE" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets left="20.0" top="5.0" />
+         </VBox.margin>
+         <padding>
+            <Insets left="-15.0" />
+         </padding>
+      </Label>
+      <Label fx:id="propertyTypeLabel" prefHeight="17.0" prefWidth="62.0" text="Label" textFill="WHITE" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets left="120.0" top="-30.0" />
+         </VBox.margin>
+      </Label>
+      <Label id="range-label" prefHeight="48.0" prefWidth="82.0" text="Range" textFill="WHITE" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets left="20.0" top="10.0" />
+         </VBox.margin>
+         <padding>
+            <Insets left="-15.0" />
+         </padding>
+      </Label>
+      <Label fx:id="propertyRangeLabel" prefHeight="16.0" prefWidth="77.0" text="Label" textFill="#fffdfd" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets left="110.0" top="-30.0" />
+         </VBox.margin>
+      </Label>
+      <Label id="random-label" prefHeight="48.0" prefWidth="72.0" text="Is random" textFill="WHITE" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets left="20.0" top="10.0" />
+         </VBox.margin>
+         <padding>
+            <Insets left="-15.0" />
+         </padding>
+      </Label>
+      <Label fx:id="propertyIsRandomLabel" prefHeight="17.0" prefWidth="59.0" text="Label" textFill="WHITE" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets left="130.0" top="-30.0" />
+         </VBox.margin>
+      </Label>
+   </children>
+</VBox>

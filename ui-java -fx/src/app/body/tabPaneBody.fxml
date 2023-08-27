@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+
+<TabPane id="tab-pane-id" fx:id="tabPaneBodyComponent" maxHeight="-Infinity" maxWidth="700" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="custom-tab-pane" stylesheets="@tabPaneBody.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.TabPaneBodyController">
+    <Tab id="tab1" text="Tab 1">
+        <content>
+            <fx:include fx:id="body1Component" source="screen1/body1.fxml" />
+        </content>
+    </Tab>
+    <Tab id="tab2" text="Tab 2">
+        <content>
+            <fx:include fx:id="body2Component" source="screen2/body2.fxml" />
+        </content>
+    </Tab>
+    <Tab id="tab3" text="Tab 3">
+        <content>
+            <fx:include fx:id="body3Component" source="screen3/body3.fxml" />
+        </content>
+    </Tab>
+</TabPane>
