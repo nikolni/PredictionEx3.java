@@ -7,5 +7,6 @@ import system.engine.world.rule.context.Context;
 public interface Action {
     void executeAction(Context context);
     ActionType getActionType();
-    EntityDefinition getContextEntity();
+    EntityDefinition getContextPrimaryEntity();
+    EntityDefinition getContextSecondEntity();
 }

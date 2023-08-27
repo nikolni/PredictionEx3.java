@@ -6,6 +6,8 @@ import system.engine.world.execution.instance.property.api.PropertyInstance;
 
 public interface Context {
     EntityInstance getPrimaryEntityInstance();
+    EntityInstance getSecondEntityInstance();
     void removeEntity(EntityInstance entityInstance);
     PropertyInstance getEnvironmentVariable(String name);
+
 }

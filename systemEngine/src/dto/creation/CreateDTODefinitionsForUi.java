@@ -17,6 +17,7 @@ import dto.definition.rule.activation.impl.ActivationDTOImpl;
 import dto.definition.rule.api.RuleDTO;
 import dto.definition.rule.impl.RuleDTOImpl;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
+import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
 import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
 import dto.definition.termination.condition.manager.api.TerminationConditionsDTOManager;
@@ -36,6 +37,7 @@ import system.engine.world.rule.action.impl.numeric.impl.calculation.MultiplyAct
 import system.engine.world.rule.api.Rule;
 import system.engine.world.termination.condition.api.TerminationCondition;
 import system.engine.world.termination.condition.impl.TicksTerminationConditionImpl;
+import system.engine.world.termination.condition.impl.TimeTerminationConditionImpl;
 import system.engine.world.termination.condition.manager.api.TerminationConditionsManager;
 
 import java.util.ArrayList;
@@ -88,39 +90,39 @@ public class CreateDTODefinitionsForUi {
             switch (action.getActionType()){
                 case INCREASE:
                     IncreaseAction increaseAction = (IncreaseAction)action;
-                    actionsDTOs.add(new IncreaseActionDTO(increaseAction.getContextEntity().getUniqueName(),
+                    actionsDTOs.add(new IncreaseActionDTO(increaseAction.getContextPrimaryEntity().getUniqueName(),
                             increaseAction.getPropertyName(), increaseAction.getExpressionStr()));
                     break;
                 case DECREASE:
                     DecreaseAction decreaseAction = (DecreaseAction)action;
-                    actionsDTOs.add(new DecreaseActionDTO(decreaseAction.getContextEntity().getUniqueName(),
+                    actionsDTOs.add(new DecreaseActionDTO(decreaseAction.getContextPrimaryEntity().getUniqueName(),
                             decreaseAction.getPropertyName(), decreaseAction.getExpressionStr()));
                     break;
                 case CALCULATION:
                     if(action instanceof DivideAction) {
                         DivideAction divideAction = (DivideAction) action;
-                        actionsDTOs.add(new DivideActionDTO(divideAction.getContextEntity().getUniqueName(),
+                        actionsDTOs.add(new DivideActionDTO(divideAction.getContextPrimaryEntity().getUniqueName(),
                                 divideAction.getResultPropName(), divideAction.getExpressionStrArg1(), divideAction.getExpressionStrArg2()));
                     }
                     else{
                         MultiplyAction multiplyAction = (MultiplyAction) action;
-                        actionsDTOs.add(new MultiplyActionDTO(multiplyAction.getContextEntity().getUniqueName(),
+                        actionsDTOs.add(new MultiplyActionDTO(multiplyAction.getContextPrimaryEntity().getUniqueName(),
                                 multiplyAction.getResultPropName(), multiplyAction.getExpressionStrArg1(), multiplyAction.getExpressionStrArg2()));
                     }
                     break;
                 case CONDITION:
                     ConditionAction conditionAction = (ConditionAction) action;
                     actionsDTOs.add(new ConditionActionDTO(conditionAction.getSingularity(),
-                            conditionAction.getContextEntity().getUniqueName()));
+                            conditionAction.getContextPrimaryEntity().getUniqueName()));
                     break;
                 case SET:
                     SetAction setAction= (SetAction) action;
-                    actionsDTOs.add(new SetActionDTO(setAction.getContextEntity().getUniqueName(),
+                    actionsDTOs.add(new SetActionDTO(setAction.getContextPrimaryEntity().getUniqueName(),
                             setAction.getPropertyName(), setAction.getExpressionStr()));
                     break;
                 case KILL:
                     KillAction killAction = (KillAction)action;
-                    actionsDTOs.add(new KillActionDTO(killAction.getContextEntity().getUniqueName()));
+                    actionsDTOs.add(new KillActionDTO(killAction.getContextPrimaryEntity().getUniqueName()));
                     break;
             }
         }
@@ -131,8 +133,11 @@ public class CreateDTODefinitionsForUi {
         if(terminationCondition instanceof TicksTerminationConditionImpl){
             return new TicksTerminationConditionsDTOImpl(terminationCondition.getTerminationCondition());
         }
-        else{
+        else if(terminationCondition instanceof TimeTerminationConditionImpl){
             return new TimeTerminationConditionsDTOImpl(terminationCondition.getTerminationCondition());
+        }
+        else{
+            return new ByUserTerminationConditionDTOImpl();
         }
     }
 

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="200.0" styleClass="tile" stylesheets="@../../../tile.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen1.tile.rule.action.calculation.CalculationActionController">
+   <children>
+      <Label id="action-type-label" prefHeight="25.0" prefWidth="106.0" text="Action type" wrapText="true">
+         <VBox.margin>
+            <Insets left="20.0" top="10.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="actionTypeLabel" prefHeight="17.0" prefWidth="62.0" text="Label" textFill="WHITE">
+         <VBox.margin>
+            <Insets left="130.0" top="-20.0" />
+         </VBox.margin>
+      </Label>
+      <Label id="primary-entity-label" prefHeight="49.0" prefWidth="111.0" text="Primary entity">
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="primaryEntityLabel" prefHeight="17.0" prefWidth="70.0" text="Label" textFill="WHITE">
+         <VBox.margin>
+            <Insets left="130.0" top="-30.0" />
+         </VBox.margin>
+      </Label>
+      <Label id="property-name-label" prefHeight="43.0" prefWidth="130.0" text="Result property name" textFill="WHITE">
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="resultPropertyNameLabel" prefHeight="17.0" prefWidth="67.0" text="Label" textFill="WHITE">
+         <VBox.margin>
+            <Insets left="130.0" top="-30.0" />
+         </VBox.margin>
+      </Label>
+      <Label id="expression1-label" prefHeight="45.0" prefWidth="105.0" text="expression1" textFill="WHITE">
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="expression1Label" prefHeight="17.0" prefWidth="55.0" text="Label" textFill="WHITE">
+         <VBox.margin>
+            <Insets left="130.0" top="-30.0" />
+         </VBox.margin>
+      </Label>
+      <Label id="expression2-label" prefHeight="53.0" prefWidth="110.0" text="expression2" textFill="WHITE">
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="expression2Label" prefHeight="17.0" prefWidth="76.0" text="Label" textFill="WHITE">
+         <VBox.margin>
+            <Insets left="130.0" top="-35.0" />
+         </VBox.margin>
+      </Label>
+   </children>
+</VBox>
