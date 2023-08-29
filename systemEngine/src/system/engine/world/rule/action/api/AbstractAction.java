@@ -7,14 +7,23 @@ public abstract class AbstractAction implements Action {
 
     private final ActionType actionType;
     private final EntityDefinition primaryEntityDefinition;
-    private final EntityDefinition secondEntityDefinition;
+    //private final EntityDefinition secondEntityDefinition;
 
+    protected AbstractAction(ActionType actionType, EntityDefinition primaryEntityDefinition
+                             ) {
+        this.actionType = actionType;
+        this.primaryEntityDefinition = primaryEntityDefinition;
+       // this.secondEntityDefinition = secondEntityDefinition;
+    }
+
+    /*
     protected AbstractAction(ActionType actionType, EntityDefinition primaryEntityDefinition,
                              EntityDefinition secondEntityDefinition) {
         this.actionType = actionType;
         this.primaryEntityDefinition = primaryEntityDefinition;
         this.secondEntityDefinition = secondEntityDefinition;
     }
+     */
 
     @Override
     public ActionType getActionType() {
@@ -26,8 +35,8 @@ public abstract class AbstractAction implements Action {
         return primaryEntityDefinition;
     }
 
-    @Override
+    /*@Override
     public EntityDefinition getContextSecondEntity() {
         return secondEntityDefinition;
-    }
+    }*/
 }
