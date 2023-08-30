@@ -23,7 +23,7 @@ public interface SystemEngineAccess {
     DTONamesListForUi getPropertiesNames(int entityDefinitionIndex );
     DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogram(Integer simulationID,
                                                                                int entityDefinitionIndex,int propertyIndex);
-
+    void updateEntitiesPopulation(DTOPopulationValuesForSE dtoPopulationValuesForSE);
     void updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE);
     void addWorldInstance();
 
