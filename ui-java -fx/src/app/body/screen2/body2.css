@@ -1,17 +1,13 @@
-#label1{
+#clear-button{
+    -fx-text-fill: WHITE;
     -fx-font-size: 14px;
     -fx-font-weight: BOLD;
+    -fx-background-color: GREEN;
 }
 
-#label2{
+#start-button{
+    -fx-text-fill: WHITE;
     -fx-font-size: 14px;
     -fx-font-weight: BOLD;
-}
-
-#text-flow-1{
-    color: blue;
-}
-
-#text-flow-2{
-    color: blue;
+    -fx-background-color: GREEN;
 }

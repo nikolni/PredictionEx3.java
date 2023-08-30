@@ -96,6 +96,10 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
+    public void updateEntitiesPopulation(DTOPopulationValuesForSE dtoPopulationValuesForSE) {
+
+    }
+    @Override
     public void updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE) {
         int index = 0;
 
