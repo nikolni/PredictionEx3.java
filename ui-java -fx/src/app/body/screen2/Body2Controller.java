@@ -91,9 +91,6 @@ public class Body2Controller {
                 Node singleEnvVar = loader.load();
 
                 EnvironmentVariableController environmentVariableController = loader.getController();
-                environmentVariableController.setInitValues(initValues);
-                environmentVariableController.setEnvVarsList(envVarsList);
-                environmentVariableController.setEnvVarType(propertyDefinitionDTO.getType());
                 environmentVariableController.setEnvVarNameLabel(propertyDefinitionDTO.getUniqueName());
                 environmentVariableController.setEnvVarTypeLabel(propertyDefinitionDTO.getType());
                 envVarNameToTileController.put(propertyDefinitionDTO.getUniqueName(), environmentVariableController);
@@ -114,7 +111,6 @@ public class Body2Controller {
 
                 EntityController entityController = loader.getController();
                 entityController.setEntitiesNames(entitiesNames);
-                entityController.setEntitiesPopulations(entitiesPopulations);
                 entityController.setEntityNameLabel(entityName);
                 entityNameToTileController.put(entityName, entityController);
                 simulationEntitiesPopulationFlowPane.getChildren().add(singlePopulation);
@@ -144,14 +140,15 @@ public class Body2Controller {
     void onClickStartButton(MouseEvent event) {
         Stage primaryStage = new Stage();
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen2/start/Button/startButton.fxml"));
             GridPane root = loader.load();
 
             StartButtonController startButtonController = loader.getController();
             startButtonController.setCallerController(this);
+            startButtonController.setStage(primaryStage);
 
 
-            Scene scene = new Scene(root, 800, 600);
+            Scene scene = new Scene(root, 500, 150);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Warning!");
             primaryStage.show();
@@ -163,8 +160,8 @@ public class Body2Controller {
     }
 
     public void startSimulation(){
-        systemEngine.updateEnvironmentVarDefinition(new CreateDTOEnvVarsForSE().getData(initValues, envVarsList));
-        systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entitiesNames, entitiesPopulations));
+        systemEngine.updateEnvironmentVarDefinition(new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList));
+        systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
         systemEngine.runSimulation();
     }
 

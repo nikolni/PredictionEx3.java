@@ -1,6 +1,9 @@
 package app.body.screen2.tile.environment.variable;
 
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -13,48 +16,64 @@ import java.util.List;
 
 public class EnvironmentVariableController {
 
-
-    @FXML
-    private Label envVarNameLabel;
-
     @FXML
     private TextField valueTextField;
 
     @FXML
     private Label envVarTypeLabel;
 
+    private Boolean isValueChanged = false;
 
-    private List<PropertyDefinitionDTO> envVarsList;
-    private List<Object> initValues;
+    @FXML
+    private Label envVarNameLabel;
+    //private List<PropertyDefinitionDTO> envVarsList;
+    //private List<Object> initValues;
 
-    private String envVarType;
+
+
+
 
 
     @FXML
     public void initialize() {
-        //initValues = new ArrayList<>(Collections.nCopies(envVarsList.size(), null));
+        valueTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+                checkInputValidity();
+            }
+        });
+
     }
 
-    public void setEnvVarsList(List<PropertyDefinitionDTO> envVarsList) {
-        this.envVarsList = envVarsList;
-    }
+    public Object getValueTextField() {
+        Object value= null;
+        if(isValueChanged){
+             String input= valueTextField.getText();
+             String envVarType = envVarTypeLabel.getText();
 
-    public void setInitValues(List<Object> initValues) {
-        this.initValues = initValues;
-    }
+            switch (envVarType) {
+                case "DECIMAL":
+                    value=Integer.parseInt(input);
+                    break;
+                case "FLOAT":
+                    value=Float.parseFloat(input);
+                    break;
+                case "STRING":
+                    value= envVarType;
+                    break;
+                case "BOOLEAN":
+                    value = Boolean.parseBoolean(input);
+                    break;
+            }
+        }
 
+        return value;
+    }
     @FXML
-    void setValueFromUser(InputMethodEvent event) {
-        int envVarIndex = getEnvVarIndexByName(envVarNameLabel.getText());
-        if(checkInputValidity(valueTextField.getText())){
-            initValues.set(envVarIndex,valueTextField.getText());
-        }
-        else{
-            valueTextField.clear();
-        }
-    }
-
-    private Boolean checkInputValidity(String input){
+    private void checkInputValidity(){
+        isValueChanged = true;
+        String input= valueTextField.getText();
+        String envVarType = envVarTypeLabel.getText();
         boolean isInputValid;
         Stage primaryStage = new Stage();
 
@@ -75,21 +94,17 @@ public class EnvironmentVariableController {
                 }
             }
             catch (NumberFormatException e) {
-
-
                 Label errorMessage = new Label("Error in value type!\nTry again.");
                 StackPane root = new StackPane();
                 root.getChildren().add(errorMessage);
-                Scene scene = new Scene(root, 300, 200);
+                Scene scene = new Scene(root, 150, 80);
                 primaryStage.setScene(scene);
                 primaryStage.setTitle("Error Window");
                 primaryStage.show();
                 isInputValid= false;
+                valueTextField.clear();
             }
-
-        //primaryStage.close();
-
-        return isInputValid;
+            //primaryStage.close();
     }
 
 
@@ -100,7 +115,11 @@ public class EnvironmentVariableController {
         this.envVarTypeLabel.setText(envVarTypeLabel);
     }
 
-    public int getEnvVarIndexByName(String name) {
+    public void resetTextField(){
+        valueTextField.clear();
+    }
+
+    /* public int getEnvVarIndexByName(String name) {
         int index = 0;
 
         for (PropertyDefinitionDTO propertyDefinitionDTO : envVarsList) {
@@ -110,13 +129,29 @@ public class EnvironmentVariableController {
             index++;
         }
         throw new IllegalArgumentException("Can't find entity with name " + name);
+    }*/
+
+    /*public void setEnvVarsList(List<PropertyDefinitionDTO> envVarsList) {
+        this.envVarsList = envVarsList;
     }
 
-    public void setEnvVarType(String envVarType) {
-        this.envVarType = envVarType;
-    }
+    public void setInitValues(List<Object> initValues) {
+        this.initValues = initValues;
+    }*/
 
-    public void resetTextField(){
-        valueTextField.clear();
-    }
+/*    @FXML
+    void setValueFromUser() {
+        int envVarIndex = getEnvVarIndexByName(envVarNameLabel.getText());
+        if(checkInputValidity(valueTextField.getText())){
+            initValues.set(envVarIndex,valueTextField.getText());
+        }
+        else{
+            valueTextField.clear();
+        }
+    }*/
+
+    /*@FXML
+    void setValueFromUser(InputMethodEvent event) {
+
+    }*/
 }
