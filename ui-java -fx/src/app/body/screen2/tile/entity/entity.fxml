@@ -30,7 +30,7 @@
                   <Insets left="-15.0" />
                </padding>
             </Label>
-            <Label fx:id="entityNameLabel" alignment="TOP_LEFT" prefHeight="34.0" prefWidth="86.0" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="CENTER">
+            <Label fx:id="entityNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="34.0" prefWidth="86.0" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="CENTER">
                <font>
                   <Font size="10.0" />
                </font>

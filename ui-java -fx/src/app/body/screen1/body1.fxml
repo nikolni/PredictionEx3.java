@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
@@ -10,13 +11,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
 
-
-<HBox prefHeight="282.0" prefWidth="672.0" stylesheets="@body1.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen1.Body1Controller">
+<HBox prefHeight="400.0" prefWidth="669.0" stylesheets="@body1.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen1.Body1Controller">
    <children>
-      <TreeView fx:id="detailsTreeView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="282.0" prefWidth="291.0" HBox.hgrow="NEVER" />
-      <VBox prefHeight="282.0" prefWidth="384.0" HBox.hgrow="ALWAYS">
+      <TreeView fx:id="detailsTreeView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="NEVER" />
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
          <children>
-            <GridPane hgap="5.0" prefHeight="90.0" prefWidth="406.0" vgap="5.0" VBox.vgrow="ALWAYS">
+            <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" vgap="5.0" VBox.vgrow="ALWAYS">
               <columnConstraints>
                   <ColumnConstraints hgrow="NEVER" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
                   <ColumnConstraints hgrow="NEVER" maxWidth="129.0" minWidth="10.0" prefWidth="129.0" />
@@ -37,7 +37,11 @@
                   <TextFlow id="text-flow2" fx:id="quantityOfSquaresText" prefHeight="40.0" prefWidth="191.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                </children>
             </GridPane>
-            <FlowPane fx:id="detailsFlowPane" hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" prefHeight="341.0" prefWidth="447.0" vgap="5.0" VBox.vgrow="ALWAYS" />
+            <ScrollPane VBox.vgrow="ALWAYS">
+               <content>
+                  <FlowPane fx:id="detailsFlowPane" hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" vgap="5.0" />
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </children>

@@ -7,6 +7,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
+import system.engine.api.SystemEngineAccess;
+import system.engine.impl.SystemEngineAccessImpl;
+
+import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 
 public class AppController {
 
@@ -15,12 +20,33 @@ public class AppController {
     @FXML private TabPane tabPaneBodyComponent;
     @FXML private TabPaneBodyController tabPaneBodyComponentController;
 
+
+
+    private SystemEngineAccess systemEngine;
+
+    public AppController(){
+        systemEngine = new SystemEngineAccessImpl();
+
+        try {
+            systemEngine.getXMLFromUser("C:/Users/nikolnisanov/Documents/JAVA/predictionsEx2New/ex1-cigarets.xml");
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @FXML
     public void initialize() {
         if (headerComponentController != null && tabPaneBodyComponentController != null) {
             headerComponentController.setMainController(this);
             tabPaneBodyComponentController.setMainController(this);
         }
+        tabPaneBodyComponentController.setSystemEngineToChildren(systemEngine);
+    }
+
+    public SystemEngineAccess getSystemEngine() {
+        return systemEngine;
     }
 
     public void setHeaderComponentController(HeaderController headerComponentController) {
@@ -37,19 +63,19 @@ public class AppController {
         tabPaneBodyComponentController.switchToTab1();
     }
 
-    void onLoadFileButtonClick(ActionEvent event) {
+    public void onLoadFileButtonClick() {
 
     }
 
-    void onNewExecutionButtonClick(ActionEvent event) {
+    public void onNewExecutionButtonClick() {
+        tabPaneBodyComponentController.switchToTab2();
+    }
+
+    public void onQueueManagementButtonClick() {
 
     }
 
-    void onQueueManagementButtonClick(ActionEvent event) {
-
-    }
-
-    void onResultButtonClick(ActionEvent event) {
+    public void onResultButtonClick() {
 
     }
 }

@@ -1,16 +1,14 @@
 package app.body.screen2.tile.environment.variable;
 
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
-import java.awt.event.InputMethodEvent;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class EnvironmentVariableController {
@@ -22,9 +20,14 @@ public class EnvironmentVariableController {
     @FXML
     private TextField valueTextField;
 
+    @FXML
+    private Label envVarTypeLabel;
+
 
     private List<PropertyDefinitionDTO> envVarsList;
     private List<Object> initValues;
+
+    private String envVarType;
 
 
     @FXML
@@ -43,13 +46,59 @@ public class EnvironmentVariableController {
     @FXML
     void setValueFromUser(InputMethodEvent event) {
         int envVarIndex = getEnvVarIndexByName(envVarNameLabel.getText());
-        initValues.set(envVarIndex,valueTextField.getText());
+        if(checkInputValidity(valueTextField.getText())){
+            initValues.set(envVarIndex,valueTextField.getText());
+        }
+        else{
+            valueTextField.clear();
+        }
     }
+
+    private Boolean checkInputValidity(String input){
+        boolean isInputValid;
+        Stage primaryStage = new Stage();
+
+            isInputValid= true;
+            try {
+                switch (envVarType) {
+                    case "DECIMAL":
+                        Integer.parseInt(input);
+                        break;
+                    case "FLOAT":
+                         Float.parseFloat(input);
+                        break;
+                    case "STRING":
+                        break;
+                    case "BOOLEAN":
+                        Boolean.parseBoolean(input);
+                        break;
+                }
+            }
+            catch (NumberFormatException e) {
+
+
+                Label errorMessage = new Label("Error in value type!\nTry again.");
+                StackPane root = new StackPane();
+                root.getChildren().add(errorMessage);
+                Scene scene = new Scene(root, 300, 200);
+                primaryStage.setScene(scene);
+                primaryStage.setTitle("Error Window");
+                primaryStage.show();
+                isInputValid= false;
+            }
+
+        //primaryStage.close();
+
+        return isInputValid;
+    }
+
 
     public void setEnvVarNameLabel(String envVarNameLabel) {
         this.envVarNameLabel.setText(envVarNameLabel);
     }
-
+    public void setEnvVarTypeLabel(String envVarTypeLabel) {
+        this.envVarTypeLabel.setText(envVarTypeLabel);
+    }
 
     public int getEnvVarIndexByName(String name) {
         int index = 0;
@@ -61,5 +110,13 @@ public class EnvironmentVariableController {
             index++;
         }
         throw new IllegalArgumentException("Can't find entity with name " + name);
+    }
+
+    public void setEnvVarType(String envVarType) {
+        this.envVarType = envVarType;
+    }
+
+    public void resetTextField(){
+        valueTextField.clear();
     }
 }

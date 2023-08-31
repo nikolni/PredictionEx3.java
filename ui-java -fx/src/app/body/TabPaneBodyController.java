@@ -4,13 +4,11 @@ import app.AppController;
 import app.body.screen1.Body1Controller;
 import app.body.screen2.Body2Controller;
 import app.body.screen3.Body3Controller;
-import app.header.HeaderController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import system.engine.api.SystemEngineAccess;
 
 public class TabPaneBodyController {
 
@@ -20,30 +18,52 @@ public class TabPaneBodyController {
     @FXML private HBox body1Component;
     @FXML private Body1Controller body1ComponentController;
 
-    @FXML private HBox body2ComponentComponent;
+    @FXML private VBox body2Component;
     @FXML private Body2Controller body2ComponentController;
 
-    @FXML private HBox body3ComponentComponent;
+    @FXML private HBox body3Component;
     @FXML private Body3Controller body3ComponentController;
 
 
-
     private AppController mainController;
+
 
     public void setMainController(AppController mainController) {
         this.mainController = mainController;
     }
 
+    public void setSystemEngineToChildren(SystemEngineAccess systemEngineAccess){
+        body1ComponentController.setSystemEngine(systemEngineAccess);
+        body2ComponentController.setSystemEngine(systemEngineAccess);
+        //body3ComponentController.setSystemEngine(systemEngineAccess);
+        initialChildren();
+
+    }
+    private void initialChildren(){
+        body1ComponentController.primaryInitialize();
+        body2ComponentController.primaryInitialize();
+       // body3ComponentController.primaryInitialize();
+    }
+
 
     public void switchToTab1() {
         tabPaneBodyComponent.getSelectionModel().select(0);
+        body1ComponentController.setVisibleTab();
+        body2ComponentController.setUnVisibleTab();
+       // body3ComponentController.setUnVisibleTab();
     }
 
     public void switchToTab2() {
         tabPaneBodyComponent.getSelectionModel().select(1);
+        body2ComponentController.setVisibleTab();
+        body1ComponentController.setUnVisibleTab();
+        // body3ComponentController.setUnVisibleTab();
     }
 
     public void switchToTab3() {
         tabPaneBodyComponent.getSelectionModel().select(2);
+        //body3ComponentController.setVisibleTab();
+        body1ComponentController.setUnVisibleTab();
+        body2ComponentController.setUnVisibleTab();
     }
 }

@@ -1,5 +1,6 @@
 package app.body.screen2;
 
+import app.body.screen2.start.Button.StartButtonController;
 import app.body.screen2.tile.TileResourceConstants;
 import app.body.screen2.tile.entity.EntityController;
 import app.body.screen2.tile.environment.variable.EnvironmentVariableController;
@@ -10,20 +11,21 @@ import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import system.engine.api.SystemEngineAccess;
-import system.engine.impl.SystemEngineAccessImpl;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 
-public class Body2Controller{
+public class Body2Controller {
     @FXML
     private FlowPane simulationEntitiesPopulationFlowPane;
 
@@ -32,8 +34,12 @@ public class Body2Controller{
 
     @FXML
     private Button clearButton;
+
     @FXML
     private Button startButton;
+
+    private Map<String, EnvironmentVariableController> envVarNameToTileController;
+    private Map<String, EntityController> entityNameToTileController;
 
     private List<PropertyDefinitionDTO> envVarsList;
     private List<Object> initValues;
@@ -41,21 +47,40 @@ public class Body2Controller{
     private List<String> entitiesNames;
     private List<Integer> entitiesPopulations;
 
-    private SystemEngineAccess systemEngine = new SystemEngineAccessImpl();
+    private SystemEngineAccess systemEngine;
 
 
-    public Body2Controller(){
+    public Body2Controller() {
         simulationEntitiesPopulationFlowPane = new FlowPane();
         simulationEnvironmentInputsFlowPane = new FlowPane();
+        envVarNameToTileController =new HashMap<>();
+        entityNameToTileController = new HashMap<>();
+        simulationEntitiesPopulationFlowPane.getChildren().clear();
+        simulationEnvironmentInputsFlowPane.getChildren().clear();
     }
 
-    @FXML
-    public void initialize() {
-        DTOEnvVarsDefForUi dtoEnvVarsDefForUi= systemEngine.getEVDFromSE();
+
+    public void primaryInitialize() {
+        DTOEnvVarsDefForUi dtoEnvVarsDefForUi = systemEngine.getEVDFromSE();
         createEnvVarsChildrenInFlowPane(envVarsList = dtoEnvVarsDefForUi.getEnvironmentVars());
         initValues = new ArrayList<>(Collections.nCopies(envVarsList.size(), null));
         entitiesNames = systemEngine.getEntitiesNames().getNames();
         createEntitiesPopulationChildrenInFlowPane(entitiesNames);
+    }
+
+
+    public void setVisibleTab(){
+        simulationEntitiesPopulationFlowPane.setVisible(true);
+        simulationEnvironmentInputsFlowPane.setVisible(true);
+    }
+
+    public void setUnVisibleTab(){
+        simulationEntitiesPopulationFlowPane.setVisible(false);
+        simulationEnvironmentInputsFlowPane.setVisible(false);
+    }
+
+    public void setSystemEngine(SystemEngineAccess systemEngineAccess){
+        this.systemEngine = systemEngineAccess;
     }
 
     private void createEnvVarsChildrenInFlowPane(List<PropertyDefinitionDTO> envVarsList){
@@ -68,7 +93,10 @@ public class Body2Controller{
                 EnvironmentVariableController environmentVariableController = loader.getController();
                 environmentVariableController.setInitValues(initValues);
                 environmentVariableController.setEnvVarsList(envVarsList);
+                environmentVariableController.setEnvVarType(propertyDefinitionDTO.getType());
                 environmentVariableController.setEnvVarNameLabel(propertyDefinitionDTO.getUniqueName());
+                environmentVariableController.setEnvVarTypeLabel(propertyDefinitionDTO.getType());
+                envVarNameToTileController.put(propertyDefinitionDTO.getUniqueName(), environmentVariableController);
                 simulationEnvironmentInputsFlowPane.getChildren().add(singleEnvVar);
             }
             catch (IOException e) {
@@ -82,13 +110,14 @@ public class Body2Controller{
             try{
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(TileResourceConstants.ENTITY_FXML_RESOURCE);
-                Node singleProperty = loader.load();
+                Node singlePopulation = loader.load();
 
                 EntityController entityController = loader.getController();
                 entityController.setEntitiesNames(entitiesNames);
                 entityController.setEntitiesPopulations(entitiesPopulations);
                 entityController.setEntityNameLabel(entityName);
-                simulationEntitiesPopulationFlowPane.getChildren().add(singleProperty);
+                entityNameToTileController.put(entityName, entityController);
+                simulationEntitiesPopulationFlowPane.getChildren().add(singlePopulation);
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
@@ -97,17 +126,48 @@ public class Body2Controller{
     }
 
 
+
     @FXML
     void onClickClearButton(MouseEvent event) {
+        for (String key : entityNameToTileController.keySet()) {
+            EntityController entityController = entityNameToTileController.get(key);
+            entityController.resetTextField();
+        }
 
-
+        for (String key : envVarNameToTileController.keySet()) {
+            EnvironmentVariableController environmentVariableController = envVarNameToTileController.get(key);
+            environmentVariableController.resetTextField();
+        }
     }
 
     @FXML
     void onClickStartButton(MouseEvent event) {
+        Stage primaryStage = new Stage();
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
+            GridPane root = loader.load();
+
+            StartButtonController startButtonController = loader.getController();
+            startButtonController.setCallerController(this);
+
+
+            Scene scene = new Scene(root, 800, 600);
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Warning!");
+            primaryStage.show();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //primaryStage.close();
+    }
+
+    public void startSimulation(){
         systemEngine.updateEnvironmentVarDefinition(new CreateDTOEnvVarsForSE().getData(initValues, envVarsList));
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entitiesNames, entitiesPopulations));
+        systemEngine.runSimulation();
     }
+
 
     public PropertyDefinitionDTO getEnvVarByName(String name) {
         for (PropertyDefinitionDTO propertyDefinitionDTO : envVarsList) {
@@ -117,13 +177,6 @@ public class Body2Controller{
         }
         throw new IllegalArgumentException("Can't find entity with name " + name);
     }
-
-
-
-
-
-
-
 
 }
 

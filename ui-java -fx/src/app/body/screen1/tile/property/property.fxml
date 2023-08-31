@@ -15,9 +15,9 @@
             <Insets left="-15.0" />
          </padding>
       </Label>
-      <Label fx:id="propertyNameLabel" alignment="TOP_LEFT" prefHeight="34.0" prefWidth="86.0" text="Label" textFill="WHITE" wrapText="true" VBox.vgrow="NEVER">
+      <Label fx:id="propertyNameLabel" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="34.0" prefWidth="86.0" text="Label" textAlignment="CENTER" textFill="WHITE" wrapText="true" VBox.vgrow="NEVER">
          <VBox.margin>
-            <Insets left="130.0" top="-20.0" />
+            <Insets left="130.0" right="10.0" top="-20.0" />
          </VBox.margin>
          <font>
             <Font size="10.0" />

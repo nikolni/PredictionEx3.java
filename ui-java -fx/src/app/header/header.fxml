@@ -9,28 +9,28 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="headerComponent" stylesheets="@header.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.header.HeaderController">
+<GridPane fx:id="headerComponent" alignment="TOP_CENTER" stylesheets="@header.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.header.HeaderController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0">
+      <HBox alignment="CENTER" prefHeight="70.0" prefWidth="200.0">
          <children>
-            <Button id="load-file-button" fx:id="loadFileButton" mnemonicParsing="false" onAction="#onLoadFileButtonClick" text="Load File Button" textFill="#f5f5f5">
+            <Button id="load-file-button" fx:id="loadFileButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onLoadFileButtonClick" text="Load File Button" textFill="#f5f5f5">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <TextField prefWidth="300.0">
+            <TextField alignment="TOP_CENTER" prefWidth="300.0">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
             </TextField>
-            <Button id="queue-man-button" fx:id="queueManaementButton" mnemonicParsing="false" onAction="#onQueueManagementButtonClick" prefHeight="80.0" text="Queue Management">
+            <Button id="queue-man-button" fx:id="queueManaementButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onQueueManagementButtonClick" prefHeight="80.0" text="Queue Management">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" top="10.0" />
                </HBox.margin>
@@ -43,19 +43,22 @@
             <Insets left="10.0" right="10.0" />
          </padding>
       </HBox>
-      <HBox prefHeight="45.0" prefWidth="600.0" GridPane.rowIndex="1">
+      <HBox alignment="CENTER" prefHeight="45.0" prefWidth="600.0" GridPane.rowIndex="1">
          <children>
-            <Button id="details-button" fx:id="detailsButton" mnemonicParsing="false" onAction="#onDetailsButtonClick" prefWidth="100.0" styleClass="move-to-page-button" text="Details">
+            <Button id="details-button" fx:id="detailsButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onDetailsButtonClick" prefHeight="30.0" prefWidth="78.0" styleClass="move-to-page-button" text="Details">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button id="new-execution-button" fx:id="newExecutionButton" mnemonicParsing="false" onAction="#onNewExecutionButtonClick" styleClass="move-to-page-button" text="New Execution">
+            <Button id="new-execution-button" fx:id="newExecutionButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onNewExecutionButtonClick" styleClass="move-to-page-button" text="New Execution">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button id="results-button" fx:id="resultButtonClick" mnemonicParsing="false" onAction="#onResultButtonClick" styleClass="move-to-page-button" text="Results" />
+            <Button id="results-button" fx:id="resultButtonClick" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onResultButtonClick" prefHeight="30.0" prefWidth="82.0" styleClass="move-to-page-button" text="Results">
+               <HBox.margin>
+                  <Insets right="160.0" />
+               </HBox.margin></Button>
          </children>
          <padding>
             <Insets left="140.0" />

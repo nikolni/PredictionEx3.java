@@ -11,3 +11,16 @@
     -fx-font-weight: BOLD;
     -fx-background-color: GREEN;
 }
+
+#env-vars-flow-pane{
+    -fx-border-color: BLUE;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+}
+
+
+#population-flow-pane{
+    -fx-border-color: BLUE;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+}

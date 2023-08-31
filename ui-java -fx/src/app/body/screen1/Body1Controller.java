@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class Body1Controller implements Initializable{
+public class Body1Controller{
     @FXML
     private TreeView<String> detailsTreeView;
     @FXML
@@ -58,25 +58,36 @@ public class Body1Controller implements Initializable{
     @FXML
     private FlowPane detailsFlowPane;
 
-    private SystemEngineAccess systemEngine = new SystemEngineAccessImpl();
+    private SystemEngineAccess systemEngine;
 
-    public Body1Controller(){
-        try {
-            systemEngine.getXMLFromUser("C:/Users/nikolnisanov/Documents/JAVA/predictionsEx2New/ex1-cigarets.xml");
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+
+    public Body1Controller(){}
+
+    public Body1Controller(SystemEngineAccess systemEngine){
+        this.systemEngine = systemEngine;
     }
-    @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {
+
+
+    @FXML
+    public void initialize() {
         quantityOfSquaresLabel.setVisible(false);
         quantityOfSquaresText.setVisible(false);
         valueDefLabel.setVisible(false);
         valueDefText.setVisible(false);
+        detailsTreeView.setVisible(false);
+    }
 
+    public void setVisibleTab(){
+        detailsTreeView.setVisible(true);
+        detailsFlowPane.setVisible(true);
+    }
 
+    public void setUnVisibleTab(){
+        detailsTreeView.setVisible(false);
+        detailsFlowPane.setVisible(false);
+    }
+
+    public void primaryInitialize(){
         TreeItem<String> rootItem = new TreeItem<>("World");
         TreeItem<String> entitiesBranch = createEntitiesSubTree(systemEngine);
         TreeItem<String> ruleBranch = createRulesSubTree(systemEngine);
@@ -89,6 +100,10 @@ public class Body1Controller implements Initializable{
         detailsTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             handleSelectedItemChange(newValue);
         });
+    }
+
+    public void setSystemEngine(SystemEngineAccess systemEngineAccess){
+        this.systemEngine = systemEngineAccess;
     }
 
     private void handleSelectedItemChange(TreeItem<String> selectedItem) {
@@ -152,12 +167,12 @@ public class Body1Controller implements Initializable{
                 for(EntityDefinitionDTO entityDefinitionDTO : entities){
 
                     if(entityDefinitionDTO.getUniqueName().equals(selectedValue)){
-                        valueDefLabel.setVisible(true);
-                        valueDefText.setVisible(true);
+                        //valueDefLabel.setVisible(true);
+                        //valueDefText.setVisible(true);
                         //population
-                        valueDefLabel.setText("entity's population:");
-                        Text entityPopulation = new Text(String.valueOf(entityDefinitionDTO.getPopulation()));
-                        valueDefText.getChildren().add(entityPopulation);
+                        //valueDefLabel.setText("entity's population:");
+                        //Text entityPopulation = new Text(String.valueOf(entityDefinitionDTO.getPopulation()));
+                       // valueDefText.getChildren().add(entityPopulation);
                         //property list
                         for(PropertyDefinitionDTO propertyDefinitionDTO:entityDefinitionDTO.getProps()){
                             createPropertyChildrenInFlowPane(propertyDefinitionDTO);

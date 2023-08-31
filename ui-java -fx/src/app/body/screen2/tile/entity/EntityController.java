@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import java.awt.event.InputMethodEvent;
+import javafx.scene.input.InputMethodEvent;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.List;
@@ -53,6 +53,10 @@ public class EntityController {
 
     public void setEntityNameLabel(String entityNameLabel) {
         this.entityNameLabel.setText(entityNameLabel);
+    }
+
+    public void resetTextField(){
+        populationTextField.clear();
     }
 }
 

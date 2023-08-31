@@ -1,0 +1,13 @@
+#continue-button{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: GREEN;
+}
+
+#cancel-button{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: blue;
+}
