@@ -27,7 +27,7 @@ public class AppMain extends Application {
         fxmlLoader.setLocation(url);
         Parent root = fxmlLoader.load(url.openStream());
 
-        Scene scene = new Scene(root, 625.0, 499.0);
+        Scene scene = new Scene(root, 750, 520);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

@@ -4,6 +4,7 @@ import app.body.screen2.Body2Controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 
 public class StartButtonController {
@@ -14,10 +15,11 @@ public class StartButtonController {
     private Button continueButton;
 
     private Body2Controller callerController;
+    private Stage primaryStage;
 
     @FXML
     void onCancelClick(MouseEvent event) {
-
+        primaryStage.close();
     }
 
     @FXML
@@ -27,5 +29,10 @@ public class StartButtonController {
 
     public void setCallerController(Body2Controller callerController) {
         this.callerController = callerController;
+    }
+
+    public void setStage(Stage primaryStage){
+        this.primaryStage = primaryStage;
+
     }
 }
