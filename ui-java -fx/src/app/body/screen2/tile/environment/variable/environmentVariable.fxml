@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="89.0" prefWidth="201.0" styleClass="tile" stylesheets="@environmentVarTile.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen2.tile.environment.variable.EnvironmentVariableController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="201.0" styleClass="tile" stylesheets="@environmentVarTile.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen2.tile.environment.variable.EnvironmentVariableController">
    <children>
       <GridPane stylesheets="@environmentVarTile.css">
          <columnConstraints>
@@ -20,8 +20,9 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="58.0" minHeight="10.0" prefHeight="50.5" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="32.5" minHeight="10.0" prefHeight="32.5" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="5.5" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
@@ -31,7 +32,7 @@
                   <Insets left="-15.0" />
                </padding>
             </Label>
-            <Label fx:id="envVarNameLabel" alignment="TOP_LEFT" prefHeight="53.0" prefWidth="86.0" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="CENTER">
+            <Label fx:id="envVarNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="86.0" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="CENTER">
                <font>
                   <Font size="10.0" />
                </font>
@@ -39,11 +40,21 @@
                   <Insets top="10.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="valueTextField" onInputMethodTextChanged="#setValueFromUser" prefHeight="25.0" prefWidth="91.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <Label id="value-label" prefHeight="17.0" prefWidth="24.0" text="Value" textAlignment="CENTER" textFill="#fdfdfd" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <TextField fx:id="valueTextField" onInputMethodTextChanged="#setValueFromUser" prefHeight="25.0" prefWidth="91.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <Label id="value-label" prefHeight="17.0" prefWidth="24.0" text="Value" textAlignment="CENTER" textFill="#fdfdfd" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                <padding>
                   <Insets left="-15.0" />
                </padding>
+            </Label>
+            <Label id="environment-var-label" prefHeight="52.0" prefWidth="91.0" stylesheets="@environmentVarTile.css" text="Environment variable Type" textAlignment="CENTER" textFill="#fdfdfd" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <padding>
+                  <Insets left="-15.0" />
+               </padding>
+            </Label>
+            <Label fx:id="envVarTypeLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="86.0" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <font>
+                  <Font size="10.0" />
+               </font>
             </Label>
          </children>
       </GridPane>

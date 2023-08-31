@@ -44,9 +44,7 @@ public class HeaderController {
     }
 
     @FXML
-    void onNewExecutionButtonClick(ActionEvent event) {
-
-    }
+    void onNewExecutionButtonClick(ActionEvent event) {mainController.onNewExecutionButtonClick();}
 
     @FXML
     void onQueueManagementButtonClick(ActionEvent event) {
