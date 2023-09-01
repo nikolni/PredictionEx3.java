@@ -1,11 +1,9 @@
 package app.header;
 
-import app.AppController;
+import app.main.AppController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 
 public class HeaderController {

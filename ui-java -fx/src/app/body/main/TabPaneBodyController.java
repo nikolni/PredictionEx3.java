@@ -1,13 +1,13 @@
-package app.body;
+package app.body.main;
 
-import app.AppController;
+import app.main.AppController;
 import app.body.screen1.Body1Controller;
-import app.body.screen2.Body2Controller;
+import app.body.screen2.main.Body2Controller;
 import app.body.screen3.Body3Controller;
 import javafx.fxml.FXML;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import system.engine.api.SystemEngineAccess;
 
 public class TabPaneBodyController {
@@ -18,7 +18,7 @@ public class TabPaneBodyController {
     @FXML private HBox body1Component;
     @FXML private Body1Controller body1ComponentController;
 
-    @FXML private VBox body2Component;
+    @FXML private ScrollPane body2Component;
     @FXML private Body2Controller body2ComponentController;
 
     @FXML private HBox body3Component;
@@ -55,7 +55,7 @@ public class TabPaneBodyController {
 
     public void switchToTab2() {
         tabPaneBodyComponent.getSelectionModel().select(1);
-        body2ComponentController.setVisibleTab();
+        //body2ComponentController.setVisibleTab();
         body1ComponentController.setUnVisibleTab();
         // body3ComponentController.setUnVisibleTab();
     }
