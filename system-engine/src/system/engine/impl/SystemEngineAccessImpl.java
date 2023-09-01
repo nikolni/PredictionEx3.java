@@ -4,9 +4,12 @@ package system.engine.impl;
 import dto.api.*;
 import dto.creation.*;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.impl.DTOSimulationEndingForUiImpl;
+import javafx.beans.property.SimpleBooleanProperty;
 import jaxb.copy.WorldFromXml;
 import system.engine.api.SystemEngineAccess;
+import system.engine.run.simulation.SimulationCallback;
 import system.engine.run.simulation.api.RunSimulation;
 import system.engine.run.simulation.impl.RunSimulationImpl;
 import system.engine.world.api.WorldDefinition;
@@ -16,6 +19,7 @@ import system.engine.world.definition.value.generator.api.ValueGenerator;
 import system.engine.world.definition.value.generator.api.ValueGeneratorFactory;
 import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.execution.instance.environment.impl.EnvVariablesInstanceManagerImpl;
+import system.engine.world.termination.condition.api.TerminationCondition;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -155,14 +159,26 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
-    public DTOSimulationEndingForUi runSimulation() throws IllegalArgumentException{    //on last index at world instances list
+    public DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isResumed) throws IllegalArgumentException{    //on last index at world instances list
         int simulationID = worldInstances.size() - 1;
         String terminationCondition;
 
         RunSimulation runSimulationInstance = new RunSimulationImpl();
+        runSimulationInstance.registerCallback(callback);
         terminationCondition = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
-                worldInstances.get(simulationID) ,envVariablesInstanceManager);
+                worldInstances.get(simulationID) ,envVariablesInstanceManager, isResumed);
 
         return new DTOSimulationEndingForUiImpl(simulationID, terminationCondition);
+    }
+
+    @Override
+    public int getTotalTicksNumber(){
+        List<TerminationCondition> terminationConditionList =  worldDefinition.getTerminationConditionsManager().getTerminationConditionsList();
+        for(TerminationCondition terminationCondition: terminationConditionList){
+            if(terminationCondition instanceof TicksTerminationConditionsDTOImpl){
+                return terminationCondition.getTerminationCondition();
+            }
+        }
+        return 0;
     }
 }

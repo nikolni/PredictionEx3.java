@@ -1,6 +1,8 @@
 package app.body.screen2.main;
 
+import app.body.screen2.simulation.progress.SimulationProgressController;
 import app.body.screen2.start.Button.StartButtonController;
+import app.body.screen2.task.RunSimulationTask;
 import app.body.screen2.tile.TileResourceConstants;
 import app.body.screen2.tile.entity.EntityController;
 import app.body.screen2.tile.environment.variable.EnvironmentVariableController;
@@ -8,6 +10,7 @@ import dto.api.DTOEnvVarsDefForUi;
 import dto.creation.CreateDTOEnvVarsForSE;
 import dto.creation.CreateDTOPopulationForSE;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -167,7 +170,11 @@ public class Body2Controller {
         systemEngine.updateEnvironmentVarDefinition(new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList));
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
         systemEngine.addWorldInstance();
-        systemEngine.runSimulation();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen2/simulation/progress/simulationProgress.fxml"));
+            SimulationProgressController simulationProgressController = loader.getController();
+            simulationProgressController.runSimulation(systemEngine);
+
     }
 
 
