@@ -1,4 +1,4 @@
-package app.body.screen2;
+package app.body.screen2.main;
 
 import app.body.screen2.start.Button.StartButtonController;
 import app.body.screen2.tile.TileResourceConstants;
@@ -13,7 +13,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -141,14 +143,16 @@ public class Body2Controller {
         Stage primaryStage = new Stage();
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen2/start/Button/startButton.fxml"));
-            GridPane root = loader.load();
+            ScrollPane root = loader.load();
 
             StartButtonController startButtonController = loader.getController();
             startButtonController.setCallerController(this);
             startButtonController.setStage(primaryStage);
+            startButtonController.setSimulationEntitiesPopulationFlowPane(simulationEntitiesPopulationFlowPane);
+            startButtonController.setSimulationEnvironmentInputsFlowPane(simulationEnvironmentInputsFlowPane);
 
 
-            Scene scene = new Scene(root, 500, 150);
+            Scene scene = new Scene(root, 620, 400);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Warning!");
             primaryStage.show();
@@ -162,6 +166,7 @@ public class Body2Controller {
     public void startSimulation(){
         systemEngine.updateEnvironmentVarDefinition(new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList));
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
+        systemEngine.addWorldInstance();
         systemEngine.runSimulation();
     }
 

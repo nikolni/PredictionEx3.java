@@ -1,4 +1,4 @@
-package app;
+package main;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -6,7 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import static app.CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE;
+import static main.CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE;
 
 
 import java.net.URL;

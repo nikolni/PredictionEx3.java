@@ -12,14 +12,14 @@
     -fx-background-color: GREEN;
 }
 
-#env-vars-flow-pane{
+#env-vars-scroll-pane{
     -fx-border-color: BLUE;
     -fx-border-width: 2px;
     -fx-border-style: solid;
 }
 
 
-#population-flow-pane{
+#population-scroll-pane{
     -fx-border-color: BLUE;
     -fx-border-width: 2px;
     -fx-border-style: solid;

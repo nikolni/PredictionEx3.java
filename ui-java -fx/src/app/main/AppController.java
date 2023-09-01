@@ -1,9 +1,7 @@
-package app;
+package app.main;
 
-import app.body.TabPaneBodyController;
-import app.body.screen1.Body1Controller;
+import app.body.main.TabPaneBodyController;
 import app.header.HeaderController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
