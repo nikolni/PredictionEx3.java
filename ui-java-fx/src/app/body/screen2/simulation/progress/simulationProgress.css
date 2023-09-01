@@ -1,0 +1,33 @@
+#pause-button{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: BLUE;
+}
+
+#stop-button{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: RED;
+}
+
+#resume-button{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: Green;
+}
+
+.my-label {
+    -fx-font-size: 14px;
+    -fx-background-color: #b0a3a3;
+    -fx-padding: 4px;
+    -fx-border-radius: 2px;
+}
+
+.my-gridPane {
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-background-color: #F5F5F5;
+}

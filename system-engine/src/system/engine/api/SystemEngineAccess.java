@@ -1,6 +1,8 @@
 package system.engine.api;
 
 import dto.api.*;
+import javafx.beans.property.SimpleBooleanProperty;
+import system.engine.run.simulation.SimulationCallback;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -27,6 +29,8 @@ public interface SystemEngineAccess {
     void updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE);
     void addWorldInstance();
 
-    DTOSimulationEndingForUi runSimulation();
+    DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isResumed);
+
+    int getTotalTicksNumber();
 
 }

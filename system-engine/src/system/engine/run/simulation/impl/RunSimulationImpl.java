@@ -1,5 +1,10 @@
 package system.engine.run.simulation.impl;
 
+import dto.api.DTOSimulationProgressForUi;
+import dto.impl.DTOSimulationProgressForUiImpl;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import system.engine.run.simulation.SimulationCallback;
 import system.engine.run.simulation.api.RunSimulation;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.api.WorldInstance;
@@ -18,10 +23,19 @@ import java.util.List;
 
 public class RunSimulationImpl implements RunSimulation {
 
+    private SimulationCallback callback;
+    @Override
+    public void registerCallback(SimulationCallback callback) {
+        this.callback = callback;
+    }
+
+
     @Override
     public String runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
-                                                 EnvVariablesInstanceManager envVariablesInstanceManager)
+                                                 EnvVariablesInstanceManager envVariablesInstanceManager,
+                                                   SimpleBooleanProperty isPaused)
                                                     throws IllegalArgumentException{
+        int entitiesLeft = worldInstance.getEntityInstanceManager().getInstances().size();
         Instant startTime = Instant.now();
         Instant endTime;
         Duration duration;
@@ -34,27 +48,35 @@ public class RunSimulationImpl implements RunSimulation {
         List<EntityInstance> entitiesToKill = new ArrayList<>();
 
 
-    //while (tick<= numOfTicksToRun && seconds<=numOfSecondsToRun){
-        while (tick<= numOfTicksToRun && seconds<=numOfSecondsToRun){
-            entitiesToKill.clear();
-            actionsList.clear();
-            for(Rule rule : getActiveRules(tick, worldDefinition)){
-                actionsList.addAll(rule.getActionsToPerform());
-            }
+        while(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun) {
+                //while (tick<= numOfTicksToRun && seconds<=numOfSecondsToRun){
+                while (!isPaused.get()) {
+                    entitiesToKill.clear();
+                    actionsList.clear();
+                    for (Rule rule : getActiveRules(tick, worldDefinition)) {
+                        actionsList.addAll(rule.getActionsToPerform());
+                    }
 
-            runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill);
+                    entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill);
 
-            tick++;
-            endTime = Instant.now();
-            duration = Duration.between(startTime, endTime);
-            seconds = (int) duration.getSeconds();
-       }
+                    tick++;
+                    endTime = Instant.now();
+                    duration = Duration.between(startTime, endTime);
+                    seconds = (int) duration.getSeconds();
+
+                    // Notify the UI about progress and status via the callback
+                    if (callback != null) {
+                        DTOSimulationProgressForUi dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(seconds, tick, entitiesLeft);
+                        callback.onUpdate(dtoSimulationProgressForUi);
+                    }
+                }
+        }
 
         if(tick>numOfTicksToRun){return "last tick";}
         else {return "time run out";}
     }
 
-    private void runAllActionsOnAllEntities(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager,
+    private int runAllActionsOnAllEntities(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager,
                                             List<Action> actionsList, List<EntityInstance> entitiesToKill){
 
         List<EntityInstance> currentEntitiesToKill = new ArrayList<>();
@@ -69,6 +91,7 @@ public class RunSimulationImpl implements RunSimulation {
         for(EntityInstance entityInstance : entitiesToKill){
             worldInstance.getEntityInstanceManager().killEntity(entityInstance.getId());
         }
+        return entitiesToKill.size();
     }
 
 

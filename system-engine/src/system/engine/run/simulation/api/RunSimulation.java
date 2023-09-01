@@ -1,5 +1,7 @@
 package system.engine.run.simulation.api;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import system.engine.run.simulation.SimulationCallback;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.api.WorldInstance;
 import system.engine.world.execution.instance.enitty.api.EntityInstance;
@@ -11,6 +13,8 @@ import java.util.List;
 
 public interface RunSimulation {
 
+    void registerCallback(SimulationCallback callback);
     String runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
-                                          EnvVariablesInstanceManager envVariablesInstanceManager);
+                                          EnvVariablesInstanceManager envVariablesInstanceManager,
+                                            SimpleBooleanProperty isResumed);
 }
