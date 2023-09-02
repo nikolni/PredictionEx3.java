@@ -1,8 +1,7 @@
 package app.body.screen2.main;
 
-import app.body.screen2.simulation.progress.SimulationProgressController;
+import app.body.screen3.simulation.progress.SimulationProgressController;
 import app.body.screen2.start.Button.StartButtonController;
-import app.body.screen2.task.RunSimulationTask;
 import app.body.screen2.tile.TileResourceConstants;
 import app.body.screen2.tile.entity.EntityController;
 import app.body.screen2.tile.environment.variable.EnvironmentVariableController;
@@ -10,7 +9,6 @@ import dto.api.DTOEnvVarsDefForUi;
 import dto.creation.CreateDTOEnvVarsForSE;
 import dto.creation.CreateDTOPopulationForSE;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -18,9 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import system.engine.api.SystemEngineAccess;
 
@@ -171,10 +167,9 @@ public class Body2Controller {
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
         systemEngine.addWorldInstance();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen2/simulation/progress/simulationProgress.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen3/simulation/progress/simulationProgress.fxml"));
             SimulationProgressController simulationProgressController = loader.getController();
             simulationProgressController.runSimulation(systemEngine);
-
     }
 
 

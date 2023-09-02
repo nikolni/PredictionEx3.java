@@ -31,7 +31,7 @@ public class RunSimulationImpl implements RunSimulation {
 
 
     @Override
-    public String runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
+    public int[] runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
                                                  EnvVariablesInstanceManager envVariablesInstanceManager,
                                                    SimpleBooleanProperty isPaused)
                                                     throws IllegalArgumentException{
@@ -49,7 +49,6 @@ public class RunSimulationImpl implements RunSimulation {
 
 
         while(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun) {
-                //while (tick<= numOfTicksToRun && seconds<=numOfSecondsToRun){
                 while (!isPaused.get()) {
                     entitiesToKill.clear();
                     actionsList.clear();
@@ -72,8 +71,13 @@ public class RunSimulationImpl implements RunSimulation {
                 }
         }
 
-        if(tick>numOfTicksToRun){return "last tick";}
-        else {return "time run out";}
+        int[] terminationCausePair=new int[3];
+        terminationCausePair[0]=tick;
+        terminationCausePair[1]=seconds;
+
+        if(tick>numOfTicksToRun){terminationCausePair[2]=0;} //last tick
+        else {terminationCausePair[2]=1;} //time ran out
+        return terminationCausePair;
     }
 
     private int runAllActionsOnAllEntities(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager,

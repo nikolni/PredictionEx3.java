@@ -1,7 +1,7 @@
-package app.body.screen2.simulation.progress;
+package app.body.screen3.simulation.progress;
 import app.body.screen2.task.RunSimulationTask;
-import app.body.screen2.task.context.Context;
-import app.body.screen2.task.context.ContextImpl;
+import app.body.screen2.task.context.api.SimulationRunTaskContext;
+import app.body.screen2.task.context.impl.SimulationRunTaskContextImpl;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -54,10 +54,10 @@ public class SimulationProgressController {
 
     public void runSimulation(SystemEngineAccess systemEngineAccess){
         toggleTaskButtons(true);
-        Context context = new ContextImpl(secondsPast, ticksPast, entitiesLeft, isPaused,
+        SimulationRunTaskContext simulationRunTaskContext = new SimulationRunTaskContextImpl(secondsPast, ticksPast, entitiesLeft, isPaused,
                 systemEngineAccess, (q) -> onTaskFinished(Optional.ofNullable(() -> toggleTaskButtons(false))),
                 systemEngineAccess.getTotalTicksNumber());
-        runSimulationTask = new RunSimulationTask(context);
+        runSimulationTask = new RunSimulationTask(simulationRunTaskContext);
 
         bindTaskToUIComponents(runSimulationTask, () -> toggleTaskButtons(false));
 
