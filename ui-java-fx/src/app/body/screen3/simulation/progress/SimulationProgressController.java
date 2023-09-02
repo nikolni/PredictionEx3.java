@@ -2,6 +2,8 @@ package app.body.screen3.simulation.progress;
 import app.body.screen2.task.RunSimulationTask;
 import app.body.screen2.task.context.api.SimulationRunTaskContext;
 import app.body.screen2.task.context.impl.SimulationRunTaskContextImpl;
+import app.body.screen3.main.Body3Controller;
+import dto.api.DTOSimulationEndingForUi;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -14,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import system.engine.api.SystemEngineAccess;
 
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 
 public class SimulationProgressController {
 
@@ -36,41 +39,55 @@ public class SimulationProgressController {
     @FXML
     private Button stopButton;
 
-    private SimpleIntegerProperty secondsPast;
-    private SimpleIntegerProperty ticksPast;
-    private SimpleIntegerProperty entitiesLeft;
+    private final SimpleIntegerProperty secondsPast;
+    private final SimpleIntegerProperty ticksPast;
+    private final SimpleIntegerProperty entitiesLeft;
 
-    private SimpleBooleanProperty isPaused;
-
+    private final SimpleBooleanProperty isPaused;
     private Task<Boolean>  runSimulationTask;
+
+
+
+    private Body3Controller body3ComponentController;
+
+    public SimulationProgressController() {
+        this.secondsPast = new SimpleIntegerProperty(0);
+        this.ticksPast = new SimpleIntegerProperty(0);
+        this.entitiesLeft = new SimpleIntegerProperty(0);
+        this.isPaused =  new SimpleBooleanProperty(false);
+    }
 
     @FXML
     private void initialize() {
         secondsLabel.textProperty().bind(Bindings.format("%,d", secondsPast));
         entitiesLeftLabel.textProperty().bind(Bindings.format("%,d", entitiesLeft));
         ticksLabel.textProperty().bind(Bindings.format("%,d", ticksPast));
-        isPaused = new SimpleBooleanProperty(false);
     }
 
-    public void runSimulation(SystemEngineAccess systemEngineAccess){
+    public void setBody3ComponentController(Body3Controller body3ComponentController) {
+        this.body3ComponentController = body3ComponentController;
+    }
+
+    public void runSimulation(SystemEngineAccess systemEngineAccess, ExecutorService threadPool){
         toggleTaskButtons(true);
         SimulationRunTaskContext simulationRunTaskContext = new SimulationRunTaskContextImpl(secondsPast, ticksPast, entitiesLeft, isPaused,
                 systemEngineAccess, (q) -> onTaskFinished(Optional.ofNullable(() -> toggleTaskButtons(false))),
                 systemEngineAccess.getTotalTicksNumber());
-        runSimulationTask = new RunSimulationTask(simulationRunTaskContext);
-
+        runSimulationTask = new RunSimulationTask(simulationRunTaskContext, this);
+        System.out.println("controller address " + this + " task address " + runSimulationTask);
         bindTaskToUIComponents(runSimulationTask, () -> toggleTaskButtons(false));
 
-        Thread simulationThread = new Thread(runSimulationTask);
-        simulationThread.start();
+        threadPool.submit(runSimulationTask);
+        /*Thread simulationThread = new Thread(runSimulationTask);
+        simulationThread.start();*/
 
-        while(simulationThread.isAlive()){
+        /*while(simulationThread.isAlive()){
             try {
                 Thread.sleep(250);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
 
@@ -111,6 +128,10 @@ public class SimulationProgressController {
         resumeButton.setDisable(!isActive);
     }
 
+    public void addNewSimulationResultToBody3Controller(DTOSimulationEndingForUi dtoSimulationEndingForUi){
+        body3ComponentController.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi);
+    }
+
 
     @FXML
     void onPauseClick(MouseEvent event) {
@@ -124,6 +145,7 @@ public class SimulationProgressController {
 
     @FXML
     void onStopClick(MouseEvent event) {
+        System.out.println(":canceld by task address " + runSimulationTask);
         runSimulationTask.cancel();
     }
 

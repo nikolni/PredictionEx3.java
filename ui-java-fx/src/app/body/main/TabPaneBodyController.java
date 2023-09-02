@@ -41,6 +41,7 @@ public class TabPaneBodyController {
         body1ComponentController.primaryInitialize();
         body2ComponentController.primaryInitialize();
         body3ComponentController.primaryInitialize();
+        body2ComponentController.setBody3Controller(body3ComponentController);
     }
 
 

@@ -4,6 +4,7 @@ import app.body.screen3.main.Body3Controller;
 import dto.api.DTODefinitionsForUi;
 import dto.api.DTOEntitiesAfterSimulationByQuantityForUi;
 import dto.api.DTOPropertyHistogramForUi;
+import dto.api.DTOSimulationEndingForUi;
 import dto.definition.entity.api.EntityDefinitionDTO;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -23,6 +25,15 @@ import java.util.List;
 import java.util.Map;
 
 public class ResultsController {
+
+    @FXML
+    private Label simulationTicksNumber;
+
+    @FXML
+    private Label simulationSecondsNumber;
+
+    @FXML
+    private GridPane entityDetailsTable;
 
     @FXML
     private Pane entityTimeGraphPane;
@@ -50,6 +61,34 @@ public class ResultsController {
 
     @FXML
     public void initialize() {
+
+    }
+
+    public void primaryInitialize(DTOSimulationEndingForUi dtoSimulationEndingForUi, SystemEngineAccess systemEngine) {
+        Integer simulationID = dtoSimulationEndingForUi.getSimulationID();
+
+            simulationTicksNumber.setText(String.valueOf(dtoSimulationEndingForUi.getTerminationReason()[0]));
+            simulationSecondsNumber.setText(String.valueOf(dtoSimulationEndingForUi.getTerminationReason()[1]));
+            fillEntityInfoGridPane(simulationID, systemEngine);
+            handleSimulationSelection(simulationID,systemEngine);
+    }
+
+    public void fillEntityInfoGridPane(int simulationID, SystemEngineAccess systemEngine){
+        DTOEntitiesAfterSimulationByQuantityForUi entitiesAfterSimulationForUi= systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID);
+        List<String> entitiesNames = entitiesAfterSimulationForUi.getEntitiesNames();
+        List<Integer> entitiesPopulationAfterSimulation =entitiesAfterSimulationForUi.getEntitiesPopulationAfterSimulation();
+        entityDetailsTable.getChildren().clear();
+
+        for (int i = 0; i < entitiesNames.size(); i++) {
+            String entityName = entitiesNames.get(i);
+            Integer population = entitiesPopulationAfterSimulation.get(i);
+
+            Label nameLabel = new Label(entityName);
+            Label populationLabel = new Label(Integer.toString(population));
+
+            entityDetailsTable.add(nameLabel, 0, i);
+            entityDetailsTable.add(populationLabel, 1, i);
+        }
 
     }
 

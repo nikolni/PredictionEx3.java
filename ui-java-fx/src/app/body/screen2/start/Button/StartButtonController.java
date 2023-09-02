@@ -24,10 +24,10 @@ public class StartButtonController {
     private Body2Controller callerController;
     private Stage primaryStage;
 
-    public StartButtonController() {
+    /*public StartButtonController() {
         simulationEntitiesPopulationFlowPane = new FlowPane();
         simulationEnvironmentInputsFlowPane = new FlowPane();
-    }
+    }*/
 
     @FXML
     void onCancelClick(MouseEvent event) {
@@ -37,6 +37,7 @@ public class StartButtonController {
     @FXML
     void onContinueClick(MouseEvent event) {
         callerController.startSimulation();
+        callerController.clearScreen();
         primaryStage.close();
     }
 

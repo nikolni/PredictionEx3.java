@@ -1,24 +1,18 @@
 package app.body.screen3.main;
 
-import app.body.screen1.Body1Controller;
 import app.body.screen3.result.ResultsController;
 import app.body.screen3.simulation.progress.SimulationProgressController;
 import dto.api.*;
-import dto.definition.entity.api.EntityDefinitionDTO;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TreeItem;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import system.engine.api.SystemEngineAccess;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Body3Controller {
@@ -26,14 +20,14 @@ public class Body3Controller {
     @FXML
     private ListView<String> simulationsList;
 
-    @FXML
+    /*@FXML
     private Label simulationTicksNumber;
 
     @FXML
     private Label simulationSecondsNumber;
 
     @FXML
-    private GridPane entityDetailsTable;
+    private GridPane entityDetailsTable;*/
 
     @FXML
     private Button stopButton;
@@ -46,17 +40,27 @@ public class Body3Controller {
 
     @FXML
     private Button rerunButton;
+    @FXML
+    private ScrollPane simulationProgressScrollPane;
+
+    @FXML
+    private ScrollPane simulationResultScrollPane;
 
     @FXML private HBox resultsComponent;
     @FXML private ResultsController resultsComponentController;
-    @FXML private VBox simulationProgressComponent;
-    @FXML private SimulationProgressController simulationProgressComponentController;
-
     private SystemEngineAccess systemEngine;
+
+    private List<HBox> simulationResultsNodesList;
+    private List<VBox> simulationProgressNodesList;
+
+    public Body3Controller() {
+        this.simulationProgressNodesList = new ArrayList<>();
+        this.simulationResultsNodesList = new ArrayList<>();
+    }
 
 
     public void primaryInitialize() {
-        if (resultsComponent != null) {
+        /*if (resultsComponent != null) {
             resultsComponentController.setBody3Controller(this);
         }
 
@@ -64,7 +68,7 @@ public class Body3Controller {
         List<Integer> idList = simulationsTimeRunDataForUi.getIdList();
         for (Integer idNum : idList) {
             simulationsList.getItems().add("Simulation ID: " + idNum);
-        }
+        }*/
         simulationsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 handleSimulationListItemSelection(newValue);
@@ -72,22 +76,34 @@ public class Body3Controller {
         });
     }
 
+    public void addNewSimulationToSimulationsList(Integer simulationID){
+        simulationsList.getItems().add("Simulation ID: " + simulationID);
+    }
+
+   /* public void addNewSimulationToSimulationsList(Integer simulationID){
+        simulationsList.getItems().add("Simulation ID: " + simulationID);
+    }*/
+
 
 
         private void handleSimulationListItemSelection(String selectedItem) {
             String[] words = selectedItem.split("\\s+");
-            int simulationID = (Integer.parseInt(words[words.length - 1]))-1;
-            for(DTOSimulationEndingForUi dtoSimulationEndingForUi: systemEngine.getDTOSimulationEndingForUiList()){
+            int simulationID = (Integer.parseInt(words[words.length - 1]));
+            simulationProgressScrollPane.setContent(simulationProgressNodesList.get(simulationID-1));
+            if(simulationResultsNodesList.get(simulationID-1) != null){
+                simulationResultScrollPane.setContent(simulationResultsNodesList.get(simulationID-1));
+            }
+            /*for(DTOSimulationEndingForUi dtoSimulationEndingForUi: systemEngine.getDTOSimulationEndingForUiList()){
                 if(dtoSimulationEndingForUi.getSimulationID()==simulationID){
                     simulationTicksNumber.setText(String.valueOf(dtoSimulationEndingForUi.getTerminationReason()[0]));
                     simulationSecondsNumber.setText(String.valueOf(dtoSimulationEndingForUi.getTerminationReason()[1]));
-                    fillEntityInfoGridPane(simulationID+1);
-                    resultsComponentController.handleSimulationSelection(simulationID+1,systemEngine);
+                    fillEntityInfoGridPane(simulationID);
+                    resultsComponentController.handleSimulationSelection(simulationID,systemEngine);
                 }
-            }
+            }*/
         }
 
-    public void fillEntityInfoGridPane(int simulationID){
+    /*public void fillEntityInfoGridPane(int simulationID){
         DTOEntitiesAfterSimulationByQuantityForUi entitiesAfterSimulationForUi= systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID);
         List<String> entitiesNames = entitiesAfterSimulationForUi.getEntitiesNames();
         List<Integer> entitiesPopulationAfterSimulation =entitiesAfterSimulationForUi.getEntitiesPopulationAfterSimulation();
@@ -104,9 +120,9 @@ public class Body3Controller {
             entityDetailsTable.add(populationLabel, 1, i);
         }
 
-    }
+    }*/
 
-    public void setVisibleTab(){
+    /*public void setVisibleTab(){
         simulationsList.setVisible(true);
         simulationTicksNumber.setVisible(true);
         simulationSecondsNumber.setVisible(true);
@@ -120,7 +136,7 @@ public class Body3Controller {
         simulationSecondsNumber.setVisible(false);
         entityDetailsTable.setVisible(false);
         resultsComponent.setVisible(false);
-    }
+    }*/
 
 
     public void setSystemEngine(SystemEngineAccess systemEngineAccess){
@@ -128,6 +144,24 @@ public class Body3Controller {
     }
 
 
+    public void addNewSimulationProgressToList(VBox simulationProgressController) {
+        simulationProgressNodesList.add(simulationProgressController);
+        simulationResultsNodesList.add(null);
+    }
+
+    public void createAndAddNewSimulationResultToList(DTOSimulationEndingForUi dtoSimulationEndingForUi) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen3/result/results.fxml"));
+            HBox simulationResultNode = loader.load();
+            ResultsController simulationResultController = loader.getController();
+            simulationResultController.setBody3Controller(this);
+            simulationResultController.primaryInitialize(dtoSimulationEndingForUi,systemEngine);
+            Integer simulationID = dtoSimulationEndingForUi.getSimulationID();
+            simulationResultsNodesList.set(simulationID -1, simulationResultNode);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 
 

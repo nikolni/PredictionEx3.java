@@ -20,6 +20,7 @@ import system.engine.world.definition.value.generator.api.ValueGeneratorFactory;
 import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.execution.instance.environment.impl.EnvVariablesInstanceManagerImpl;
 import system.engine.world.termination.condition.api.TerminationCondition;
+import system.engine.world.termination.condition.impl.TicksTerminationConditionImpl;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -36,6 +37,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     public SystemEngineAccessImpl() {
         this.worldInstances = new ArrayList<>();
+        simulationEndingForUiList=new ArrayList<>();
     }
 
 
@@ -161,16 +163,16 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     @Override
     public DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isPaused) throws IllegalArgumentException{    //on last index at world instances list
-        int simulationID = worldInstances.size() - 1;
+        int simulationID = worldInstances.size();
         int[] terminationConditionArr;
 
         RunSimulation runSimulationInstance = new RunSimulationImpl();
         runSimulationInstance.registerCallback(callback);
         terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
-                worldInstances.get(simulationID) ,envVariablesInstanceManager, isPaused);
+                worldInstances.get(simulationID-1) ,envVariablesInstanceManager, isPaused);
 
         DTOSimulationEndingForUi dtoSimulationEndingForUi=new DTOSimulationEndingForUiImpl(simulationID, terminationConditionArr);
-        simulationEndingForUiList.add(dtoSimulationEndingForUi);
+        //simulationEndingForUiList.add(dtoSimulationEndingForUi);
         return dtoSimulationEndingForUi;
     }
 
@@ -178,7 +180,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     public int getTotalTicksNumber(){
         List<TerminationCondition> terminationConditionList =  worldDefinition.getTerminationConditionsManager().getTerminationConditionsList();
         for(TerminationCondition terminationCondition: terminationConditionList){
-            if(terminationCondition instanceof TicksTerminationConditionsDTOImpl){
+            if(terminationCondition instanceof TicksTerminationConditionImpl){
                 return terminationCondition.getTerminationCondition();
             }
         }

@@ -2,8 +2,8 @@ package system.engine.run.simulation.impl;
 
 import dto.api.DTOSimulationProgressForUi;
 import dto.impl.DTOSimulationProgressForUiImpl;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import system.engine.run.simulation.SimulationCallback;
 import system.engine.run.simulation.api.RunSimulation;
 import system.engine.world.api.WorldDefinition;
@@ -24,6 +24,7 @@ import java.util.List;
 public class RunSimulationImpl implements RunSimulation {
 
     private SimulationCallback callback;
+    private final long SLEEP_TIME = 3;
     @Override
     public void registerCallback(SimulationCallback callback) {
         this.callback = callback;
@@ -49,6 +50,9 @@ public class RunSimulationImpl implements RunSimulation {
 
 
         while(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun) {
+            if(isPaused.get()){
+                callback.onUpdateWhileSimulationIsPaused();
+            }
                 while (!isPaused.get()) {
                     entitiesToKill.clear();
                     actionsList.clear();
@@ -66,8 +70,15 @@ public class RunSimulationImpl implements RunSimulation {
                     // Notify the UI about progress and status via the callback
                     if (callback != null) {
                         DTOSimulationProgressForUi dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(seconds, tick, entitiesLeft);
-                        callback.onUpdate(dtoSimulationProgressForUi);
+                        callback.onUpdateWhileSimulationRunning(dtoSimulationProgressForUi);
+                        /*Platform.runLater(() -> {
+                            callback.onUpdate(dtoSimulationProgressForUi);
+                        });*/
                     }
+                    if(!(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun)){
+                        break;
+                    }
+                    sleepForAWhile(SLEEP_TIME);
                 }
         }
 
@@ -78,6 +89,16 @@ public class RunSimulationImpl implements RunSimulation {
         if(tick>numOfTicksToRun){terminationCausePair[2]=0;} //last tick
         else {terminationCausePair[2]=1;} //time ran out
         return terminationCausePair;
+    }
+
+    public  void sleepForAWhile(long sleepTime) {
+        if (sleepTime != 0) {
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException ignored) {
+
+            }
+        }
     }
 
     private int runAllActionsOnAllEntities(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager,

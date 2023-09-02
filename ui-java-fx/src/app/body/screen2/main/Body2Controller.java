@@ -1,5 +1,6 @@
 package app.body.screen2.main;
 
+import app.body.screen3.main.Body3Controller;
 import app.body.screen3.simulation.progress.SimulationProgressController;
 import app.body.screen2.start.Button.StartButtonController;
 import app.body.screen2.tile.TileResourceConstants;
@@ -26,6 +27,8 @@ import java.io.IOException;
 
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Body2Controller {
@@ -52,8 +55,11 @@ public class Body2Controller {
 
     private List<String> entitiesNames;
     private List<Integer> entitiesPopulations;
-
     private SystemEngineAccess systemEngine;
+    private Body3Controller body3ComponentController;
+
+    private Integer simulationsCounter = 0;
+    private ExecutorService threadPool;
 
 
     public Body2Controller() {
@@ -63,6 +69,8 @@ public class Body2Controller {
         entityNameToTileController = new HashMap<>();
         simulationEntitiesPopulationFlowPane.getChildren().clear();
         simulationEnvironmentInputsFlowPane.getChildren().clear();
+
+        threadPool = Executors.newFixedThreadPool(3);
     }
 
 
@@ -132,6 +140,10 @@ public class Body2Controller {
 
     @FXML
     void onClickClearButton(MouseEvent event) {
+        clearScreen();
+    }
+
+    public void clearScreen(){
         for (String key : entityNameToTileController.keySet()) {
             EntityController entityController = entityNameToTileController.get(key);
             entityController.resetTextField();
@@ -169,6 +181,8 @@ public class Body2Controller {
     }
 
     public void startSimulation(){
+        simulationsCounter++;
+
         systemEngine.updateEnvironmentVarDefinition(new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList));
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
         systemEngine.addWorldInstance();
@@ -176,9 +190,13 @@ public class Body2Controller {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen3/simulation/progress/simulationProgress.fxml"));
-            VBox root = loader.load();
+            VBox simulationProgressNode = loader.load();
             SimulationProgressController simulationProgressController = loader.getController();
-            simulationProgressController.runSimulation(systemEngine);
+            System.out.println("simulation num " + simulationsCounter + " with controller address " + simulationProgressController);
+            body3ComponentController.addNewSimulationProgressToList(simulationProgressNode);
+            body3ComponentController.addNewSimulationToSimulationsList(simulationsCounter);
+            simulationProgressController.setBody3ComponentController(body3ComponentController);
+            simulationProgressController.runSimulation(systemEngine, threadPool);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -195,5 +213,8 @@ public class Body2Controller {
         throw new IllegalArgumentException("Can't find entity with name " + name);
     }
 
+    public void setBody3Controller(Body3Controller body3ComponentController) {
+        this.body3ComponentController = body3ComponentController;
+    }
 }
 
