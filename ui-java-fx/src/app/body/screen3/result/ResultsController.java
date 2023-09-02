@@ -1,6 +1,6 @@
 package app.body.screen3.result;
 
-import app.body.screen3.Body3Controller;
+import app.body.screen3.main.Body3Controller;
 import dto.api.DTODefinitionsForUi;
 import dto.api.DTOEntitiesAfterSimulationByQuantityForUi;
 import dto.api.DTOPropertyHistogramForUi;
