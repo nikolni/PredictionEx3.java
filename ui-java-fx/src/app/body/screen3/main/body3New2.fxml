@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox prefHeight="400.0" prefWidth="669.0" stylesheets="@body3.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen3.main.Body3Controller">
+   <children>
+      <ScrollPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="NEVER">
+         <content>
+            <ListView fx:id="simulationsList" prefWidth="200.0" />
+         </content>
+      </ScrollPane>
+      <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+         <children>
+            <ScrollPane fx:id="simulationProgressScrollPane" prefHeight="200.0" prefWidth="469.0" VBox.vgrow="ALWAYS">
+            </ScrollPane>
+            <ScrollPane prefHeight="200.0" prefWidth="469.0" VBox.vgrow="ALWAYS">
+               <content>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </children>
+</HBox>
