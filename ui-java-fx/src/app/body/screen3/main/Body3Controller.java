@@ -2,6 +2,7 @@ package app.body.screen3.main;
 
 import app.body.screen1.Body1Controller;
 import app.body.screen3.result.ResultsController;
+import app.body.screen3.simulation.progress.SimulationProgressController;
 import dto.api.*;
 import dto.definition.entity.api.EntityDefinitionDTO;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
@@ -12,6 +13,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import system.engine.api.SystemEngineAccess;
 
 import java.time.LocalDateTime;
@@ -47,6 +49,8 @@ public class Body3Controller {
 
     @FXML private HBox resultsComponent;
     @FXML private ResultsController resultsComponentController;
+    @FXML private VBox simulationProgressComponent;
+    @FXML private SimulationProgressController simulationProgressComponentController;
 
     private SystemEngineAccess systemEngine;
 

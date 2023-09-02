@@ -10,27 +10,26 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
-<ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen2.main.Body2Controller">
+<ScrollPane id="primary-scroll-pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@body2.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen2.main.Body2Controller">
    <content>
-      <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@body2.css">
+      <VBox id="vbox" fx:id="vBoxComponent" alignment="BOTTOM_CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@body2.css">
          <children>
-            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@body2.css">
+            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@body2.css" VBox.vgrow="ALWAYS">
                <children>
-                  <ScrollPane id="population-scroll-pane" prefHeight="282.0" prefWidth="215.0">
+                  <ScrollPane id="population-scroll-pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="20.0" />
                      </HBox.margin>
                      <content>
-                        <FlowPane fx:id="simulationEntitiesPopulationFlowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <FlowPane fx:id="simulationEntitiesPopulationFlowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="412.0" prefWidth="204.0" />
                      </content>
                   </ScrollPane>
-                  <ScrollPane id="env-vars-scroll-pane" prefHeight="282.0" prefWidth="456.0">
+                  <ScrollPane id="env-vars-scroll-pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
                      <content>
-                        <FlowPane fx:id="simulationEnvironmentInputsFlowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" />
+                        <FlowPane fx:id="simulationEnvironmentInputsFlowPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" prefHeight="416.0" prefWidth="409.0" />
                      </content>
                   </ScrollPane>
                </children>
@@ -38,7 +37,7 @@
                   <Insets bottom="20.0" />
                </padding>
             </HBox>
-            <GridPane alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+            <GridPane alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="1.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -52,8 +51,8 @@
                 <RowConstraints maxHeight="59.0" minHeight="7.5" prefHeight="24.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button id="clear-button" fx:id="clearButton" mnemonicParsing="false" onMouseClicked="#onClickClearButton" text="Clear" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
-                  <Button id="start-button" fx:id="startButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onMouseClicked="#onClickStartButton" text="Start!" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                  <Button id="clear-button" fx:id="clearButton" mnemonicParsing="false" onMouseClicked="#onClickClearButton" text="Clear" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+                  <Button id="start-button" fx:id="startButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onMouseClicked="#onClickStartButton" text="Start!" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
                </children>
             </GridPane>
          </children>

@@ -17,6 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import system.engine.api.SystemEngineAccess;
 
@@ -38,6 +40,9 @@ public class Body2Controller {
 
     @FXML
     private Button startButton;
+
+    @FXML
+    private VBox vBoxComponent;
 
     private Map<String, EnvironmentVariableController> envVarNameToTileController;
     private Map<String, EntityController> entityNameToTileController;
@@ -62,6 +67,7 @@ public class Body2Controller {
 
 
     public void primaryInitialize() {
+        VBox.setVgrow(vBoxComponent, Priority.ALWAYS);
         DTOEnvVarsDefForUi dtoEnvVarsDefForUi = systemEngine.getEVDFromSE();
         createEnvVarsChildrenInFlowPane(envVarsList = dtoEnvVarsDefForUi.getEnvironmentVars());
         initValues = new ArrayList<>(Collections.nCopies(envVarsList.size(), null));
@@ -167,9 +173,16 @@ public class Body2Controller {
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
         systemEngine.addWorldInstance();
 
+
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen3/simulation/progress/simulationProgress.fxml"));
+            VBox root = loader.load();
             SimulationProgressController simulationProgressController = loader.getController();
             simulationProgressController.runSimulation(systemEngine);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 

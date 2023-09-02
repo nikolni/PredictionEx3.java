@@ -107,6 +107,9 @@ public class Body1Controller{
     }
 
     private void handleSelectedItemChange(TreeItem<String> selectedItem) {
+        detailsTreeView.setVisible(true);
+        detailsScrollPane.setVisible(true);
+
         // Check if the selected item is a leaf (entity)
         if (selectedItem != null && selectedItem.isLeaf()) {
             // Check if "Entities" branch is expanded
@@ -159,6 +162,8 @@ public class Body1Controller{
             valueDefText.getChildren().clear(); // Clear existing text
             quantityOfSquaresLabel.setVisible(false);
             quantityOfSquaresText.setVisible(false);
+        valueDefLabel.setVisible(false);
+        valueDefText.setVisible(false);
         detailsFlowPane.getChildren().clear();
         if (entitySelectedItem != null) {
                 String selectedValue = entitySelectedItem.getValue();

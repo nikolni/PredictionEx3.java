@@ -16,7 +16,7 @@
     </Tab>
     <Tab id="tab3" text="Tab 3">
         <content>
-            <fx:include fx:id="body3Component" source="../screen3/main/body3.fxml" />
+            <fx:include fx:id="body3Component" source="../screen3/main/body3New.fxml" />
         </content>
     </Tab>
 </TabPane>
