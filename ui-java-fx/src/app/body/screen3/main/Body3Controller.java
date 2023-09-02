@@ -1,4 +1,4 @@
-package app.body.screen3;
+package app.body.screen3.main;
 
 import app.body.screen1.Body1Controller;
 import app.body.screen3.result.ResultsController;
