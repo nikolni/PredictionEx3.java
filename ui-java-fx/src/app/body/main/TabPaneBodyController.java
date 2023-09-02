@@ -47,21 +47,21 @@ public class TabPaneBodyController {
     public void switchToTab1() {
         tabPaneBodyComponent.getSelectionModel().select(0);
         body1ComponentController.setVisibleTab();
-        body2ComponentController.setUnVisibleTab();
-        body3ComponentController.setUnVisibleTab();
+        //body2ComponentController.setUnVisibleTab();
+        //body3ComponentController.setUnVisibleTab();
     }
 
     public void switchToTab2() {
         tabPaneBodyComponent.getSelectionModel().select(1);
-        body2ComponentController.setVisibleTab();
-        body1ComponentController.setUnVisibleTab();
-         body3ComponentController.setUnVisibleTab();
+        //body2ComponentController.setVisibleTab();
+        //body1ComponentController.setUnVisibleTab();
+         //body3ComponentController.setUnVisibleTab();
     }
 
     public void switchToTab3() {
         tabPaneBodyComponent.getSelectionModel().select(2);
-        body3ComponentController.setVisibleTab();
-        body1ComponentController.setUnVisibleTab();
-        body2ComponentController.setUnVisibleTab();
+       // body3ComponentController.setVisibleTab();
+        //body1ComponentController.setUnVisibleTab();
+        //body2ComponentController.setUnVisibleTab();
     }
 }
