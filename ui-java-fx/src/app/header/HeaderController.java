@@ -51,7 +51,7 @@ public class HeaderController {
 
     @FXML
     void onResultButtonClick(ActionEvent event) {
-
+        mainController.onResultButtonClick();
     }
 
 }

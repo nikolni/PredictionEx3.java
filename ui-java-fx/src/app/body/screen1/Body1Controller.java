@@ -18,8 +18,8 @@ import dto.definition.termination.condition.manager.api.TerminationConditionsDTO
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.FlowPane;
@@ -32,16 +32,11 @@ import app.body.screen1.tile.rule.action.helper.ActionTileCreatorFactoryImpl;
 import app.body.screen1.tile.termination.condition.TerminationConditionsController;
 import app.body.screen1.tile.termination.condition.TerminationConditionsResourceConstants;
 import system.engine.api.SystemEngineAccess;
-import system.engine.impl.SystemEngineAccessImpl;
 import dto.api.*;
 
-import javax.xml.bind.JAXBException;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class Body1Controller{
     @FXML
@@ -57,6 +52,8 @@ public class Body1Controller{
     private TextFlow quantityOfSquaresText;
     @FXML
     private FlowPane detailsFlowPane;
+    @FXML
+    private ScrollPane detailsScrollPane;
 
     private SystemEngineAccess systemEngine;
 
@@ -75,16 +72,19 @@ public class Body1Controller{
         valueDefLabel.setVisible(false);
         valueDefText.setVisible(false);
         detailsTreeView.setVisible(false);
+        detailsScrollPane.setVisible(false);
     }
 
     public void setVisibleTab(){
         detailsTreeView.setVisible(true);
         detailsFlowPane.setVisible(true);
+        detailsScrollPane.setVisible(true);
     }
 
     public void setUnVisibleTab(){
         detailsTreeView.setVisible(false);
         detailsFlowPane.setVisible(false);
+        detailsScrollPane.setVisible(false);
     }
 
     public void primaryInitialize(){

@@ -4,12 +4,12 @@ import dto.api.DTOSimulationEndingForUi;
 
 public class DTOSimulationEndingForUiImpl implements DTOSimulationEndingForUi {
     private int simulationID;
-    private String terminationReason;
+    private int[] terminationReasonArr;
 
 
-    public DTOSimulationEndingForUiImpl(int simulationID, String terminationReason){
+    public DTOSimulationEndingForUiImpl(int simulationID, int[] terminationReasonArr){
         this.simulationID = simulationID;
-        this.terminationReason = terminationReason;
+        this.terminationReasonArr = terminationReasonArr;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class DTOSimulationEndingForUiImpl implements DTOSimulationEndingForUi {
     }
 
     @Override
-    public String getTerminationReason() {
-        return terminationReason;
+    public int[] getTerminationReason() {
+        return terminationReasonArr;
     }
 }

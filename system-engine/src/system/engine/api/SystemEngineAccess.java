@@ -6,6 +6,7 @@ import system.engine.run.simulation.SimulationCallback;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 public interface SystemEngineAccess {
 
@@ -32,5 +33,10 @@ public interface SystemEngineAccess {
     DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isResumed);
 
     int getTotalTicksNumber();
+
+    List<DTOSimulationEndingForUi> getDTOSimulationEndingForUiList();
+    DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogramByNames(Integer simulationID,
+                                                                                      String entityName,String propertyName);
+
 
 }

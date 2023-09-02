@@ -29,6 +29,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     private WorldDefinition worldDefinition;
     private List< WorldInstance> worldInstances;
+    private List<DTOSimulationEndingForUi> simulationEndingForUiList;
     private EnvVariablesInstanceManager envVariablesInstanceManager;
     private boolean isHaveValidFileInSystem=false;
 
@@ -159,16 +160,18 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
-    public DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isResumed) throws IllegalArgumentException{    //on last index at world instances list
+    public DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isPaused) throws IllegalArgumentException{    //on last index at world instances list
         int simulationID = worldInstances.size() - 1;
-        String terminationCondition;
+        int[] terminationConditionArr;
 
         RunSimulation runSimulationInstance = new RunSimulationImpl();
         runSimulationInstance.registerCallback(callback);
-        terminationCondition = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
-                worldInstances.get(simulationID) ,envVariablesInstanceManager, isResumed);
+        terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
+                worldInstances.get(simulationID) ,envVariablesInstanceManager, isPaused);
 
-        return new DTOSimulationEndingForUiImpl(simulationID, terminationCondition);
+        DTOSimulationEndingForUi dtoSimulationEndingForUi=new DTOSimulationEndingForUiImpl(simulationID, terminationConditionArr);
+        simulationEndingForUiList.add(dtoSimulationEndingForUi);
+        return dtoSimulationEndingForUi;
     }
 
     @Override
@@ -180,5 +183,16 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
             }
         }
         return 0;
+    }
+
+    @Override
+    public List<DTOSimulationEndingForUi> getDTOSimulationEndingForUiList() {
+        return simulationEndingForUiList;
+    }
+
+    @Override
+    public DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogramByNames(Integer simulationID,
+                                                                                             String entityName,String propertyName) {
+        return new CreateDTOPropertyHistogramForUi().getData(worldInstances.get(simulationID-1), entityName, propertyName);
     }
 }

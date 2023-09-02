@@ -74,6 +74,7 @@ public class AppController {
     }
 
     public void onResultButtonClick() {
-
+        tabPaneBodyComponentController.switchToTab3();
     }
+
 }

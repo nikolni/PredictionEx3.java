@@ -1,12 +1,13 @@
-package app.body.screen2.task.context;
+package app.body.screen2.task.context.impl;
 
+import app.body.screen2.task.context.api.SimulationRunTaskContext;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import system.engine.api.SystemEngineAccess;
 
 import java.util.function.Consumer;
 
-public class ContextImpl implements Context{
+public class SimulationRunTaskContextImpl implements SimulationRunTaskContext {
 
     private SimpleIntegerProperty secondsPast;
     private SimpleIntegerProperty ticksPast;
@@ -16,10 +17,10 @@ public class ContextImpl implements Context{
     private Consumer<Runnable> onCancel;
     private Integer totalTicksNumber;
 
-    public ContextImpl(SimpleIntegerProperty secondsPast, SimpleIntegerProperty ticksPast,
-                       SimpleIntegerProperty entitiesLeft, SimpleBooleanProperty isPaused,
-                        SystemEngineAccess systemEngineAccess,
-                       Consumer<Runnable> onCancel, Integer totalTicksNumber) {
+    public SimulationRunTaskContextImpl(SimpleIntegerProperty secondsPast, SimpleIntegerProperty ticksPast,
+                                        SimpleIntegerProperty entitiesLeft, SimpleBooleanProperty isPaused,
+                                        SystemEngineAccess systemEngineAccess,
+                                        Consumer<Runnable> onCancel, Integer totalTicksNumber) {
         this.secondsPast = secondsPast;
         this.ticksPast = ticksPast;
         this.entitiesLeft = entitiesLeft;

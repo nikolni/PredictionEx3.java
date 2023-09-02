@@ -14,7 +14,7 @@ import java.util.List;
 public interface RunSimulation {
 
     void registerCallback(SimulationCallback callback);
-    String runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
+    int[] runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
                                           EnvVariablesInstanceManager envVariablesInstanceManager,
-                                            SimpleBooleanProperty isResumed);
+                                            SimpleBooleanProperty isPaused);
 }

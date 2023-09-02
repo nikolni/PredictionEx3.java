@@ -24,7 +24,6 @@ public class TabPaneBodyController {
     @FXML private HBox body3Component;
     @FXML private Body3Controller body3ComponentController;
 
-
     private AppController mainController;
 
 
@@ -35,14 +34,13 @@ public class TabPaneBodyController {
     public void setSystemEngineToChildren(SystemEngineAccess systemEngineAccess){
         body1ComponentController.setSystemEngine(systemEngineAccess);
         body2ComponentController.setSystemEngine(systemEngineAccess);
-        //body3ComponentController.setSystemEngine(systemEngineAccess);
+        body3ComponentController.setSystemEngine(systemEngineAccess);
         initialChildren();
-
     }
     private void initialChildren(){
         body1ComponentController.primaryInitialize();
         body2ComponentController.primaryInitialize();
-       // body3ComponentController.primaryInitialize();
+        body3ComponentController.primaryInitialize();
     }
 
 
@@ -50,19 +48,19 @@ public class TabPaneBodyController {
         tabPaneBodyComponent.getSelectionModel().select(0);
         body1ComponentController.setVisibleTab();
         body2ComponentController.setUnVisibleTab();
-       // body3ComponentController.setUnVisibleTab();
+        body3ComponentController.setUnVisibleTab();
     }
 
     public void switchToTab2() {
         tabPaneBodyComponent.getSelectionModel().select(1);
-        //body2ComponentController.setVisibleTab();
+        body2ComponentController.setVisibleTab();
         body1ComponentController.setUnVisibleTab();
-        // body3ComponentController.setUnVisibleTab();
+         body3ComponentController.setUnVisibleTab();
     }
 
     public void switchToTab3() {
         tabPaneBodyComponent.getSelectionModel().select(2);
-        //body3ComponentController.setVisibleTab();
+        body3ComponentController.setVisibleTab();
         body1ComponentController.setUnVisibleTab();
         body2ComponentController.setUnVisibleTab();
     }

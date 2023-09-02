@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@simulationProgress.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen2.simulation.progress.SimulationProgressController">
+<ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@simulationProgress.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen3.simulation.progress.SimulationProgressController">
    <content>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="311.0" prefWidth="705.0">
          <children>

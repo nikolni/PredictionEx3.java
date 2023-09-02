@@ -1,6 +1,6 @@
 package app.body.screen2.task;
 
-import app.body.screen2.task.context.Context;
+import app.body.screen2.task.context.api.SimulationRunTaskContext;
 import app.body.screen2.task.exception.TaskIsCanceledException;
 import dto.api.DTOSimulationProgressForUi;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,14 +21,14 @@ public class RunSimulationTask extends Task<Boolean> implements SimulationCallba
     private Consumer<Runnable> onCancel;
     private Integer totalTicksNumber;
 
-    public RunSimulationTask(Context context) {
-        this.totalTicksNumber = context.getTotalTicksNumber();
-        this.secondsPast = context.getSecondsPast();
-        this.ticksPast = context.getTicksPast();
-        this.entitiesLeft = context.getEntitiesLeft();
-        this.systemEngineAccess = context.getSystemEngineAccess();
-        this.onCancel = context.getOnCancel();
-        this.isPaused = context.getIsPausedProperty();
+    public RunSimulationTask(SimulationRunTaskContext simulationRunTaskContext) {
+        this.totalTicksNumber = simulationRunTaskContext.getTotalTicksNumber();
+        this.secondsPast = simulationRunTaskContext.getSecondsPast();
+        this.ticksPast = simulationRunTaskContext.getTicksPast();
+        this.entitiesLeft = simulationRunTaskContext.getEntitiesLeft();
+        this.systemEngineAccess = simulationRunTaskContext.getSystemEngineAccess();
+        this.onCancel = simulationRunTaskContext.getOnCancel();
+        this.isPaused = simulationRunTaskContext.getIsPausedProperty();
     }
 
 
