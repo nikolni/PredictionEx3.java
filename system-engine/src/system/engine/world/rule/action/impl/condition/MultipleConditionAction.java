@@ -1,5 +1,6 @@
 package system.engine.world.rule.action.impl.condition;
 
+import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.rule.context.Context;
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.rule.action.api.Action;
@@ -11,8 +12,8 @@ public class MultipleConditionAction extends ConditionAction {
     private final String logical;
     private List<ConditionAction> conditionsCollection;
 
-    public MultipleConditionAction(String singularity, EntityDefinition entityDefinitionParam, String logicalParam) {
-        super(singularity,entityDefinitionParam);
+    public MultipleConditionAction(String singularity, EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition, String logicalParam) {
+        super(singularity,entityDefinitionParam,secondaryEntityDefinition);
         logical = logicalParam;
         conditionsCollection = new ArrayList<>();
     }

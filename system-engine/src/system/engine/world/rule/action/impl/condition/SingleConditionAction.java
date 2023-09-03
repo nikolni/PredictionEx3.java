@@ -2,6 +2,7 @@ package system.engine.world.rule.action.impl.condition;
 
 import system.engine.world.creation.api.ExpressionCreation;
 import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
+import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.rule.action.impl.numeric.api.NumericVerify;
 import system.engine.world.rule.context.Context;
 import system.engine.world.execution.instance.property.api.PropertyInstance;
@@ -12,15 +13,15 @@ import system.engine.world.rule.enums.Type;
 
 public class SingleConditionAction extends ConditionAction {
 
-    private EntityDefinition secondEntityDefinition;
+    private EntityDefinition innerEntityDefinition;
     private final String propertyName;
     private final String expressionStr;
     private final String operator;
 
-    public SingleConditionAction(String singularity, EntityDefinition primaryEntityDefinition, EntityDefinition secondEntityDefinition,
+    public SingleConditionAction(String singularity, EntityDefinition primaryEntityDefinition, SecondaryEntityDefinition secondaryEntityDefinition, EntityDefinition innerEntityDefinition,
                                  String propertyNameParam, String operatorParam, String expressionParam) {
-        super(singularity,primaryEntityDefinition);
-        this.secondEntityDefinition = secondEntityDefinition;
+        super(singularity,primaryEntityDefinition,secondaryEntityDefinition);
+        this.innerEntityDefinition = innerEntityDefinition;
         propertyName = propertyNameParam;
         operator = operatorParam;
         expressionStr =expressionParam;
