@@ -2,28 +2,20 @@ package system.engine.world.rule.action.api;
 
 
 import system.engine.world.definition.entity.api.EntityDefinition;
+import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 
 public abstract class AbstractAction implements Action {
 
     private final ActionType actionType;
     private final EntityDefinition primaryEntityDefinition;
-    //private final EntityDefinition secondEntityDefinition;
+    private SecondaryEntityDefinition secondaryEntityDefinition;
 
-    protected AbstractAction(ActionType actionType, EntityDefinition primaryEntityDefinition
-                             ) {
+    protected AbstractAction(ActionType actionType, EntityDefinition primaryEntityDefinition,SecondaryEntityDefinition secondaryEntityDefinition){
         this.actionType = actionType;
         this.primaryEntityDefinition = primaryEntityDefinition;
-       // this.secondEntityDefinition = secondEntityDefinition;
+       this.secondaryEntityDefinition=secondaryEntityDefinition;
     }
 
-    /*
-    protected AbstractAction(ActionType actionType, EntityDefinition primaryEntityDefinition,
-                             EntityDefinition secondEntityDefinition) {
-        this.actionType = actionType;
-        this.primaryEntityDefinition = primaryEntityDefinition;
-        this.secondEntityDefinition = secondEntityDefinition;
-    }
-     */
 
     @Override
     public ActionType getActionType() {

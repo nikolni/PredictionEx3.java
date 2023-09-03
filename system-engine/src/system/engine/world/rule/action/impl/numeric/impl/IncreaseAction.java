@@ -3,6 +3,7 @@ package system.engine.world.rule.action.impl.numeric.impl;
 import system.engine.world.creation.api.ExpressionCreation;
 import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
 import system.engine.world.definition.entity.api.EntityDefinition;
+import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.rule.action.api.AbstractAction;
 import system.engine.world.rule.action.api.ActionType;
 import system.engine.world.rule.action.expression.api.Expression;
@@ -16,8 +17,8 @@ public class IncreaseAction extends AbstractAction implements NumericVerify {
     private final String propertyName;
     private final String expressionStr;
 
-    public IncreaseAction(EntityDefinition entityDefinitionParam, String propertyNameParam, String expressionStrParam) {
-        super(ActionType.INCREASE, entityDefinitionParam);
+    public IncreaseAction(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition, String propertyNameParam, String expressionStrParam) {
+        super(ActionType.INCREASE, entityDefinitionParam,secondaryEntityDefinition);
         propertyName = propertyNameParam;
         expressionStr =expressionStrParam;
     }

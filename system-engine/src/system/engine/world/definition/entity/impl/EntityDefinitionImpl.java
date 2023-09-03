@@ -9,12 +9,11 @@ import java.util.List;
 public class EntityDefinitionImpl implements EntityDefinition {
 
     private final String uniqueName;
-    private final int population;
+
     private final List<PropertyDefinition> properties;
 
-    public EntityDefinitionImpl(String uniqueName, int population) {
+    public EntityDefinitionImpl(String uniqueName) {
         this.uniqueName = uniqueName;
-        this.population = population;
         properties = new ArrayList<>();
     }
 
@@ -23,10 +22,6 @@ public class EntityDefinitionImpl implements EntityDefinition {
         return uniqueName;
     }
 
-    @Override
-    public int getPopulation() {
-        return population;
-    }
 
     @Override
     public List<PropertyDefinition> getProps() {

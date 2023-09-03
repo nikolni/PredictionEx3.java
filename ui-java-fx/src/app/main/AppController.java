@@ -25,13 +25,13 @@ public class AppController {
     public AppController(){
         systemEngine = new SystemEngineAccessImpl();
 
-        try {
-            systemEngine.getXMLFromUser("C:/Users/nikolnisanov/Documents/JAVA/predictionsEx2New/ex1-cigarets.xml");
+        /*try {
+            systemEngine.getXMLFromUser("C:/Users/maaya/javaProjects/PredictionsEX2_2.9/ex1-cigarets.xml");
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
-        }
+        }*/
     }
 
     @FXML
@@ -41,6 +41,7 @@ public class AppController {
             tabPaneBodyComponentController.setMainController(this);
         }
         tabPaneBodyComponentController.setSystemEngineToChildren(systemEngine);
+        headerComponentController.setSystemEngine(systemEngine);
     }
 
     public SystemEngineAccess getSystemEngine() {

@@ -3,6 +3,7 @@ package system.engine.world.rule.action.impl;
 import system.engine.world.creation.api.ExpressionCreation;
 import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
 import system.engine.world.definition.entity.api.EntityDefinition;
+import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.execution.instance.property.api.PropertyInstance;
 import system.engine.world.rule.action.api.AbstractAction;
 import system.engine.world.rule.action.api.ActionType;
@@ -14,8 +15,8 @@ public class SetAction extends AbstractAction {
         private final String propertyName;
         private final String expressionStr;
 
-    public SetAction(EntityDefinition entityDefinitionParam, String propertyNameParam, String expressionStrParam) {
-        super(ActionType.INCREASE, entityDefinitionParam);
+    public SetAction(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition,String propertyNameParam, String expressionStrParam) {
+        super(ActionType.INCREASE, entityDefinitionParam,secondaryEntityDefinition);
         propertyName = propertyNameParam;
         expressionStr =expressionStrParam;
     }

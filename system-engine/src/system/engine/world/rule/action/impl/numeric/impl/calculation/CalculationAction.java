@@ -1,6 +1,7 @@
 package system.engine.world.rule.action.impl.numeric.impl.calculation;
 
 import system.engine.world.definition.entity.api.EntityDefinition;
+import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.rule.action.impl.numeric.api.NumericVerify;
 import system.engine.world.rule.action.api.AbstractAction;
 import system.engine.world.rule.action.api.ActionType;
@@ -11,8 +12,8 @@ public abstract class CalculationAction extends AbstractAction implements Numeri
     protected String expressionStrArg1;
     protected String expressionStrArg2;
 
-    public CalculationAction(EntityDefinition entityDefinitionParam, String propertyNameParam, String expressionStrParam1, String expressionStrParam2){
-        super(ActionType.CALCULATION, entityDefinitionParam);
+    public CalculationAction(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition,String propertyNameParam, String expressionStrParam1, String expressionStrParam2){
+        super(ActionType.CALCULATION, entityDefinitionParam,secondaryEntityDefinition);
         resultPropName = propertyNameParam;
         expressionStrArg1= expressionStrParam1;
         expressionStrArg2= expressionStrParam2;

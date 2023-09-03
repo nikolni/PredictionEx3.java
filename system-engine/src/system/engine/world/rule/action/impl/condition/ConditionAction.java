@@ -1,6 +1,7 @@
 package system.engine.world.rule.action.impl.condition;
 
 import system.engine.world.definition.entity.api.EntityDefinition;
+import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.rule.action.api.AbstractAction;
 import system.engine.world.rule.action.api.Action;
 import system.engine.world.rule.action.api.ActionType;
@@ -14,8 +15,8 @@ public abstract class ConditionAction extends AbstractAction {
     protected List<Action> thenActionList;
     protected List<Action> elseActionList;
 
-    public ConditionAction(String singularity, EntityDefinition entityDefinitionParam) {
-        super(ActionType.CONDITION, entityDefinitionParam);
+    public ConditionAction(String singularity, EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition) {
+        super(ActionType.CONDITION, entityDefinitionParam,secondaryEntityDefinition);
         this.singularity = singularity;
         thenActionList = new ArrayList<>();
         elseActionList = new ArrayList<>();
