@@ -2,6 +2,7 @@ package system.engine.world.rule.action.impl.numeric.impl.calculation;
 
 import system.engine.world.creation.api.ExpressionCreation;
 import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
+import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.rule.action.impl.numeric.api.NumericVerify;
 import system.engine.world.rule.context.Context;
 import system.engine.world.rule.enums.Type;
@@ -10,8 +11,8 @@ import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.rule.action.expression.api.Expression;
 
 public class MultiplyAction extends CalculationAction {
-    public MultiplyAction(EntityDefinition entityDefinitionParam, String propertyNameParam, String expressionStrParam1, String expressionStrParam2){
-        super(entityDefinitionParam, propertyNameParam, expressionStrParam1, expressionStrParam2);
+    public MultiplyAction(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition, String propertyNameParam, String expressionStrParam1, String expressionStrParam2){
+        super(entityDefinitionParam,secondaryEntityDefinition, propertyNameParam, expressionStrParam1, expressionStrParam2);
     }
 
     @Override

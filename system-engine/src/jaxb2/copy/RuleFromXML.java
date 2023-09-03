@@ -50,7 +50,7 @@ public class RuleFromXML {
     public SecondaryEntityDefinition createSecondaryEntity(EntityDefinitionManager entityDefinitionManager, PRDAction.PRDSecondaryEntity prdSecondaryEntity)
     {
         EntityDefinition extendEntityDefinition= entityDefinitionManager.getEntityDefinitionByName(prdSecondaryEntity.getEntity());
-        ConditionAction selectionCondition=createConditionActionFromPRDCondition(entityDefinitionManager,extendEntityDefinition,prdSecondaryEntity.getPRDSelection().getPRDCondition());
+        ConditionAction selectionCondition=createConditionActionFromPRDCondition(entityDefinitionManager,extendEntityDefinition,null,prdSecondaryEntity.getPRDSelection().getPRDCondition());
         SecondaryEntityDefinition secondaryEntityDefinition=new SecondaryEntityDefinitionImpl(extendEntityDefinition,prdSecondaryEntity.getPRDSelection().getCount(),selectionCondition);
         return secondaryEntityDefinition;
     }
@@ -58,64 +58,67 @@ public class RuleFromXML {
     public Action createAction(EntityDefinitionManager entityDefinitionManager, String primaryEntityDefinitionName, PRDAction.PRDSecondaryEntity prdSecondaryEntity, PRDAction prdAction){
         ActionCreation actionCreation=new ActionCreationImpl();
         EntityDefinition primaryEntityDefinition= entityDefinitionManager.getEntityDefinitionByName(primaryEntityDefinitionName);
-        SecondaryEntityDefinition secondaryEntityDefinition=createSecondaryEntity(entityDefinitionManager,prdSecondaryEntity);
+        SecondaryEntityDefinition secondaryEntityDefinition=null;
+        if(prdSecondaryEntity!=null)
+            secondaryEntityDefinition=createSecondaryEntity(entityDefinitionManager,prdSecondaryEntity);
+
 
         switch (prdAction.getType()){
             case "increase":
                 String propertyName1 = prdAction.getProperty();
                 String expressionStr1 = prdAction.getBy();
-                return actionCreation.createActionIncrease(entityDefinition, propertyName1, expressionStr1);
+                return actionCreation.createActionIncrease(primaryEntityDefinition,secondaryEntityDefinition, propertyName1, expressionStr1);
             case "decrease":
                 String propertyName2 = prdAction.getProperty();
                 String expressionStr2 = prdAction.getBy();
-                return actionCreation.createActionDecrease(entityDefinition, propertyName2, expressionStr2);
+                return actionCreation.createActionDecrease(primaryEntityDefinition,secondaryEntityDefinition, propertyName2, expressionStr2);
             case "calculation":
                 if(prdAction.getPRDMultiply()!=null)
-                    return actionCreation.createActionCalculationMultiply(entityDefinition,prdAction.getResultProp(),prdAction.getPRDMultiply().getArg1(),prdAction.getPRDMultiply().getArg2());
+                    return actionCreation.createActionCalculationMultiply(primaryEntityDefinition,secondaryEntityDefinition,prdAction.getResultProp(),prdAction.getPRDMultiply().getArg1(),prdAction.getPRDMultiply().getArg2());
                 if(prdAction.getPRDDivide()!=null)
-                    return actionCreation.createActionCalculationDivide(entityDefinition,prdAction.getResultProp(),prdAction.getPRDDivide().getArg1(),prdAction.getPRDDivide().getArg2());
+                    return actionCreation.createActionCalculationDivide(primaryEntityDefinition,secondaryEntityDefinition,prdAction.getResultProp(),prdAction.getPRDDivide().getArg1(),prdAction.getPRDDivide().getArg2());
             case "condition":
-                ConditionAction conditionAction=createConditionActionFromPRDCondition(entityDefinitionManager,entityDefinition,prdAction.getPRDCondition());
+                ConditionAction conditionAction=createConditionActionFromPRDCondition(entityDefinitionManager,primaryEntityDefinition,secondaryEntityDefinition,prdAction.getPRDCondition());
                 for(PRDAction thenPrdAction:prdAction.getPRDThen().getPRDAction())
-                    conditionAction.addActionToThenList(createAction(entityDefinitionManager,entityDefinitionName,thenPrdAction));
+                    conditionAction.addActionToThenList(createAction(entityDefinitionManager,thenPrdAction.getEntity(),thenPrdAction.getPRDSecondaryEntity(),thenPrdAction));
                 if(prdAction.getPRDElse()!=null){
                     for(PRDAction elsePrdAction:prdAction.getPRDElse().getPRDAction())
-                        conditionAction.addActionToElseList(createAction(entityDefinitionManager,entityDefinitionName,elsePrdAction));
+                        conditionAction.addActionToElseList(createAction(entityDefinitionManager,elsePrdAction.getEntity(),elsePrdAction.getPRDSecondaryEntity(),elsePrdAction));
                 }
                 return conditionAction;
             case "set":
                 String propertyName3 = prdAction.getProperty();
                 String expressionStr3 = prdAction.getValue();
-                return actionCreation.createActionSet(entityDefinition, propertyName3, expressionStr3);
+                return actionCreation.createActionSet(primaryEntityDefinition,secondaryEntityDefinition, propertyName3, expressionStr3);
             case "kill":
-                return actionCreation.createActionKill(entityDefinition);
+                return actionCreation.createActionKill(primaryEntityDefinition,secondaryEntityDefinition);
 
         }
         return null;
     }
 
-    public ConditionAction createConditionActionFromPRDCondition(EntityDefinitionManager entityDefinitionManager, EntityDefinition mainEntityDefinition, PRDCondition prdCondition) {
+    public ConditionAction createConditionActionFromPRDCondition(EntityDefinitionManager entityDefinitionManager, EntityDefinition mainEntityDefinition,SecondaryEntityDefinition secondaryEntityDefinition, PRDCondition prdCondition) {
         switch (prdCondition.getSingularity()) {
             case "single":
-                return createActionConditionSingle(entityDefinitionManager, mainEntityDefinition,prdCondition.getEntity(),prdCondition.getProperty(),prdCondition.getOperator(),prdCondition.getValue());
+                return createActionConditionSingle(entityDefinitionManager, mainEntityDefinition,secondaryEntityDefinition,prdCondition.getEntity(),prdCondition.getProperty(),prdCondition.getOperator(),prdCondition.getValue());
             case "multiple":
-                MultipleConditionAction multipleConditionAction=createActionConditionMultiple(mainEntityDefinition,prdCondition.getLogical());
+                MultipleConditionAction multipleConditionAction=createActionConditionMultiple(mainEntityDefinition,secondaryEntityDefinition,prdCondition.getLogical());
                 for(PRDCondition prdCondition1:prdCondition.getPRDCondition()){
-                    multipleConditionAction.addConditionToConditionsCollection(createConditionActionFromPRDCondition(entityDefinitionManager,mainEntityDefinition,prdCondition1));
+                    multipleConditionAction.addConditionToConditionsCollection(createConditionActionFromPRDCondition(entityDefinitionManager,mainEntityDefinition,secondaryEntityDefinition,prdCondition1));
                 }
                 return multipleConditionAction;
         }
         return null;
     }
 
-    public SingleConditionAction createActionConditionSingle(EntityDefinitionManager entityDefinitionManager, EntityDefinition mainEntityDefinition, String entityDefinition2, String propertyName,
+    public SingleConditionAction createActionConditionSingle(EntityDefinitionManager entityDefinitionManager, EntityDefinition mainEntityDefinition,SecondaryEntityDefinition secondaryEntityDefinition, String entityDefinition2, String propertyName,
                                                              String operator, String expressionStr){
-        EntityDefinition secEntityDefinition = entityDefinitionManager.getEntityDefinitionByName(entityDefinition2);
-        return new SingleConditionAction("single",mainEntityDefinition, secEntityDefinition, propertyName, operator, expressionStr);
+        EntityDefinition innerEntityDefinition = entityDefinitionManager.getEntityDefinitionByName(entityDefinition2);
+        return new SingleConditionAction("single",mainEntityDefinition,secondaryEntityDefinition, innerEntityDefinition, propertyName, operator, expressionStr);
     }
 
-    public MultipleConditionAction createActionConditionMultiple(EntityDefinition mainEntityDefinition, String logical){
-        return new MultipleConditionAction("multiple",mainEntityDefinition, logical);
+    public MultipleConditionAction createActionConditionMultiple(EntityDefinition mainEntityDefinition,SecondaryEntityDefinition secondaryEntityDefinition, String logical){
+        return new MultipleConditionAction("multiple",mainEntityDefinition,secondaryEntityDefinition, logical);
     }
 
     public RuleDefinitionManager getRuleDefinitionManager() {
