@@ -7,10 +7,13 @@ public abstract class AbstractActionDTO {
 
     private final ActionType actionType;
     private final String primaryEntityDefinitionDTO;
+    private final String secondEntityDefinitionDTO;
 
-    protected AbstractActionDTO(ActionType actionType, String primaryEntityDefinitionDTO) {
+    protected AbstractActionDTO(ActionType actionType, String primaryEntityDefinitionDTO,
+                                String secondEntityDefinitionDTO) {
         this.actionType = actionType;
         this.primaryEntityDefinitionDTO = primaryEntityDefinitionDTO;
+        this.secondEntityDefinitionDTO = secondEntityDefinitionDTO;
     }
 
 
@@ -21,5 +24,9 @@ public abstract class AbstractActionDTO {
 
     public String getEntityDefinitionName() {
         return primaryEntityDefinitionDTO;
+    }
+
+    public String getSecondEntityDefinitionDTO() {
+        return secondEntityDefinitionDTO;
     }
 }

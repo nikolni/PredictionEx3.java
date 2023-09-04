@@ -25,7 +25,8 @@ public class SetAction extends AbstractAction {
         public void executeAction(Context context) throws IllegalArgumentException{
             ExpressionCreation expressionCreation = new ExpressionCreationImpl();
             PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(propertyName);
-            Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(), propertyName);
+            Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(),
+                    context.getSecondEntityInstance(),propertyName);
             Object expressionVal=  expression.evaluateExpression(context);
             Type propertyType = propertyInstance.getPropertyDefinition().getType();
 

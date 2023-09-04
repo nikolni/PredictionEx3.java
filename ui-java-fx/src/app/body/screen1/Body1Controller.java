@@ -6,6 +6,8 @@ import dto.definition.rule.action.KillActionDTO;
 import dto.definition.rule.action.SetActionDTO;
 import dto.definition.rule.action.api.AbstractActionDTO;
 import dto.definition.rule.action.condition.ConditionActionDTO;
+import dto.definition.rule.action.condition.MultipleConditionActionDTO;
+import dto.definition.rule.action.condition.SingleConditionActionDTO;
 import dto.definition.rule.action.numeric.DecreaseActionDTO;
 import dto.definition.rule.action.numeric.IncreaseActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
@@ -316,8 +318,14 @@ public class Body1Controller{
                     }
                     break;
                 case CONDITION:
-                    ConditionActionDTO conditionAction = (ConditionActionDTO) action;
-                    actionTileCreatorFactory.createConditionActionChildren(conditionAction, detailsFlowPane);
+                    if(action instanceof SingleConditionActionDTO) {
+                        SingleConditionActionDTO singleConditionActionDTO = (SingleConditionActionDTO) action;
+                        actionTileCreatorFactory.createSingleConditionActionChildren(singleConditionActionDTO, detailsFlowPane);
+                    }
+                    else{
+                        MultipleConditionActionDTO multipleConditionActionDTO = (MultipleConditionActionDTO) action;
+                        actionTileCreatorFactory.createMultipleConditionActionChildren(multipleConditionActionDTO, detailsFlowPane);
+                    }
                     break;
                 case KILL:
                     KillActionDTO killAction = (KillActionDTO)action;

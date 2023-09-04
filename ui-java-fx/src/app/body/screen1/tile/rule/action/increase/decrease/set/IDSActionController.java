@@ -9,6 +9,8 @@ public class IDSActionController {
 
         @FXML
         private Label primaryEntityLabel;
+        @FXML
+        private Label secondEntityLabel;
 
         @FXML
         private Label propertyNameLabel;
@@ -22,6 +24,9 @@ public class IDSActionController {
 
         public void setPrimaryEntityLabel(String primaryEntityText) {
                 this.primaryEntityLabel.setText(primaryEntityText);
+        }
+        public void setSecondEntityLabel(String secondEntityText) {
+                this.secondEntityLabel.setText(secondEntityText);
         }
 
         public void setPropertyNameLabel(String propertyNameText) {

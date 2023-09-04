@@ -5,8 +5,8 @@ import dto.definition.rule.action.api.ActionType;
 
 public class KillActionDTO extends AbstractActionDTO {
 
-    public KillActionDTO(String entityDefinition) {
-        super(ActionType.KILL, entityDefinition);
+    public KillActionDTO(String entityDefinition,String secondEntityDefinitionDTO) {
+        super(ActionType.KILL, entityDefinition, secondEntityDefinitionDTO);
     }
 
 

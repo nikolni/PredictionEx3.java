@@ -10,6 +10,8 @@ public class CalculationActionController {
 
         @FXML
         private Label primaryEntityLabel;
+        @FXML
+        private Label secondEntityLabel;
 
         @FXML
         private Label resultPropertyNameLabel;
@@ -26,6 +28,9 @@ public class CalculationActionController {
 
         public void setPrimaryEntityLabel(String primaryEntityLabel) {
                 this.primaryEntityLabel.setText(primaryEntityLabel);
+        }
+        public void setSecondEntityLabel(String secondEntityText) {
+                this.secondEntityLabel.setText(secondEntityText);
         }
 
         public void setResultPropertyNameLabel(String resultPropertyNameLabel) {
