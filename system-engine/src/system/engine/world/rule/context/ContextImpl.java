@@ -12,6 +12,7 @@ public class ContextImpl implements Context {
     private final EntityInstance secondEntityInstance;
     private final EnvVariablesInstanceManager envVariablesInstanceManager;
     private List<EntityInstance> entitiesToKill;
+    private Integer tickNumber = 0;
 
    /* public ContextImpl(EntityInstance primaryEntityInstance,
                        EnvVariablesInstanceManager envVariablesInstanceManager,
@@ -23,11 +24,12 @@ public class ContextImpl implements Context {
     }*/
     public ContextImpl(EntityInstance primaryEntityInstance, EntityInstance secondEntityInstance,
                        EnvVariablesInstanceManager envVariablesInstanceManager,
-                       List<EntityInstance> entitiesToKill) {
+                       List<EntityInstance> entitiesToKill, Integer tickNumber) {
         this.primaryEntityInstance = primaryEntityInstance;
         this.secondEntityInstance = secondEntityInstance;
         this.envVariablesInstanceManager  =  envVariablesInstanceManager;
         this.entitiesToKill = entitiesToKill;
+        this.tickNumber =  tickNumber;
     }
 
     @Override
@@ -48,5 +50,10 @@ public class ContextImpl implements Context {
     @Override
     public EntityInstance getSecondEntityInstance() {
         return secondEntityInstance;
+    }
+
+    @Override
+    public Integer getTickNumber() {
+        return tickNumber;
     }
 }

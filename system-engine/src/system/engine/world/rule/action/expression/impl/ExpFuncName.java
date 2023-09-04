@@ -45,9 +45,9 @@ public class ExpFuncName extends AbstractExpressionImpl {
             case "percent":
                 value= percent(functionArgs.get(0),functionArgs.get(1), context);
                 break;
-            /*case "ticks":
-                value= ticks(functionArgs.get(0));
-                break;*/
+            case "ticks":
+                value= ticks(functionArgs.get(0), context);
+                break;
         }
         return value;
     }
@@ -114,28 +114,28 @@ public class ExpFuncName extends AbstractExpressionImpl {
         return ((float)percentNumValue / 100) * (float) wholeNumValue;
     }
 
-//    private Object ticks(String propertyByEntity) {
-//        String entityName;
-//        String propertyName;
-//
-//        String[] parts = propertyByEntity.split("\\.");
-//        if (parts.length == 2) {
-//            entityName = parts[0];
-//            propertyName = parts[1];
-//        } else {
-//            throw new IllegalArgumentException("the argument for evaluate function is invalid!");
-//        }
-//
-//        EntityInstance entityInstance= null;
-//        if(entityName.equals(primaryEntityInstance.getEntityDefinition().getUniqueName())){
-//            entityInstance = primaryEntityInstance;
-//        }
-//        else{
-//            entityInstance = primaryEntityInstance;
-//        }
-//
-//        PropertyInstance propertyInstance =entityInstance.getPropertyByName(propertyName);
-//
-//
-//    }
+    private Integer ticks(String propertyByEntity, Context context) {
+        String entityName;
+        String propertyName;
+
+        String[] parts = propertyByEntity.split("\\.");
+        if (parts.length == 2) {
+            entityName = parts[0];
+            propertyName = parts[1];
+        } else {
+            throw new IllegalArgumentException("the argument for evaluate function is invalid!");
+        }
+
+        EntityInstance entityInstance= null;
+        if(entityName.equals(primaryEntityInstance.getEntityDefinition().getUniqueName())){
+            entityInstance = primaryEntityInstance;
+        }
+        else{
+            entityInstance = primaryEntityInstance;
+        }
+
+        PropertyInstance propertyInstance =entityInstance.getPropertyByName(propertyName);
+
+        return context.getTickNumber() - propertyInstance.getLastTickNumberOfValueUpdate();
+    }
 }

@@ -9,5 +9,6 @@ public interface Context {
     EntityInstance getSecondEntityInstance();
     void removeEntity(EntityInstance entityInstance);
     PropertyInstance getEnvironmentVariable(String name);
+    Integer getTickNumber();
 
 }

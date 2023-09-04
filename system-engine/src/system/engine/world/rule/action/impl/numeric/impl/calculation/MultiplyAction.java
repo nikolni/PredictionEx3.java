@@ -63,6 +63,7 @@ public class MultiplyAction extends CalculationAction {
                 propertyInstance.setValue(fResult);
                 break;
         }
+        propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber());
     }
 
 

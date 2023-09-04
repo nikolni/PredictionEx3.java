@@ -9,7 +9,6 @@ public abstract class AbstractAction implements Action {
     private final ActionType actionType;
     private final EntityDefinition primaryEntityDefinition;
     private SecondaryEntityDefinition secondaryEntityDefinition;
-    private final Integer secondEntityQuantity = 0;
 
     protected AbstractAction(ActionType actionType, EntityDefinition primaryEntityDefinition,
                              SecondaryEntityDefinition secondaryEntityDefinition){
@@ -34,6 +33,6 @@ public abstract class AbstractAction implements Action {
     }
     @Override
     public Integer getSecondEntityQuantity() {
-        return secondEntityQuantity;
+        return Integer.parseInt(secondaryEntityDefinition.getSecEntityCount());
     }
 }
