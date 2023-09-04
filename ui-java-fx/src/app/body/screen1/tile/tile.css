@@ -5,6 +5,12 @@
     -fx-background-radius: 5.0;
 }
 
+.my-label{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 12px;
+    -fx-font-weight: BOLD;
+}
+
 #action-type-label{
     -fx-text-fill: WHITE;
     -fx-font-size: 12px;

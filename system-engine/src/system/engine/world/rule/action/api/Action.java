@@ -8,5 +8,5 @@ public interface Action {
     void executeAction(Context context);
     ActionType getActionType();
     EntityDefinition getContextPrimaryEntity();
-   // EntityDefinition getContextSecondEntity();
+    EntityDefinition getSecondaryEntityDefinition();
 }

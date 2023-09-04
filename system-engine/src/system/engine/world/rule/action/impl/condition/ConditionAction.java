@@ -30,11 +30,10 @@ public abstract class ConditionAction extends AbstractAction {
         return singularity;
     }
 
-//    public List<AbstractAction> getThenActionList() {
-//        return thenActionList;
-//    }
-//
-//    public List<AbstractAction> getElseActionList() {
-//        return elseActionList;
-//    }
+  public Integer getThenActionsNumber() {
+       return thenActionList.size();}
+
+    public Integer getElseActionsNumber() {
+        return elseActionList.size();
+    }
 }

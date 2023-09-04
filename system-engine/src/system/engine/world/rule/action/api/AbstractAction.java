@@ -27,8 +27,8 @@ public abstract class AbstractAction implements Action {
         return primaryEntityDefinition;
     }
 
-    /*@Override
-    public EntityDefinition getContextSecondEntity() {
-        return secondEntityDefinition;
-    }*/
+    public EntityDefinition getSecondaryEntityDefinition() {
+        return secondaryEntityDefinition.getExtendsEntityDefinition();
+    }
+
 }

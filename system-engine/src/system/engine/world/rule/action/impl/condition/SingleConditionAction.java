@@ -18,7 +18,8 @@ public class SingleConditionAction extends ConditionAction {
     private final String expressionStr;
     private final String operator;
 
-    public SingleConditionAction(String singularity, EntityDefinition primaryEntityDefinition, SecondaryEntityDefinition secondaryEntityDefinition, EntityDefinition innerEntityDefinition,
+    public SingleConditionAction(String singularity, EntityDefinition primaryEntityDefinition,
+                                 SecondaryEntityDefinition secondaryEntityDefinition, EntityDefinition innerEntityDefinition,
                                  String propertyNameParam, String operatorParam, String expressionParam) {
         super(singularity,primaryEntityDefinition,secondaryEntityDefinition);
         this.innerEntityDefinition = innerEntityDefinition;
@@ -130,5 +131,21 @@ public class SingleConditionAction extends ConditionAction {
                 break;
         }
         return result;
+    }
+
+    public EntityDefinition getInnerEntityDefinition() {
+        return innerEntityDefinition;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public String getExpressionStr() {
+        return expressionStr;
+    }
+
+    public String getOperator() {
+        return operator;
     }
 }

@@ -6,9 +6,10 @@ import javafx.scene.control.Label;
 public class KillActionController {
         @FXML
         private Label actionTypeLabel;
-
         @FXML
         private Label primaryEntityLabel;
+        @FXML
+        private Label secondEntityLabel;
 
 
         public void setActionTypeLabel(String actionTypeLabel) {
@@ -17,5 +18,8 @@ public class KillActionController {
 
         public void setPrimaryEntityLabel(String primaryEntityLabel) {
                 this.primaryEntityLabel.setText(primaryEntityLabel);
+        }
+        public void setSecondEntityLabel(String secondEntityText) {
+                this.secondEntityLabel.setText(secondEntityText);
         }
 }

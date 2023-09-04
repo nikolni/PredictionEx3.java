@@ -10,8 +10,9 @@ public abstract class CalculationActionDTO extends AbstractActionDTO {
     protected String expressionStrArg1;
     protected String expressionStrArg2;
 
-    public CalculationActionDTO(String entityDefinitionParam, String propertyNameParam, String expressionStrParam1, String expressionStrParam2){
-        super(ActionType.CALCULATION, entityDefinitionParam);
+    public CalculationActionDTO(String entityDefinitionParam,String secondEntityDefinitionDTO,
+                                String propertyNameParam, String expressionStrParam1, String expressionStrParam2){
+        super(ActionType.CALCULATION, entityDefinitionParam, secondEntityDefinitionDTO);
         resultPropName = propertyNameParam;
         expressionStrArg1= expressionStrParam1;
         expressionStrArg2= expressionStrParam2;

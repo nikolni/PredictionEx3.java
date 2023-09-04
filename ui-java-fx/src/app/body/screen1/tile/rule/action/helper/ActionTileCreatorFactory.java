@@ -17,7 +17,7 @@ public interface ActionTileCreatorFactory {
       void createDivideActionChildren(DivideActionDTO divideActionDTO, FlowPane detailsFlowPane);
       void createMultiplyActionChildren(MultiplyActionDTO multiplyActionDTO, FlowPane detailsFlowPane);
       void createKillActionChildren(KillActionDTO killActionDTO, FlowPane detailsFlowPane);
-      void createConditionActionChildren(ConditionActionDTO conditionActionDTO, FlowPane detailsFlowPane);
+      void createSingleConditionActionChildren(ConditionActionDTO conditionActionDTO, FlowPane detailsFlowPane);
 
-
+      void createMultipleConditionActionChildren(ConditionActionDTO conditionActionDTO, FlowPane detailsFlowPane);
 }

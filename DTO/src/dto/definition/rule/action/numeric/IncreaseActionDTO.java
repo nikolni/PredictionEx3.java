@@ -9,8 +9,9 @@ public class IncreaseActionDTO extends AbstractActionDTO {
     private final String propertyName;
     private final String expressionStr;
 
-    public IncreaseActionDTO(String entityDefinitionParam, String propertyNameParam, String expressionStrParam) {
-        super(ActionType.INCREASE, entityDefinitionParam);
+    public IncreaseActionDTO(String entityDefinitionParam,String secondEntityDefinitionDTO,
+                             String propertyNameParam, String expressionStrParam) {
+        super(ActionType.INCREASE, entityDefinitionParam, secondEntityDefinitionDTO);
         propertyName = propertyNameParam;
         expressionStr =expressionStrParam;
     }

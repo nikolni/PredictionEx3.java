@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultipleConditionAction extends ConditionAction {
+
+
     private final String logical;
     private List<ConditionAction> conditionsCollection;
 
@@ -61,5 +63,13 @@ public class MultipleConditionAction extends ConditionAction {
 
     public void addConditionToConditionsCollection(ConditionAction conditionAction){
         conditionsCollection.add(conditionAction);
+    }
+
+    public String getLogical() {
+        return logical;
+    }
+
+    public Integer getConditionsNumber() {
+        return conditionsCollection.size();
     }
 }

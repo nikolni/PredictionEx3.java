@@ -1,11 +1,14 @@
 package app.body.screen1.tile.rule.action.helper;
 
 import app.body.screen1.tile.rule.action.calculation.CalculationActionController;
-import app.body.screen1.tile.rule.action.condition.ConditionActionController;
+import app.body.screen1.tile.rule.action.condition.multiple.MultipleConditionActionController;
+import app.body.screen1.tile.rule.action.condition.single.SingleConditionActionController;
 import app.body.screen1.tile.rule.action.kill.KillActionController;
 import dto.definition.rule.action.KillActionDTO;
 import dto.definition.rule.action.SetActionDTO;
 import dto.definition.rule.action.condition.ConditionActionDTO;
+import dto.definition.rule.action.condition.MultipleConditionActionDTO;
+import dto.definition.rule.action.condition.SingleConditionActionDTO;
 import dto.definition.rule.action.numeric.DecreaseActionDTO;
 import dto.definition.rule.action.numeric.IncreaseActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
@@ -29,6 +32,7 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
             IDSActionController idsActionController = loader.getController();
             idsActionController.setActionTypeLabel("increase");
             idsActionController.setPrimaryEntityLabel(increaseActionDTO.getEntityDefinitionName());
+            idsActionController.setSecondEntityLabel(increaseActionDTO.getSecondEntityDefinitionDTO());
             idsActionController.setPropertyNameLabel(increaseActionDTO.getPropertyName());
             idsActionController.setExpressionLabel(increaseActionDTO.getExpressionStr());
             detailsFlowPane.getChildren().add(singleAction);
@@ -48,6 +52,7 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
             IDSActionController idsActionController = loader.getController();
             idsActionController.setActionTypeLabel("decrease");
             idsActionController.setPrimaryEntityLabel(decreaseActionDTO.getEntityDefinitionName());
+            idsActionController.setSecondEntityLabel(decreaseActionDTO.getSecondEntityDefinitionDTO());
             idsActionController.setPropertyNameLabel(decreaseActionDTO.getPropertyName());
             idsActionController.setExpressionLabel(decreaseActionDTO.getExpressionStr());
             detailsFlowPane.getChildren().add(singleAction);
@@ -65,6 +70,7 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
             IDSActionController idsActionController = loader.getController();
             idsActionController.setActionTypeLabel("set");
             idsActionController.setPrimaryEntityLabel(setActionDTO.getEntityDefinitionName());
+            idsActionController.setSecondEntityLabel(setActionDTO.getSecondEntityDefinitionDTO());
             idsActionController.setPropertyNameLabel(setActionDTO.getPropertyName());
             idsActionController.setExpressionLabel(setActionDTO.getExpressionStr());
             detailsFlowPane.getChildren().add(singleAction);
@@ -82,6 +88,7 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
             CalculationActionController calculationActionController = loader.getController();
             calculationActionController.setActionTypeLabel("divide");
             calculationActionController.setPrimaryEntityLabel(divideActionDTO.getEntityDefinitionName());
+            calculationActionController.setSecondEntityLabel(divideActionDTO.getSecondEntityDefinitionDTO());
             calculationActionController.setResultPropertyNameLabel(divideActionDTO.getResultPropName());
             calculationActionController.setExpression1Label(divideActionDTO.getExpressionStrArg1());
             calculationActionController.setExpression2Label(divideActionDTO.getExpressionStrArg2());
@@ -100,6 +107,7 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
             CalculationActionController calculationActionController = loader.getController();
             calculationActionController.setActionTypeLabel("multiply");
             calculationActionController.setPrimaryEntityLabel(multiplyActionDTO.getEntityDefinitionName());
+            calculationActionController.setSecondEntityLabel(multiplyActionDTO.getSecondEntityDefinitionDTO());
             calculationActionController.setResultPropertyNameLabel(multiplyActionDTO.getResultPropName());
             calculationActionController.setExpression1Label(multiplyActionDTO.getExpressionStrArg1());
             calculationActionController.setExpression2Label(multiplyActionDTO.getExpressionStrArg2());
@@ -118,22 +126,53 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
             KillActionController killActionController = loader.getController();
             killActionController.setActionTypeLabel("kill");
             killActionController.setPrimaryEntityLabel(killActionDTO.getEntityDefinitionName());
+            killActionController.setSecondEntityLabel(killActionDTO.getSecondEntityDefinitionDTO());
             detailsFlowPane.getChildren().add(singleAction);
         }catch (IOException e) {
             e.printStackTrace();
         }
     }
     @Override
-    public  void createConditionActionChildren(ConditionActionDTO conditionActionDTO, FlowPane detailsFlowPane){
+    public  void createSingleConditionActionChildren(ConditionActionDTO conditionActionDTO, FlowPane detailsFlowPane){
+        SingleConditionActionDTO singleConditionActionDTO= (SingleConditionActionDTO)conditionActionDTO;
         try{
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ActionsResourcesConstants.CONDITION_FXML_URL);
+            loader.setLocation(ActionsResourcesConstants.SINGLE_CONDITION_FXML_URL);
             Node singleAction = loader.load();
 
-            ConditionActionController conditionActionController = loader.getController();
-            conditionActionController.setActionTypeLabel("condition");
-            conditionActionController.setPrimaryEntityLabel(conditionActionDTO.getEntityDefinitionName());
-            conditionActionController.setSingularityLabel(conditionActionDTO.getSingularity());
+            SingleConditionActionController singleConditionActionController = loader.getController();
+            singleConditionActionController.setActionTypeLabel("condition");
+            singleConditionActionController.setPrimaryEntityLabel(singleConditionActionDTO.getEntityDefinitionName());
+            singleConditionActionController.setSecondEntityLabel(singleConditionActionDTO.getSecondEntityDefinitionDTO());
+            singleConditionActionController.setSingularityLabel(singleConditionActionDTO.getSingularity());
+            singleConditionActionController.setThenActionsLabel(singleConditionActionDTO.getThenActionNumber().toString());
+            singleConditionActionController.setElseActionsLabel(singleConditionActionDTO.getElseActionNumber().toString());
+            singleConditionActionController.setPropertyNameLabel(singleConditionActionDTO.getPropertyName());
+            singleConditionActionController.setOperatorLabel(singleConditionActionDTO.getOperator());
+            singleConditionActionController.setValueLabel(singleConditionActionDTO.getExpressionStr());
+            detailsFlowPane.getChildren().add(singleAction);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public  void createMultipleConditionActionChildren(ConditionActionDTO conditionActionDTO, FlowPane detailsFlowPane){
+        MultipleConditionActionDTO multipleConditionActionDTO= (MultipleConditionActionDTO)conditionActionDTO;
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ActionsResourcesConstants.MULTIPLE_CONDITION_FXML_URL);
+            Node singleAction = loader.load();
+
+            MultipleConditionActionController multipleConditionActionController = loader.getController();
+            multipleConditionActionController.setActionTypeLabel("condition");
+            multipleConditionActionController.setPrimaryEntityLabel(multipleConditionActionDTO.getEntityDefinitionName());
+            multipleConditionActionController.setSecondEntityLabel(multipleConditionActionDTO.getSecondEntityDefinitionDTO());
+            multipleConditionActionController.setSingularityLabel(multipleConditionActionDTO.getSingularity());
+            multipleConditionActionController.setThenActionsLabel(multipleConditionActionDTO.getThenActionNumber().toString());
+            multipleConditionActionController.setElseActionsLabel(multipleConditionActionDTO.getElseActionNumber().toString());
+            multipleConditionActionController.setLogicalLabel(multipleConditionActionDTO.getLogical());
+            multipleConditionActionController.setConditionsNumberLabel(multipleConditionActionDTO.getConditionsNumber().toString());
             detailsFlowPane.getChildren().add(singleAction);
         }catch (IOException e) {
             e.printStackTrace();
