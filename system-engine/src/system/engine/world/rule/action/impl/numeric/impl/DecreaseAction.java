@@ -27,7 +27,8 @@ public class DecreaseAction extends AbstractAction implements NumericVerify {
     public void executeAction(Context context) throws IllegalArgumentException{
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(propertyName);
-        Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(), propertyName);
+        Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(),
+                context.getSecondEntityInstance(),propertyName);
         Type type = propertyInstance.getPropertyDefinition().getType();
 
         if (!NumericVerify.verifyNumericPropertyType(propertyInstance)){

@@ -18,8 +18,10 @@ public class DivideAction extends CalculationAction {
     public void executeAction(Context context) throws IllegalArgumentException{
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(resultPropName);
-        Expression expression1 = expressionCreation.craeteExpression(expressionStrArg1, context.getPrimaryEntityInstance(), resultPropName);
-        Expression expression2 = expressionCreation.craeteExpression(expressionStrArg2, context.getPrimaryEntityInstance(), resultPropName);
+        Expression expression1 = expressionCreation.craeteExpression(expressionStrArg1, context.getPrimaryEntityInstance(),
+                context.getSecondEntityInstance(),resultPropName);
+        Expression expression2 = expressionCreation.craeteExpression(expressionStrArg2, context.getPrimaryEntityInstance(),
+                context.getSecondEntityInstance(),resultPropName);
         //can assume that property type is float
 
         if (!NumericVerify.verifyNumericExpressionValue(expression1, context) |

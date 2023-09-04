@@ -9,8 +9,10 @@ public abstract class AbstractAction implements Action {
     private final ActionType actionType;
     private final EntityDefinition primaryEntityDefinition;
     private SecondaryEntityDefinition secondaryEntityDefinition;
+    private final Integer secondEntityQuantity = 0;
 
-    protected AbstractAction(ActionType actionType, EntityDefinition primaryEntityDefinition,SecondaryEntityDefinition secondaryEntityDefinition){
+    protected AbstractAction(ActionType actionType, EntityDefinition primaryEntityDefinition,
+                             SecondaryEntityDefinition secondaryEntityDefinition){
         this.actionType = actionType;
         this.primaryEntityDefinition = primaryEntityDefinition;
        this.secondaryEntityDefinition=secondaryEntityDefinition;
@@ -26,9 +28,12 @@ public abstract class AbstractAction implements Action {
     public EntityDefinition getContextPrimaryEntity() {
         return primaryEntityDefinition;
     }
-
+    @Override
     public EntityDefinition getSecondaryEntityDefinition() {
         return secondaryEntityDefinition.getExtendsEntityDefinition();
     }
-
+    @Override
+    public Integer getSecondEntityQuantity() {
+        return secondEntityQuantity;
+    }
 }

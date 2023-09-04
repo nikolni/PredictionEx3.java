@@ -12,7 +12,7 @@ public class MultipleConditionAction extends ConditionAction {
 
 
     private final String logical;
-    private List<ConditionAction> conditionsCollection;
+    private final List<ConditionAction> conditionsCollection;
 
     public MultipleConditionAction(String singularity, EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition, String logicalParam) {
         super(singularity,entityDefinitionParam,secondaryEntityDefinition);

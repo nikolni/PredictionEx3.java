@@ -9,4 +9,5 @@ public interface Action {
     ActionType getActionType();
     EntityDefinition getContextPrimaryEntity();
     EntityDefinition getSecondaryEntityDefinition();
+    Integer getSecondEntityQuantity();
 }
