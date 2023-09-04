@@ -105,11 +105,26 @@ public class RunSimulationImpl implements RunSimulation {
                                             List<Action> actionsList, List<EntityInstance> entitiesToKill){
 
         List<EntityInstance> currentEntitiesToKill = new ArrayList<>();
-        for(EntityInstance entityInstance : getAllEntityInstancesOfWorldInstance(worldInstance)){
+        for(EntityInstance primaryEntityInstance : getAllEntityInstancesOfWorldInstance(worldInstance)){
             currentEntitiesToKill.clear();
-            if(entityInstance != null){
-                Context context = new ContextImpl(entityInstance, envVariablesInstanceManager, currentEntitiesToKill);
-                actionsList.forEach(action -> action.executeAction(context));
+            if(primaryEntityInstance != null){
+                for(Action action : actionsList){
+                    Context context  =null;
+                    if(action.getSecondaryEntityDefinition() != null){
+                        //הגרלת מופעים של הישויות
+                        List<EntityInstance> secondEntitiesList  =new ArrayList<>();
+                        for(EntityInstance secondEntityInstance : secondEntitiesList){
+                            context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager, currentEntitiesToKill);
+                            action.executeAction(context);
+                        }
+                    }
+                    //no second entity
+                    else{
+                        context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager, currentEntitiesToKill);
+                        action.executeAction(context);
+                    }
+                }
+
                 entitiesToKill.addAll(currentEntitiesToKill);
             }
         }

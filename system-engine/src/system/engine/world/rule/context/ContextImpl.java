@@ -9,26 +9,26 @@ import java.util.List;
 public class ContextImpl implements Context {
 
     private final EntityInstance primaryEntityInstance;
-   // private final EntityInstance secondEntityInstance;
+    private final EntityInstance secondEntityInstance;
     private final EnvVariablesInstanceManager envVariablesInstanceManager;
     private List<EntityInstance> entitiesToKill;
 
-    public ContextImpl(EntityInstance primaryEntityInstance,
+   /* public ContextImpl(EntityInstance primaryEntityInstance,
                        EnvVariablesInstanceManager envVariablesInstanceManager,
                        List<EntityInstance> entitiesToKill) {
         this.primaryEntityInstance = primaryEntityInstance;
         //this.secondEntityInstance = secondEntityInstance;
         this.envVariablesInstanceManager  =  envVariablesInstanceManager;
         this.entitiesToKill = entitiesToKill;
-    }
-    /*public ContextImpl(EntityInstance primaryEntityInstance, EntityInstance secondEntityInstance,
+    }*/
+    public ContextImpl(EntityInstance primaryEntityInstance, EntityInstance secondEntityInstance,
                        EnvVariablesInstanceManager envVariablesInstanceManager,
                        List<EntityInstance> entitiesToKill) {
         this.primaryEntityInstance = primaryEntityInstance;
         this.secondEntityInstance = secondEntityInstance;
         this.envVariablesInstanceManager  =  envVariablesInstanceManager;
         this.entitiesToKill = entitiesToKill;
-    }*/
+    }
 
     @Override
     public EntityInstance getPrimaryEntityInstance() {
@@ -45,8 +45,8 @@ public class ContextImpl implements Context {
         return envVariablesInstanceManager.getEnvVar(name);
     }
 
-  /*  @Override
+    @Override
     public EntityInstance getSecondEntityInstance() {
         return secondEntityInstance;
-    }*/
+    }
 }

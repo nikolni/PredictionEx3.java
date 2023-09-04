@@ -19,8 +19,10 @@ public class MultiplyAction extends CalculationAction {
     public void executeAction(Context context) throws IllegalArgumentException{
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(resultPropName);
-        Expression expression1 = expressionCreation.craeteExpression(expressionStrArg1, context.getPrimaryEntityInstance(), resultPropName);
-        Expression expression2 = expressionCreation.craeteExpression(expressionStrArg2, context.getPrimaryEntityInstance(), resultPropName);
+        Expression expression1 = expressionCreation.craeteExpression(expressionStrArg1, context.getPrimaryEntityInstance(),
+                context.getSecondEntityInstance(),resultPropName);
+        Expression expression2 = expressionCreation.craeteExpression(expressionStrArg2, context.getPrimaryEntityInstance(),
+                context.getSecondEntityInstance(),resultPropName);
         Type type = propertyInstance.getPropertyDefinition().getType();
 
         if (!NumericVerify.verifyNumericPropertyType(propertyInstance)){

@@ -13,7 +13,7 @@ import system.engine.world.rule.enums.Type;
 
 public class SingleConditionAction extends ConditionAction {
 
-    private EntityDefinition innerEntityDefinition;
+    private final EntityDefinition innerEntityDefinition;
     private final String propertyName;
     private final String expressionStr;
     private final String operator;
@@ -46,7 +46,8 @@ public class SingleConditionAction extends ConditionAction {
     public boolean isConditionFulfilled(Context context) throws IllegalArgumentException{
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(propertyName);
-        Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(), propertyName);
+        Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(),
+                context.getSecondEntityInstance(),propertyName);
         Object propertyValue = propertyInstance.getValue();
         Object expressionValue = expression.evaluateExpression(context);
         Type propertyType = propertyInstance.getPropertyDefinition().getType();
