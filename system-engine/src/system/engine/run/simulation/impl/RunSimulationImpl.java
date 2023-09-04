@@ -107,27 +107,27 @@ public class RunSimulationImpl implements RunSimulation {
         List<EntityInstance> currentEntitiesToKill = new ArrayList<>();
         for(EntityInstance primaryEntityInstance : getAllEntityInstancesOfWorldInstance(worldInstance)){
             currentEntitiesToKill.clear();
-            if(primaryEntityInstance != null){
                 for(Action action : actionsList){
-                    Context context  =null;
-                    if(action.getSecondaryEntityDefinition() != null){
-                        //הגרלת מופעים של הישויות
-                        List<EntityInstance> secondEntitiesList  =new ArrayList<>();
-                        for(EntityInstance secondEntityInstance : secondEntitiesList){
-                            context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager, currentEntitiesToKill);
+                    if(action.getContextPrimaryEntity().getUniqueName().equals(primaryEntityInstance.getEntityDefinition().getUniqueName())){
+                        Context context  =null;
+                        if(action.getSecondaryEntityDefinition() != null){
+                            for(EntityInstance secondEntityInstance :action.getSecondaryEntityDefinition().generateSecondaryEntityList(worldInstance,envVariablesInstanceManager)){
+                                context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager, currentEntitiesToKill);
+                                action.executeAction(context);
+                            }
+                        }
+                        //no second entity
+                        else{
+                            context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager, currentEntitiesToKill);
                             action.executeAction(context);
                         }
                     }
-                    //no second entity
-                    else{
-                        context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager, currentEntitiesToKill);
-                        action.executeAction(context);
-                    }
+
                 }
 
                 entitiesToKill.addAll(currentEntitiesToKill);
             }
-        }
+
         for(EntityInstance entityInstance : entitiesToKill){
             worldInstance.getEntityInstanceManager().killEntity(entityInstance.getId());
         }

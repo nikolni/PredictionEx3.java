@@ -98,15 +98,17 @@ public class RuleFromXML {
     }
 
     public ConditionAction createConditionActionFromPRDCondition(EntityDefinitionManager entityDefinitionManager, EntityDefinition mainEntityDefinition,SecondaryEntityDefinition secondaryEntityDefinition, PRDCondition prdCondition) {
-        switch (prdCondition.getSingularity()) {
-            case "single":
-                return createActionConditionSingle(entityDefinitionManager, mainEntityDefinition,secondaryEntityDefinition,prdCondition.getEntity(),prdCondition.getProperty(),prdCondition.getOperator(),prdCondition.getValue());
-            case "multiple":
-                MultipleConditionAction multipleConditionAction=createActionConditionMultiple(mainEntityDefinition,secondaryEntityDefinition,prdCondition.getLogical());
-                for(PRDCondition prdCondition1:prdCondition.getPRDCondition()){
-                    multipleConditionAction.addConditionToConditionsCollection(createConditionActionFromPRDCondition(entityDefinitionManager,mainEntityDefinition,secondaryEntityDefinition,prdCondition1));
-                }
-                return multipleConditionAction;
+        if(prdCondition!=null){
+            switch (prdCondition.getSingularity()) {
+                case "single":
+                    return createActionConditionSingle(entityDefinitionManager, mainEntityDefinition,secondaryEntityDefinition,prdCondition.getEntity(),prdCondition.getProperty(),prdCondition.getOperator(),prdCondition.getValue());
+                case "multiple":
+                    MultipleConditionAction multipleConditionAction=createActionConditionMultiple(mainEntityDefinition,secondaryEntityDefinition,prdCondition.getLogical());
+                    for(PRDCondition prdCondition1:prdCondition.getPRDCondition()){
+                        multipleConditionAction.addConditionToConditionsCollection(createConditionActionFromPRDCondition(entityDefinitionManager,mainEntityDefinition,secondaryEntityDefinition,prdCondition1));
+                    }
+                    return multipleConditionAction;
+            }
         }
         return null;
     }

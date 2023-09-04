@@ -28,10 +28,23 @@ public abstract class AbstractAction implements Action {
     public EntityDefinition getContextPrimaryEntity() {
         return primaryEntityDefinition;
     }
-    @Override
-    public EntityDefinition getSecondaryEntityDefinition() {
+    public EntityDefinition getExtendsSecondaryEntityDefinition() {
         return secondaryEntityDefinition.getExtendsEntityDefinition();
     }
+
+    @Override
+    public SecondaryEntityDefinition getSecondaryEntityDefinition() {
+        return secondaryEntityDefinition;
+    }
+
+    public void setSecondaryEntityDefinition(SecondaryEntityDefinition secondaryEntityDefinition) {
+        this.secondaryEntityDefinition = secondaryEntityDefinition;
+    }
+
+    public EntityDefinition getPrimaryEntityDefinition() {
+        return primaryEntityDefinition;
+    }
+
     @Override
     public Integer getSecondEntityQuantity() {
         return secondEntityQuantity;

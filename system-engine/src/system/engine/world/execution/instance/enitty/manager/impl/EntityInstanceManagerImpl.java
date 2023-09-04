@@ -10,16 +10,15 @@ import system.engine.world.execution.instance.property.api.PropertyInstance;
 import system.engine.world.execution.instance.property.impl.PropertyInstanceImpl;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private int count;   //all instances of all entities
     private List<EntityInstance> instances;
     private List<EntityInstance> instancesBeforeKill;
     private Map<String, Integer> entitiesPopulationAfterSimulationRunning;
+    private Map<String,List<EntityInstance>> entityInstanceByEntityDef;
 
 
     public EntityInstanceManagerImpl(EntityDefinitionManager entityDefinitionManager) {
@@ -28,6 +27,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         instances = new ArrayList<>();
         instancesBeforeKill = new ArrayList<>();
         entitiesPopulationAfterSimulationRunning = new HashMap<>();
+        entityInstanceByEntityDef=new HashMap<>();
         for (EntityDefinition entityDefinition: entityDefinitionManager.getDefinitions()){
             for(int i = 0; i<entityDefinition.getPopulation(); i++) {
                 create(entityDefinition);
@@ -36,6 +36,8 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
                     entityDefinitionManager.getDefinitions().get(entityDefinitionCount).getPopulation());
         }
         instancesBeforeKill.addAll(instances);
+        entityInstanceByEntityDef = instances.stream()
+                .collect(Collectors.groupingBy(entityInstance -> entityInstance.getEntityDefinition().getUniqueName()));
     }
 
     @Override
@@ -60,6 +62,10 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     @Override
     public List<EntityInstance> getInstances() {
         return instances;
+    }
+
+    public Map<String, List<EntityInstance>> getEntityInstanceByEntityDef() {
+        return entityInstanceByEntityDef;
     }
 
     @Override
