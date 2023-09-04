@@ -6,5 +6,6 @@ public interface PropertyInstance {
     PropertyDefinition getPropertyDefinition();
     Object getValue();
     void setValue(Object val);
-
+    void setLastTickNumberOfValueUpdate(Integer lastTickNumberOfValueUpdate);
+    Integer getLastTickNumberOfValueUpdate();
 }

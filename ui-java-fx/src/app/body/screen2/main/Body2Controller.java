@@ -50,6 +50,9 @@ public class Body2Controller {
     private Map<String, EnvironmentVariableController> envVarNameToTileController;
     private Map<String, EntityController> entityNameToTileController;
 
+    private Map<String, String> envVarNameToSelectedInitValue;
+    private Map<String, String> entityNameToSelectedPopulationValue;
+
     private List<PropertyDefinitionDTO> envVarsList;
     private List<Object> initValues;
 
@@ -67,6 +70,8 @@ public class Body2Controller {
         simulationEnvironmentInputsFlowPane = new FlowPane();
         envVarNameToTileController =new HashMap<>();
         entityNameToTileController = new HashMap<>();
+        envVarNameToSelectedInitValue =new HashMap<>();
+        entityNameToSelectedPopulationValue = new HashMap<>();
         simulationEntitiesPopulationFlowPane.getChildren().clear();
         simulationEnvironmentInputsFlowPane.getChildren().clear();
 
@@ -110,6 +115,7 @@ public class Body2Controller {
                 environmentVariableController.setEnvVarTypeLabel(propertyDefinitionDTO.getType());
                 envVarNameToTileController.put(propertyDefinitionDTO.getUniqueName(), environmentVariableController);
                 simulationEnvironmentInputsFlowPane.getChildren().add(singleEnvVar);
+                envVarNameToSelectedInitValue.put(propertyDefinitionDTO.getUniqueName(), null);
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
@@ -129,6 +135,7 @@ public class Body2Controller {
                 entityController.setEntityNameLabel(entityName);
                 entityNameToTileController.put(entityName, entityController);
                 simulationEntitiesPopulationFlowPane.getChildren().add(singlePopulation);
+                entityNameToSelectedPopulationValue.put(entityName, null);
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
@@ -165,8 +172,10 @@ public class Body2Controller {
             StartButtonController startButtonController = loader.getController();
             startButtonController.setCallerController(this);
             startButtonController.setStage(primaryStage);
-            startButtonController.setSimulationEntitiesPopulationFlowPane(simulationEntitiesPopulationFlowPane);
-            startButtonController.setSimulationEnvironmentInputsFlowPane(simulationEnvironmentInputsFlowPane);
+            setMapsForStartButtonController();
+
+            startButtonController.setSimulationEntitiesPopulationFlowPane(entityNameToSelectedPopulationValue);
+            startButtonController.setSimulationEnvironmentInputsFlowPane(envVarNameToSelectedInitValue);
 
 
             Scene scene = new Scene(root, 620, 400);
@@ -180,6 +189,27 @@ public class Body2Controller {
         //primaryStage.close();
     }
 
+    private void setMapsForStartButtonController(){
+        for (String key : entityNameToTileController.keySet()) {
+            EntityController entityController = entityNameToTileController.get(key);
+            if(entityController.getPopulationValue() !=null){
+                entityNameToSelectedPopulationValue.put(key, entityController.getPopulationValue().toString());
+            }
+            else{
+                entityNameToSelectedPopulationValue.put(key, "");
+            }
+        }
+
+        for (String key : envVarNameToTileController.keySet()) {
+            EnvironmentVariableController environmentVariableController = envVarNameToTileController.get(key);
+            if(environmentVariableController.getValueTextField() !=null){
+                envVarNameToSelectedInitValue.put(key, environmentVariableController.getValueTextField().toString());
+            }
+            else{
+                envVarNameToSelectedInitValue.put(key, "random");
+            }
+        }
+    }
     public void startSimulation(){
         simulationsCounter++;
 
@@ -202,6 +232,8 @@ public class Body2Controller {
         }
 
     }
+
+
 
 
     public PropertyDefinitionDTO getEnvVarByName(String name) {

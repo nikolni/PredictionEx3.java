@@ -60,7 +60,7 @@ public class RunSimulationImpl implements RunSimulation {
                         actionsList.addAll(rule.getActionsToPerform());
                     }
 
-                    entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill);
+                    entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill, tick);
 
                     tick++;
                     endTime = Instant.now();
@@ -102,7 +102,7 @@ public class RunSimulationImpl implements RunSimulation {
     }
 
     private int runAllActionsOnAllEntities(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager,
-                                            List<Action> actionsList, List<EntityInstance> entitiesToKill){
+                                            List<Action> actionsList, List<EntityInstance> entitiesToKill, Integer tickNumber){
 
         List<EntityInstance> currentEntitiesToKill = new ArrayList<>();
         for(EntityInstance primaryEntityInstance : getAllEntityInstancesOfWorldInstance(worldInstance)){
@@ -122,7 +122,6 @@ public class RunSimulationImpl implements RunSimulation {
                             action.executeAction(context);
                         }
                     }
-
                 }
 
                 entitiesToKill.addAll(currentEntitiesToKill);
