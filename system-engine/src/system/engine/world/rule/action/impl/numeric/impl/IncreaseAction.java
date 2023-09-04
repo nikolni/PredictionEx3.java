@@ -66,6 +66,7 @@ public class IncreaseAction extends AbstractAction implements NumericVerify {
                 propertyInstance.setValue(fResult);
                 break;
         }
+        propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber());
     }
 
     public String getPropertyName() {

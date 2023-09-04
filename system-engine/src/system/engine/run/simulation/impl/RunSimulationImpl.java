@@ -60,7 +60,7 @@ public class RunSimulationImpl implements RunSimulation {
                         actionsList.addAll(rule.getActionsToPerform());
                     }
 
-                    entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill);
+                    entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill, tick);
 
                     tick++;
                     endTime = Instant.now();
@@ -102,7 +102,7 @@ public class RunSimulationImpl implements RunSimulation {
     }
 
     private int runAllActionsOnAllEntities(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager,
-                                            List<Action> actionsList, List<EntityInstance> entitiesToKill){
+                                            List<Action> actionsList, List<EntityInstance> entitiesToKill, Integer tickNumber){
 
         List<EntityInstance> currentEntitiesToKill = new ArrayList<>();
         for(EntityInstance primaryEntityInstance : getAllEntityInstancesOfWorldInstance(worldInstance)){
@@ -114,13 +114,15 @@ public class RunSimulationImpl implements RunSimulation {
                         //הגרלת מופעים של הישויות
                         List<EntityInstance> secondEntitiesList  =new ArrayList<>();
                         for(EntityInstance secondEntityInstance : secondEntitiesList){
-                            context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager, currentEntitiesToKill);
+                            context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager,
+                                    currentEntitiesToKill, tickNumber);
                             action.executeAction(context);
                         }
                     }
                     //no second entity
                     else{
-                        context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager, currentEntitiesToKill);
+                        context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager,
+                                currentEntitiesToKill, tickNumber);
                         action.executeAction(context);
                     }
                 }

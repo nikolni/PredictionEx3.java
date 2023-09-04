@@ -68,6 +68,7 @@ public class DecreaseAction extends AbstractAction implements NumericVerify {
                 propertyInstance.setValue(fResult);
                 break;
         }
+        propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber());
     }
 
     public String getPropertyName() {
