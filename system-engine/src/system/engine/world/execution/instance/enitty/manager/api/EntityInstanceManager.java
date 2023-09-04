@@ -5,6 +5,7 @@ import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.definition.entity.api.EntityDefinition;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EntityInstanceManager {
 
@@ -14,4 +15,5 @@ public interface EntityInstanceManager {
     List<EntityInstance> getInstancesBeforeKill();
     int getEntityPopulationAfterRunning(String entityDefinitionName);
     void killEntity(int id);
+    Map<String, List<EntityInstance>> getEntityInstanceByEntityDef();
 }

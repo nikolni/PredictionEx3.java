@@ -46,6 +46,8 @@ public class SingleConditionAction extends ConditionAction {
     public boolean isConditionFulfilled(Context context) throws IllegalArgumentException{
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(propertyName);
+       /* Expression propertyExp=expressionCreation.craeteExpression(propertyName, context.getPrimaryEntityInstance(),
+                context.getSecondEntityInstance(),propertyName);*/
         Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(),
                 context.getSecondEntityInstance(),propertyName);
         Object propertyValue = propertyInstance.getValue();
