@@ -217,7 +217,6 @@ public class Body2Controller {
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
         systemEngine.addWorldInstance();
 
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen3/simulation/progress/simulationProgress.fxml"));
             VBox simulationProgressNode = loader.load();

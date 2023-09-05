@@ -1,8 +1,8 @@
 package dto.api;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DTOPopulationValuesForSE {
-    List<String> getEntitiesNames();
-    List<Integer> getEntitiesPopulations();
+    Map<String, Integer> getEntityNameDefToPopulation();
 }

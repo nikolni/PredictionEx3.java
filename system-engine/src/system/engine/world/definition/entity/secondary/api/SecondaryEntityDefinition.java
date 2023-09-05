@@ -14,6 +14,7 @@ public interface SecondaryEntityDefinition {
     public String getSecEntityCount();
 
     public ConditionAction getSelectionCondition();
-     List<EntityInstance> generateSecondaryEntityList(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager);
+     List<EntityInstance> generateSecondaryEntityList(WorldInstance worldInstance,
+                                                      EnvVariablesInstanceManager envVariablesInstanceManager, Integer tickNumber);
 
     }

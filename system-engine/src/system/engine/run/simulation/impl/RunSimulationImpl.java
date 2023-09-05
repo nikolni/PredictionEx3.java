@@ -111,14 +111,17 @@ public class RunSimulationImpl implements RunSimulation {
                     if(action.getContextPrimaryEntity().getUniqueName().equals(primaryEntityInstance.getEntityDefinition().getUniqueName())){
                         Context context  =null;
                         if(action.getSecondaryEntityDefinition() != null){
-                            for(EntityInstance secondEntityInstance :action.getSecondaryEntityDefinition().generateSecondaryEntityList(worldInstance,envVariablesInstanceManager)){
-                                context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager, currentEntitiesToKill);
+                            for(EntityInstance secondEntityInstance :action.getSecondaryEntityDefinition().
+                                    generateSecondaryEntityList(worldInstance,envVariablesInstanceManager, tickNumber)){
+                                context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager,
+                                        currentEntitiesToKill, tickNumber);
                                 action.executeAction(context);
                             }
                         }
                         //no second entity
                         else{
-                            context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager, currentEntitiesToKill);
+                            context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager,
+                                    currentEntitiesToKill, tickNumber);
                             action.executeAction(context);
                         }
                     }
