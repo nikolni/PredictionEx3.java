@@ -3,6 +3,7 @@ package system.engine.world.rule.action.impl.numeric.impl.calculation;
 import system.engine.world.creation.api.ExpressionCreation;
 import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
+import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.rule.action.impl.numeric.api.NumericVerify;
 import system.engine.world.rule.context.Context;
 import system.engine.world.rule.enums.Type;
@@ -18,7 +19,11 @@ public class MultiplyAction extends CalculationAction {
     @Override
     public void executeAction(Context context) throws IllegalArgumentException{
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
-        PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(resultPropName);
+        EntityInstance actionEntityInstance=checkByDefinitionIfPrimaryOrSecondary(context);
+        if(actionEntityInstance==null) //cant execute the action
+            return;
+        PropertyInstance propertyInstance=actionEntityInstance.getPropertyByName(resultPropName);
+
         Expression expression1 = expressionCreation.craeteExpression(expressionStrArg1, context.getPrimaryEntityInstance(),
                 context.getSecondEntityInstance());
         Expression expression2 = expressionCreation.craeteExpression(expressionStrArg2, context.getPrimaryEntityInstance(),

@@ -111,12 +111,21 @@ public class RunSimulationImpl implements RunSimulation {
                     if(action.getContextPrimaryEntity().getUniqueName().equals(primaryEntityInstance.getEntityDefinition().getUniqueName())){
                         Context context  =null;
                         if(action.getSecondaryEntityDefinition() != null){
-                            for(EntityInstance secondEntityInstance :action.getSecondaryEntityDefinition().
-                                    generateSecondaryEntityList(worldInstance,envVariablesInstanceManager, tickNumber)){
-                                context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager,
-                                        currentEntitiesToKill, tickNumber);
-                                action.executeAction(context);
+                            List<EntityInstance> chosenSecondaryEntities=action.getSecondaryEntityDefinition().generateSecondaryEntityList(worldInstance,envVariablesInstanceManager, tickNumber);
+                            if(!chosenSecondaryEntities.isEmpty()){
+                                for(EntityInstance secondEntityInstance :chosenSecondaryEntities){
+                                    context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager,
+                                            currentEntitiesToKill, tickNumber);
+                                    action.executeAction(context);
+                                }
                             }
+                            else{ //secondary Entities list is empty
+                                context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager,
+                                        currentEntitiesToKill, tickNumber);
+                                if(action.getActionType().name().equals("CONDITION"))
+                                    action.executeAction(context);
+                            }
+
                         }
                         //no second entity
                         else{

@@ -4,6 +4,7 @@ import system.engine.world.creation.api.ExpressionCreation;
 import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
+import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.execution.instance.property.api.PropertyInstance;
 import system.engine.world.rule.action.api.AbstractAction;
 import system.engine.world.rule.action.api.ActionType;
@@ -24,7 +25,11 @@ public class SetAction extends AbstractAction {
         @Override
         public void executeAction(Context context) throws IllegalArgumentException{
             ExpressionCreation expressionCreation = new ExpressionCreationImpl();
-            PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(propertyName);
+            EntityInstance actionEntityInstance=checkByDefinitionIfPrimaryOrSecondary(context);
+            if(actionEntityInstance==null) //cant execute the action
+                return;
+            PropertyInstance propertyInstance=actionEntityInstance.getPropertyByName(propertyName);
+
             Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(),
                     context.getSecondEntityInstance());
             Object expressionVal=  expression.evaluateExpression(context);

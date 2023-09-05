@@ -3,6 +3,7 @@ package system.engine.world.rule.action.impl.condition;
 import system.engine.world.creation.api.ExpressionCreation;
 import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
+import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.rule.action.expression.impl.ExpFuncName;
 import system.engine.world.rule.action.expression.impl.ExpPropName;
 import system.engine.world.rule.action.impl.numeric.api.NumericVerify;
@@ -33,6 +34,12 @@ public class SingleConditionAction extends ConditionAction {
 
     @Override
     public void executeAction(Context context) {
+        if(context.getPrimaryEntityInstance()==null)
+            return;
+        if(getSecondaryEntityDefinition()!=null) //check if a single condition can be execute
+            if(context.getSecondEntityInstance()==null&&innerEntityDefinition.getUniqueName().equals(getExtendsSecondaryEntityDefinition().getUniqueName()))
+                return;
+
         if (isConditionFulfilled(context)) {
             for (Action action : thenActionList) {
                 action.executeAction(context);
@@ -47,7 +54,8 @@ public class SingleConditionAction extends ConditionAction {
 
     public boolean isConditionFulfilled(Context context) throws IllegalArgumentException{
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
-        //PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(propertyName);
+        EntityInstance actionEntityInstance=checkByDefinitionIfPrimaryOrSecondary(context);
+        //need to add actionEntityInstance to every Expression creation
         Expression propertyExp=expressionCreation.craeteExpression(propertyName, context.getPrimaryEntityInstance(),
                 context.getSecondEntityInstance());
         Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(),
