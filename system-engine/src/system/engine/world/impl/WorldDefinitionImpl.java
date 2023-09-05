@@ -6,11 +6,13 @@ import system.engine.world.definition.environment.variable.api.EnvVariablesDefin
 import system.engine.world.rule.manager.api.RuleDefinitionManager;
 import system.engine.world.termination.condition.manager.api.TerminationConditionsManager;
 
+import java.util.Map;
+
 public class WorldDefinitionImpl implements WorldDefinition {
-    private EntityDefinitionManager entityDefinitionManager;
-    private EnvVariablesDefinitionManager envVariablesDefinitionManager;
-    private RuleDefinitionManager ruleDefinitionManager;
-    private TerminationConditionsManager terminationConditionsManager;
+    private final EntityDefinitionManager entityDefinitionManager;
+    private final EnvVariablesDefinitionManager envVariablesDefinitionManager;
+    private final RuleDefinitionManager ruleDefinitionManager;
+    private final TerminationConditionsManager terminationConditionsManager;
 
     public WorldDefinitionImpl(EntityDefinitionManager entityDefinitionManager,
                                EnvVariablesDefinitionManager envVariablesDefinitionManager,
@@ -36,5 +38,14 @@ public class WorldDefinitionImpl implements WorldDefinition {
     @Override
     public WorldInstanceImpl createWorldInstance(int id) {
         return new WorldInstanceImpl(this, id);
+    }
+
+    @Override
+    public void addPopulationToEntitiesDefinition(Map<String, Integer> entityNameDefToPopulation){
+        for (String key : entityNameDefToPopulation.keySet()) {
+            if(entityNameDefToPopulation.get(key) != null){
+                entityDefinitionManager.getEntityDefinitionByName(key).setPopulation(entityNameDefToPopulation.get(key));
+            }
+        }
     }
 }

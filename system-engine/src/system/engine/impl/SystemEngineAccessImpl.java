@@ -104,7 +104,8 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     @Override
     public void updateEntitiesPopulation(DTOPopulationValuesForSE dtoPopulationValuesForSE) {
-
+        Map<String, Integer> entityNameDefToPopulation = dtoPopulationValuesForSE.getEntityNameDefToPopulation();
+        worldDefinition.addPopulationToEntitiesDefinition(entityNameDefToPopulation);
     }
     @Override
     public void updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE) {
