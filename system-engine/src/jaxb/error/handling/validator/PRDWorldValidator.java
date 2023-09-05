@@ -258,7 +258,7 @@ public class PRDWorldValidator {
             return null;
         }
 
-    public Type getType(String value) {
+    public static Type getType(String value) {
         Pattern integerPattern = Pattern.compile("^-?\\d+$");
         Pattern decimalPattern = Pattern.compile("^-?\\d+\\.\\d+$");
         Pattern booleanPattern = Pattern.compile("^(true|false)$", Pattern.CASE_INSENSITIVE);

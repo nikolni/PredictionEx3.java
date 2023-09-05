@@ -3,6 +3,9 @@ package system.engine.world.rule.action.api;
 
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
+import system.engine.world.execution.instance.enitty.api.EntityInstance;
+import system.engine.world.execution.instance.property.api.PropertyInstance;
+import system.engine.world.rule.context.Context;
 
 public abstract class AbstractAction implements Action {
 
@@ -15,6 +18,25 @@ public abstract class AbstractAction implements Action {
         this.actionType = actionType;
         this.primaryEntityDefinition = primaryEntityDefinition;
        this.secondaryEntityDefinition=secondaryEntityDefinition;
+    }
+
+    @Override
+    public EntityInstance checkByDefinitionIfPrimaryOrSecondary(Context context){
+        EntityInstance entityInstance=null;
+        if(context.getPrimaryEntityInstance()==null)
+            return entityInstance;
+        if(context.getSecondEntityInstance()!=null){
+            if(getContextPrimaryEntity().getUniqueName().equals(context.getPrimaryEntityInstance().getEntityDefinition().getUniqueName()))
+                return context.getPrimaryEntityInstance();
+            if(getContextPrimaryEntity().getUniqueName().equals(context.getSecondEntityInstance().getEntityDefinition().getUniqueName()))
+                return context.getSecondEntityInstance();
+        }
+        else{
+            if(getContextPrimaryEntity().getUniqueName().equals(context.getPrimaryEntityInstance().getEntityDefinition().getUniqueName()))
+                return context.getPrimaryEntityInstance();
+        }
+
+        return entityInstance;
     }
 
 
@@ -38,10 +60,6 @@ public abstract class AbstractAction implements Action {
 
     public void setSecondaryEntityDefinition(SecondaryEntityDefinition secondaryEntityDefinition) {
         this.secondaryEntityDefinition = secondaryEntityDefinition;
-    }
-
-    public EntityDefinition getPrimaryEntityDefinition() {
-        return primaryEntityDefinition;
     }
 
     @Override

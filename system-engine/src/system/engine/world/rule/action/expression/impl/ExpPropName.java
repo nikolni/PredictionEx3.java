@@ -9,7 +9,7 @@ public class ExpPropName extends AbstractExpressionImpl {
 
     private String propertyName;
     public ExpPropName(String expressionStrParam, EntityInstance primaryEntityInstance,
-                       EntityInstance secondEntityInstance, String propertyNameParam) {
+                       EntityInstance secondEntityInstance) {
         super(expressionStrParam, primaryEntityInstance, secondEntityInstance);
         propertyName = expressionStrParam;
     }
