@@ -19,8 +19,10 @@ public class RunSimulationTask extends Task<Boolean> implements SimulationCallba
     private SimpleIntegerProperty secondsPast;
     private SimpleIntegerProperty ticksPast;
     private SimpleIntegerProperty entitiesLeft;
+
+    private Integer simulationID;
     private SimpleBooleanProperty isPaused;
-    private SimpleBooleanProperty isResumed;
+    private SimpleBooleanProperty isCanceled;
     private SystemEngineAccess systemEngineAccess;
     private Consumer<Runnable> onCancel;
     private Integer totalTicksNumber;
@@ -36,6 +38,7 @@ public class RunSimulationTask extends Task<Boolean> implements SimulationCallba
         this.systemEngineAccess = simulationRunTaskContext.getSystemEngineAccess();
         this.onCancel = simulationRunTaskContext.getOnCancel();
         this.isPaused = simulationRunTaskContext.getIsPausedProperty();
+        this.simulationID = simulationRunTaskContext.getSimulationID();
         this.simulationProgressController = simulationProgressController;
     }
 
@@ -45,7 +48,7 @@ public class RunSimulationTask extends Task<Boolean> implements SimulationCallba
         updateMessage("Simulation is running...");
         updateProgress(0, totalTicksNumber);
         try{
-            DTOSimulationEndingForUi dtoSimulationEndingForUi = systemEngineAccess.runSimulation(this, isPaused);
+            DTOSimulationEndingForUi dtoSimulationEndingForUi = systemEngineAccess.runSimulation(this, isPaused, simulationID);
             simulationProgressController.addNewSimulationResultToBody3Controller(dtoSimulationEndingForUi);
 
         } catch (TaskIsCanceledException e) {
@@ -61,7 +64,6 @@ public class RunSimulationTask extends Task<Boolean> implements SimulationCallba
     protected void cancelled() {
         updateMessage("Cancelled!");
         super.cancelled();
-
     }
 
     @Override
@@ -73,7 +75,6 @@ public class RunSimulationTask extends Task<Boolean> implements SimulationCallba
             secondsPast.set(dtoSimulationProgressForUi.getSecondsPast());
             entitiesLeft.set(dtoSimulationProgressForUi.getEntitiesLeft());
         });
-
     }
 
     @Override

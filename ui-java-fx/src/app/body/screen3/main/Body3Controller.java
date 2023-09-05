@@ -2,6 +2,7 @@ package app.body.screen3.main;
 
 import app.body.screen3.result.ResultsController;
 import app.body.screen3.simulation.progress.SimulationProgressController;
+import app.body.screen3.simulation.progress.task.UpdateUiThread;
 import dto.api.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,6 +53,7 @@ public class Body3Controller {
 
     private List<HBox> simulationResultsNodesList;
     private List<VBox> simulationProgressNodesList;
+    private List<SimulationProgressController> simulationProgressControllerList;
 
     public Body3Controller() {
         this.simulationProgressNodesList = new ArrayList<>();
@@ -90,6 +92,8 @@ public class Body3Controller {
             String[] words = selectedItem.split("\\s+");
             int simulationID = (Integer.parseInt(words[words.length - 1]));
             simulationProgressScrollPane.setContent(simulationProgressNodesList.get(simulationID-1));
+            UpdateUiThread updateUiThread = new UpdateUiThread(simulationProgressControllerList.get(simulationID-1), systemEngine, simulationID);
+            updateUiThread.start();
             if(simulationResultsNodesList.get(simulationID-1) != null){
                 simulationResultScrollPane.setContent(simulationResultsNodesList.get(simulationID-1));
             }
@@ -144,8 +148,9 @@ public class Body3Controller {
     }
 
 
-    public void addNewSimulationProgressToList(VBox simulationProgressController) {
-        simulationProgressNodesList.add(simulationProgressController);
+    public void addNewSimulationProgressToList(VBox simulationProgressNode, SimulationProgressController simulationProgressController) {
+        simulationProgressNodesList.add(simulationProgressNode);
+        simulationProgressControllerList.add(simulationProgressController);
         simulationResultsNodesList.add(null);
     }
 

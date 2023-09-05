@@ -4,6 +4,8 @@ import app.body.screen2.task.context.api.SimulationRunTaskContext;
 import app.body.screen2.task.context.impl.SimulationRunTaskContextImpl;
 import app.body.screen3.main.Body3Controller;
 import dto.api.DTOSimulationEndingForUi;
+import dto.api.DTOSimulationProgressForUi;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -14,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
 import system.engine.api.SystemEngineAccess;
+import system.engine.run.simulation.SimulationCallback;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -24,6 +27,8 @@ public class SimulationProgressController {
     private ProgressBar simulationProgressBar;
     @FXML
     private Label PercentLabel;
+    @FXML
+    private Label simulationIdLabel;
     @FXML
     private Label progressMassageLabel;
     @FXML
@@ -67,27 +72,20 @@ public class SimulationProgressController {
     public void setBody3ComponentController(Body3Controller body3ComponentController) {
         this.body3ComponentController = body3ComponentController;
     }
+    public void setSimulationIdLabel(String simulationIdLabel) {
+        this.simulationIdLabel.setText(simulationIdLabel);
+    }
 
-    public void runSimulation(SystemEngineAccess systemEngineAccess, ExecutorService threadPool){
+    public void runSimulation(SystemEngineAccess systemEngineAccess, Integer simulationID){
         toggleTaskButtons(true);
         SimulationRunTaskContext simulationRunTaskContext = new SimulationRunTaskContextImpl(secondsPast, ticksPast, entitiesLeft, isPaused,
                 systemEngineAccess, (q) -> onTaskFinished(Optional.ofNullable(() -> toggleTaskButtons(false))),
-                systemEngineAccess.getTotalTicksNumber());
+                systemEngineAccess.getTotalTicksNumber(), simulationID);
         runSimulationTask = new RunSimulationTask(simulationRunTaskContext, this);
-        System.out.println("controller address " + this + " task address " + runSimulationTask);
         bindTaskToUIComponents(runSimulationTask, () -> toggleTaskButtons(false));
+        systemEngineAccess.addTaskToQueue(runSimulationTask);
 
-        threadPool.submit(runSimulationTask);
-        /*Thread simulationThread = new Thread(runSimulationTask);
-        simulationThread.start();*/
-
-        /*while(simulationThread.isAlive()){
-            try {
-                Thread.sleep(250);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }*/
+        System.out.println("controller address " + this + " task address " + runSimulationTask);
     }
 
 
@@ -131,6 +129,17 @@ public class SimulationProgressController {
     public void addNewSimulationResultToBody3Controller(DTOSimulationEndingForUi dtoSimulationEndingForUi){
         body3ComponentController.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi);
     }
+
+    public void updateSimulationProgress(DTOSimulationProgressForUi dtoSimulationProgressForUi){
+        SimulationCallback callback = (SimulationCallback)runSimulationTask;
+        if(isPaused.get()){
+            callback.onUpdateWhileSimulationIsPaused();
+        }
+        else {
+            callback.onUpdateWhileSimulationRunning(dtoSimulationProgressForUi);
+        }
+    }
+
 
 
     @FXML

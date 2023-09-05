@@ -2,6 +2,7 @@ package system.engine.api;
 
 import dto.api.*;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.concurrent.Task;
 import system.engine.run.simulation.SimulationCallback;
 
 import javax.xml.bind.JAXBException;
@@ -30,13 +31,14 @@ public interface SystemEngineAccess {
     void updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE);
     void addWorldInstance();
 
-    DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isResumed);
+    DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isResumed, Integer simulationID);
 
     int getTotalTicksNumber();
 
     List<DTOSimulationEndingForUi> getDTOSimulationEndingForUiList();
     DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogramByNames(Integer simulationID,
                                                                                       String entityName,String propertyName);
-
+    DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID);
+    void addTaskToQueue(Task<Boolean> runSimulationTask);
 
 }
