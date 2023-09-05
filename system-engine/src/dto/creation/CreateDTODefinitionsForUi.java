@@ -8,7 +8,6 @@ import dto.definition.property.definition.impl.PropertyDefinitionDTOImpl;
 import dto.definition.rule.action.KillActionDTO;
 import dto.definition.rule.action.SetActionDTO;
 import dto.definition.rule.action.api.AbstractActionDTO;
-import dto.definition.rule.action.condition.ConditionActionDTO;
 import dto.definition.rule.action.condition.MultipleConditionActionDTO;
 import dto.definition.rule.action.condition.SingleConditionActionDTO;
 import dto.definition.rule.action.numeric.DecreaseActionDTO;
@@ -31,7 +30,6 @@ import system.engine.world.definition.property.api.PropertyDefinition;
 import system.engine.world.rule.action.api.*;
 import system.engine.world.rule.action.impl.KillAction;
 import system.engine.world.rule.action.impl.SetAction;
-import system.engine.world.rule.action.impl.condition.ConditionAction;
 import system.engine.world.rule.action.impl.condition.MultipleConditionAction;
 import system.engine.world.rule.action.impl.condition.SingleConditionAction;
 import system.engine.world.rule.action.impl.numeric.impl.DecreaseAction;
@@ -97,30 +95,30 @@ public class CreateDTODefinitionsForUi {
                 case INCREASE:
                     IncreaseAction increaseAction = (IncreaseAction)action;
                     actionsDTOs.add(new IncreaseActionDTO(increaseAction.getContextPrimaryEntity().getUniqueName(),
-                            secondaryEntityName = (increaseAction.getSecondaryEntityDefinition() != null) ?
-                                    increaseAction.getSecondaryEntityDefinition().getUniqueName() : "no second entity",
+                            secondaryEntityName = (increaseAction.getExtendsSecondaryEntityDefinition() != null) ?
+                                    increaseAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity",
                             increaseAction.getPropertyName(), increaseAction.getExpressionStr()));
                     break;
                 case DECREASE:
                     DecreaseAction decreaseAction = (DecreaseAction)action;
                     actionsDTOs.add(new DecreaseActionDTO(decreaseAction.getContextPrimaryEntity().getUniqueName(),
-                            secondaryEntityName = (decreaseAction.getSecondaryEntityDefinition() != null) ?
-                                    decreaseAction.getSecondaryEntityDefinition().getUniqueName() : "no second entity",
+                            secondaryEntityName = (decreaseAction.getExtendsSecondaryEntityDefinition() != null) ?
+                                    decreaseAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity",
                             decreaseAction.getPropertyName(), decreaseAction.getExpressionStr()));
                     break;
                 case CALCULATION:
                     if(action instanceof DivideAction) {
                         DivideAction divideAction = (DivideAction) action;
                         actionsDTOs.add(new DivideActionDTO(divideAction.getContextPrimaryEntity().getUniqueName(),
-                                secondaryEntityName = (divideAction.getSecondaryEntityDefinition() != null) ?
-                                        divideAction.getSecondaryEntityDefinition().getUniqueName() : "no second entity",
+                                secondaryEntityName = (divideAction.getExtendsSecondaryEntityDefinition() != null) ?
+                                        divideAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity",
                                 divideAction.getResultPropName(), divideAction.getExpressionStrArg1(), divideAction.getExpressionStrArg2()));
                     }
                     else{
                         MultiplyAction multiplyAction = (MultiplyAction) action;
                         actionsDTOs.add(new MultiplyActionDTO(multiplyAction.getContextPrimaryEntity().getUniqueName(),
-                                secondaryEntityName = (multiplyAction.getSecondaryEntityDefinition() != null) ?
-                                        multiplyAction.getSecondaryEntityDefinition().getUniqueName() : "no second entity",
+                                secondaryEntityName = (multiplyAction.getExtendsSecondaryEntityDefinition() != null) ?
+                                        multiplyAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity",
                                 multiplyAction.getResultPropName(), multiplyAction.getExpressionStrArg1(), multiplyAction.getExpressionStrArg2()));
                     }
                     break;
@@ -129,8 +127,8 @@ public class CreateDTODefinitionsForUi {
                         SingleConditionAction singleConditionAction = (SingleConditionAction) action;
                         actionsDTOs.add(new SingleConditionActionDTO(singleConditionAction.getSingularity(),
                                 singleConditionAction.getContextPrimaryEntity().getUniqueName(),
-                                secondaryEntityName = (singleConditionAction.getSecondaryEntityDefinition() != null) ?
-                                        singleConditionAction.getSecondaryEntityDefinition().getUniqueName() : "no second entity",
+                                secondaryEntityName = (singleConditionAction.getExtendsSecondaryEntityDefinition() != null) ?
+                                        singleConditionAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity",
                                 singleConditionAction.getInnerEntityDefinition().getUniqueName(),
                                 singleConditionAction.getPropertyName(), singleConditionAction.getOperator(), singleConditionAction.getExpressionStr(),
                                 singleConditionAction.getThenActionsNumber(), singleConditionAction.getElseActionsNumber()));
@@ -139,8 +137,8 @@ public class CreateDTODefinitionsForUi {
                         MultipleConditionAction multipleConditionAction = (MultipleConditionAction) action;
                         actionsDTOs.add(new MultipleConditionActionDTO(multipleConditionAction.getSingularity(),
                                 multipleConditionAction.getContextPrimaryEntity().getUniqueName(),
-                                secondaryEntityName = (multipleConditionAction.getSecondaryEntityDefinition() != null) ?
-                                        multipleConditionAction.getSecondaryEntityDefinition().getUniqueName() : "no second entity",
+                                secondaryEntityName = (multipleConditionAction.getExtendsSecondaryEntityDefinition() != null) ?
+                                        multipleConditionAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity",
                                 multipleConditionAction.getLogical(), multipleConditionAction.getConditionsNumber(),
                                 multipleConditionAction.getThenActionsNumber(), multipleConditionAction.getElseActionsNumber()));
                     }
@@ -148,15 +146,15 @@ public class CreateDTODefinitionsForUi {
                 case SET:
                     SetAction setAction= (SetAction) action;
                     actionsDTOs.add(new SetActionDTO(setAction.getContextPrimaryEntity().getUniqueName(),
-                            secondaryEntityName = (setAction.getSecondaryEntityDefinition() != null) ?
-                                    setAction.getSecondaryEntityDefinition().getUniqueName() : "no second entity",
+                            secondaryEntityName = (setAction.getExtendsSecondaryEntityDefinition() != null) ?
+                                    setAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity",
                             setAction.getPropertyName(), setAction.getExpressionStr()));
                     break;
                 case KILL:
                     KillAction killAction = (KillAction)action;
                     actionsDTOs.add(new KillActionDTO(killAction.getContextPrimaryEntity().getUniqueName(),
-                             secondaryEntityName = (killAction.getSecondaryEntityDefinition() != null) ?
-                            killAction.getSecondaryEntityDefinition().getUniqueName() : "no second entity"));
+                             secondaryEntityName = (killAction.getExtendsSecondaryEntityDefinition() != null) ?
+                            killAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity"));
                     break;
             }
         }
