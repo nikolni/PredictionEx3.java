@@ -16,11 +16,12 @@ public class SimulationRunTaskContextImpl implements SimulationRunTaskContext {
     private SystemEngineAccess systemEngineAccess;
     private Consumer<Runnable> onCancel;
     private Integer totalTicksNumber;
+    private Integer simulationID;
 
     public SimulationRunTaskContextImpl(SimpleIntegerProperty secondsPast, SimpleIntegerProperty ticksPast,
                                         SimpleIntegerProperty entitiesLeft, SimpleBooleanProperty isPaused,
                                         SystemEngineAccess systemEngineAccess,
-                                        Consumer<Runnable> onCancel, Integer totalTicksNumber) {
+                                        Consumer<Runnable> onCancel, Integer totalTicksNumber, Integer simulationID) {
         this.secondsPast = secondsPast;
         this.ticksPast = ticksPast;
         this.entitiesLeft = entitiesLeft;
@@ -28,6 +29,7 @@ public class SimulationRunTaskContextImpl implements SimulationRunTaskContext {
         this.systemEngineAccess = systemEngineAccess;
         this.onCancel = onCancel;
         this.totalTicksNumber = totalTicksNumber;
+        this.simulationID =  simulationID;
     }
 
     @Override
@@ -58,5 +60,10 @@ public class SimulationRunTaskContextImpl implements SimulationRunTaskContext {
     @Override
     public Integer getTotalTicksNumber() {
         return totalTicksNumber;
+    }
+
+    @Override
+    public Integer getSimulationID() {
+        return simulationID;
     }
 }

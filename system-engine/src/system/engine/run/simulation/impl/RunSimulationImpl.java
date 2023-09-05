@@ -2,9 +2,7 @@ package system.engine.run.simulation.impl;
 
 import dto.api.DTOSimulationProgressForUi;
 import dto.impl.DTOSimulationProgressForUiImpl;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
-import system.engine.run.simulation.SimulationCallback;
 import system.engine.run.simulation.api.RunSimulation;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.api.WorldInstance;
@@ -22,14 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RunSimulationImpl implements RunSimulation {
-
-    private SimulationCallback callback;
+    private DTOSimulationProgressForUi dtoSimulationProgressForUi= null;
+    //private Task<Boolean> currentTask;
     private final long SLEEP_TIME = 3;
-    @Override
+   /* @Override
     public void registerCallback(SimulationCallback callback) {
         this.callback = callback;
-    }
-
+    }*/
 
     @Override
     public int[] runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
@@ -50,9 +47,9 @@ public class RunSimulationImpl implements RunSimulation {
 
 
         while(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun) {
-            if(isPaused.get()){
+            /*if(isPaused.get()){
                 callback.onUpdateWhileSimulationIsPaused();
-            }
+            }*/
                 while (!isPaused.get()) {
                     entitiesToKill.clear();
                     actionsList.clear();
@@ -67,14 +64,16 @@ public class RunSimulationImpl implements RunSimulation {
                     duration = Duration.between(startTime, endTime);
                     seconds = (int) duration.getSeconds();
 
-                    // Notify the UI about progress and status via the callback
+                    updateDtoSimulationProgressForUi(seconds, tick, entitiesLeft);
+
+                    /*// Notify the UI about progress and status via the callback
                     if (callback != null) {
                         DTOSimulationProgressForUi dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(seconds, tick, entitiesLeft);
                         callback.onUpdateWhileSimulationRunning(dtoSimulationProgressForUi);
-                        /*Platform.runLater(() -> {
+                        *//*Platform.runLater(() -> {
                             callback.onUpdate(dtoSimulationProgressForUi);
-                        });*/
-                    }
+                        });*//*
+                    }*/
                     if(!(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun)){
                         break;
                     }
@@ -134,6 +133,15 @@ public class RunSimulationImpl implements RunSimulation {
             worldInstance.getEntityInstanceManager().killEntity(entityInstance.getId());
         }
         return entitiesToKill.size();
+    }
+
+
+    private void updateDtoSimulationProgressForUi(Integer seconds,Integer tick,Integer entitiesLeft) {
+        dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(seconds, tick, entitiesLeft);
+    }
+    @Override
+    public DTOSimulationProgressForUi getDtoSimulationProgressForUi() {
+        return dtoSimulationProgressForUi;
     }
 
 

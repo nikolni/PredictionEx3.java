@@ -62,7 +62,6 @@ public class Body2Controller {
     private Body3Controller body3ComponentController;
 
     private Integer simulationsCounter = 0;
-    private ExecutorService threadPool;
 
 
     public Body2Controller() {
@@ -74,8 +73,6 @@ public class Body2Controller {
         entityNameToSelectedPopulationValue = new HashMap<>();
         simulationEntitiesPopulationFlowPane.getChildren().clear();
         simulationEnvironmentInputsFlowPane.getChildren().clear();
-
-        threadPool = Executors.newFixedThreadPool(3);
     }
 
 
@@ -222,10 +219,11 @@ public class Body2Controller {
             VBox simulationProgressNode = loader.load();
             SimulationProgressController simulationProgressController = loader.getController();
             System.out.println("simulation num " + simulationsCounter + " with controller address " + simulationProgressController);
-            body3ComponentController.addNewSimulationProgressToList(simulationProgressNode);
+            body3ComponentController.addNewSimulationProgressToList(simulationProgressNode, simulationProgressController);
             body3ComponentController.addNewSimulationToSimulationsList(simulationsCounter);
             simulationProgressController.setBody3ComponentController(body3ComponentController);
-            simulationProgressController.runSimulation(systemEngine, threadPool);
+            simulationProgressController.setSimulationIdLabel(simulationsCounter.toString());
+            simulationProgressController.runSimulation(systemEngine, simulationsCounter);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
