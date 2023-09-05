@@ -14,4 +14,5 @@ public interface SimulationRunTaskContext {
      SystemEngineAccess getSystemEngineAccess() ;
      Consumer<Runnable> getOnCancel();
      Integer getTotalTicksNumber();
+     Integer getSimulationID();
 }

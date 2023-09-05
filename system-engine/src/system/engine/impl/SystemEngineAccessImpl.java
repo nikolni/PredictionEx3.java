@@ -7,6 +7,7 @@ import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.impl.DTOSimulationEndingForUiImpl;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.concurrent.Task;
 import jaxb.copy.WorldFromXml;
 import system.engine.api.SystemEngineAccess;
 import system.engine.run.simulation.SimulationCallback;
@@ -25,6 +26,8 @@ import system.engine.world.termination.condition.impl.TicksTerminationConditionI
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SystemEngineAccessImpl implements SystemEngineAccess {
 
@@ -33,14 +36,17 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     private List<DTOSimulationEndingForUi> simulationEndingForUiList;
     private EnvVariablesInstanceManager envVariablesInstanceManager;
     private boolean isHaveValidFileInSystem=false;
+    private Map<Integer, RunSimulation>  simulationIdToRunSimulation;
+
+    private ExecutorService threadPool;
 
 
     public SystemEngineAccessImpl() {
         this.worldInstances = new ArrayList<>();
         simulationEndingForUiList=new ArrayList<>();
+        simulationIdToRunSimulation = new HashMap<>();
+        threadPool = Executors.newFixedThreadPool(3);
     }
-
-
 
     @Override
     public void getXMLFromUser(String xmlPath) throws JAXBException, FileNotFoundException {
@@ -163,18 +169,23 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
-    public DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isPaused) throws IllegalArgumentException{    //on last index at world instances list
-        int simulationID = worldInstances.size();
+    public DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isPaused, Integer simulationID) throws IllegalArgumentException{    //on last index at world instances list
         int[] terminationConditionArr;
 
         RunSimulation runSimulationInstance = new RunSimulationImpl();
-        runSimulationInstance.registerCallback(callback);
+        simulationIdToRunSimulation.put(simulationID,runSimulationInstance);
+        //runSimulationInstance.registerCallback(callback);
         terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
                 worldInstances.get(simulationID-1) ,envVariablesInstanceManager, isPaused);
 
         DTOSimulationEndingForUi dtoSimulationEndingForUi=new DTOSimulationEndingForUiImpl(simulationID, terminationConditionArr);
         //simulationEndingForUiList.add(dtoSimulationEndingForUi);
         return dtoSimulationEndingForUi;
+    }
+
+    @Override
+    public void addTaskToQueue(Task<Boolean> runSimulationTask){
+        threadPool.submit(runSimulationTask);
     }
 
     @Override
@@ -197,5 +208,10 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     public DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogramByNames(Integer simulationID,
                                                                                              String entityName,String propertyName) {
         return new CreateDTOPropertyHistogramForUi().getData(worldInstances.get(simulationID-1), entityName, propertyName);
+    }
+
+    @Override
+    public DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID){
+        return simulationIdToRunSimulation.get(simulationID).getDtoSimulationProgressForUi();
     }
 }

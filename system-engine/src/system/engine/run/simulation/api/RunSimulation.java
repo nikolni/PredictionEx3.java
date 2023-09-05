@@ -1,5 +1,6 @@
 package system.engine.run.simulation.api;
 
+import dto.api.DTOSimulationProgressForUi;
 import javafx.beans.property.SimpleBooleanProperty;
 import system.engine.run.simulation.SimulationCallback;
 import system.engine.world.api.WorldDefinition;
@@ -13,8 +14,9 @@ import java.util.List;
 
 public interface RunSimulation {
 
-    void registerCallback(SimulationCallback callback);
+    //void registerCallback(SimulationCallback callback);
     int[] runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
                                           EnvVariablesInstanceManager envVariablesInstanceManager,
                                             SimpleBooleanProperty isPaused);
+    DTOSimulationProgressForUi getDtoSimulationProgressForUi();
 }
