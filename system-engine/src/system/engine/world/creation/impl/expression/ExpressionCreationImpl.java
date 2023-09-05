@@ -10,15 +10,15 @@ import system.engine.world.rule.action.expression.impl.ExpPropName;
 public class ExpressionCreationImpl implements ExpressionCreation{
 
     public Expression craeteExpression(String expressionStr, EntityInstance primaryEntityInstance,
-                                       EntityInstance secondEntityInstance, String propertyName) {
+                                       EntityInstance secondEntityInstance) {
         //String[] numAction = {"increase", "decrease","calculation", "divide", "ticks"};
         //String[] boolAction = {"environment", "random","evaluate", "percent", "ticks"};
         //String[] stringAction = {"environment", "random","evaluate", "percent", "ticks"};
         String argument = null;
         Expression expression = null;
 
-        if((expression = createFuncExpression(expressionStr , primaryEntityInstance,secondEntityInstance, propertyName)) == null){
-            if((expression = createPropExpression(expressionStr, primaryEntityInstance,secondEntityInstance, propertyName)) == null){
+        if((expression = createFuncExpression(expressionStr , primaryEntityInstance,secondEntityInstance)) == null){
+            if((expression = createPropExpression(expressionStr, primaryEntityInstance,secondEntityInstance)) == null){
                 expression = new ExpFreeValue(expressionStr, primaryEntityInstance, secondEntityInstance);
             }
 
@@ -27,7 +27,7 @@ public class ExpressionCreationImpl implements ExpressionCreation{
     }
 
     public Expression createFuncExpression(String expressionStr, EntityInstance primaryEntityInstance,
-                                           EntityInstance secondEntityInstance, String propertyName) {
+                                           EntityInstance secondEntityInstance) {
         String[] allowedPrefixes = {"environment", "random","evaluate", "percent", "ticks"};
         String funcNameStr = null;
         String arguments = null;
@@ -39,8 +39,7 @@ public class ExpressionCreationImpl implements ExpressionCreation{
                 funcNameStr = prefix;
                 arguments = expressionStr.substring(prefix.length() + 1, expressionStr.length() - 1);
                 argumentsArr = arguments.split(",");
-                expression = new ExpFuncName(funcNameStr, primaryEntityInstance,secondEntityInstance,
-                        propertyName, argumentsArr);
+                expression = new ExpFuncName(funcNameStr, primaryEntityInstance,secondEntityInstance,argumentsArr);
                 break;
             }
         }
@@ -48,12 +47,12 @@ public class ExpressionCreationImpl implements ExpressionCreation{
     }
 
     public Expression createPropExpression(String expressionStr, EntityInstance entityInstance,
-                                           EntityInstance secondEntityInstance, String propertyName) {
+                                           EntityInstance secondEntityInstance) {
         String property = expressionStr;
         Expression expression = null;
 
         if(entityInstance.getPropertyByName(expressionStr) != null){
-            expression = new ExpPropName(property, entityInstance, secondEntityInstance, propertyName);
+            expression = new ExpPropName(property, entityInstance, secondEntityInstance);
         }
         return expression;
     }

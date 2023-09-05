@@ -26,7 +26,7 @@ public class SetAction extends AbstractAction {
             ExpressionCreation expressionCreation = new ExpressionCreationImpl();
             PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(propertyName);
             Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(),
-                    context.getSecondEntityInstance(),propertyName);
+                    context.getSecondEntityInstance());
             Object expressionVal=  expression.evaluateExpression(context);
             Type propertyType = propertyInstance.getPropertyDefinition().getType();
 

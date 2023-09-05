@@ -19,13 +19,13 @@ import java.util.List;
 public class ExpFuncName extends AbstractExpressionImpl {
 
     private final List<String> functionArgs;
-    private final String propertyName;
+
 
     public ExpFuncName(String expressionStrParam, EntityInstance entityInstanceParam,
-                       EntityInstance secondEntityInstance, String propertyNameParam, String... strings) {
+                       EntityInstance secondEntityInstance,String... strings) {
         super(expressionStrParam, entityInstanceParam, secondEntityInstance);
         functionArgs = Arrays.asList(strings);
-        propertyName = propertyNameParam;
+
     }
 
     @Override
@@ -57,21 +57,10 @@ public class ExpFuncName extends AbstractExpressionImpl {
     }
 
     private Object random(String num) {
-        int number = Integer.parseInt(num);   //throws
-        PropertyInstance propertyInstance = primaryEntityInstance.getPropertyByName(propertyName);
-        Type type = propertyInstance.getPropertyDefinition().getType();
-        Object value = null;
+    int number = Integer.parseInt(num);   //throws
 
-        switch (type) {
-            case DECIMAL:
-                value= (new RandomIntegerGenerator(0, number)).generateValue();
-                break;
-            case FLOAT:
-                value= (new RandomFloatGenerator((float) 0, (float) number)).generateValue();
-                break;
-        }
+    return (new RandomIntegerGenerator(0, number)).generateValue();
 
-        return value;
     }
 
     private Object evaluate(String propertyByEntity) {   //using only arguments
@@ -101,8 +90,8 @@ public class ExpFuncName extends AbstractExpressionImpl {
     private float percent(String wholeNum, String percentNum, Context context) {
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
 
-        Expression wholeNumExp = expressionCreation.craeteExpression(wholeNum, primaryEntityInstance, secondEntityInstance, propertyName);
-        Expression percentNumExp = expressionCreation.craeteExpression(percentNum, primaryEntityInstance, secondEntityInstance, propertyName);
+        Expression wholeNumExp = expressionCreation.craeteExpression(wholeNum, primaryEntityInstance, secondEntityInstance);
+        Expression percentNumExp = expressionCreation.craeteExpression(percentNum, primaryEntityInstance, secondEntityInstance);
 
         if (!NumericVerify.verifyNumericExpressionValue(wholeNumExp, context) |
                 !NumericVerify.verifyNumericExpressionValue(percentNumExp, context)) {

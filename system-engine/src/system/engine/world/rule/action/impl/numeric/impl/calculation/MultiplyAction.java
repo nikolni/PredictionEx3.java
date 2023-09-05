@@ -20,9 +20,9 @@ public class MultiplyAction extends CalculationAction {
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(resultPropName);
         Expression expression1 = expressionCreation.craeteExpression(expressionStrArg1, context.getPrimaryEntityInstance(),
-                context.getSecondEntityInstance(),resultPropName);
+                context.getSecondEntityInstance());
         Expression expression2 = expressionCreation.craeteExpression(expressionStrArg2, context.getPrimaryEntityInstance(),
-                context.getSecondEntityInstance(),resultPropName);
+                context.getSecondEntityInstance());
         Type type = propertyInstance.getPropertyDefinition().getType();
 
         if (!NumericVerify.verifyNumericPropertyType(propertyInstance)){
