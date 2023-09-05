@@ -37,8 +37,8 @@ public class SecondaryEntityDefinitionImpl implements SecondaryEntityDefinition 
     }
 
     @Override
-    public List<EntityInstance> generateSecondaryEntityList(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager) {
-
+    public List<EntityInstance> generateSecondaryEntityList(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager,Integer tickNumber) {
+        List<EntityInstance> entitiesToKill = new ArrayList<>();
         List<EntityInstance> allEntityInstancesOfDefinition = worldInstance.getEntityInstanceManager().getEntityInstanceByEntityDef().get(extendsEntityDefinition.getUniqueName());
         if (count.equals("ALL"))
             return allEntityInstancesOfDefinition;
@@ -56,7 +56,9 @@ public class SecondaryEntityDefinitionImpl implements SecondaryEntityDefinition 
             }
             else {
                 for(EntityInstance checkedEntityInstance: allEntityInstancesOfDefinition){
-                    Context context = new ContextImpl(checkedEntityInstance,null, envVariablesInstanceManager, null);
+
+                    Context context = new ContextImpl(checkedEntityInstance,null,
+                            envVariablesInstanceManager, entitiesToKill, tickNumber);
                     if(selectionCondition.isConditionFulfilled(context))
                         chosenEntities.add(checkedEntityInstance);
                 }
