@@ -9,8 +9,8 @@ import java.util.List;
 public class EntityDefinitionImpl implements EntityDefinition {
 
     private final String uniqueName;
-
     private final List<PropertyDefinition> properties;
+    private Integer populationQuantity = 0;
 
     public EntityDefinitionImpl(String uniqueName) {
         this.uniqueName = uniqueName;
@@ -20,6 +20,16 @@ public class EntityDefinitionImpl implements EntityDefinition {
     @Override
     public String getUniqueName() {
         return uniqueName;
+    }
+
+    @Override
+    public int getPopulation() {
+        return populationQuantity;
+    }
+
+    @Override
+    public void setPopulation(Integer population) {
+        this.populationQuantity  =population;
     }
 
 
