@@ -1,5 +1,6 @@
 package app.body.screen2.tile.entity;
 
+import app.body.screen2.main.Body2Controller;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,6 +32,8 @@ public class EntityController {
     private Boolean isValueChanged = false;
     private List<String> entitiesNames;
     private List<Integer> entitiesPopulations;
+    private Body2Controller callerController;
+    private Integer previousValue = 0;
 
     @FXML
     public void initialize() {
@@ -57,25 +60,55 @@ public class EntityController {
     @FXML
     private void checkInputValidity(){
         isValueChanged = true;
-        boolean isInputValid;
         Stage primaryStage = new Stage();
+        boolean isValueValid = true;
 
-        isInputValid= true;
-        try {
-            //check population size
-        }
-        catch (NumberFormatException e) {
-            Label errorMessage = new Label("Max value for population .... Min value...!\nTry again.");
+        if(getPopulationValue() >=0) {
+
+            if (previousValue != null) {
+                if (previousValue < getPopulationValue()) {
+                    if (callerController.isPopulationQuantityValid(getPopulationValue() - previousValue)) {
+                        callerController.increaseMaxPopulationQuantity(previousValue);
+                        callerController.decreaseMaxPopulationQuantity(getPopulationValue());
+                        previousValue = getPopulationValue();
+                    } else {
+                        isValueValid = false;
+                    }
+                } else {
+                    callerController.increaseMaxPopulationQuantity(previousValue);
+                    callerController.decreaseMaxPopulationQuantity(getPopulationValue());
+                    previousValue = getPopulationValue();
+                }
+            } else {
+                if (callerController.isPopulationQuantityValid(getPopulationValue())) {
+                    callerController.decreaseMaxPopulationQuantity(getPopulationValue());
+                    previousValue = getPopulationValue();
+                } else {
+                    isValueValid = false;
+                }
+            }
+
+            if(!isValueValid) {
+                Label errorMessage = new Label("Max value for population" +
+                        callerController.getMaxPopulationQuantity()  + "\n" + "Try again.");
+                StackPane root = new StackPane();
+                root.getChildren().add(errorMessage);
+                Scene scene = new Scene(root, 150, 80);
+                primaryStage.setScene(scene);
+                primaryStage.setTitle("Error Window");
+                primaryStage.show();
+                populationTextField.clear();
+            }
+        } else {
+            Label errorMessage = new Label("Min value for population is 0!\nTry again.");
             StackPane root = new StackPane();
             root.getChildren().add(errorMessage);
             Scene scene = new Scene(root, 150, 80);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Error Window");
             primaryStage.show();
-            isInputValid= false;
             populationTextField.clear();
         }
-
     }
 
     /*public void setEntitiesPopulations(List<Integer> entitiesPopulations) {
@@ -105,6 +138,10 @@ public class EntityController {
 
     public void resetTextField(){
         populationTextField.clear();
+    }
+
+    public void setCallerController(Body2Controller callerController) {
+        this.callerController = callerController;
     }
 }
 

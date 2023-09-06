@@ -53,11 +53,14 @@ public class WorldDefinitionImpl implements WorldDefinition {
         }
     }
 
+    @Override
     public Integer getGridRows() {
         return worldGrid.getGridRows();
     }
 
+    @Override
     public Integer getGridColumns() {
         return worldGrid.getGridColumns();
     }
+
 }

@@ -40,5 +40,6 @@ public interface SystemEngineAccess {
                                                                                       String entityName,String propertyName);
     DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID);
     void addTaskToQueue(Task<Boolean> runSimulationTask);
+    DTOWorldGridForUi getDTOWorldGridForUi();
 
 }
