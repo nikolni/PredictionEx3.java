@@ -56,10 +56,8 @@ public class SingleConditionAction extends ConditionAction {
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
         EntityInstance actionEntityInstance=checkByDefinitionIfPrimaryOrSecondary(context);
         //need to add actionEntityInstance to every Expression creation
-        Expression propertyExp=expressionCreation.craeteExpression(propertyName, context.getPrimaryEntityInstance(),
-                context.getSecondEntityInstance());
-        Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(),
-                context.getSecondEntityInstance());
+        Expression propertyExp=expressionCreation.craeteExpression(propertyName, actionEntityInstance);
+        Expression expression = expressionCreation.craeteExpression(expressionStr, actionEntityInstance);
 
         Object expressionValue = expression.evaluateExpression(context);
         Type propertyType;

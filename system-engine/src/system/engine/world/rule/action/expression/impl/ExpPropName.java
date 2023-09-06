@@ -8,15 +8,14 @@ import system.engine.world.rule.action.expression.api.AbstractExpressionImpl;
 public class ExpPropName extends AbstractExpressionImpl {
 
     private String propertyName;
-    public ExpPropName(String expressionStrParam, EntityInstance primaryEntityInstance,
-                       EntityInstance secondEntityInstance) {
-        super(expressionStrParam, primaryEntityInstance, secondEntityInstance);
+    public ExpPropName(String expressionStrParam, EntityInstance expressionEntityInstance) {
+        super(expressionStrParam, expressionEntityInstance);
         propertyName = expressionStrParam;
     }
 
     @Override
     public Object evaluateExpression(Context context) {
-        PropertyInstance propertyInstance = primaryEntityInstance.getPropertyByName(propertyName);
+        PropertyInstance propertyInstance = expressionEntityInstance.getPropertyByName(propertyName);
         return propertyInstance.getValue();
     }
 }

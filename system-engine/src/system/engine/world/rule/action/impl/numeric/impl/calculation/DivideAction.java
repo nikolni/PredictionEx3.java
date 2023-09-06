@@ -23,10 +23,8 @@ public class DivideAction extends CalculationAction {
             return;
         PropertyInstance propertyInstance=actionEntityInstance.getPropertyByName(resultPropName);
 
-        Expression expression1 = expressionCreation.craeteExpression(expressionStrArg1, context.getPrimaryEntityInstance(),
-                context.getSecondEntityInstance());
-        Expression expression2 = expressionCreation.craeteExpression(expressionStrArg2, context.getPrimaryEntityInstance(),
-                context.getSecondEntityInstance());
+        Expression expression1 = expressionCreation.craeteExpression(expressionStrArg1, actionEntityInstance);
+        Expression expression2 = expressionCreation.craeteExpression(expressionStrArg2, actionEntityInstance);
         //can assume that property type is float
 
         if (!NumericVerify.verifyNumericExpressionValue(expression1, context) |
