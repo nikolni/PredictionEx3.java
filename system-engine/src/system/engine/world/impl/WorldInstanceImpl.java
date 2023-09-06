@@ -3,6 +3,7 @@ package system.engine.world.impl;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.api.WorldInstance;
 import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
+import system.engine.world.grid.api.WorldGrid;
 
 import java.time.LocalDateTime;
 
@@ -12,9 +13,9 @@ public class WorldInstanceImpl implements WorldInstance {
     private EntityInstanceManager entityInstanceManager;
 
 
-    public WorldInstanceImpl(WorldDefinition worldDefinition, int id){
+    public WorldInstanceImpl(WorldDefinition worldDefinition, int id, WorldGrid worldGrid){
         this.id = id;
-        this.entityInstanceManager = worldDefinition.getEntityDefinitionManager().createEntityInstanceManager();
+        this.entityInstanceManager = worldDefinition.getEntityDefinitionManager().createEntityInstanceManager(worldGrid);
         simulationRunTime = LocalDateTime.now();
     }
 

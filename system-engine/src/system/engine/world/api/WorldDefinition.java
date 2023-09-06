@@ -18,4 +18,6 @@ public interface WorldDefinition {
 
     TerminationConditionsManager getTerminationConditionsManager();
     void addPopulationToEntitiesDefinition(Map<String, Integer> entityNameDefToPopulation);
+    Integer getGridRows();
+    Integer getGridColumns();
 }

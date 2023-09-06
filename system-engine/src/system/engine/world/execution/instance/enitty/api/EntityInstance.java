@@ -10,4 +10,7 @@ public interface EntityInstance {
 
     EntityDefinition getEntityDefinition();
     void addPropertyInstance(PropertyInstance propertyInstance);
+    Integer getRow() ;
+    Integer getColumns();
+    void moveEntityInWorld();
 }
