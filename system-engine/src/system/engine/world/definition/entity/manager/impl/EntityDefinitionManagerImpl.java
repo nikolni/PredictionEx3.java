@@ -2,15 +2,15 @@ package system.engine.world.definition.entity.manager.impl;
 
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.entity.manager.api.EntityDefinitionManager;
-import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
 import system.engine.world.execution.instance.enitty.manager.impl.EntityInstanceManagerImpl;
+import system.engine.world.grid.api.WorldGrid;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EntityDefinitionManagerImpl implements EntityDefinitionManager {
-    private List<EntityDefinition> definitions;
+    private final List<EntityDefinition> definitions;
 
     public EntityDefinitionManagerImpl() {
         definitions = new ArrayList<>();
@@ -37,8 +37,8 @@ public class EntityDefinitionManagerImpl implements EntityDefinitionManager {
     }
 
     @Override
-    public EntityInstanceManager createEntityInstanceManager() {
-        return new EntityInstanceManagerImpl(this);
+    public EntityInstanceManager createEntityInstanceManager(WorldGrid worldGrid) {
+        return new EntityInstanceManagerImpl(this, worldGrid);
     }
 
 

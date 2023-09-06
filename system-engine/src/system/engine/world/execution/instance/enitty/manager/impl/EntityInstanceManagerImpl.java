@@ -8,6 +8,7 @@ import system.engine.world.execution.instance.enitty.impl.EntityInstanceImpl;
 import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
 import system.engine.world.execution.instance.property.api.PropertyInstance;
 import system.engine.world.execution.instance.property.impl.PropertyInstanceImpl;
+import system.engine.world.grid.api.WorldGrid;
 
 
 import java.util.*;
@@ -15,13 +16,13 @@ import java.util.stream.Collectors;
 
 public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private int count;   //all instances of all entities
-    private List<EntityInstance> instances;
-    private List<EntityInstance> instancesBeforeKill;
-    private Map<String, Integer> entitiesPopulationAfterSimulationRunning;
+    private final List<EntityInstance> instances;
+    private final List<EntityInstance> instancesBeforeKill;
+    private final Map<String, Integer> entitiesPopulationAfterSimulationRunning;
     private Map<String,List<EntityInstance>> entityInstanceByEntityDef;
 
 
-    public EntityInstanceManagerImpl(EntityDefinitionManager entityDefinitionManager) {
+    public EntityInstanceManagerImpl(EntityDefinitionManager entityDefinitionManager, WorldGrid worldGrid) {
         count = 0;
         int entityDefinitionCount = 0;
         instances = new ArrayList<>();
@@ -30,7 +31,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         entityInstanceByEntityDef=new HashMap<>();
         for (EntityDefinition entityDefinition: entityDefinitionManager.getDefinitions()){
             for(int i = 0; i<entityDefinition.getPopulation(); i++) {
-                create(entityDefinition);
+                create(entityDefinition, worldGrid);
             }
             entitiesPopulationAfterSimulationRunning.put(entityDefinitionManager.getDefinitions().get(entityDefinitionCount).getUniqueName(),
                     entityDefinitionManager.getDefinitions().get(entityDefinitionCount).getPopulation());
@@ -46,10 +47,10 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     }
 
     @Override
-    public void create(EntityDefinition entityDefinition) {
+    public void create(EntityDefinition entityDefinition, WorldGrid worldGrid) {
 
         count++;
-        EntityInstance newEntityInstance = new EntityInstanceImpl(entityDefinition, count);
+        EntityInstance newEntityInstance = new EntityInstanceImpl(entityDefinition, count, worldGrid);
         instances.add(newEntityInstance);
 
         for (PropertyDefinition propertyDefinition : entityDefinition.getProps()) {
