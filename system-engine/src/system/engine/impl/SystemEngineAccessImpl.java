@@ -6,6 +6,7 @@ import dto.creation.*;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.impl.DTOSimulationEndingForUiImpl;
+import dto.impl.DTOWorldGridForUiImpl;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 import jaxb.copy.WorldFromXml;
@@ -213,5 +214,11 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     @Override
     public DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID){
         return simulationIdToRunSimulation.get(simulationID).getDtoSimulationProgressForUi();
+    }
+
+    @Override
+    public DTOWorldGridForUi getDTOWorldGridForUi(){
+        DTOWorldGridForUi dtoWorldGridForUi = new DTOWorldGridForUiImpl(worldDefinition.getGridRows(), worldDefinition.getGridColumns());
+        return dtoWorldGridForUi;
     }
 }

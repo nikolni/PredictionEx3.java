@@ -7,6 +7,7 @@ import app.body.screen2.tile.TileResourceConstants;
 import app.body.screen2.tile.entity.EntityController;
 import app.body.screen2.tile.environment.variable.EnvironmentVariableController;
 import dto.api.DTOEnvVarsDefForUi;
+import dto.api.DTOWorldGridForUi;
 import dto.creation.CreateDTOEnvVarsForSE;
 import dto.creation.CreateDTOPopulationForSE;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
@@ -62,6 +63,10 @@ public class Body2Controller {
     private Body3Controller body3ComponentController;
 
     private Integer simulationsCounter = 0;
+
+
+
+    private int maxPopulationQuantity;
 
 
     public Body2Controller() {
@@ -121,6 +126,9 @@ public class Body2Controller {
     }
 
     private void createEntitiesPopulationChildrenInFlowPane(List<String> entitiesNames){
+        DTOWorldGridForUi dtoWorldGridForUi = systemEngine.getDTOWorldGridForUi();
+        maxPopulationQuantity = dtoWorldGridForUi.getGridRows() * dtoWorldGridForUi.getGridColumns();
+
         for(String entityName: entitiesNames){
             try{
                 FXMLLoader loader = new FXMLLoader();
@@ -130,6 +138,7 @@ public class Body2Controller {
                 EntityController entityController = loader.getController();
                 entityController.setEntitiesNames(entitiesNames);
                 entityController.setEntityNameLabel(entityName);
+                entityController.setCallerController(this);
                 entityNameToTileController.put(entityName, entityController);
                 simulationEntitiesPopulationFlowPane.getChildren().add(singlePopulation);
                 entityNameToSelectedPopulationValue.put(entityName, null);
@@ -140,6 +149,20 @@ public class Body2Controller {
         }
     }
 
+    public int getMaxPopulationQuantity() {
+        return maxPopulationQuantity;
+    }
+
+    public Boolean isPopulationQuantityValid(int populationQuantity){
+        return (maxPopulationQuantity - populationQuantity) >= 0;
+    }
+
+    public void decreaseMaxPopulationQuantity(int populationQuantity){
+       maxPopulationQuantity -= populationQuantity;
+    }
+    public void increaseMaxPopulationQuantity(int populationQuantity){
+        maxPopulationQuantity += populationQuantity;
+    }
 
 
     @FXML
