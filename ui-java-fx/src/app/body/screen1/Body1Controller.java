@@ -3,6 +3,7 @@ package app.body.screen1;
 import dto.definition.entity.api.EntityDefinitionDTO;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.definition.rule.action.KillActionDTO;
+import dto.definition.rule.action.ProximityActionDTO;
 import dto.definition.rule.action.SetActionDTO;
 import dto.definition.rule.action.api.AbstractActionDTO;
 import dto.definition.rule.action.condition.ConditionActionDTO;
@@ -10,6 +11,7 @@ import dto.definition.rule.action.condition.MultipleConditionActionDTO;
 import dto.definition.rule.action.condition.SingleConditionActionDTO;
 import dto.definition.rule.action.numeric.DecreaseActionDTO;
 import dto.definition.rule.action.numeric.IncreaseActionDTO;
+import dto.definition.rule.action.numeric.ReplaceActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
 import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
 import dto.definition.rule.api.RuleDTO;
@@ -330,6 +332,14 @@ public class Body1Controller{
                 case KILL:
                     KillActionDTO killAction = (KillActionDTO)action;
                     actionTileCreatorFactory.createKillActionChildren(killAction, detailsFlowPane);
+                    break;
+                case PROXIMITY:
+                    ProximityActionDTO proximityActionDTO = (ProximityActionDTO) action;
+                    actionTileCreatorFactory.createProximityActionChildren(proximityActionDTO, detailsFlowPane);
+                    break;
+                case REPLACE:
+                    ReplaceActionDTO replaceActionDTO = (ReplaceActionDTO) action;
+                    actionTileCreatorFactory.createReplaceActionChildren(replaceActionDTO, detailsFlowPane);
                     break;
             }
         }
