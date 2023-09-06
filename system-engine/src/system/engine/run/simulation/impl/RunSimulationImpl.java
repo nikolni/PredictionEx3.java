@@ -10,6 +10,7 @@ import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
 import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.rule.action.api.Action;
+import system.engine.world.rule.action.api.ActionType;
 import system.engine.world.rule.api.Rule;
 import system.engine.world.rule.context.Context;
 import system.engine.world.rule.context.ContextImpl;
@@ -107,8 +108,10 @@ public class RunSimulationImpl implements RunSimulation {
         for(EntityInstance primaryEntityInstance : getAllEntityInstancesOfWorldInstance(worldInstance)){
             currentEntitiesToKill.clear();
                 for(Action action : actionsList){
+                    //the entity instance is from the type of primary entity of the action
                     if(action.getContextPrimaryEntity().getUniqueName().equals(primaryEntityInstance.getEntityDefinition().getUniqueName())){
                         Context context  =null;
+                        //there is second entity
                         if(action.getSecondaryEntityDefinition() != null){
                             List<EntityInstance> chosenSecondaryEntities=action.getSecondaryEntityDefinition().generateSecondaryEntityList(worldInstance,envVariablesInstanceManager, tickNumber);
                             if(!chosenSecondaryEntities.isEmpty()){
@@ -121,7 +124,7 @@ public class RunSimulationImpl implements RunSimulation {
                             else{ //secondary Entities list is empty
                                 context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager,
                                         currentEntitiesToKill, tickNumber);
-                                if(action.getActionType().name().equals("CONDITION"))
+                                if(action.getActionType().equals(ActionType.CONDITION) | action.getActionType().equals(ActionType.PROXIMITY))
                                     action.executeAction(context);
                             }
 

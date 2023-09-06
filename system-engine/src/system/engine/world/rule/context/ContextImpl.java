@@ -9,7 +9,7 @@ import java.util.List;
 public class ContextImpl implements Context {
 
     private final EntityInstance primaryEntityInstance;
-    private final EntityInstance secondEntityInstance;
+    private EntityInstance secondEntityInstance;
     private final EnvVariablesInstanceManager envVariablesInstanceManager;
     private List<EntityInstance> entitiesToKill;
     private Integer tickNumber = 0;
@@ -50,6 +50,11 @@ public class ContextImpl implements Context {
     @Override
     public EntityInstance getSecondEntityInstance() {
         return secondEntityInstance;
+    }
+
+    @Override
+    public void setSecondEntityInstance(EntityInstance secondEntityInstance) {
+        this.secondEntityInstance = secondEntityInstance;
     }
 
     @Override
