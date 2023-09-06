@@ -7,9 +7,8 @@ import system.engine.world.rule.action.expression.api.AbstractExpressionImpl;
 public class ExpFreeValue extends AbstractExpressionImpl{
     Object expressionValue;
 
-    public ExpFreeValue(String expressionStrParam, EntityInstance primaryEntityInstance,
-                        EntityInstance secondEntityInstance) {
-        super(expressionStrParam, primaryEntityInstance,secondEntityInstance);
+    public ExpFreeValue(String expressionStrParam, EntityInstance expressionEntityInstance) {
+        super(expressionStrParam, expressionEntityInstance);
         try{
             expressionValue = Integer.parseInt(expressionStr);
         }

@@ -21,9 +21,8 @@ public class ExpFuncName extends AbstractExpressionImpl {
     private final List<String> functionArgs;
 
 
-    public ExpFuncName(String expressionStrParam, EntityInstance entityInstanceParam,
-                       EntityInstance secondEntityInstance,String... strings) {
-        super(expressionStrParam, entityInstanceParam, secondEntityInstance);
+    public ExpFuncName(String expressionStrParam, EntityInstance expressionEntityInstance,String... strings) {
+        super(expressionStrParam,expressionEntityInstance);
         functionArgs = Arrays.asList(strings);
 
     }
@@ -40,7 +39,7 @@ public class ExpFuncName extends AbstractExpressionImpl {
                 value= random(functionArgs.get(0));
                 break;
             case "evaluate":
-                value= evaluate(functionArgs.get(0));
+                value= evaluate(functionArgs.get(0),context);
                 break;
             case "percent":
                 value= percent(functionArgs.get(0),functionArgs.get(1), context);
@@ -63,7 +62,7 @@ public class ExpFuncName extends AbstractExpressionImpl {
 
     }
 
-    private Object evaluate(String propertyByEntity) {   //using only arguments
+    private Object evaluate(String propertyByEntity,Context context) {   //using only arguments
         String entityName;
         String propertyName;
 
@@ -76,12 +75,15 @@ public class ExpFuncName extends AbstractExpressionImpl {
         }
 
         EntityInstance entityInstance= null;
-        if(entityName.equals(primaryEntityInstance.getEntityDefinition().getUniqueName())){
-            entityInstance = primaryEntityInstance;
+        if(entityName.equals(context.getPrimaryEntityInstance().getEntityDefinition().getUniqueName())){
+            entityInstance = context.getPrimaryEntityInstance();
         }
-        else{
-            entityInstance = primaryEntityInstance;
+        else if(context.getSecondEntityInstance()!=null){
+            if(entityName.equals(context.getSecondEntityInstance().getEntityDefinition().getUniqueName()))
+                entityInstance = context.getSecondEntityInstance();
         }
+        if(entityInstance== null) //entityName is name of instance that not exist
+            throw new IllegalArgumentException("in evaluate function"+entityName+"instance is not exist");
 
         PropertyInstance propertyInstance =entityInstance.getPropertyByName(propertyName);
         return propertyInstance.getValue();
@@ -90,8 +92,8 @@ public class ExpFuncName extends AbstractExpressionImpl {
     private float percent(String wholeNum, String percentNum, Context context) {
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
 
-        Expression wholeNumExp = expressionCreation.craeteExpression(wholeNum, primaryEntityInstance, secondEntityInstance);
-        Expression percentNumExp = expressionCreation.craeteExpression(percentNum, primaryEntityInstance, secondEntityInstance);
+        Expression wholeNumExp = expressionCreation.craeteExpression(wholeNum, getExpressionEntityInstance());
+        Expression percentNumExp = expressionCreation.craeteExpression(percentNum, getExpressionEntityInstance());
 
         if (!NumericVerify.verifyNumericExpressionValue(wholeNumExp, context) |
                 !NumericVerify.verifyNumericExpressionValue(percentNumExp, context)) {
@@ -116,15 +118,17 @@ public class ExpFuncName extends AbstractExpressionImpl {
         }
 
         EntityInstance entityInstance= null;
-        if(entityName.equals(primaryEntityInstance.getEntityDefinition().getUniqueName())){
-            entityInstance = primaryEntityInstance;
+        if(entityName.equals(context.getPrimaryEntityInstance().getEntityDefinition().getUniqueName())){
+            entityInstance = context.getPrimaryEntityInstance();
         }
-        else{
-            entityInstance = primaryEntityInstance;
+        else if(context.getSecondEntityInstance()!=null){
+            if(entityName.equals(context.getSecondEntityInstance().getEntityDefinition().getUniqueName()))
+                entityInstance = context.getSecondEntityInstance();
         }
+        if(entityInstance== null) //entityName is name of instance that not exist
+            throw new IllegalArgumentException("in ticks function"+entityName+"instance is not exist");
 
         PropertyInstance propertyInstance =entityInstance.getPropertyByName(propertyName);
-
         return context.getTickNumber() - propertyInstance.getLastTickNumberOfValueUpdate();
     }
 }

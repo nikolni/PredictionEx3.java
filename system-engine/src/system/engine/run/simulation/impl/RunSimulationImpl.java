@@ -105,7 +105,8 @@ public class RunSimulationImpl implements RunSimulation {
 
         List<EntityInstance> currentEntitiesToKill = new ArrayList<>();
         for(EntityInstance primaryEntityInstance : getAllEntityInstancesOfWorldInstance(worldInstance)){
-            currentEntitiesToKill.clear();
+            if(primaryEntityInstance!=null){
+                currentEntitiesToKill.clear();
                 for(Action action : actionsList){
                     if(action.getContextPrimaryEntity().getUniqueName().equals(primaryEntityInstance.getEntityDefinition().getUniqueName())){
                         Context context  =null;
@@ -137,6 +138,8 @@ public class RunSimulationImpl implements RunSimulation {
 
                 primaryEntityInstance.moveEntityInWorld();
                 entitiesToKill.addAll(currentEntitiesToKill);
+            }
+
             }
 
         for(EntityInstance entityInstance : entitiesToKill){

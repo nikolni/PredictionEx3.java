@@ -118,7 +118,7 @@ public class EntityInstanceImpl extends AbstractEntityLocationInWorld implements
         int direction;
 
         while(!found){
-            direction =random.nextInt(3);
+            direction =random.nextInt(4);
             if(directionArr[direction] == 0){
                 worldDirections = WorldDirections.intToEnum(direction);
                 found= true;
