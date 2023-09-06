@@ -34,8 +34,7 @@ public class ProximityAction extends AbstractAction {
     @Override
     public void executeAction(Context context) {
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
-        Expression expression = expressionCreation.craeteExpression(ofExp, context.getPrimaryEntityInstance(),
-                context.getSecondEntityInstance());
+        Expression expression = expressionCreation.craeteExpression(ofExp, context.getPrimaryEntityInstance());
         if (!verifyNumericExpressionValue(expression, context)) {
             throw new IllegalArgumentException("proximity action can't operate with non numeric expression type");
         }
