@@ -32,8 +32,7 @@ public class DecreaseAction extends AbstractAction implements NumericVerify {
             return;
         PropertyInstance propertyInstance=actionEntityInstance.getPropertyByName(propertyName);
 
-        Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(),
-                context.getSecondEntityInstance());
+        Expression expression = expressionCreation.craeteExpression(expressionStr, actionEntityInstance);
         Type type = propertyInstance.getPropertyDefinition().getType();
 
         if (!NumericVerify.verifyNumericPropertyType(propertyInstance)){
