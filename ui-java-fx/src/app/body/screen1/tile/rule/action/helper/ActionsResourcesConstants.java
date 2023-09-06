@@ -13,6 +13,8 @@ public class ActionsResourcesConstants {
 
     private static final  String SINGLE_CONDITION_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/condition/singleConditionAction.fxml";
     private static final  String MULTIPLE_CONDITION_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/condition/multipleConditionAction.fxml";
+    private static final  String PROXIMITY_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/proximity/proximityAction.fxml";
+    private static final  String REPLACE_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/replace/replaceAction.fxml";
     public static final URL KILL_FXML_URL = ActionsResourcesConstants.class.getResource(ActionsResourcesConstants.KILL_FXML_RESOURCE_IDENTIFIER);
     public static final URL IDS_FXML_URL = ActionsResourcesConstants.class.getResource(ActionsResourcesConstants.IDS_FXML_RESOURCE_IDENTIFIER);
 
@@ -20,4 +22,6 @@ public class ActionsResourcesConstants {
 
     public static final URL SINGLE_CONDITION_FXML_URL = ActionsResourcesConstants.class.getResource(ActionsResourcesConstants.SINGLE_CONDITION_FXML_RESOURCE_IDENTIFIER);
     public static final URL MULTIPLE_CONDITION_FXML_URL = ActionsResourcesConstants.class.getResource(ActionsResourcesConstants.MULTIPLE_CONDITION_FXML_RESOURCE_IDENTIFIER);
+    public static final URL PROXIMITY_FXML_URL = ActionsResourcesConstants.class.getResource(ActionsResourcesConstants.PROXIMITY_FXML_RESOURCE_IDENTIFIER);
+    public static final URL REPLACE_FXML_URL = ActionsResourcesConstants.class.getResource(ActionsResourcesConstants.REPLACE_FXML_RESOURCE_IDENTIFIER);
 }
