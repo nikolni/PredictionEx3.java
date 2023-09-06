@@ -2,7 +2,6 @@ package system.engine.world.definition.entity.secondary.impl;
 
 import system.engine.world.api.WorldInstance;
 import system.engine.world.definition.entity.api.EntityDefinition;
-import system.engine.world.definition.entity.impl.EntityDefinitionImpl;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
@@ -15,9 +14,9 @@ import java.util.Random;
 import java.util.*;
 
 public class SecondaryEntityDefinitionImpl implements SecondaryEntityDefinition {
-    private EntityDefinition extendsEntityDefinition;
-    private String count;
-    private ConditionAction selectionCondition;
+    private final EntityDefinition extendsEntityDefinition;
+    private final String count;
+    private final ConditionAction selectionCondition;
     public SecondaryEntityDefinitionImpl(EntityDefinition extendsEntityDefinition,String count,ConditionAction selectionCondition) {
        this.extendsEntityDefinition=extendsEntityDefinition;
         this.count=count;

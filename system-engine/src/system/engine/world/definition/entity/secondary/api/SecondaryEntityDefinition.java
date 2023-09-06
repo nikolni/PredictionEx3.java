@@ -9,11 +9,11 @@ import system.engine.world.rule.action.impl.condition.ConditionAction;
 import java.util.List;
 
 public interface SecondaryEntityDefinition {
-    public EntityDefinition getExtendsEntityDefinition();
+     EntityDefinition getExtendsEntityDefinition();
 
-    public String getSecEntityCount();
+     String getSecEntityCount();
 
-    public ConditionAction getSelectionCondition();
+     ConditionAction getSelectionCondition();
      List<EntityInstance> generateSecondaryEntityList(WorldInstance worldInstance,
                                                       EnvVariablesInstanceManager envVariablesInstanceManager, Integer tickNumber);
 
