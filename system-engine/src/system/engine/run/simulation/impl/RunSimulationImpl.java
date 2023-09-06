@@ -135,6 +135,7 @@ public class RunSimulationImpl implements RunSimulation {
                     }
                 }
 
+                primaryEntityInstance.moveEntityInWorld();
                 entitiesToKill.addAll(currentEntitiesToKill);
             }
 
