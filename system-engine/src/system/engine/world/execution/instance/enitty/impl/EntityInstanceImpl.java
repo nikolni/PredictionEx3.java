@@ -25,7 +25,7 @@ public class EntityInstanceImpl extends AbstractEntityLocationInWorld implements
         this.entityDefinition = entityDefinition;
         this.id = id;
         properties = new HashMap<>();
-        entityLocationInWorld  = new EntityLocationInWorldImpl(worldGrid);
+        entityLocationInWorld  = new EntityLocationInWorldImpl(worldGrid, this);
         this.worldGrid = worldGrid;
     }
 
@@ -65,7 +65,7 @@ public class EntityInstanceImpl extends AbstractEntityLocationInWorld implements
     public void moveEntityInWorld() {
         int[] directionArr = {0,0,0,0};
 
-        EntityLocationInWorld desirableEntityLocationInWorld = new EntityLocationInWorldImpl(worldGrid);
+        EntityLocationInWorld desirableEntityLocationInWorld = new EntityLocationInWorldImpl(worldGrid, this);
         Boolean stillLooking = true;
 
         while (stillLooking & isDirectionsLeft(directionArr)) {

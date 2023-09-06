@@ -1,22 +1,23 @@
 package system.engine.world.grid.impl;
 
+import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.execution.instance.enitty.location.api.EntityLocationInWorld;
 import system.engine.world.grid.api.WorldGrid;
 
 public final class WorldGridImpl implements WorldGrid {
     private final Integer gridRows;
     private final Integer gridColumns;
-    private final Integer[][] worldGrid;
+    private final EntityInstance[][] worldGrid;
 
 
     public WorldGridImpl(Integer gridRows, Integer gridColumns) {
         this.gridRows = gridRows;
         this.gridColumns = gridColumns;
 
-        this.worldGrid = new Integer[gridRows][gridColumns];
+        this.worldGrid = new EntityInstance[gridRows][gridColumns];
         for (int i = 0; i < gridRows; i++) {
             for (int j = 0; j < gridColumns; j++) {
-                worldGrid[i][j] = 0;
+                worldGrid[i][j] = null;
             }
         }
     }
@@ -30,12 +31,12 @@ public final class WorldGridImpl implements WorldGrid {
         return gridColumns;
     }
     @Override
-    public void setPosition(Integer row, Integer column){
-        worldGrid[row][column] = 1;
+    public void setPosition(Integer row, Integer column, EntityInstance entityInstance){
+        worldGrid[row][column] = entityInstance;
     }
     @Override
     public Boolean isPositionAvailable(Integer row, Integer column){
-        return worldGrid[row][column] == 0;
+        return worldGrid[row][column] == null;
     }
     @Override
     public Boolean isPositionAvailableForMovingEntity(EntityLocationInWorld currentEntityLocationInWorld,
@@ -81,4 +82,32 @@ public final class WorldGridImpl implements WorldGrid {
             }
         }
     }
+
+    @Override
+    public Boolean isThereSecondEntityCloseEnough(EntityInstance primaryEntityInstance, EntityInstance secondEntityInstance, Integer of){
+        int centerX = primaryEntityInstance.getColumns();
+        int centerY = primaryEntityInstance.getRow();
+        int radius = of;
+
+        for (int row = 0; row < gridRows; row++) {
+            for (int col = 0; col < gridColumns; col++) {
+                if(row == centerY & col == centerX){
+                    continue;
+                }
+                // Calculate the distance from the current square to the center point.
+                int distance = (int) Math.sqrt((row - centerY) * (row - centerY) + (col - centerX) * (col - centerX));
+
+                // Check if the square is at the specified distance from the center point.
+                if (Math.abs(distance - radius) < 0.5 || isAtEdge(row, col, gridRows, gridColumns)) {
+                    secondEntityInstance = worldGrid[row][col];
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+        private boolean isAtEdge(int row, int col, int numRows, int numCols) {
+            return row == 0 || row == numRows - 1 || col == 0 || col == numCols - 1;
+        }
 }

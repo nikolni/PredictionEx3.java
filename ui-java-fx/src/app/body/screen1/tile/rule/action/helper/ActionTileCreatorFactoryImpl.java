@@ -4,13 +4,17 @@ import app.body.screen1.tile.rule.action.calculation.CalculationActionController
 import app.body.screen1.tile.rule.action.condition.multiple.MultipleConditionActionController;
 import app.body.screen1.tile.rule.action.condition.single.SingleConditionActionController;
 import app.body.screen1.tile.rule.action.kill.KillActionController;
+import app.body.screen1.tile.rule.action.proximity.ProximityActionController;
+import app.body.screen1.tile.rule.action.replace.ReplaceActionController;
 import dto.definition.rule.action.KillActionDTO;
+import dto.definition.rule.action.ProximityActionDTO;
 import dto.definition.rule.action.SetActionDTO;
 import dto.definition.rule.action.condition.ConditionActionDTO;
 import dto.definition.rule.action.condition.MultipleConditionActionDTO;
 import dto.definition.rule.action.condition.SingleConditionActionDTO;
 import dto.definition.rule.action.numeric.DecreaseActionDTO;
 import dto.definition.rule.action.numeric.IncreaseActionDTO;
+import dto.definition.rule.action.numeric.ReplaceActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
 import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
 import javafx.fxml.FXMLLoader;
@@ -173,6 +177,43 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
             multipleConditionActionController.setElseActionsLabel(multipleConditionActionDTO.getElseActionNumber().toString());
             multipleConditionActionController.setLogicalLabel(multipleConditionActionDTO.getLogical());
             multipleConditionActionController.setConditionsNumberLabel(multipleConditionActionDTO.getConditionsNumber().toString());
+            detailsFlowPane.getChildren().add(singleAction);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void createProximityActionChildren(ProximityActionDTO proximityActionDTO, FlowPane detailsFlowPane) {
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ActionsResourcesConstants.PROXIMITY_FXML_URL);
+            Node singleAction = loader.load();
+
+            ProximityActionController proximityActionController = loader.getController();
+            proximityActionController.setActionTypeLabel("proximity");
+            proximityActionController.setPrimaryEntityLabel(proximityActionDTO.getEntityDefinitionName());
+            proximityActionController.setSecondEntityLabel(proximityActionDTO.getSecondEntityDefinitionDTO());
+            proximityActionController.setOfLabel(proximityActionDTO.getOf());
+            proximityActionController.setActionsNumLabel(proximityActionDTO.getActionsCollectionSize().toString());
+            detailsFlowPane.getChildren().add(singleAction);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void createReplaceActionChildren(ReplaceActionDTO replaceActionDTO, FlowPane detailsFlowPane) {
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ActionsResourcesConstants.REPLACE_FXML_URL);
+            Node singleAction = loader.load();
+
+            ReplaceActionController replaceActionController = loader.getController();
+            replaceActionController.setActionTypeLabel("replace");
+            replaceActionController.setKillEntityLabel(replaceActionDTO.getEntityDefinitionName());
+            replaceActionController.setCreateEntityLabel(replaceActionDTO.getSecondEntityDefinitionDTO());
+            replaceActionController.setModeLabel(replaceActionDTO.getMode());
             detailsFlowPane.getChildren().add(singleAction);
         }catch (IOException e) {
             e.printStackTrace();

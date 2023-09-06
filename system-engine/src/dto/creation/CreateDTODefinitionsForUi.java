@@ -6,12 +6,14 @@ import dto.definition.entity.impl.EntityDefinitionDTOImpl;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.definition.property.definition.impl.PropertyDefinitionDTOImpl;
 import dto.definition.rule.action.KillActionDTO;
+import dto.definition.rule.action.ProximityActionDTO;
 import dto.definition.rule.action.SetActionDTO;
 import dto.definition.rule.action.api.AbstractActionDTO;
 import dto.definition.rule.action.condition.MultipleConditionActionDTO;
 import dto.definition.rule.action.condition.SingleConditionActionDTO;
 import dto.definition.rule.action.numeric.DecreaseActionDTO;
 import dto.definition.rule.action.numeric.IncreaseActionDTO;
+import dto.definition.rule.action.numeric.ReplaceActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
 import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
 import dto.definition.rule.activation.impl.ActivationDTOImpl;
@@ -29,6 +31,7 @@ import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.property.api.PropertyDefinition;
 import system.engine.world.rule.action.api.*;
 import system.engine.world.rule.action.impl.KillAction;
+import system.engine.world.rule.action.impl.ProximityAction;
 import system.engine.world.rule.action.impl.SetAction;
 import system.engine.world.rule.action.impl.condition.MultipleConditionAction;
 import system.engine.world.rule.action.impl.condition.SingleConditionAction;
@@ -155,6 +158,20 @@ public class CreateDTODefinitionsForUi {
                     actionsDTOs.add(new KillActionDTO(killAction.getContextPrimaryEntity().getUniqueName(),
                              secondaryEntityName = (killAction.getExtendsSecondaryEntityDefinition() != null) ?
                             killAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity"));
+                    break;
+                case PROXIMITY:
+                    ProximityAction proximityAction = (ProximityAction) action;
+                    actionsDTOs.add(new ProximityActionDTO(proximityAction.getContextPrimaryEntity().getUniqueName(),
+                            secondaryEntityName = (proximityAction.getExtendsSecondaryEntityDefinition() != null) ?
+                                    proximityAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity",
+                            proximityAction.getOf(), proximityAction.getActionsCollectionSize()));
+                    break;
+                case REPLACE:
+                    ReplaceAction replaceAction = (ReplaceAction) action;
+                    actionsDTOs.add(new ReplaceActionDTO(replaceAction.getContextPrimaryEntity().getUniqueName(),
+                            secondaryEntityName = (replaceAction.getExtendsSecondaryEntityDefinition() != null) ?
+                                    replaceAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity").
+                            replaceAction.getMode);
                     break;
             }
         }
