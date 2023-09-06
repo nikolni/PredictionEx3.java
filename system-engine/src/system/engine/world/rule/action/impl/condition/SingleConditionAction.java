@@ -3,6 +3,9 @@ package system.engine.world.rule.action.impl.condition;
 import system.engine.world.creation.api.ExpressionCreation;
 import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
+import system.engine.world.execution.instance.enitty.api.EntityInstance;
+import system.engine.world.rule.action.expression.impl.ExpFuncName;
+import system.engine.world.rule.action.expression.impl.ExpPropName;
 import system.engine.world.rule.action.impl.numeric.api.NumericVerify;
 import system.engine.world.rule.context.Context;
 import system.engine.world.execution.instance.property.api.PropertyInstance;
@@ -31,6 +34,12 @@ public class SingleConditionAction extends ConditionAction {
 
     @Override
     public void executeAction(Context context) {
+        if(context.getPrimaryEntityInstance()==null)
+            return;
+        if(getSecondaryEntityDefinition()!=null) //check if a single condition can be execute
+            if(context.getSecondEntityInstance()==null&&innerEntityDefinition.getUniqueName().equals(getExtendsSecondaryEntityDefinition().getUniqueName()))
+                return;
+
         if (isConditionFulfilled(context)) {
             for (Action action : thenActionList) {
                 action.executeAction(context);
@@ -45,20 +54,25 @@ public class SingleConditionAction extends ConditionAction {
 
     public boolean isConditionFulfilled(Context context) throws IllegalArgumentException{
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
-        PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(propertyName);
-       /* Expression propertyExp=expressionCreation.craeteExpression(propertyName, context.getPrimaryEntityInstance(),
-                context.getSecondEntityInstance(),propertyName);*/
+        EntityInstance actionEntityInstance=checkByDefinitionIfPrimaryOrSecondary(context);
+        //need to add actionEntityInstance to every Expression creation
+        Expression propertyExp=expressionCreation.craeteExpression(propertyName, context.getPrimaryEntityInstance(),
+                context.getSecondEntityInstance());
         Expression expression = expressionCreation.craeteExpression(expressionStr, context.getPrimaryEntityInstance(),
-                context.getSecondEntityInstance(),propertyName);
-        Object propertyValue = propertyInstance.getValue();
-        Object expressionValue = expression.evaluateExpression(context);
-        Type propertyType = propertyInstance.getPropertyDefinition().getType();
-        boolean result =false;
+                context.getSecondEntityInstance());
 
+        Object expressionValue = expression.evaluateExpression(context);
+        Type propertyType;
+        Object propertyValue = propertyExp.evaluateExpression(context);
+        if(propertyExp instanceof ExpFuncName || propertyExp instanceof ExpPropName)
+            propertyType=convertToType(propertyValue);
+        else //free value
+            propertyType=Type.STRING;
+
+        boolean result =false;
         if (!verifySuitableType(propertyType, expressionValue)) {
             throw new IllegalArgumentException("condition action can't operate with expression type different from type of property " + propertyName);
         }
-
 
         switch (operator) {
             case "=":
@@ -68,28 +82,38 @@ public class SingleConditionAction extends ConditionAction {
                 result= propertyValue !=  expressionValue;
                 break;
             case "bt":
-                result= caseBT(propertyInstance, propertyValue, propertyType, expressionValue);
+                result= caseBT(propertyValue, propertyType, expressionValue);
                 break;
             case "lt":
-                result= caseLT(propertyInstance, propertyValue, propertyType, expressionValue);
+                result= caseLT(propertyValue, propertyType, expressionValue);
                 break;
         }
         return result;
     }
 
+    public Type convertToType(Object obj) {
+        if (obj instanceof Float || obj instanceof Double) {
+            return Type.FLOAT;
+        } else if (obj instanceof String) {
+            return Type.STRING;
+        } else if (obj instanceof Boolean) {
+            return Type.BOOLEAN;
+        } else {
+            throw new IllegalArgumentException("Unsupported data type");
+        }
+    }
 
-    private boolean caseBT(PropertyInstance propertyInstance, Object propertyValue,Type propertyType,
-                           Object expressionValue) throws IllegalArgumentException {
+
+    private boolean caseBT(Object propertyValue,Type propertyType, Object expressionValue) throws IllegalArgumentException {
         boolean result =false;
-
-        if (!NumericVerify.verifyNumericPropertyType(propertyInstance)) {
+        if (!propertyType.equals(Type.FLOAT)) {
             throw new IllegalArgumentException("bt operator can't operate on a none number property " + propertyName);
         }
 
         switch (propertyType) {
-            case DECIMAL:
+           /* case DECIMAL:
                 result= (int) propertyValue > (int) expressionValue;
-                break;
+                break;*/
             case FLOAT:
                 result= (float) propertyValue > (float) expressionValue;
                 break;
@@ -97,18 +121,17 @@ public class SingleConditionAction extends ConditionAction {
         return result;
     }
 
-    private boolean caseLT(PropertyInstance propertyInstance, Object propertyValue,Type propertyType,
-                           Object expressionValue) throws IllegalArgumentException {
+    private boolean caseLT(Object propertyValue,Type propertyType, Object expressionValue) throws IllegalArgumentException {
         boolean result =false;
 
-        if (!NumericVerify.verifyNumericPropertyType(propertyInstance)) {
+        if (!propertyType.equals(Type.FLOAT)) {
             throw new IllegalArgumentException("lt operator can't operate on a none number property " + propertyName);
         }
 
         switch (propertyType) {
-            case DECIMAL:
+            /*case DECIMAL:
                 result= (int) propertyValue < (int) expressionValue;
-                break;
+                break;*/
             case FLOAT:
                 result= (float) propertyValue < (float) expressionValue;
                 break;
@@ -120,9 +143,9 @@ public class SingleConditionAction extends ConditionAction {
         boolean result =false;
 
         switch (propertyType) {
-            case DECIMAL:
+            /*case DECIMAL:
                 result= (expressionVal instanceof Integer);
-                break;
+                break;*/
             case FLOAT:
                 result= (expressionVal instanceof Float | expressionVal instanceof Integer);
                 break;

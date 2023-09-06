@@ -5,5 +5,5 @@ import system.engine.world.rule.action.expression.api.Expression;
 
 public interface ExpressionCreation {
     Expression craeteExpression(String expressionStr, EntityInstance entityInstance,
-                                EntityInstance secondEntityInstance, String propertyName);
+                                EntityInstance secondEntityInstance);
 }
