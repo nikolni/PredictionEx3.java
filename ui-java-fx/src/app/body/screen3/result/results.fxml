@@ -16,7 +16,7 @@
       <TreeView fx:id="entityPropTreeView" prefHeight="200.0" prefWidth="150.0" />
       <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <ComboBox fx:id="viewComboBox" prefWidth="300.0" VBox.vgrow="NEVER" />
+            <ComboBox fx:id="viewComboBox" onAction="#comboBoxSelected" prefWidth="300.0" VBox.vgrow="NEVER" />
             <GridPane VBox.vgrow="NEVER">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

@@ -7,6 +7,7 @@ import dto.api.DTOPropertyHistogramForUi;
 import dto.api.DTOSimulationEndingForUi;
 import dto.definition.entity.api.EntityDefinitionDTO;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -54,6 +55,7 @@ public class ResultsController {
     private Pane histogramGraphPane;
 
     private Body3Controller body3Controller;
+    private SystemEngineAccess systemEngine;
 
     public void setBody3Controller(Body3Controller body3Controller) {
         this.body3Controller = body3Controller;
@@ -70,7 +72,16 @@ public class ResultsController {
             simulationTicksNumber.setText(String.valueOf(dtoSimulationEndingForUi.getTerminationReason()[0]));
             simulationSecondsNumber.setText(String.valueOf(dtoSimulationEndingForUi.getTerminationReason()[1]));
             fillEntityInfoGridPane(simulationID, systemEngine);
-            handleSimulationSelection(simulationID,systemEngine);
+            viewComboBox.getItems().addAll("Histogram", "Consistency", "Property Average");
+            viewComboBox.setVisible(false);
+            ConsistencyValueLabel.setVisible(false);
+            PropertyAverageValueLabel.setVisible(false);
+            histogramGraphPane.setVisible(false);
+            //handleSimulationSelection(simulationID,systemEngine);
+    }
+
+    public void setSystemEngine(SystemEngineAccess systemEngineAccess){
+        this.systemEngine = systemEngineAccess;
     }
 
     public void fillEntityInfoGridPane(int simulationID, SystemEngineAccess systemEngine){
@@ -91,7 +102,10 @@ public class ResultsController {
         }
 
     }
+    @FXML
+    void comboBoxSelected(ActionEvent event) {
 
+    }
     public BarChart<String, Number> createHistogram(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID) {
 
         // Create the X and Y axes
@@ -117,6 +131,24 @@ public class ResultsController {
         return barChart;
     }
 
+    public float calculatePropertyAverage(Integer simulationID,String entityName,String propertyName){
+        DTOPropertyHistogramForUi dtoPropertyHistogramForUi;
+        float sumOfProducts = 0.0f;
+        float sumOfValues = 0.0f;
+            dtoPropertyHistogramForUi=systemEngine.getPropertyDataAfterSimulationRunningByHistogramByNames(simulationID,entityName,propertyName);
+            for (Map.Entry<Object, Long> entry : dtoPropertyHistogramForUi.getPropertyHistogram().entrySet()) {
+                float key = (float)(entry.getKey());
+                float value = (float)(entry.getValue());
+                float product = key * value;
+
+                sumOfProducts += product;
+                sumOfValues += value;
+            }
+
+            return (sumOfProducts / sumOfValues);
+
+    }
+
 
     public void handleSimulationSelection(int simulationID,SystemEngineAccess systemEngine) {
         TreeItem<String> rootItem = createEntitiesSubTree(simulationID, systemEngine);
@@ -128,11 +160,33 @@ public class ResultsController {
         });
     }
 
+
+
     public void handleSelectedItemChange(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID){
+        viewComboBox.setVisible(true);
+
         BarChart<String, Number> histogram = createHistogram(selectedItem,systemEngine,simulationID);
         histogramGraphPane.getChildren().add(histogram);
 
+        if(systemEngine.getDefinitionsDataFromSE().getPropertyDefinitionByName(selectedItem.getParent().getValue(),selectedItem.getValue()).getType().toLowerCase().equals("float"))
+            PropertyAverageValueLabel.setText(String.valueOf(calculatePropertyAverage(simulationID,selectedItem.getParent().getValue(),selectedItem.getValue())));
+
+        String comboBoxsChoice = viewComboBox.getValue();
+        ConsistencyValueLabel.setVisible(false);
+        PropertyAverageValueLabel.setVisible(false);
+        histogramGraphPane.setVisible(false);
+        if ("Histogram".equals(comboBoxsChoice)) {
+            histogramGraphPane.setVisible(true);
+        } else if ("Consistency".equals(comboBoxsChoice)) {
+            ConsistencyValueLabel.setVisible(true);
+        } else if ("Property Average".equals(comboBoxsChoice)) {
+            PropertyAverageValueLabel.setVisible(true);
+        }
+
+
     }
+
+
 
         public TreeItem<String> createEntitiesSubTree(int simulationID, SystemEngineAccess systemEngine){
             DTOEntitiesAfterSimulationByQuantityForUi entitiesAfterSimulationForUi= systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID);
