@@ -4,7 +4,6 @@ package system.engine.impl;
 import dto.api.*;
 import dto.creation.*;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
-import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.impl.DTOSimulationEndingForUiImpl;
 import dto.impl.DTOWorldGridForUiImpl;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -33,18 +32,19 @@ import java.util.concurrent.Executors;
 public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     private WorldDefinition worldDefinition;
-    private List< WorldInstance> worldInstances;
-    private List<DTOSimulationEndingForUi> simulationEndingForUiList;
+    //private List< WorldInstance> worldInstances;
+    //private final List<DTOSimulationEndingForUi> simulationEndingForUiList;
     private EnvVariablesInstanceManager envVariablesInstanceManager;
     private boolean isHaveValidFileInSystem=false;
-    private Map<Integer, RunSimulation>  simulationIdToRunSimulation;
+    private final Map<Integer, RunSimulation>  simulationIdToRunSimulation;
+    private final Map<Integer, WorldInstance> simulationIdToWorldInstance;
 
-    private ExecutorService threadPool;
+    private final ExecutorService threadPool;
 
 
     public SystemEngineAccessImpl() {
-        this.worldInstances = new ArrayList<>();
-        simulationEndingForUiList=new ArrayList<>();
+        this.simulationIdToWorldInstance = new HashMap<>();
+        //simulationEndingForUiList=new ArrayList<>();
         simulationIdToRunSimulation = new HashMap<>();
         threadPool = Executors.newFixedThreadPool(3);
     }
@@ -54,7 +54,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         WorldFromXml worldFromXml = new WorldFromXml();
         worldDefinition = worldFromXml.FromXmlToPRDWorld(xmlPath);
         isHaveValidFileInSystem=true;
-        worldInstances.clear();
+        simulationIdToWorldInstance.clear();
     }
 
     public boolean getIsHaveValidFileInSystem() {
@@ -78,12 +78,12 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     @Override
     public DTOSimulationsTimeRunDataForUi getSimulationsTimeRunDataFromSE() {
-        return new CreateDTOSimulationsTimeRunDataForUi().getData(worldInstances);
+        return new CreateDTOSimulationsTimeRunDataForUi().getData(simulationIdToWorldInstance);
     }
 
     @Override
     public DTOEntitiesAfterSimulationByQuantityForUi getEntitiesDataAfterSimulationRunningByQuantity(Integer simulationID) {
-        return new CreateDTOEntitiesAfterSimulationByQuantityForUi().getData(worldDefinition, worldInstances.get(simulationID -1));
+        return new CreateDTOEntitiesAfterSimulationByQuantityForUi().getData(worldDefinition, simulationIdToWorldInstance.get(simulationID ));
     }
 
     @Override
@@ -106,7 +106,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         String propertyName = worldDefinition.getEntityDefinitionManager().
                 getDefinitions().get(entityDefinitionIndex -1).getProps().get(propertyIndex -1).getUniqueName();
 
-        return new CreateDTOPropertyHistogramForUi().getData(worldInstances.get(simulationID-1), entityName, propertyName);
+        return new CreateDTOPropertyHistogramForUi().getData(simulationIdToWorldInstance.get(simulationID), entityName, propertyName);
     }
 
     @Override
@@ -165,8 +165,8 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     }
     @Override
-    public void addWorldInstance(){
-        worldInstances.add(worldDefinition.createWorldInstance(worldInstances.size() + 1));
+    public void addWorldInstance(Integer simulationID){
+        simulationIdToWorldInstance.put(simulationID, worldDefinition.createWorldInstance(simulationID));
     }
 
     @Override
@@ -177,7 +177,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         simulationIdToRunSimulation.put(simulationID,runSimulationInstance);
         //runSimulationInstance.registerCallback(callback);
         terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
-                worldInstances.get(simulationID-1) ,envVariablesInstanceManager, isPaused);
+                simulationIdToWorldInstance.get(simulationID) ,envVariablesInstanceManager, isPaused);
 
         DTOSimulationEndingForUi dtoSimulationEndingForUi=new DTOSimulationEndingForUiImpl(simulationID, terminationConditionArr);
         //simulationEndingForUiList.add(dtoSimulationEndingForUi);
@@ -200,15 +200,15 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         return 0;
     }
 
-    @Override
+    /*@Override
     public List<DTOSimulationEndingForUi> getDTOSimulationEndingForUiList() {
         return simulationEndingForUiList;
-    }
+    }*/
 
     @Override
     public DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogramByNames(Integer simulationID,
                                                                                              String entityName,String propertyName) {
-        return new CreateDTOPropertyHistogramForUi().getData(worldInstances.get(simulationID-1), entityName, propertyName);
+        return new CreateDTOPropertyHistogramForUi().getData(simulationIdToWorldInstance.get(simulationID), entityName, propertyName);
     }
 
     @Override

@@ -19,14 +19,14 @@
   </rowConstraints>
    <children>
       <Label id="action-type-label" alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="101.0" styleClass="my-label" text="Action type" wrapText="true" />
-      <Label id="primary-entity-label" alignment="CENTER" prefHeight="43.0" prefWidth="104.0" styleClass="my-label" text="Primary entity" GridPane.rowIndex="1" />
+      <Label id="primary-entity-label" alignment="CENTER" prefHeight="43.0" prefWidth="104.0" styleClass="my-label" text="Source entity" GridPane.rowIndex="1" />
       <Label id="property-name-label" alignment="CENTER" prefHeight="16.0" prefWidth="100.0" styleClass="my-label" text="Of" textFill="#fcfbfb" GridPane.rowIndex="3" />
       <Label id="expression1-label" alignment="CENTER" prefHeight="48.0" prefWidth="105.0" styleClass="my-label" text="Actions quantity" textFill="#faf8f8" GridPane.rowIndex="4" />
       <Label fx:id="primaryEntityLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="68.0" styleClass="my-label" text="Label" textFill="#fdfbfb" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Label fx:id="actionTypeLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="63.0" styleClass="my-label" text="Label" textFill="#fdf9f9" GridPane.columnIndex="1" />
       <Label fx:id="ofLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="60.0" styleClass="my-label" text="Label" textFill="#fdf9f9" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <Label fx:id="actionsQuantityLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="82.0" styleClass="my-label" text="Label" textFill="#fffefe" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label id="primary-entity-label" alignment="CENTER" prefHeight="43.0" prefWidth="104.0" styleClass="my-label" text="Second entity" GridPane.rowIndex="2" />
+      <Label id="primary-entity-label" alignment="CENTER" prefHeight="43.0" prefWidth="104.0" styleClass="my-label" text="Target entity" GridPane.rowIndex="2" />
       <Label fx:id="secondEntityLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="68.0" styleClass="my-label" text="Label" textFill="#fdfbfb" GridPane.columnIndex="1" GridPane.rowIndex="2" />
    </children>
 </GridPane>

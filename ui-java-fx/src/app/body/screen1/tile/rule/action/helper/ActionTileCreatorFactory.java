@@ -6,7 +6,7 @@ import dto.definition.rule.action.SetActionDTO;
 import dto.definition.rule.action.condition.ConditionActionDTO;
 import dto.definition.rule.action.numeric.DecreaseActionDTO;
 import dto.definition.rule.action.numeric.IncreaseActionDTO;
-import dto.definition.rule.action.numeric.ReplaceActionDTO;
+import dto.definition.rule.action.ReplaceActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
 import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
 import javafx.scene.layout.FlowPane;

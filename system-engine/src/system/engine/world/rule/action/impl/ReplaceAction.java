@@ -9,7 +9,7 @@ import system.engine.world.rule.context.Context;
 
 public class ReplaceAction extends AbstractAction {
     private final EntityDefinition createEntityDefinition;
-    private String mode;
+    private final String mode;
 
 
     public ReplaceAction(EntityDefinition primaryEntityDefinition, SecondaryEntityDefinition secondaryEntityDefinition,
@@ -30,4 +30,14 @@ public class ReplaceAction extends AbstractAction {
             context.getEntityInstanceManager().createEntityInstanceFromDerived(createEntityDefinition,EntityInstanceToKill);
         context.removeEntity(EntityInstanceToKill);
     }
+
+    public String getCreateEntityDefinitionName() {
+        return createEntityDefinition.getUniqueName();
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+
 }
