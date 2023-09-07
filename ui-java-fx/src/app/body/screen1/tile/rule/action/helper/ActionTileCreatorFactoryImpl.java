@@ -14,7 +14,7 @@ import dto.definition.rule.action.condition.MultipleConditionActionDTO;
 import dto.definition.rule.action.condition.SingleConditionActionDTO;
 import dto.definition.rule.action.numeric.DecreaseActionDTO;
 import dto.definition.rule.action.numeric.IncreaseActionDTO;
-import dto.definition.rule.action.numeric.ReplaceActionDTO;
+import dto.definition.rule.action.ReplaceActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
 import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
 import javafx.fxml.FXMLLoader;
@@ -193,7 +193,7 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
             ProximityActionController proximityActionController = loader.getController();
             proximityActionController.setActionTypeLabel("proximity");
             proximityActionController.setPrimaryEntityLabel(proximityActionDTO.getEntityDefinitionName());
-            proximityActionController.setSecondEntityLabel(proximityActionDTO.getSecondEntityDefinitionDTO());
+            proximityActionController.setSecondEntityLabel(proximityActionDTO.getTargetEntityDefinitionName());
             proximityActionController.setOfLabel(proximityActionDTO.getOf());
             proximityActionController.setActionsNumLabel(proximityActionDTO.getActionsCollectionSize().toString());
             detailsFlowPane.getChildren().add(singleAction);
@@ -212,7 +212,7 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
             ReplaceActionController replaceActionController = loader.getController();
             replaceActionController.setActionTypeLabel("replace");
             replaceActionController.setKillEntityLabel(replaceActionDTO.getEntityDefinitionName());
-            replaceActionController.setCreateEntityLabel(replaceActionDTO.getSecondEntityDefinitionDTO());
+            replaceActionController.setCreateEntityLabel(replaceActionDTO.getCreateEntityDefinitionName());
             replaceActionController.setModeLabel(replaceActionDTO.getMode());
             detailsFlowPane.getChildren().add(singleAction);
         }catch (IOException e) {

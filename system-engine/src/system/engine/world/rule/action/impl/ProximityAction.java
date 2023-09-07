@@ -5,7 +5,6 @@ import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.execution.instance.enitty.api.EntityInstance;
-import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
 import system.engine.world.grid.api.WorldGrid;
 import system.engine.world.rule.action.api.AbstractAction;
 import system.engine.world.rule.action.api.Action;
@@ -22,6 +21,7 @@ public class ProximityAction extends AbstractAction {
 
     private final String ofExp;
     private final List<Action> actionsCollection;
+
     private final EntityDefinition targetEntityDefinition;
     private final WorldGrid worldGrid;
 
@@ -51,7 +51,8 @@ public class ProximityAction extends AbstractAction {
 
         EntityInstance primaryEntityInstance = context.getPrimaryEntityInstance();
         EntityInstance secondEntityInstance = null;
-        if(isThereSecondEntityThatCloseEnough(primaryEntityInstance, secondEntityInstance, of)){
+        String targetEntityName = targetEntityDefinition.getUniqueName();
+        if(isThereSecondEntityThatCloseEnough(primaryEntityInstance, secondEntityInstance, targetEntityName, of)){
             context.setSecondEntityInstance(secondEntityInstance);
             for(Action action : actionsCollection){
                 action.executeAction(context);
@@ -60,11 +61,11 @@ public class ProximityAction extends AbstractAction {
     }
 
     private Boolean isThereSecondEntityThatCloseEnough(EntityInstance primaryEntityInstance, EntityInstance secondEntityInstance,
-                                                       Integer of){
+                                                       String targetEntityName, Integer of){
         int currentOf=1;
 
         while(currentOf <= of){
-            if(worldGrid.isThereSecondEntityCloseEnough(primaryEntityInstance, secondEntityInstance, currentOf)){
+            if(worldGrid.isThereSecondEntityCloseEnough(primaryEntityInstance, secondEntityInstance, targetEntityName, currentOf)){
                 break;
             }
             currentOf++;
@@ -82,5 +83,8 @@ public class ProximityAction extends AbstractAction {
 
     public Integer getActionsCollectionSize() {
         return actionsCollection.size();
+    }
+    public String getTargetEntityDefinitionName() {
+        return targetEntityDefinition.getUniqueName();
     }
 }
