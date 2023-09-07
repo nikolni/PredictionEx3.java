@@ -2,12 +2,11 @@ package app.body.screen3.main;
 
 import app.body.screen3.result.ResultsController;
 import app.body.screen3.simulation.progress.SimulationProgressController;
-import app.body.screen3.simulation.progress.task.UpdateUiThread;
+import app.body.screen3.simulation.progress.task.UpdateUiTask;
 import dto.api.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import system.engine.api.SystemEngineAccess;
@@ -49,14 +48,18 @@ public class Body3Controller {
 
     @FXML private HBox resultsComponent;
     @FXML private ResultsController resultsComponentController;
+    @FXML private VBox simulationProgressComponent;
+    @FXML private SimulationProgressController simulationProgressComponentController;
     private SystemEngineAccess systemEngine;
 
     private List<HBox> simulationResultsNodesList;
-    private List<VBox> simulationProgressNodesList;
-    private List<SimulationProgressController> simulationProgressControllerList;
+    //private List<VBox> simulationProgressNodesList;
+    //private List<SimulationProgressController> simulationProgressControllerList;
+    private Thread oldUpdateUiThreadThread = null;
+
 
     public Body3Controller() {
-        this.simulationProgressNodesList = new ArrayList<>();
+        //this.simulationProgressNodesList = new ArrayList<>();
         this.simulationResultsNodesList = new ArrayList<>();
     }
 
@@ -89,11 +92,24 @@ public class Body3Controller {
 
 
         private void handleSimulationListItemSelection(String selectedItem) {
+            if(oldUpdateUiThreadThread !=null & oldUpdateUiThreadThread.isAlive()){
+                oldUpdateUiThreadThread.interrupt();
+            }
             String[] words = selectedItem.split("\\s+");
-            int simulationID = (Integer.parseInt(words[words.length - 1]));
-            simulationProgressScrollPane.setContent(simulationProgressNodesList.get(simulationID-1));
-            UpdateUiThread updateUiThread = new UpdateUiThread(simulationProgressControllerList.get(simulationID-1), systemEngine, simulationID);
-            updateUiThread.start();
+
+            Integer simulationID = (Integer.parseInt(words[words.length - 1]));
+            //simulationProgressScrollPane.setContent(simulationProgressNodesList.get(simulationID-1));
+            UpdateUiTask updateUiTask = new UpdateUiTask(simulationProgressComponentController, systemEngine, simulationID);
+
+            simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
+            simulationProgressComponentController.bindUiTaskToUiDownLevelComponents(updateUiTask);
+            simulationProgressComponentController.setSimulationIdLabel(simulationID.toString());
+            simulationProgressComponentController.setSimulationID(simulationID);
+            simulationProgressComponentController.setSystemEngine(systemEngine);
+
+            oldUpdateUiThreadThread  = new Thread(updateUiTask);
+            oldUpdateUiThreadThread.start();
+            System.out.println( "thread address " + updateUiTask);
             if(simulationResultsNodesList.get(simulationID-1) != null){
                 simulationResultScrollPane.setContent(simulationResultsNodesList.get(simulationID-1));
             }
@@ -148,11 +164,11 @@ public class Body3Controller {
     }
 
 
-    public void addNewSimulationProgressToList(VBox simulationProgressNode, SimulationProgressController simulationProgressController) {
+    /*public void addNewSimulationProgressToList(VBox simulationProgressNode, SimulationProgressController simulationProgressController) {
         simulationProgressNodesList.add(simulationProgressNode);
         simulationProgressControllerList.add(simulationProgressController);
         simulationResultsNodesList.add(null);
-    }
+    }*/
 
     public void createAndAddNewSimulationResultToList(DTOSimulationEndingForUi dtoSimulationEndingForUi) {
         try{
