@@ -84,7 +84,8 @@ public final class WorldGridImpl implements WorldGrid {
     }
 
     @Override
-    public Boolean isThereSecondEntityCloseEnough(EntityInstance primaryEntityInstance, EntityInstance secondEntityInstance, Integer of){
+    public Boolean isThereSecondEntityCloseEnough(EntityInstance primaryEntityInstance, EntityInstance secondEntityInstance,
+                                                  String targetEntityName, Integer of){
         int centerX = primaryEntityInstance.getColumns();
         int centerY = primaryEntityInstance.getRow();
         int radius = of;
@@ -99,8 +100,10 @@ public final class WorldGridImpl implements WorldGrid {
 
                 // Check if the square is at the specified distance from the center point.
                 if (Math.abs(distance - radius) < 0.5 || isAtEdge(row, col, gridRows, gridColumns)) {
-                    secondEntityInstance = worldGrid[row][col];
-                    return true;
+                    if(worldGrid[row][col] != null & worldGrid[row][col].getEntityDefinition().getUniqueName().equals(targetEntityName)){
+                        secondEntityInstance = worldGrid[row][col];
+                        return true;
+                    }
                 }
             }
         }
