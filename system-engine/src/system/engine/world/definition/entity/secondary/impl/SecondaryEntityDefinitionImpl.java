@@ -57,7 +57,7 @@ public class SecondaryEntityDefinitionImpl implements SecondaryEntityDefinition 
                 for(EntityInstance checkedEntityInstance: allEntityInstancesOfDefinition){
 
                     Context context = new ContextImpl(checkedEntityInstance,null,
-                            envVariablesInstanceManager, entitiesToKill, tickNumber);
+                            envVariablesInstanceManager, entitiesToKill, tickNumber,worldInstance.getEntityInstanceManager());
                     if(selectionCondition.isConditionFulfilled(context))
                         chosenEntities.add(checkedEntityInstance);
                 }
