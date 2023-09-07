@@ -1,13 +1,9 @@
 package system.engine.api;
 
 import dto.api.*;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.concurrent.Task;
-import system.engine.run.simulation.SimulationCallback;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
-import java.util.List;
 
 public interface SystemEngineAccess {
 
@@ -31,7 +27,7 @@ public interface SystemEngineAccess {
     void updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE);
     void addWorldInstance(Integer simulationID);
 
-    DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isResumed, Integer simulationID);
+    DTOSimulationEndingForUi runSimulation(Integer simulationID) ;
 
     int getTotalTicksNumber();
 
@@ -39,7 +35,10 @@ public interface SystemEngineAccess {
     DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogramByNames(Integer simulationID,
                                                                                       String entityName,String propertyName);
     DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID);
-    void addTaskToQueue(Task<Boolean> runSimulationTask);
+    void addTaskToQueue(Runnable runSimulationRunnable);
     DTOWorldGridForUi getDTOWorldGridForUi();
+    void pauseSimulation(int simulationID);
+    void resumeSimulation(int simulationID);
+    void cancelSimulation(int simulationID);
 
 }

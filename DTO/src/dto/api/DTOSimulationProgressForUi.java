@@ -1,9 +1,12 @@
 package dto.api;
 
+import java.util.Map;
+
 public interface DTOSimulationProgressForUi {
      Integer getSecondsPast();
 
      Integer getTicksPast() ;
 
-     Integer getEntitiesLeft() ;
+     Map<String, Integer> getEntitiesLeft();
+     String getProgressMassage();
 }

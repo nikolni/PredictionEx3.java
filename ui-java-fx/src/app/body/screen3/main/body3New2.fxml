@@ -15,6 +15,9 @@
       <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
             <ScrollPane fx:id="simulationProgressScrollPane" prefHeight="200.0" prefWidth="469.0" VBox.vgrow="ALWAYS">
+               <content>
+                  <fx:include fx:id="simulationProgressComponent" source="/app/body/screen3/simulation/progress/SimulationProgressController.java" />
+               </content>
             </ScrollPane>
             <ScrollPane prefHeight="200.0" prefWidth="469.0" VBox.vgrow="ALWAYS">
                <content>

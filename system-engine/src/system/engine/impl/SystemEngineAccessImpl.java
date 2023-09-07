@@ -6,13 +6,11 @@ import dto.creation.*;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.impl.DTOSimulationEndingForUiImpl;
 import dto.impl.DTOWorldGridForUiImpl;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.concurrent.Task;
 import jaxb2.copy.WorldFromXml;
 import system.engine.api.SystemEngineAccess;
-import system.engine.run.simulation.SimulationCallback;
 import system.engine.run.simulation.api.RunSimulation;
 import system.engine.run.simulation.impl.RunSimulationImpl;
+import system.engine.run.simulation.manager.RunSimulationManager;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.api.WorldInstance;
 import system.engine.world.definition.property.api.PropertyDefinition;
@@ -26,8 +24,6 @@ import system.engine.world.termination.condition.impl.TicksTerminationConditionI
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class SystemEngineAccessImpl implements SystemEngineAccess {
 
@@ -36,23 +32,21 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     //private final List<DTOSimulationEndingForUi> simulationEndingForUiList;
     private EnvVariablesInstanceManager envVariablesInstanceManager;
     private boolean isHaveValidFileInSystem=false;
-    private final Map<Integer, RunSimulation>  simulationIdToRunSimulation;
     private final Map<Integer, WorldInstance> simulationIdToWorldInstance;
-
-    private final ExecutorService threadPool;
+    private RunSimulationManager runSimulationManager;
 
 
     public SystemEngineAccessImpl() {
         this.simulationIdToWorldInstance = new HashMap<>();
         //simulationEndingForUiList=new ArrayList<>();
-        simulationIdToRunSimulation = new HashMap<>();
-        threadPool = Executors.newFixedThreadPool(3);
+
     }
 
     @Override
     public void getXMLFromUser(String xmlPath) throws JAXBException, FileNotFoundException {
         WorldFromXml worldFromXml = new WorldFromXml();
         worldDefinition = worldFromXml.FromXmlToPRDWorld(xmlPath);
+        runSimulationManager = new RunSimulationManager( worldDefinition.getThreadPoolSize());
         isHaveValidFileInSystem=true;
         simulationIdToWorldInstance.clear();
     }
@@ -170,23 +164,24 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
-    public DTOSimulationEndingForUi runSimulation(SimulationCallback callback, SimpleBooleanProperty isPaused, Integer simulationID) throws IllegalArgumentException{    //on last index at world instances list
-        int[] terminationConditionArr;
+    public DTOSimulationEndingForUi runSimulation(Integer simulationID)
+            throws IllegalArgumentException{
 
-        RunSimulation runSimulationInstance = new RunSimulationImpl();
-        simulationIdToRunSimulation.put(simulationID,runSimulationInstance);
-        //runSimulationInstance.registerCallback(callback);
-        terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
-                simulationIdToWorldInstance.get(simulationID) ,envVariablesInstanceManager, isPaused);
+            int[] terminationConditionArr;
 
-        DTOSimulationEndingForUi dtoSimulationEndingForUi=new DTOSimulationEndingForUiImpl(simulationID, terminationConditionArr);
-        //simulationEndingForUiList.add(dtoSimulationEndingForUi);
-        return dtoSimulationEndingForUi;
+            RunSimulation runSimulationInstance = new RunSimulationImpl();
+            runSimulationManager.addSimulationIdToRunSimulation(simulationID, runSimulationInstance);
+            terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
+                    simulationIdToWorldInstance.get(simulationID), envVariablesInstanceManager);
+
+            DTOSimulationEndingForUi dtoSimulationEndingForUi = new DTOSimulationEndingForUiImpl(simulationID, terminationConditionArr);
+            //simulationEndingForUiList.add(dtoSimulationEndingForUi);
+            return dtoSimulationEndingForUi;
     }
 
     @Override
-    public void addTaskToQueue(Task<Boolean> runSimulationTask){
-        threadPool.submit(runSimulationTask);
+    public void addTaskToQueue(Runnable runSimulationRunnable){
+        runSimulationManager.addTaskToQueue(runSimulationRunnable);
     }
 
     @Override
@@ -213,12 +208,25 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     @Override
     public DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID){
-        return simulationIdToRunSimulation.get(simulationID).getDtoSimulationProgressForUi();
+        return runSimulationManager.getDtoSimulationProgressForUi(simulationID);
     }
 
     @Override
     public DTOWorldGridForUi getDTOWorldGridForUi(){
         DTOWorldGridForUi dtoWorldGridForUi = new DTOWorldGridForUiImpl(worldDefinition.getGridRows(), worldDefinition.getGridColumns());
         return dtoWorldGridForUi;
+    }
+    @Override
+    public void pauseSimulation(int simulationID){
+        runSimulationManager.pauseSimulation(simulationID);
+    }
+
+    @Override
+    public void resumeSimulation(int simulationID){
+        runSimulationManager.resumeSimulation(simulationID);
+    }
+    @Override
+    public void cancelSimulation(int simulationID){
+        runSimulationManager.cancelSimulation(simulationID);
     }
 }

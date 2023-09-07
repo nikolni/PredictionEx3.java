@@ -1,5 +1,6 @@
 package app.body.screen2.main;
 
+import app.body.screen2.task.RunSimulationTask;
 import app.body.screen3.main.Body3Controller;
 import app.body.screen3.simulation.progress.SimulationProgressController;
 import app.body.screen2.start.Button.StartButtonController;
@@ -237,7 +238,10 @@ public class Body2Controller {
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
         systemEngine.addWorldInstance(simulationsCounter);
 
-        try {
+        RunSimulationTask runSimulationTask = new RunSimulationTask(systemEngine, body3ComponentController);
+        systemEngine.addTaskToQueue(runSimulationTask);
+
+        /*try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen3/simulation/progress/simulationProgress.fxml"));
             VBox simulationProgressNode = loader.load();
             SimulationProgressController simulationProgressController = loader.getController();
@@ -249,7 +253,7 @@ public class Body2Controller {
             simulationProgressController.runSimulation(systemEngine, simulationsCounter);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
     }
 

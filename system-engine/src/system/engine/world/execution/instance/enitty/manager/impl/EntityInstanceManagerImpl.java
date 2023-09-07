@@ -141,4 +141,12 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         instancesBeforeKill.set(id -1, instances.get(id-1));
         instances.set(id-1, null);
     }
+
+
+    @Override
+    public Map<String, Integer> getEntitiesPopulationAfterSimulationRunning() {
+        return entitiesPopulationAfterSimulationRunning;
+    }
+
+
 }
