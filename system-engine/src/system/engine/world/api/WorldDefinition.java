@@ -20,4 +20,5 @@ public interface WorldDefinition {
     void addPopulationToEntitiesDefinition(Map<String, Integer> entityNameDefToPopulation);
     Integer getGridRows();
     Integer getGridColumns();
+    int getThreadPoolSize();
 }

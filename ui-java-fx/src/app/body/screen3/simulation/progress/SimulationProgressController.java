@@ -1,25 +1,22 @@
 package app.body.screen3.simulation.progress;
-import app.body.screen2.task.RunSimulationTask;
-import app.body.screen2.task.context.api.SimulationRunTaskContext;
-import app.body.screen2.task.context.impl.SimulationRunTaskContextImpl;
 import app.body.screen3.main.Body3Controller;
+import app.body.screen3.simulation.progress.task.UpdateUiTask;
+import dto.api.DTOEntitiesAfterSimulationByQuantityForUi;
 import dto.api.DTOSimulationEndingForUi;
-import dto.api.DTOSimulationProgressForUi;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import system.engine.api.SystemEngineAccess;
-import system.engine.run.simulation.SimulationCallback;
 
-import java.util.Optional;
-import java.util.concurrent.ExecutorService;
+import java.util.List;
+import java.util.Map;
+
 
 public class SimulationProgressController {
 
@@ -43,30 +40,19 @@ public class SimulationProgressController {
     private Button resumeButton;
     @FXML
     private Button stopButton;
+    @FXML
+    private GridPane entitiesLeftGridPane;
 
-    private final SimpleIntegerProperty secondsPast;
-    private final SimpleIntegerProperty ticksPast;
-    private final SimpleIntegerProperty entitiesLeft;
-
-    private final SimpleBooleanProperty isPaused;
-    private Task<Boolean>  runSimulationTask;
-
-
-
+    private int simulationID;
     private Body3Controller body3ComponentController;
+    private SystemEngineAccess systemEngine;
 
-    public SimulationProgressController() {
-        this.secondsPast = new SimpleIntegerProperty(0);
-        this.ticksPast = new SimpleIntegerProperty(0);
-        this.entitiesLeft = new SimpleIntegerProperty(0);
-        this.isPaused =  new SimpleBooleanProperty(false);
+    public void setSimulationID(int simulationID) {
+        this.simulationID = simulationID;
     }
 
-    @FXML
-    private void initialize() {
-        secondsLabel.textProperty().bind(Bindings.format("%,d", secondsPast));
-        entitiesLeftLabel.textProperty().bind(Bindings.format("%,d", entitiesLeft));
-        ticksLabel.textProperty().bind(Bindings.format("%,d", ticksPast));
+    public void setSystemEngine(SystemEngineAccess systemEngine) {
+        this.systemEngine = systemEngine;
     }
 
     public void setBody3ComponentController(Body3Controller body3ComponentController) {
@@ -76,25 +62,23 @@ public class SimulationProgressController {
         this.simulationIdLabel.setText(simulationIdLabel);
     }
 
-    public void runSimulation(SystemEngineAccess systemEngineAccess, Integer simulationID){
-        toggleTaskButtons(true);
-        SimulationRunTaskContext simulationRunTaskContext = new SimulationRunTaskContextImpl(secondsPast, ticksPast, entitiesLeft, isPaused,
-                systemEngineAccess, (q) -> onTaskFinished(Optional.ofNullable(() -> toggleTaskButtons(false))),
-                systemEngineAccess.getTotalTicksNumber(), simulationID);
-        runSimulationTask = new RunSimulationTask(simulationRunTaskContext, this);
-        bindTaskToUIComponents(runSimulationTask, () -> toggleTaskButtons(false));
-        systemEngineAccess.addTaskToQueue(runSimulationTask);
-
-        System.out.println("controller address " + this + " task address " + runSimulationTask);
+    public void bindUiTaskToUiDownLevelComponents(UpdateUiTask uiTask) {
+        secondsLabel.textProperty().bind(Bindings.format("%,d", uiTask.getSecondsPastProperty()));
+        entitiesLeftLabel.textProperty().bind(Bindings.format("%,d", uiTask.getEntitiesLeftProperty()));
+        ticksLabel.textProperty().bind(Bindings.format("%,d", uiTask.getTicksPastProperty()));
+        if(progressMassageLabel.getText().equals("Done!")){
+            toggleTaskButtons(false);
+        }
+        else if(progressMassageLabel.getText().equals("Running!")){
+            toggleTaskButtons(true);
+        }
     }
-
-
-    public void bindTaskToUIComponents(Task<Boolean> aTask, Runnable onFinish) {
+    public void bindUiTaskToUiUpLevelComponents(Task<Boolean> uiTask) {
         // task message
-        progressMassageLabel.textProperty().bind(aTask.messageProperty());
+        progressMassageLabel.textProperty().bind(uiTask.messageProperty());
 
         // task progress bar
-        simulationProgressBar.progressProperty().bind(aTask.progressProperty());
+        simulationProgressBar.progressProperty().bind(uiTask.progressProperty());
 
         // task percent label
         PercentLabel.textProperty().bind(
@@ -102,25 +86,23 @@ public class SimulationProgressController {
                         Bindings.format(
                                 "%.0f",
                                 Bindings.multiply(
-                                        aTask.progressProperty(),
+                                        uiTask.progressProperty(),
                                         100)),
                         " %"));
 
         // task cleanup upon finish
-        aTask.valueProperty().addListener((observable, oldValue, newValue) -> {
+        /*aTask.valueProperty().addListener((observable, oldValue, newValue) -> {
             onTaskFinished(Optional.ofNullable(onFinish));
-        });
-
+        });*/
     }
 
-    public void onTaskFinished(Optional<Runnable> onFinish) {
+    public void onTaskFinished() {
         this.progressMassageLabel.textProperty().unbind();
         this.PercentLabel.textProperty().unbind();
         this.simulationProgressBar.progressProperty().unbind();
-        onFinish.ifPresent(Runnable::run);
     }
 
-    private void toggleTaskButtons(boolean isActive) {
+    public void toggleTaskButtons(boolean isActive) {
         stopButton.setDisable(!isActive);
         pauseButton.setDisable(!isActive);
         resumeButton.setDisable(!isActive);
@@ -129,33 +111,29 @@ public class SimulationProgressController {
     public void addNewSimulationResultToBody3Controller(DTOSimulationEndingForUi dtoSimulationEndingForUi){
         body3ComponentController.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi);
     }
-
-    public void updateSimulationProgress(DTOSimulationProgressForUi dtoSimulationProgressForUi){
-        SimulationCallback callback = (SimulationCallback)runSimulationTask;
-        if(isPaused.get()){
-            callback.onUpdateWhileSimulationIsPaused();
-        }
-        else {
-            callback.onUpdateWhileSimulationRunning(dtoSimulationProgressForUi);
-        }
-    }
-
-
-
     @FXML
-    void onPauseClick(MouseEvent event) {
-        isPaused.set(true);
+    synchronized void onPauseClick(MouseEvent event) {
+        systemEngine.pauseSimulation(simulationID);
     }
 
     @FXML
-    void onResumeClick(MouseEvent event) {
-        isPaused.set(false);
+    synchronized void onResumeClick(MouseEvent event) {
+        systemEngine.resumeSimulation(simulationID);
     }
 
     @FXML
     void onStopClick(MouseEvent event) {
-        System.out.println(":canceld by task address " + runSimulationTask);
-        runSimulationTask.cancel();
+       systemEngine.cancelSimulation(simulationID);
     }
 
+    public void updateEntitiesLeftGridPane(Map<String, Integer> entitiesPopulationAfterSimulationRunning) {
+        for(String key: entitiesPopulationAfterSimulationRunning.keySet()){
+            for (int row = 0; row < entitiesPopulationAfterSimulationRunning.size(); row++) {
+                Label entityName = new Label(key);
+                entitiesLeftGridPane.add(entityName, 0, row);
+                Label population = new Label(entitiesPopulationAfterSimulationRunning.get(key).toString());
+                entitiesLeftGridPane.add(population, 1, row);
+            }
+        }
+    }
 }

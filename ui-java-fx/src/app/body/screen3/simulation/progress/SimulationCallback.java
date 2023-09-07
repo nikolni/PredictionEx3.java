@@ -1,4 +1,4 @@
-package system.engine.run.simulation;
+package app.body.screen3.simulation.progress;
 
 import dto.api.DTOSimulationEndingForUi;
 import dto.api.DTOSimulationProgressForUi;

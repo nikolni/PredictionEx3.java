@@ -16,6 +16,8 @@ public class WorldDefinitionImpl implements WorldDefinition {
     private final RuleDefinitionManager ruleDefinitionManager;
     private final TerminationConditionsManager terminationConditionsManager;
     private final WorldGrid worldGrid;
+
+
     private final int threadPoolSize;
 
     public WorldDefinitionImpl(EntityDefinitionManager entityDefinitionManager,
@@ -65,5 +67,10 @@ public class WorldDefinitionImpl implements WorldDefinition {
     public Integer getGridColumns() {
         return worldGrid.getGridColumns();
     }
+    @Override
+    public int getThreadPoolSize() {
+        return threadPoolSize;
+    }
+
 
 }

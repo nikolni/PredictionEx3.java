@@ -2,12 +2,11 @@ package system.engine.run.simulation.impl;
 
 import dto.api.DTOSimulationProgressForUi;
 import dto.impl.DTOSimulationProgressForUiImpl;
-import javafx.beans.property.SimpleBooleanProperty;
 import system.engine.run.simulation.api.RunSimulation;
+import system.engine.run.simulation.manager.IsSimulationPaused;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.api.WorldInstance;
 import system.engine.world.execution.instance.enitty.api.EntityInstance;
-import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
 import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.rule.action.api.Action;
 import system.engine.world.rule.action.api.ActionType;
@@ -19,21 +18,29 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RunSimulationImpl implements RunSimulation {
     private DTOSimulationProgressForUi dtoSimulationProgressForUi= null;
+
+    private IsSimulationPaused isSimulationPaused;
+    private boolean isCanceled = false;
     //private Task<Boolean> currentTask;
     private final long SLEEP_TIME = 3;
-   /* @Override
-    public void registerCallback(SimulationCallback callback) {
-        this.callback = callback;
-    }*/
+    @Override
+    public void setCanceled(boolean canceled) {
+        isCanceled = canceled;
+    }
+    @Override
+    public IsSimulationPaused getIsSimulationPaused() {
+        return isSimulationPaused;
+    }
 
     @Override
     public int[] runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
-                                                 EnvVariablesInstanceManager envVariablesInstanceManager,
-                                                   SimpleBooleanProperty isPaused)
-                                                    throws IllegalArgumentException{
+                                                 EnvVariablesInstanceManager envVariablesInstanceManager)
+            throws IllegalArgumentException {
+
         int entitiesLeft = worldInstance.getEntityInstanceManager().getInstances().size();
         Instant startTime = Instant.now();
         Instant endTime;
@@ -42,54 +49,75 @@ public class RunSimulationImpl implements RunSimulation {
         int seconds = 0;
         int numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
         int numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
+        String progressMassage = "Running!";
 
         List<Action> actionsList = new ArrayList<>();
         List<EntityInstance> entitiesToKill = new ArrayList<>();
 
-
         while(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun) {
-            /*if(isPaused.get()){
-                callback.onUpdateWhileSimulationIsPaused();
-            }*/
-                while (!isPaused.get()) {
-                    entitiesToKill.clear();
-                    actionsList.clear();
-                    for (Rule rule : getActiveRules(tick, worldDefinition)) {
-                        actionsList.addAll(rule.getActionsToPerform());
+            /*synchronized (this){
+                if(isSimulationPaused.isPaused()) {
+                    try {
+                        this.wait(); // Pause the thread until notified
+                    } catch (InterruptedException e) {
                     }
-
-                    entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill, tick);
-
-                    tick++;
-                    endTime = Instant.now();
-                    duration = Duration.between(startTime, endTime);
-                    seconds = (int) duration.getSeconds();
-
-                    updateDtoSimulationProgressForUi(seconds, tick, entitiesLeft);
-
-                    /*// Notify the UI about progress and status via the callback
-                    if (callback != null) {
-                        DTOSimulationProgressForUi dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(seconds, tick, entitiesLeft);
-                        callback.onUpdateWhileSimulationRunning(dtoSimulationProgressForUi);
-                        *//*Platform.runLater(() -> {
-                            callback.onUpdate(dtoSimulationProgressForUi);
-                        });*//*
-                    }*/
-                    if(!(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun)){
-                        break;
-                    }
-                    sleepForAWhile(SLEEP_TIME);
                 }
+            }*/
+            while (isSimulationPaused.isPaused()) {
+                updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
+                        worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+
+                if(isCanceled){
+                    progressMassage = "Canceled!";
+                    updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
+                            worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+
+                    break;
+                }
+                entitiesToKill.clear();
+                actionsList.clear();
+                for (Rule rule : getActiveRules(tick, worldDefinition)) {
+                    actionsList.addAll(rule.getActionsToPerform());
+                }
+
+                entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill, tick);
+
+                tick++;
+                endTime = Instant.now();
+                duration = Duration.between(startTime, endTime);
+                seconds = (int) duration.getSeconds();
+
+                updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
+                        worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+
+                if(!(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun)){
+                    break;
+                }
+                sleepForAWhile(SLEEP_TIME);
+            }
+            if(isCanceled){
+                break;
+            }
         }
 
-        int[] terminationCausePair=new int[3];
+
+        int[] terminationCausePair=new int[4];
         terminationCausePair[0]=tick;
         terminationCausePair[1]=seconds;
 
-        if(tick>numOfTicksToRun){terminationCausePair[2]=0;} //last tick
-        else {terminationCausePair[2]=1;} //time ran out
+        if(isCanceled) {terminationCausePair[3]=2;} //by user
+        else{
+            if(tick>numOfTicksToRun){terminationCausePair[3]=0;} //last tick
+            else {terminationCausePair[3]=1;} //time ran out
+            progressMassage = "Done!";
+            updateDtoSimulationProgressForUi(seconds-1, tick-1, progressMassage,
+                    worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+
+        }
+
         return terminationCausePair;
     }
+
 
     public  void sleepForAWhile(long sleepTime) {
         if (sleepTime != 0) {
@@ -125,7 +153,8 @@ public class RunSimulationImpl implements RunSimulation {
                             else{ //secondary Entities list is empty
                                 context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager,
                                         currentEntitiesToKill, tickNumber,worldInstance.getEntityInstanceManager());
-                                if(action.getActionType().equals(ActionType.CONDITION) | action.getActionType().equals(ActionType.PROXIMITY))
+                                if(action.getActionType().equals(ActionType.CONDITION) | action.getActionType().equals(ActionType.PROXIMITY) |
+                                        action.getActionType().equals(ActionType.REPLACE))
                                     action.executeAction(context);
                             }
 
@@ -152,8 +181,9 @@ public class RunSimulationImpl implements RunSimulation {
     }
 
 
-    private void updateDtoSimulationProgressForUi(Integer seconds,Integer tick,Integer entitiesLeft) {
-        dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(seconds, tick, entitiesLeft);
+    private void updateDtoSimulationProgressForUi(Integer seconds, Integer tick, String progressMassage,
+                                                  Map<String, Integer> entitiesPopulationAfterSimulationRunning) {
+        dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(seconds, tick, progressMassage, entitiesPopulationAfterSimulationRunning);
     }
     @Override
     public DTOSimulationProgressForUi getDtoSimulationProgressForUi() {
@@ -188,7 +218,4 @@ public class RunSimulationImpl implements RunSimulation {
     }
 
 
-    private EntityInstanceManager getEntityInstanceManagerOfWorldInstance(WorldInstance worldInstance) {
-        return worldInstance.getEntityInstanceManager();
-    }
 }

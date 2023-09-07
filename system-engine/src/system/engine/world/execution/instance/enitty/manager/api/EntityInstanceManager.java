@@ -20,4 +20,5 @@ public interface EntityInstanceManager {
     Map<String, List<EntityInstance>> getEntityInstanceByEntityDef();
     void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate);
     void createEntityInstanceFromDerived(EntityDefinition entityDefinitionToCreate,EntityInstance derivedEntityInstance);
+    Map<String, Integer> getEntitiesPopulationAfterSimulationRunning();
 }
