@@ -18,7 +18,7 @@ public class MultiplyAction extends CalculationAction {
     }
 
     @Override
-    public void executeAction(Context context, EntityInstanceManager entityInstanceManager) throws IllegalArgumentException{
+    public void executeAction(Context context) throws IllegalArgumentException{
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
         EntityInstance actionEntityInstance=checkByDefinitionIfPrimaryOrSecondary(context);
         if(actionEntityInstance==null) //cant execute the action
