@@ -235,7 +235,7 @@ public class Body2Controller {
 
         systemEngine.updateEnvironmentVarDefinition(new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList));
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
-        systemEngine.addWorldInstance();
+        systemEngine.addWorldInstance(simulationsCounter);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen3/simulation/progress/simulationProgress.fxml"));
