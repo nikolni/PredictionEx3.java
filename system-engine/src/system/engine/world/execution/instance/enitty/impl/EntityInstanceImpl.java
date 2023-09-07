@@ -62,6 +62,16 @@ public class EntityInstanceImpl extends AbstractEntityLocationInWorld implements
     }
 
     @Override
+    public void setRow(Integer newRow) {
+        entityLocationInWorld.setRow(newRow);
+    }
+
+    @Override
+    public void setColumns(Integer newColumns) {
+        entityLocationInWorld.setColumn(newColumns);
+    }
+
+    @Override
     public void moveEntityInWorld() {
         int[] directionArr = {0,0,0,0};
 

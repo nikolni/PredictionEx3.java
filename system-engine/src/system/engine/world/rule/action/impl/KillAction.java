@@ -3,6 +3,7 @@ package system.engine.world.rule.action.impl;
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.execution.instance.enitty.api.EntityInstance;
+import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
 import system.engine.world.execution.instance.property.api.PropertyInstance;
 import system.engine.world.rule.action.api.AbstractAction;
 import system.engine.world.rule.action.api.ActionType;

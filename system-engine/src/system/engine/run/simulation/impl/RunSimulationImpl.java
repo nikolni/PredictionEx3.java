@@ -118,13 +118,13 @@ public class RunSimulationImpl implements RunSimulation {
                             if(!chosenSecondaryEntities.isEmpty()){
                                 for(EntityInstance secondEntityInstance :chosenSecondaryEntities){
                                     context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager,
-                                            currentEntitiesToKill, tickNumber);
+                                            currentEntitiesToKill, tickNumber,worldInstance.getEntityInstanceManager());
                                     action.executeAction(context);
                                 }
                             }
                             else{ //secondary Entities list is empty
                                 context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager,
-                                        currentEntitiesToKill, tickNumber);
+                                        currentEntitiesToKill, tickNumber,worldInstance.getEntityInstanceManager());
                                 if(action.getActionType().equals(ActionType.CONDITION) | action.getActionType().equals(ActionType.PROXIMITY))
                                     action.executeAction(context);
                             }
@@ -133,7 +133,7 @@ public class RunSimulationImpl implements RunSimulation {
                         //no second entity
                         else{
                             context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager,
-                                    currentEntitiesToKill, tickNumber);
+                                    currentEntitiesToKill, tickNumber,worldInstance.getEntityInstanceManager());
                             action.executeAction(context);
                         }
                     }

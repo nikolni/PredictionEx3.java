@@ -18,4 +18,6 @@ public interface EntityInstanceManager {
     int getEntityPopulationAfterRunning(String entityDefinitionName);
     void killEntity(int id);
     Map<String, List<EntityInstance>> getEntityInstanceByEntityDef();
+    void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate);
+    void createEntityInstanceFromDerived(EntityDefinition entityDefinitionToCreate,EntityInstance derivedEntityInstance);
 }

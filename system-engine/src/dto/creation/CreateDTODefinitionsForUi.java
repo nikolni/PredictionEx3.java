@@ -32,6 +32,7 @@ import system.engine.world.definition.property.api.PropertyDefinition;
 import system.engine.world.rule.action.api.*;
 import system.engine.world.rule.action.impl.KillAction;
 import system.engine.world.rule.action.impl.ProximityAction;
+import system.engine.world.rule.action.impl.ReplaceAction;
 import system.engine.world.rule.action.impl.SetAction;
 import system.engine.world.rule.action.impl.condition.MultipleConditionAction;
 import system.engine.world.rule.action.impl.condition.SingleConditionAction;
@@ -166,13 +167,13 @@ public class CreateDTODefinitionsForUi {
                                     proximityAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity",
                             proximityAction.getOf(), proximityAction.getActionsCollectionSize()));
                     break;
-                case REPLACE:
+                /*case REPLACE:
                     ReplaceAction replaceAction = (ReplaceAction) action;
                     actionsDTOs.add(new ReplaceActionDTO(replaceAction.getContextPrimaryEntity().getUniqueName(),
                             secondaryEntityName = (replaceAction.getExtendsSecondaryEntityDefinition() != null) ?
                                     replaceAction.getExtendsSecondaryEntityDefinition().getUniqueName() : "no second entity").
                             replaceAction.getMode);
-                    break;
+                    break;*/
             }
         }
         return actionsDTOs;

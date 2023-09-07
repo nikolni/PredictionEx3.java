@@ -3,6 +3,7 @@ package system.engine.world.impl;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.definition.entity.manager.api.EntityDefinitionManager;
 import system.engine.world.definition.environment.variable.api.EnvVariablesDefinitionManager;
+import system.engine.world.grid.api.WorldGrid;
 import system.engine.world.grid.impl.WorldGridImpl;
 import system.engine.world.rule.manager.api.RuleDefinitionManager;
 import system.engine.world.termination.condition.manager.api.TerminationConditionsManager;
@@ -14,18 +15,20 @@ public class WorldDefinitionImpl implements WorldDefinition {
     private final EnvVariablesDefinitionManager envVariablesDefinitionManager;
     private final RuleDefinitionManager ruleDefinitionManager;
     private final TerminationConditionsManager terminationConditionsManager;
-    private final WorldGridImpl worldGrid;
+    private final WorldGrid worldGrid;
+    private final int threadPoolSize;
 
     public WorldDefinitionImpl(EntityDefinitionManager entityDefinitionManager,
                                EnvVariablesDefinitionManager envVariablesDefinitionManager,
                                RuleDefinitionManager ruleDefinitionManager,
                                TerminationConditionsManager terminationConditionsManager,
-                               WorldGridImpl worldGrid){
+                               WorldGrid worldGrid,int threadPoolSize){
         this.entityDefinitionManager = entityDefinitionManager;
         this.envVariablesDefinitionManager = envVariablesDefinitionManager;
         this.ruleDefinitionManager = ruleDefinitionManager;
         this.terminationConditionsManager = terminationConditionsManager;
         this.worldGrid = worldGrid;
+        this.threadPoolSize=threadPoolSize;
     }
 
     public EntityDefinitionManager getEntityDefinitionManager() {

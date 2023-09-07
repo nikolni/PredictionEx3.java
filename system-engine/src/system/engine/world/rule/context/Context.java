@@ -2,6 +2,7 @@ package system.engine.world.rule.context;
 
 
 import system.engine.world.execution.instance.enitty.api.EntityInstance;
+import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
 import system.engine.world.execution.instance.property.api.PropertyInstance;
 
 public interface Context {
@@ -11,5 +12,6 @@ public interface Context {
     void removeEntity(EntityInstance entityInstance);
     PropertyInstance getEnvironmentVariable(String name);
     Integer getTickNumber();
+    EntityInstanceManager getEntityInstanceManager();
 
 }
