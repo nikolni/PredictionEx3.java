@@ -7,16 +7,17 @@ import system.engine.world.api.WorldInstance;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CreateDTOSimulationsTimeRunDataForUi {
 
-    public DTOSimulationsTimeRunDataForUi getData(List<WorldInstance> worldInstances ) {
+    public DTOSimulationsTimeRunDataForUi getData(Map<Integer, WorldInstance> simulationIdToWorldInstance ) {
         List<Integer> idList = new ArrayList<>();
         List<LocalDateTime> simulationRunTimeList = new ArrayList<>();
 
-        for(WorldInstance worldInstance : worldInstances) {
-            idList.add(worldInstance.getId());
-            simulationRunTimeList.add(worldInstance.getSimulationRunTime());
+        for(Integer simulationID : simulationIdToWorldInstance.keySet()) {
+            idList.add(simulationID);
+            simulationRunTimeList.add(simulationIdToWorldInstance.get(simulationIdToWorldInstance).getSimulationRunTime());
         }
 
             return new DTOSimulationsTimeRunDataForUiImpl(idList,simulationRunTimeList );
