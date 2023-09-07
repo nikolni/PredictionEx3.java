@@ -113,6 +113,7 @@ public class Body3Controller {
             if(simulationResultsNodesList.get(simulationID-1) != null){
                 simulationResultScrollPane.setContent(simulationResultsNodesList.get(simulationID-1));
             }
+            resultsComponentController.handleSimulationSelection(simulationID,systemEngine);
             /*for(DTOSimulationEndingForUi dtoSimulationEndingForUi: systemEngine.getDTOSimulationEndingForUiList()){
                 if(dtoSimulationEndingForUi.getSimulationID()==simulationID){
                     simulationTicksNumber.setText(String.valueOf(dtoSimulationEndingForUi.getTerminationReason()[0]));
@@ -161,6 +162,7 @@ public class Body3Controller {
 
     public void setSystemEngine(SystemEngineAccess systemEngineAccess){
         this.systemEngine = systemEngineAccess;
+        this.resultsComponentController.setSystemEngine(systemEngineAccess);
     }
 
 
