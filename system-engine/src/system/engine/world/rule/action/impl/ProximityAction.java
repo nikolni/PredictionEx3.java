@@ -5,6 +5,7 @@ import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.execution.instance.enitty.api.EntityInstance;
+import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
 import system.engine.world.grid.api.WorldGrid;
 import system.engine.world.rule.action.api.AbstractAction;
 import system.engine.world.rule.action.api.Action;
@@ -21,20 +22,28 @@ public class ProximityAction extends AbstractAction {
 
     private final String ofExp;
     private final List<Action> actionsCollection;
+    private final EntityDefinition targetEntityDefinition;
     private final WorldGrid worldGrid;
 
     public ProximityAction(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition,
-                           String of, WorldGrid worldGrid) {
+                           String of, WorldGrid worldGrid,EntityDefinition targetEntityDefinition) {
         super(ActionType.PROXIMITY,entityDefinitionParam,secondaryEntityDefinition);
         this.ofExp = of;
         this.actionsCollection= new ArrayList<>();
         this.worldGrid = worldGrid;
+        this.targetEntityDefinition=targetEntityDefinition;
     }
+
+
 
     @Override
     public void executeAction(Context context) {
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
-        Expression expression = expressionCreation.craeteExpression(ofExp, context.getPrimaryEntityInstance());
+        EntityInstance EntityInstanceSource=checkByDefinitionIfPrimaryOrSecondary(context);
+        if(EntityInstanceSource==null) //cant execute the action
+            return;
+
+        Expression expression = expressionCreation.craeteExpression(ofExp, EntityInstanceSource);
         if (!verifyNumericExpressionValue(expression, context)) {
             throw new IllegalArgumentException("proximity action can't operate with non numeric expression type");
         }

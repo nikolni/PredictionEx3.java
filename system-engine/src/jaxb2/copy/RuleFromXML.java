@@ -8,7 +8,9 @@ import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.entity.manager.api.EntityDefinitionManager;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.definition.entity.secondary.impl.SecondaryEntityDefinitionImpl;
+import system.engine.world.grid.api.WorldGrid;
 import system.engine.world.rule.action.api.Action;
+import system.engine.world.rule.action.impl.ProximityAction;
 import system.engine.world.rule.action.impl.condition.ConditionAction;
 import system.engine.world.rule.action.impl.condition.MultipleConditionAction;
 import system.engine.world.rule.action.impl.condition.SingleConditionAction;
@@ -21,13 +23,18 @@ import system.engine.world.rule.manager.impl.RuleDefinitionManagerImpl;
 public class RuleFromXML {
     private RuleDefinitionManager ruleDefinitionManager=new RuleDefinitionManagerImpl();
 
-    public RuleFromXML(PRDRules prdRules, EntityDefinitionManager entityDefinitionManager) {
+    public RuleFromXML(PRDRules prdRules, EntityDefinitionManager entityDefinitionManager, WorldGrid worldGrid) {
         for(PRDRule prdRule:prdRules.getPRDRule()){
             RuleCreation ruleCreation=new RuleCreation(prdRule.getName());
             if(prdRule.getPRDActivation()!=null)
                 setRuleActivation(prdRule.getPRDActivation(),ruleCreation.getRule());
             for(PRDAction prdAction:prdRule.getPRDActions().getPRDAction()){
-                ruleCreation.getRule().addAction(createAction(entityDefinitionManager,prdAction.getEntity(),prdAction.getPRDSecondaryEntity(),prdAction));
+                if(prdAction.getType().equals("replace"))
+                    ruleCreation.getRule().addAction(createAction(entityDefinitionManager,prdAction.getKill(),prdAction.getPRDSecondaryEntity(),prdAction,worldGrid));
+                else if(prdAction.getType().equals("proximity"))
+                    ruleCreation.getRule().addAction(createAction(entityDefinitionManager,prdAction.getPRDBetween().getSourceEntity(),prdAction.getPRDSecondaryEntity(),prdAction,worldGrid));
+                else
+                    ruleCreation.getRule().addAction(createAction(entityDefinitionManager,prdAction.getEntity(),prdAction.getPRDSecondaryEntity(),prdAction,worldGrid));
             }
             ruleDefinitionManager.addRuleDefinition(ruleCreation.getRule());
         }
@@ -55,7 +62,7 @@ public class RuleFromXML {
         return secondaryEntityDefinition;
     }
 
-    public Action createAction(EntityDefinitionManager entityDefinitionManager, String primaryEntityDefinitionName, PRDAction.PRDSecondaryEntity prdSecondaryEntity, PRDAction prdAction){
+    public Action createAction(EntityDefinitionManager entityDefinitionManager, String primaryEntityDefinitionName, PRDAction.PRDSecondaryEntity prdSecondaryEntity, PRDAction prdAction,WorldGrid worldGrid){
         ActionCreation actionCreation=new ActionCreationImpl();
         EntityDefinition primaryEntityDefinition= entityDefinitionManager.getEntityDefinitionByName(primaryEntityDefinitionName);
         SecondaryEntityDefinition secondaryEntityDefinition=null;
@@ -79,11 +86,23 @@ public class RuleFromXML {
                     return actionCreation.createActionCalculationDivide(primaryEntityDefinition,secondaryEntityDefinition,prdAction.getResultProp(),prdAction.getPRDDivide().getArg1(),prdAction.getPRDDivide().getArg2());
             case "condition":
                 ConditionAction conditionAction=createConditionActionFromPRDCondition(entityDefinitionManager,primaryEntityDefinition,secondaryEntityDefinition,prdAction.getPRDCondition());
-                for(PRDAction thenPrdAction:prdAction.getPRDThen().getPRDAction())
-                    conditionAction.addActionToThenList(createAction(entityDefinitionManager,thenPrdAction.getEntity(),thenPrdAction.getPRDSecondaryEntity(),thenPrdAction));
+                for(PRDAction thenPrdAction:prdAction.getPRDThen().getPRDAction()){
+                    if(thenPrdAction.getType().equals("replace"))
+                        conditionAction.addActionToThenList(createAction(entityDefinitionManager,thenPrdAction.getKill(),thenPrdAction.getPRDSecondaryEntity(),thenPrdAction,worldGrid));
+                    else if(thenPrdAction.getType().equals("proximity"))
+                        conditionAction.addActionToThenList(createAction(entityDefinitionManager,thenPrdAction.getPRDBetween().getSourceEntity(),thenPrdAction.getPRDSecondaryEntity(),thenPrdAction,worldGrid));
+                    else
+                        conditionAction.addActionToThenList(createAction(entityDefinitionManager,thenPrdAction.getEntity(),thenPrdAction.getPRDSecondaryEntity(),thenPrdAction,worldGrid));
+                }
                 if(prdAction.getPRDElse()!=null){
-                    for(PRDAction elsePrdAction:prdAction.getPRDElse().getPRDAction())
-                        conditionAction.addActionToElseList(createAction(entityDefinitionManager,elsePrdAction.getEntity(),elsePrdAction.getPRDSecondaryEntity(),elsePrdAction));
+                    for(PRDAction elsePrdAction:prdAction.getPRDElse().getPRDAction()){
+                        if(elsePrdAction.getType().equals("replace"))
+                            conditionAction.addActionToElseList(createAction(entityDefinitionManager,elsePrdAction.getKill(),elsePrdAction.getPRDSecondaryEntity(),elsePrdAction,worldGrid));
+                        else if(elsePrdAction.getType().equals("proximity"))
+                            conditionAction.addActionToElseList(createAction(entityDefinitionManager,elsePrdAction.getPRDBetween().getSourceEntity(),elsePrdAction.getPRDSecondaryEntity(),elsePrdAction,worldGrid));
+                        else
+                            conditionAction.addActionToElseList(createAction(entityDefinitionManager,elsePrdAction.getEntity(),elsePrdAction.getPRDSecondaryEntity(),elsePrdAction,worldGrid));
+                    }
                 }
                 return conditionAction;
             case "set":
@@ -92,7 +111,20 @@ public class RuleFromXML {
                 return actionCreation.createActionSet(primaryEntityDefinition,secondaryEntityDefinition, propertyName3, expressionStr3);
             case "kill":
                 return actionCreation.createActionKill(primaryEntityDefinition,secondaryEntityDefinition);
-
+            case "replace":
+                EntityDefinition createEntityDefinition= entityDefinitionManager.getEntityDefinitionByName(prdAction.getCreate());
+                return actionCreation.createActionReplace(primaryEntityDefinition,secondaryEntityDefinition,createEntityDefinition,prdAction.getMode());
+            case "proximity":
+                EntityDefinition targetEntityDefinition= entityDefinitionManager.getEntityDefinitionByName(prdAction.getPRDBetween().getTargetEntity());
+                ProximityAction proximityAction=actionCreation.createActionProximity(primaryEntityDefinition,secondaryEntityDefinition,prdAction.getPRDEnvDepth().getOf(),worldGrid,targetEntityDefinition);
+                for(PRDAction proximityPrdAction:prdAction.getPRDActions().getPRDAction()){
+                    if(proximityPrdAction.getType().equals("replace"))
+                        proximityAction.addActionToActionsCollection(createAction(entityDefinitionManager,proximityPrdAction.getKill(),proximityPrdAction.getPRDSecondaryEntity(),proximityPrdAction,worldGrid));
+                    else if(proximityPrdAction.getType().equals("proximity"))
+                        proximityAction.addActionToActionsCollection(createAction(entityDefinitionManager,proximityPrdAction.getPRDBetween().getSourceEntity(),proximityPrdAction.getPRDSecondaryEntity(),proximityPrdAction,worldGrid));
+                    else
+                        proximityAction.addActionToActionsCollection(createAction(entityDefinitionManager,proximityPrdAction.getEntity(),proximityPrdAction.getPRDSecondaryEntity(),proximityPrdAction,worldGrid));
+                }
         }
         return null;
     }

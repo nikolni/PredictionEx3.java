@@ -20,6 +20,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private final List<EntityInstance> instancesBeforeKill;
     private final Map<String, Integer> entitiesPopulationAfterSimulationRunning;
     private Map<String,List<EntityInstance>> entityInstanceByEntityDef;
+    private WorldGrid worldGrid;
 
 
     public EntityInstanceManagerImpl(EntityDefinitionManager entityDefinitionManager, WorldGrid worldGrid) {
@@ -29,9 +30,10 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         instancesBeforeKill = new ArrayList<>();
         entitiesPopulationAfterSimulationRunning = new HashMap<>();
         entityInstanceByEntityDef=new HashMap<>();
+        this.worldGrid=worldGrid;
         for (EntityDefinition entityDefinition: entityDefinitionManager.getDefinitions()){
             for(int i = 0; i<entityDefinition.getPopulation(); i++) {
-                create(entityDefinition, worldGrid);
+                create(entityDefinition, this.worldGrid);
             }
             entitiesPopulationAfterSimulationRunning.put(entityDefinitionManager.getDefinitions().get(entityDefinitionCount).getUniqueName(),
                     entityDefinitionManager.getDefinitions().get(entityDefinitionCount).getPopulation());
@@ -39,6 +41,55 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         instancesBeforeKill.addAll(instances);
         entityInstanceByEntityDef = instances.stream()
                 .collect(Collectors.groupingBy(entityInstance -> entityInstance.getEntityDefinition().getUniqueName()));
+    }
+
+    @Override
+    public void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate) {
+        create(entityDefinitionToCreate, this.worldGrid);
+        entityDefinitionToCreate.setPopulation(entityDefinitionToCreate.getPopulation()+1);
+
+        entitiesPopulationAfterSimulationRunning.put(entityDefinitionToCreate.getUniqueName(),
+                entityDefinitionToCreate.getPopulation());
+        instancesBeforeKill.add(instances.get(instances.size()-1));
+
+        if (!entityInstanceByEntityDef.containsKey(entityDefinitionToCreate.getUniqueName())) {
+            entityInstanceByEntityDef.put(entityDefinitionToCreate.getUniqueName(), new ArrayList<>());
+        }
+        List<EntityInstance> entityInstancesList = entityInstanceByEntityDef.get(entityDefinitionToCreate.getUniqueName());
+        entityInstancesList.add(instances.get(instances.size()-1));
+    }
+
+    @Override
+    public void createEntityInstanceFromDerived(EntityDefinition entityDefinitionToCreate, EntityInstance derivedEntityInstance) {
+        count++;
+        EntityInstance newEntityInstance = new EntityInstanceImpl(entityDefinitionToCreate, count, worldGrid);
+        worldGrid.setPosition(newEntityInstance.getRow(),newEntityInstance.getColumns(),null);
+        worldGrid.setPosition(derivedEntityInstance.getRow(),derivedEntityInstance.getColumns(),newEntityInstance);
+        newEntityInstance.setRow(derivedEntityInstance.getRow());
+        newEntityInstance.setColumns(derivedEntityInstance.getColumns());
+        derivedEntityInstance.setRow(null);
+        derivedEntityInstance.setColumns(null);
+
+        instances.add(newEntityInstance);
+
+        boolean foundMatchProperty=false;
+        for (PropertyDefinition propertyDefinition : entityDefinitionToCreate.getProps()) {
+            foundMatchProperty=false;
+            for(PropertyDefinition derivedPropertyDefinition:derivedEntityInstance.getEntityDefinition().getProps()){
+                if(derivedPropertyDefinition.getUniqueName().equals(propertyDefinition.getUniqueName()) && derivedPropertyDefinition.getType().equals(propertyDefinition.getType())){
+                    foundMatchProperty=true;
+                    Object value=derivedEntityInstance.getPropertyByName(derivedPropertyDefinition.getUniqueName()).getValue();
+                    PropertyInstance newPropertyInstance = new PropertyInstanceImpl(propertyDefinition, value);
+                    newEntityInstance.addPropertyInstance(newPropertyInstance);
+                }
+            }
+            if(!foundMatchProperty){
+                Object value = propertyDefinition.generateValue();
+                PropertyInstance newPropertyInstance = new PropertyInstanceImpl(propertyDefinition, value);
+                newEntityInstance.addPropertyInstance(newPropertyInstance);
+            }
+        }
+
     }
 
     @Override
@@ -59,6 +110,8 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
             newEntityInstance.addPropertyInstance(newPropertyInstance);
         }
     }
+
+
 
     @Override
     public List<EntityInstance> getInstances() {

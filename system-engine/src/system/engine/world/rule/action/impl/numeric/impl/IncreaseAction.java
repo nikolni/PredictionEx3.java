@@ -5,6 +5,7 @@ import system.engine.world.creation.impl.expression.ExpressionCreationImpl;
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.entity.secondary.api.SecondaryEntityDefinition;
 import system.engine.world.execution.instance.enitty.api.EntityInstance;
+import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
 import system.engine.world.rule.action.api.AbstractAction;
 import system.engine.world.rule.action.api.ActionType;
 import system.engine.world.rule.action.expression.api.Expression;

@@ -12,5 +12,7 @@ public interface EntityInstance {
     void addPropertyInstance(PropertyInstance propertyInstance);
     Integer getRow() ;
     Integer getColumns();
+    void setRow(Integer newRow);
+    void setColumns(Integer newColumns);
     void moveEntityInWorld();
 }
