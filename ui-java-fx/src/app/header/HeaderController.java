@@ -95,6 +95,10 @@ public class HeaderController {
         }
         selectedFileProperty.set(absolutePath);
         isFileSelected.set(true);
+
+        mainController.onLoadFileButtonClick();
+
+
     }
 
     @FXML

@@ -162,7 +162,7 @@ public class Body3Controller {
 
     public void setSystemEngine(SystemEngineAccess systemEngineAccess){
         this.systemEngine = systemEngineAccess;
-        this.resultsComponentController.setSystemEngine(systemEngineAccess);
+        //this.resultsComponentController.setSystemEngine(systemEngineAccess);
     }
 
 
@@ -178,6 +178,7 @@ public class Body3Controller {
             HBox simulationResultNode = loader.load();
             ResultsController simulationResultController = loader.getController();
             simulationResultController.setBody3Controller(this);
+            simulationResultController.setSystemEngine(systemEngine);
             simulationResultController.primaryInitialize(dtoSimulationEndingForUi,systemEngine);
             Integer simulationID = dtoSimulationEndingForUi.getSimulationID();
             simulationResultsNodesList.set(simulationID -1, simulationResultNode);
