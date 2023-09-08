@@ -1,7 +1,9 @@
 package jaxb2.error.handling.validator;
 
-import jaxb.error.handling.exception.file.InvalidFileException;
-import jaxb.error.handling.exception.file.InvalidXmlFileException;
+
+
+import jaxb2.error.handling.exception.file.InvalidFileException;
+import jaxb2.error.handling.exception.file.InvalidXmlFileException;
 
 import java.io.File;
 import java.io.FileNotFoundException;

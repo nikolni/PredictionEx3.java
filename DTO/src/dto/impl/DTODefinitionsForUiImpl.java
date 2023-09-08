@@ -2,6 +2,7 @@ package dto.impl;
 
 import dto.api.DTODefinitionsForUi;
 import dto.definition.entity.api.EntityDefinitionDTO;
+import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.definition.rule.api.RuleDTO;
 import dto.definition.termination.condition.manager.api.TerminationConditionsDTOManager;
 
@@ -35,6 +36,18 @@ public class DTODefinitionsForUiImpl implements DTODefinitionsForUi {
         @Override
         public TerminationConditionsDTOManager getTerminationConditionsDTOManager() {
                 return terminationConditionsDTOManager;
+        }
+        @Override
+        public PropertyDefinitionDTO getPropertyDefinitionByName(String EntityName,String propertyName){
+                for(EntityDefinitionDTO entityDefinitionDTO:entitiesDTO){
+                        if(entityDefinitionDTO.getUniqueName().equals(EntityName)){
+                                for(PropertyDefinitionDTO propertyDefinitionDTO:entityDefinitionDTO.getProps()){
+                                        if(propertyDefinitionDTO.getUniqueName().equals(propertyName))
+                                                return propertyDefinitionDTO;
+                                }
+                        }
+                }
+              return null;
         }
 
 }
