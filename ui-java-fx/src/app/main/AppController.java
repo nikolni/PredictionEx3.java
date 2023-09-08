@@ -40,7 +40,6 @@ public class AppController {
             headerComponentController.setMainController(this);
             tabPaneBodyComponentController.setMainController(this);
         }
-        tabPaneBodyComponentController.setSystemEngineToChildren(systemEngine);
         headerComponentController.setSystemEngine(systemEngine);
     }
 
@@ -63,7 +62,7 @@ public class AppController {
     }
 
     public void onLoadFileButtonClick() {
-
+        tabPaneBodyComponentController.setSystemEngineToChildren(systemEngine);
     }
 
     public void onNewExecutionButtonClick() {

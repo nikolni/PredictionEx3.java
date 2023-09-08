@@ -9,8 +9,7 @@ public class RunSimulationTask implements Runnable{
     private final SystemEngineAccess systemEngineAccess;
     private final Body3Controller body3Controller;
 
-    public RunSimulationTask(SystemEngineAccess systemEngineAccess,Integer simulationID,
-                             Body3Controller body3Controller) {
+    public RunSimulationTask(SystemEngineAccess systemEngineAccess,Integer simulationID, Body3Controller body3Controller) {
         this.systemEngineAccess = systemEngineAccess;
         this.simulationID = simulationID;
         this.body3Controller = body3Controller;

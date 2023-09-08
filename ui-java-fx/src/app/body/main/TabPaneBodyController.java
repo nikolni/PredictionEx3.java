@@ -1,7 +1,7 @@
 package app.body.main;
 
 import app.main.AppController;
-import app.body.screen1.Body1Controller;
+import app.body.screen1.main.Body1Controller;
 import app.body.screen2.main.Body2Controller;
 import app.body.screen3.main.Body3Controller;
 import javafx.fxml.FXML;
