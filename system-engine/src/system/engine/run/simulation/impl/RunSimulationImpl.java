@@ -13,6 +13,7 @@ import system.engine.world.rule.action.api.ActionType;
 import system.engine.world.rule.api.Rule;
 import system.engine.world.rule.context.Context;
 import system.engine.world.rule.context.ContextImpl;
+import system.engine.world.termination.condition.impl.ByUserTerminationConditionImpl;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -27,6 +28,12 @@ public class RunSimulationImpl implements RunSimulation {
     private boolean isCanceled = false;
     //private Task<Boolean> currentTask;
     private final long SLEEP_TIME = 3;
+
+    public RunSimulationImpl(WorldInstance worldInstance){
+        dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(0, 0 ,"Running!",
+                worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+        isSimulationPaused = new IsSimulationPaused();
+    }
     @Override
     public void setCanceled(boolean canceled) {
         isCanceled = canceled;
@@ -47,14 +54,19 @@ public class RunSimulationImpl implements RunSimulation {
         Duration duration;
         int tick = 0;
         int seconds = 0;
-        int numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
-        int numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
+        int numOfTicksToRun = 0;
+        int numOfSecondsToRun = 0;
+        if(!isTerminationConditionByUser(worldDefinition)){
+             numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
+             numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
+        }
+
         String progressMassage = "Running!";
 
         List<Action> actionsList = new ArrayList<>();
         List<EntityInstance> entitiesToKill = new ArrayList<>();
 
-        while(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun) {
+        while(isTerminationConditionByUser(worldDefinition) || (tick <= numOfTicksToRun && seconds <= numOfSecondsToRun) ) {
             /*synchronized (this){
                 if(isSimulationPaused.isPaused()) {
                     try {
@@ -63,7 +75,7 @@ public class RunSimulationImpl implements RunSimulation {
                     }
                 }
             }*/
-            while (isSimulationPaused.isPaused()) {
+            while (!isSimulationPaused.isPaused()) {
                 updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
                         worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
 
@@ -214,6 +226,11 @@ public class RunSimulationImpl implements RunSimulation {
 
     private List<EntityInstance> getAllEntityInstancesOfWorldInstance(WorldInstance worldInstance) {
         return worldInstance.getEntityInstanceManager().getInstances();
+    }
+
+    private boolean isTerminationConditionByUser(WorldDefinition worldDefinition){
+        return (worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0)
+                instanceof ByUserTerminationConditionImpl);
     }
 
 
