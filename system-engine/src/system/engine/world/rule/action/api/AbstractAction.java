@@ -50,7 +50,9 @@ public abstract class AbstractAction implements Action {
         return primaryEntityDefinition;
     }
     public EntityDefinition getExtendsSecondaryEntityDefinition() {
-        return secondaryEntityDefinition.getExtendsEntityDefinition();
+        if(secondaryEntityDefinition!=null)
+            return secondaryEntityDefinition.getExtendsEntityDefinition();
+        return null;
     }
 
     @Override
