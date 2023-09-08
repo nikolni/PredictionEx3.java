@@ -11,14 +11,18 @@ import java.util.Map;
 
 public interface EntityInstanceManager {
 
-    void create(EntityDefinition entityDefinition, WorldGrid worldGrid);
+    EntityInstance create(EntityDefinition entityDefinition, WorldGrid worldGrid);
     List<EntityInstance> getInstances();
 
     List<EntityInstance> getInstancesBeforeKill();
+
+    void changeGridByKillEntity(EntityInstance newEntityInstance, EntityInstance killEntityInstance);
+
     int getEntityPopulationAfterRunning(String entityDefinitionName);
     void killEntity(int id);
     Map<String, List<EntityInstance>> getEntityInstanceByEntityDef();
-    void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate);
+    void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate,EntityInstance entityInstanceToKill);
     void createEntityInstanceFromDerived(EntityDefinition entityDefinitionToCreate,EntityInstance derivedEntityInstance);
     Map<String, Integer> getEntitiesPopulationAfterSimulationRunning();
+    void updateMembersAfterNewEntity(EntityDefinition entityDefinitionToCreate);
 }

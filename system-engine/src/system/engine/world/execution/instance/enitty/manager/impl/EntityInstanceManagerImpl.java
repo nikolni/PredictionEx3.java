@@ -44,32 +44,17 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     }
 
     @Override
-    public void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate) {
-        create(entityDefinitionToCreate, this.worldGrid);
-        entityDefinitionToCreate.setPopulation(entityDefinitionToCreate.getPopulation()+1);
-
-        entitiesPopulationAfterSimulationRunning.put(entityDefinitionToCreate.getUniqueName(),
-                entityDefinitionToCreate.getPopulation());
-        instancesBeforeKill.add(instances.get(instances.size()-1));
-
-        if (!entityInstanceByEntityDef.containsKey(entityDefinitionToCreate.getUniqueName())) {
-            entityInstanceByEntityDef.put(entityDefinitionToCreate.getUniqueName(), new ArrayList<>());
-        }
-        List<EntityInstance> entityInstancesList = entityInstanceByEntityDef.get(entityDefinitionToCreate.getUniqueName());
-        entityInstancesList.add(instances.get(instances.size()-1));
+    public void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate,EntityInstance entityInstanceToKill) {
+        EntityInstance newEntityInstance=create(entityDefinitionToCreate, this.worldGrid);
+        updateMembersAfterNewEntity(entityDefinitionToCreate);
+        changeGridByKillEntity(newEntityInstance,entityInstanceToKill);
     }
 
     @Override
     public void createEntityInstanceFromDerived(EntityDefinition entityDefinitionToCreate, EntityInstance derivedEntityInstance) {
         count++;
         EntityInstance newEntityInstance = new EntityInstanceImpl(entityDefinitionToCreate, count, worldGrid);
-        worldGrid.setPosition(newEntityInstance.getRow(),newEntityInstance.getColumns(),null);
-        worldGrid.setPosition(derivedEntityInstance.getRow(),derivedEntityInstance.getColumns(),newEntityInstance);
-        newEntityInstance.setRow(derivedEntityInstance.getRow());
-        newEntityInstance.setColumns(derivedEntityInstance.getColumns());
-        derivedEntityInstance.setRow(null);
-        derivedEntityInstance.setColumns(null);
-
+        changeGridByKillEntity(newEntityInstance,derivedEntityInstance);
         instances.add(newEntityInstance);
 
         boolean foundMatchProperty=false;
@@ -89,16 +74,38 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
                 newEntityInstance.addPropertyInstance(newPropertyInstance);
             }
         }
+        updateMembersAfterNewEntity(entityDefinitionToCreate);
 
     }
+    @Override
+    public void updateMembersAfterNewEntity(EntityDefinition entityDefinitionToCreate){
+        entityDefinitionToCreate.setPopulation(entityDefinitionToCreate.getPopulation()+1);
+        entitiesPopulationAfterSimulationRunning.put(entityDefinitionToCreate.getUniqueName(),
+                entityDefinitionToCreate.getPopulation());
+        instancesBeforeKill.add(instances.get(instances.size()-1));
 
+        if (!entityInstanceByEntityDef.containsKey(entityDefinitionToCreate.getUniqueName())) {
+            entityInstanceByEntityDef.put(entityDefinitionToCreate.getUniqueName(), new ArrayList<>());
+        }
+        List<EntityInstance> entityInstancesList = entityInstanceByEntityDef.get(entityDefinitionToCreate.getUniqueName());
+        entityInstancesList.add(instances.get(instances.size()-1));
+    }
+    @Override
+    public void changeGridByKillEntity(EntityInstance newEntityInstance, EntityInstance killEntityInstance){
+        worldGrid.setPosition(newEntityInstance.getRow(),newEntityInstance.getColumns(),null);
+        worldGrid.setPosition(killEntityInstance.getRow(),killEntityInstance.getColumns(),newEntityInstance);
+        newEntityInstance.setRow(killEntityInstance.getRow());
+        newEntityInstance.setColumns(killEntityInstance.getColumns());
+        killEntityInstance.setRow(null);
+        killEntityInstance.setColumns(null);
+    }
     @Override
     public int getEntityPopulationAfterRunning(String entityDefinitionName){
         return entitiesPopulationAfterSimulationRunning.get(entityDefinitionName);
     }
 
     @Override
-    public void create(EntityDefinition entityDefinition, WorldGrid worldGrid) {
+    public EntityInstance create(EntityDefinition entityDefinition, WorldGrid worldGrid) {
 
         count++;
         EntityInstance newEntityInstance = new EntityInstanceImpl(entityDefinition, count, worldGrid);
@@ -109,6 +116,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
             PropertyInstance newPropertyInstance = new PropertyInstanceImpl(propertyDefinition, value);
             newEntityInstance.addPropertyInstance(newPropertyInstance);
         }
+        return newEntityInstance;
     }
 
 
