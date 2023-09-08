@@ -238,7 +238,7 @@ public class Body2Controller {
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
         systemEngine.addWorldInstance(simulationsCounter);
 
-        RunSimulationTask runSimulationTask = new RunSimulationTask(systemEngine, body3ComponentController);
+        RunSimulationTask runSimulationTask = new RunSimulationTask(systemEngine, simulationsCounter,body3ComponentController);
         systemEngine.addTaskToQueue(runSimulationTask);
 
         /*try {

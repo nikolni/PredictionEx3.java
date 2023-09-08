@@ -1,4 +1,4 @@
-package app.body.screen1;
+package app.body.screen1.main;
 
 import dto.definition.entity.api.EntityDefinitionDTO;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;

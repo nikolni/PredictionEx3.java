@@ -12,7 +12,7 @@ public class BodyMain extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Predictions");
 
-        Parent load = FXMLLoader.load(getClass().getResource("/app/body/screen1/body1.fxml"));
+        Parent load = FXMLLoader.load(getClass().getResource("/app/body/screen1/main/body1.fxml"));
         Scene scene = new Scene(load, 700, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
