@@ -3,6 +3,7 @@ import app.body.screen3.main.Body3Controller;
 import app.body.screen3.simulation.progress.task.UpdateUiTask;
 import dto.api.DTOEntitiesAfterSimulationByQuantityForUi;
 import dto.api.DTOSimulationEndingForUi;
+import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
@@ -64,7 +65,7 @@ public class SimulationProgressController {
 
     public void bindUiTaskToUiDownLevelComponents(UpdateUiTask uiTask) {
         secondsLabel.textProperty().bind(Bindings.format("%,d", uiTask.getSecondsPastProperty()));
-        entitiesLeftLabel.textProperty().bind(Bindings.format("%,d", uiTask.getEntitiesLeftProperty()));
+        //entitiesLeftLabel.textProperty().bind(Bindings.format("%,d", uiTask.getEntitiesLeftProperty()));
         ticksLabel.textProperty().bind(Bindings.format("%,d", uiTask.getTicksPastProperty()));
         if(progressMassageLabel.getText().equals("Done!")){
             toggleTaskButtons(false);
@@ -77,23 +78,28 @@ public class SimulationProgressController {
         // task message
         progressMassageLabel.textProperty().bind(uiTask.messageProperty());
 
-        // task progress bar
-        simulationProgressBar.progressProperty().bind(uiTask.progressProperty());
+        if (systemEngine.getTerminationConditions() instanceof ByUserTerminationConditionDTOImpl) {
+            simulationProgressBar.setDisable(true);
+            PercentLabel.setDisable(true);
+        } else {
+            // task progress bar
+            simulationProgressBar.progressProperty().bind(uiTask.progressProperty());
 
-        // task percent label
-        PercentLabel.textProperty().bind(
-                Bindings.concat(
-                        Bindings.format(
-                                "%.0f",
-                                Bindings.multiply(
-                                        uiTask.progressProperty(),
-                                        100)),
-                        " %"));
+            // task percent label
+            PercentLabel.textProperty().bind(
+                    Bindings.concat(
+                            Bindings.format(
+                                    "%.0f",
+                                    Bindings.multiply(
+                                            uiTask.progressProperty(),
+                                            100)),
+                            " %"));
 
-        // task cleanup upon finish
+            // task cleanup upon finish
         /*aTask.valueProperty().addListener((observable, oldValue, newValue) -> {
             onTaskFinished(Optional.ofNullable(onFinish));
         });*/
+        }
     }
 
     public void onTaskFinished() {

@@ -1,6 +1,8 @@
 package system.engine.api;
 
 import dto.api.*;
+import dto.definition.termination.condition.api.TerminationConditionsDTO;
+import system.engine.world.termination.condition.api.TerminationCondition;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -40,5 +42,5 @@ public interface SystemEngineAccess {
     void pauseSimulation(int simulationID);
     void resumeSimulation(int simulationID);
     void cancelSimulation(int simulationID);
-
+    TerminationConditionsDTO getTerminationConditions();
 }

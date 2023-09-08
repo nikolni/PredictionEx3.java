@@ -4,6 +4,7 @@ package system.engine.impl;
 import dto.api.*;
 import dto.creation.*;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import dto.impl.DTOSimulationEndingForUiImpl;
 import dto.impl.DTOWorldGridForUiImpl;
 import jaxb2.copy.WorldFromXml;
@@ -169,7 +170,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
             int[] terminationConditionArr;
 
-            RunSimulation runSimulationInstance = new RunSimulationImpl();
+            RunSimulation runSimulationInstance = new RunSimulationImpl(simulationIdToWorldInstance.get(simulationID));
             runSimulationManager.addSimulationIdToRunSimulation(simulationID, runSimulationInstance);
             terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
                     simulationIdToWorldInstance.get(simulationID), envVariablesInstanceManager);
@@ -228,5 +229,11 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     @Override
     public void cancelSimulation(int simulationID){
         runSimulationManager.cancelSimulation(simulationID);
+    }
+
+    @Override
+    public TerminationConditionsDTO getTerminationConditions() {
+        return new CreateDTODefinitionsForUi().getData(worldDefinition).
+                getTerminationConditionsDTOManager().getTerminationConditionsDTOList().get(0);
     }
 }

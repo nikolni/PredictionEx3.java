@@ -16,6 +16,7 @@ public class RunSimulationTask implements Runnable{
     }
     @Override
     public void run() {
+        System.out.println("thread is running!" + Thread.currentThread());
         DTOSimulationEndingForUi dtoSimulationEndingForUi = systemEngineAccess.runSimulation(simulationID);
         body3Controller.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi);
     }
