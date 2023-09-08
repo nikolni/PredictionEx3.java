@@ -17,7 +17,7 @@ public class SetAction extends AbstractAction {
         private final String expressionStr;
 
     public SetAction(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition,String propertyNameParam, String expressionStrParam) {
-        super(ActionType.INCREASE, entityDefinitionParam,secondaryEntityDefinition);
+        super(ActionType.SET, entityDefinitionParam,secondaryEntityDefinition);
         propertyName = propertyNameParam;
         expressionStr =expressionStrParam;
     }

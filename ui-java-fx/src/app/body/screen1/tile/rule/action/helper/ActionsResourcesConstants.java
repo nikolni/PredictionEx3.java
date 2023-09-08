@@ -6,13 +6,12 @@ public class ActionsResourcesConstants {
 
     private static final String BASE_PACKAGE = "/app/body/screen1/tile/rule/action";
     private static final  String IDS_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/increase/decrease/set/idsAction - Copy.fxml";
-
     private static final  String CALCULATION_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/calculation/calculationAction - Copy.fxml";
 
     private static final  String KILL_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/kill/killAction - Copy.fxml";
 
-    private static final  String SINGLE_CONDITION_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/condition/singleConditionAction.fxml";
-    private static final  String MULTIPLE_CONDITION_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/condition/multipleConditionAction.fxml";
+    private static final  String SINGLE_CONDITION_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/condition/single/singleConditionAction.fxml";
+    private static final  String MULTIPLE_CONDITION_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/condition/multiple/multipleConditionAction.fxml";
     private static final  String PROXIMITY_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/proximity/proximityAction.fxml";
     private static final  String REPLACE_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/replace/replaceAction.fxml";
     public static final URL KILL_FXML_URL = ActionsResourcesConstants.class.getResource(ActionsResourcesConstants.KILL_FXML_RESOURCE_IDENTIFIER);
