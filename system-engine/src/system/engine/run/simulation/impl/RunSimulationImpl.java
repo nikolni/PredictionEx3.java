@@ -153,8 +153,7 @@ public class RunSimulationImpl implements RunSimulation {
                             else{ //secondary Entities list is empty
                                 context = new ContextImpl(primaryEntityInstance,null, envVariablesInstanceManager,
                                         currentEntitiesToKill, tickNumber,worldInstance.getEntityInstanceManager());
-                                if(action.getActionType().equals(ActionType.CONDITION) | action.getActionType().equals(ActionType.PROXIMITY) |
-                                        action.getActionType().equals(ActionType.REPLACE))
+                                if(action.getActionType().equals(ActionType.CONDITION))
                                     action.executeAction(context);
                             }
 

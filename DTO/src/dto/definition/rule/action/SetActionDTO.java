@@ -9,7 +9,7 @@ public class SetActionDTO extends AbstractActionDTO {
 
     public SetActionDTO(String entityDefinitionParam,String secondEntityDefinitionDTO,
                         String propertyNameParam, String expressionStrParam) {
-        super(ActionType.INCREASE, entityDefinitionParam, secondEntityDefinitionDTO);
+        super(ActionType.SET, entityDefinitionParam, secondEntityDefinitionDTO);
         propertyName = propertyNameParam;
         expressionStr =expressionStrParam;
     }

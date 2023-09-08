@@ -237,6 +237,7 @@ public class Body2Controller {
         systemEngine.updateEnvironmentVarDefinition(new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList));
         systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
         systemEngine.addWorldInstance(simulationsCounter);
+        body3ComponentController.addItemToSimulationListView(simulationsCounter);
 
         RunSimulationTask runSimulationTask = new RunSimulationTask(systemEngine, simulationsCounter,body3ComponentController);
         systemEngine.addTaskToQueue(runSimulationTask);
