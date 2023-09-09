@@ -33,7 +33,7 @@ public class EntityController {
     private List<String> entitiesNames;
     private List<Integer> entitiesPopulations;
     private Body2Controller callerController;
-    private Integer previousValue = 0;
+    private Integer previousValue = null;
 
     @FXML
     public void initialize() {
@@ -48,7 +48,9 @@ public class EntityController {
 
         Integer population = null;
         if(isValueChanged){
-            population= Integer.parseInt(populationTextField.getText());
+            if(populationTextField.getText() != ""){
+                population= Integer.parseInt(populationTextField.getText());
+            }
         }
         return population;
 
@@ -137,7 +139,13 @@ public class EntityController {
     }
 
     public void resetTextField(){
-        populationTextField.clear();
+        populationTextField=new TextField();
+        populationTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+                checkInputValidity();
+            }
+        });
     }
 
     public void setCallerController(Body2Controller callerController) {

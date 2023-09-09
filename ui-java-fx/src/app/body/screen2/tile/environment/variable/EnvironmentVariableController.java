@@ -53,16 +53,27 @@ public class EnvironmentVariableController {
 
             switch (envVarType) {
                 case "DECIMAL":
-                    value=Integer.parseInt(input);
+                    if(valueTextField.getText() != "") {
+                        value = Integer.parseInt(input);
+                    }
                     break;
                 case "FLOAT":
-                    value=Float.parseFloat(input);
+                    if(valueTextField.getText() != "") {
+                        value=Float.parseFloat(input);
+                    }
+
                     break;
                 case "STRING":
-                    value= envVarType;
+                    if(valueTextField.getText() != "") {
+                        value= envVarType;
+                    }
+
                     break;
                 case "BOOLEAN":
-                    value = Boolean.parseBoolean(input);
+                    if(valueTextField.getText() != "") {
+                        value = Boolean.parseBoolean(input);
+                    }
+
                     break;
             }
         }
@@ -116,7 +127,13 @@ public class EnvironmentVariableController {
     }
 
     public void resetTextField(){
-        valueTextField.clear();
+        valueTextField=new TextField();
+        valueTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+                checkInputValidity();
+            }
+        });
     }
 
     /* public int getEnvVarIndexByName(String name) {
