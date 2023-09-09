@@ -47,7 +47,7 @@ public class StartButtonController {
     @FXML
     void onContinueClick(MouseEvent event) {
         callerController.startSimulation();
-        callerController.clearScreen();
+        //callerController.clearScreen();
         primaryStage.close();
     }
 

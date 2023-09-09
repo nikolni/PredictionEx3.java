@@ -47,10 +47,11 @@ public class RunSimulationManager {
     }
     public void cancelSimulation(int simulationID){
         if(simulationIdToRunSimulation.get(simulationID) != null) {
-            simulationIdToRunSimulation.get(simulationID).setCanceled(true);
+            //simulationIdToRunSimulation.get(simulationID).setCanceled(true);
             if(simulationIdToRunSimulation.get(simulationID).getPaused()){
                 simulationIdToRunSimulation.get(simulationID).getIsSimulationPaused().resume();
             }
+            simulationIdToRunSimulation.get(simulationID).setCanceled(true);
         }
     }
 }

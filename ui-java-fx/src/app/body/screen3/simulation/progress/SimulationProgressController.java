@@ -136,6 +136,7 @@ public class SimulationProgressController {
 
     public void updateEntitiesLeftGridPane(Map<String, Integer> entitiesPopulationAfterSimulationRunning) {
         int row = 0;
+        entitiesLeftGridPane.getChildren().clear();
         for(String key: entitiesPopulationAfterSimulationRunning.keySet()){
             Label entityName = new Label(key);
             entitiesLeftGridPane.add(entityName, 0, row);

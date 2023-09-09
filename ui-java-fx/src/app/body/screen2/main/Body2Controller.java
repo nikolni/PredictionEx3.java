@@ -172,7 +172,12 @@ public class Body2Controller {
     }
 
     public void clearScreen(){
-        for (String key : entityNameToTileController.keySet()) {
+        simulationEntitiesPopulationFlowPane.getChildren().clear();
+        simulationEnvironmentInputsFlowPane.getChildren().clear();
+        createEnvVarsChildrenInFlowPane(envVarsList );
+        createEntitiesPopulationChildrenInFlowPane(entitiesNames);
+
+        /*for (String key : entityNameToTileController.keySet()) {
             EntityController entityController = entityNameToTileController.get(key);
             entityController.resetTextField();
         }
@@ -180,7 +185,7 @@ public class Body2Controller {
         for (String key : envVarNameToTileController.keySet()) {
             EnvironmentVariableController environmentVariableController = envVarNameToTileController.get(key);
             environmentVariableController.resetTextField();
-        }
+        }*/
     }
 
     @FXML
@@ -241,6 +246,7 @@ public class Body2Controller {
 
         RunSimulationTask runSimulationTask = new RunSimulationTask(systemEngine, simulationsCounter,body3ComponentController);
         systemEngine.addTaskToQueue(runSimulationTask);
+        clearScreen();
 
         /*try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen3/simulation/progress/simulationProgress.fxml"));
