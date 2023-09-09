@@ -13,7 +13,9 @@ import system.engine.api.SystemEngineAccess;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Body3Controller {
 
@@ -51,9 +53,10 @@ public class Body3Controller {
     @FXML private VBox simulationProgressComponent;
     @FXML private SimulationProgressController simulationProgressComponentController;
     private SystemEngineAccess systemEngine;
-
-    private List<HBox> simulationResultsNodesList;
-    private List<ResultsController> simulationResultsControllerList;
+    private Map<Integer, HBox> simulationResultsNodesMap;
+    private Map<Integer, ResultsController> simulationResultControllersMap;
+    //private List<HBox> simulationResultsNodesList;
+    //private List<ResultsController> simulationResultsControllerList;
     //private List<VBox> simulationProgressNodesList;
     //private List<SimulationProgressController> simulationProgressControllerList;
     private Thread oldUpdateUiThreadThread = null;
@@ -61,7 +64,9 @@ public class Body3Controller {
 
     public Body3Controller() {
         //this.simulationProgressNodesList = new ArrayList<>();
-        this.simulationResultsNodesList = new ArrayList<>();
+        //this.simulationResultsNodesList = new ArrayList<>();
+        simulationResultsNodesMap = new HashMap<>();
+        simulationResultControllersMap = new HashMap<>();
     }
 
 
@@ -97,29 +102,33 @@ public class Body3Controller {
 
 
         private void handleSimulationListItemSelection(String selectedItem) {
-            /*if(oldUpdateUiThreadThread !=null & oldUpdateUiThreadThread.isAlive()){
+            if(oldUpdateUiThreadThread !=null && oldUpdateUiThreadThread.isAlive()){
+                System.out.println( "killing thread address   " + oldUpdateUiThreadThread);
                 oldUpdateUiThreadThread.interrupt();
-            }*/
+            }
             String[] words = selectedItem.split("\\s+");
 
             Integer simulationID = (Integer.parseInt(words[words.length - 1]));
             //simulationProgressScrollPane.setContent(simulationProgressNodesList.get(simulationID-1));
             UpdateUiTask updateUiTask = new UpdateUiTask(simulationProgressComponentController, systemEngine, simulationID);
 
-            simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
-            simulationProgressComponentController.bindUiTaskToUiDownLevelComponents(updateUiTask);
+            simulationProgressComponentController.setSystemEngine(systemEngine);
             simulationProgressComponentController.setSimulationIdLabel(simulationID.toString());
             simulationProgressComponentController.setSimulationID(simulationID);
-            simulationProgressComponentController.setSystemEngine(systemEngine);
+            simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
+            simulationProgressComponentController.bindUiTaskToUiDownLevelComponents(updateUiTask);
+
 
             oldUpdateUiThreadThread  = new Thread(updateUiTask);
             oldUpdateUiThreadThread.start();
-            System.out.println( "thread address " + updateUiTask);
-            if(simulationResultsNodesList.get(simulationID-1) != null){
-                simulationResultScrollPane.setContent(simulationResultsNodesList.get(simulationID-1));
+            System.out.println( "thread address for simulation id "+ simulationID + "   " + oldUpdateUiThreadThread);
+            if(simulationResultsNodesMap.get(simulationID) != null){
+                simulationResultScrollPane.setContent(simulationResultsNodesMap.get(simulationID));
+                ResultsController resultsController = simulationResultControllersMap.get(simulationID);
+                resultsController.handleSimulationSelection(simulationID,systemEngine);
             }
-            ResultsController resultsController = simulationResultsControllerList.get(simulationID-1);
-            resultsController.handleSimulationSelection(simulationID,systemEngine);
+            //ResultsController resultsController = simulationResultControllersMap.get(simulationID);
+            //resultsController.handleSimulationSelection(simulationID,systemEngine);
             /*for(DTOSimulationEndingForUi dtoSimulationEndingForUi: systemEngine.getDTOSimulationEndingForUiList()){
                 if(dtoSimulationEndingForUi.getSimulationID()==simulationID){
                     simulationTicksNumber.setText(String.valueOf(dtoSimulationEndingForUi.getTerminationReason()[0]));
@@ -187,8 +196,10 @@ public class Body3Controller {
             simulationResultController.setSystemEngine(systemEngine);
             simulationResultController.primaryInitialize(dtoSimulationEndingForUi,systemEngine);
             Integer simulationID = dtoSimulationEndingForUi.getSimulationID();
-            simulationResultsNodesList.set(simulationID -1, simulationResultNode);
-            simulationResultsControllerList.add(simulationResultController);
+            simulationResultsNodesMap.put(simulationID, simulationResultNode);
+            simulationResultControllersMap.put(simulationID, simulationResultController);
+            //simulationResultsNodesList.set(simulationID -1, simulationResultNode);
+            //simulationResultsControllerList.add(simulationResultController);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

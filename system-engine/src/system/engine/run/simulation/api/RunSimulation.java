@@ -13,4 +13,6 @@ public interface RunSimulation {
     DTOSimulationProgressForUi getDtoSimulationProgressForUi();
     void setCanceled(boolean canceled);
     IsSimulationPaused getIsSimulationPaused();
+    void setPaused(boolean paused);
+    boolean getPaused();
 }

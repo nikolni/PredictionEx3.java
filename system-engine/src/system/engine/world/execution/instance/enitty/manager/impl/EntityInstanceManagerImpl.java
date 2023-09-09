@@ -35,8 +35,8 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
             for(int i = 0; i<entityDefinition.getPopulation(); i++) {
                 create(entityDefinition, this.worldGrid);
             }
-            entitiesPopulationAfterSimulationRunning.put(entityDefinitionManager.getDefinitions().get(entityDefinitionCount).getUniqueName(),
-                    entityDefinitionManager.getDefinitions().get(entityDefinitionCount).getPopulation());
+            entitiesPopulationAfterSimulationRunning.put(entityDefinition.getUniqueName(),
+                    entityDefinition.getPopulation());
         }
         instancesBeforeKill.addAll(instances);
         entityInstanceByEntityDef = instances.stream()
