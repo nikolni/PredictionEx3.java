@@ -27,14 +27,6 @@ import java.util.Map;
 
 public class ResultsController {
 
-    @FXML
-    private Label simulationTicksNumber;
-
-    @FXML
-    private Label simulationSecondsNumber;
-
-    @FXML
-    private GridPane entityDetailsTable;
 
     @FXML
     private Pane entityTimeGraphPane;
@@ -69,9 +61,7 @@ public class ResultsController {
     public void primaryInitialize(DTOSimulationEndingForUi dtoSimulationEndingForUi, SystemEngineAccess systemEngine) {
         Integer simulationID = dtoSimulationEndingForUi.getSimulationID();
 
-            simulationTicksNumber.setText(String.valueOf(dtoSimulationEndingForUi.getTerminationReason()[0]));
-            simulationSecondsNumber.setText(String.valueOf(dtoSimulationEndingForUi.getTerminationReason()[1]));
-            fillEntityInfoGridPane(simulationID, systemEngine);
+            //fillEntityInfoGridPane(simulationID, systemEngine);
             viewComboBox.getItems().addAll("Histogram", "Consistency", "Property Average");
             viewComboBox.setVisible(false);
             ConsistencyValueLabel.setVisible(false);
@@ -84,11 +74,10 @@ public class ResultsController {
         this.systemEngine = systemEngineAccess;
     }
 
-    public void fillEntityInfoGridPane(int simulationID, SystemEngineAccess systemEngine){
+    /*public void fillEntityInfoGridPane(int simulationID, SystemEngineAccess systemEngine){
         DTOEntitiesAfterSimulationByQuantityForUi entitiesAfterSimulationForUi= systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID);
         List<String> entitiesNames = entitiesAfterSimulationForUi.getEntitiesNames();
         List<Integer> entitiesPopulationAfterSimulation =entitiesAfterSimulationForUi.getEntitiesPopulationAfterSimulation();
-        entityDetailsTable.getChildren().clear();
 
         for (int i = 0; i < entitiesNames.size(); i++) {
             String entityName = entitiesNames.get(i);
@@ -97,11 +86,9 @@ public class ResultsController {
             Label nameLabel = new Label(entityName);
             Label populationLabel = new Label(Integer.toString(population));
 
-            entityDetailsTable.add(nameLabel, 0, i);
-            entityDetailsTable.add(populationLabel, 1, i);
         }
 
-    }
+    }*/
     @FXML
     void comboBoxSelected(ActionEvent event) {
 

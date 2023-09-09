@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.Map;
 
 public class RunSimulationImpl implements RunSimulation {
-    private DTOSimulationProgressForUi dtoSimulationProgressForUi= null;
+    private DTOSimulationProgressForUi dtoSimulationProgressForUi;
 
-    private IsSimulationPaused isSimulationPaused;
+    private final IsSimulationPaused isSimulationPaused;
+
+   private boolean isPaused = false;
     private boolean isCanceled = false;
     //private Task<Boolean> currentTask;
     private final long SLEEP_TIME = 3;
@@ -38,6 +40,16 @@ public class RunSimulationImpl implements RunSimulation {
     public void setCanceled(boolean canceled) {
         isCanceled = canceled;
     }
+    @Override
+    public void setPaused(boolean paused) {
+        isPaused = paused;
+    }
+    @Override
+    public boolean getPaused() {
+        return isPaused ;
+    }
+
+
     @Override
     public IsSimulationPaused getIsSimulationPaused() {
         return isSimulationPaused;
@@ -67,23 +79,29 @@ public class RunSimulationImpl implements RunSimulation {
         List<EntityInstance> entitiesToKill = new ArrayList<>();
 
         while(isTerminationConditionByUser(worldDefinition) || (tick <= numOfTicksToRun && seconds <= numOfSecondsToRun) ) {
-            /*synchronized (this){
-                if(isSimulationPaused.isPaused()) {
-                    try {
-                        this.wait(); // Pause the thread until notified
-                    } catch (InterruptedException e) {
-                    }
+
+                if(isPaused) {
+                    progressMassage = "Paused!";
+                    updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
+                            worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+                    isSimulationPaused.pause();
                 }
-            }*/
-            while (!isSimulationPaused.isPaused()) {
+
+            while (!isPaused) {
+                progressMassage = "Running!";
                 updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
                         worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
 
                 if(isCanceled){
-                    progressMassage = "Canceled!";
+                    System.out.println( "1 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
+                    if(isTerminationConditionByUser(worldDefinition)){
+                        progressMassage = "Done!";
+                    }
+                    else{
+                        progressMassage = "Canceled!";
+                    }
                     updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
                             worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
-
                     break;
                 }
                 entitiesToKill.clear();
@@ -108,6 +126,7 @@ public class RunSimulationImpl implements RunSimulation {
                 sleepForAWhile(SLEEP_TIME);
             }
             if(isCanceled){
+                System.out.println( "2 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
                 break;
             }
         }
@@ -151,7 +170,7 @@ public class RunSimulationImpl implements RunSimulation {
                 for(Action action : actionsList){
                     //the entity instance is from the type of primary entity of the action
                     if(action.getContextPrimaryEntity().getUniqueName().equals(primaryEntityInstance.getEntityDefinition().getUniqueName())){
-                        Context context  =null;
+                        Context context ;
                         //there is second entity
                         if(action.getSecondaryEntityDefinition() != null){
                             List<EntityInstance> chosenSecondaryEntities=action.getSecondaryEntityDefinition().generateSecondaryEntityList(worldInstance,envVariablesInstanceManager, tickNumber);

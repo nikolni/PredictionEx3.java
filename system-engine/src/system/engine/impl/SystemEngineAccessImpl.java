@@ -47,7 +47,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     public void getXMLFromUser(String xmlPath) throws JAXBException, FileNotFoundException {
         WorldFromXml worldFromXml = new WorldFromXml();
         worldDefinition = worldFromXml.FromXmlToPRDWorld(xmlPath);
-        runSimulationManager = new RunSimulationManager( worldDefinition.getThreadPoolSize());
+        runSimulationManager = new RunSimulationManager( worldDefinition.getThreadPoolSize(), simulationIdToWorldInstance);
         isHaveValidFileInSystem=true;
         simulationIdToWorldInstance.clear();
     }
