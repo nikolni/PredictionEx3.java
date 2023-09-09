@@ -25,7 +25,7 @@ public class ReplaceAction extends AbstractAction {
         if(EntityInstanceToKill==null) //cant execute the action
             return;
         if(mode.equals("scratch"))
-            context.getEntityInstanceManager().createEntityInstanceFromScratch(createEntityDefinition);
+            context.getEntityInstanceManager().createEntityInstanceFromScratch(createEntityDefinition,EntityInstanceToKill);
         else
             context.getEntityInstanceManager().createEntityInstanceFromDerived(createEntityDefinition,EntityInstanceToKill);
         context.removeEntity(EntityInstanceToKill);
