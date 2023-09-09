@@ -7,8 +7,8 @@ import dto.api.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import system.engine.api.SystemEngineAccess;
 
 import java.io.IOException;
@@ -65,6 +65,7 @@ public class Body3Controller {
     public Body3Controller() {
         //this.simulationProgressNodesList = new ArrayList<>();
         //this.simulationResultsNodesList = new ArrayList<>();
+        simulationResultScrollPane=new ScrollPane();
         simulationResultsNodesMap = new HashMap<>();
         simulationResultControllersMap = new HashMap<>();
     }
@@ -124,7 +125,10 @@ public class Body3Controller {
             System.out.println( "thread address for simulation id "+ simulationID + "   " + oldUpdateUiThreadThread);
             if(simulationResultsNodesMap.get(simulationID) != null){
                 simulationResultScrollPane.setContent(simulationResultsNodesMap.get(simulationID));
+                //simulationResultsNodesMap.get(simulationID).setVisible(true);
                 ResultsController resultsController = simulationResultControllersMap.get(simulationID);
+                //resultsController.getEntityPropTreeView().setVisible(true);
+                //simulationResultScrollPane.setVisible(true);
                 resultsController.handleSimulationSelection(simulationID,systemEngine);
             }
             //ResultsController resultsController = simulationResultControllersMap.get(simulationID);

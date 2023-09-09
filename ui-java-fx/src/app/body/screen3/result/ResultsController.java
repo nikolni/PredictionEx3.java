@@ -58,6 +58,10 @@ public class ResultsController {
 
     }
 
+    public TreeView<String> getEntityPropTreeView() {
+        return entityPropTreeView;
+    }
+
     public void primaryInitialize(DTOSimulationEndingForUi dtoSimulationEndingForUi, SystemEngineAccess systemEngine) {
         Integer simulationID = dtoSimulationEndingForUi.getSimulationID();
 
@@ -67,6 +71,7 @@ public class ResultsController {
             ConsistencyValueLabel.setVisible(false);
             PropertyAverageValueLabel.setVisible(false);
             histogramGraphPane.setVisible(false);
+            entityPropTreeView.setVisible(true);
             //handleSimulationSelection(simulationID,systemEngine);
     }
 
@@ -91,6 +96,23 @@ public class ResultsController {
     }*/
     @FXML
     void comboBoxSelected(ActionEvent event) {
+        String comboBoxsChoice = viewComboBox.getValue();
+       /* ConsistencyValueLabel.setVisible(false);
+        PropertyAverageValueLabel.setVisible(false);
+        histogramGraphPane.setVisible(false);*/
+        if ("Histogram".equals(comboBoxsChoice)) {
+            ConsistencyValueLabel.setVisible(false);
+            PropertyAverageValueLabel.setVisible(false);
+            histogramGraphPane.setVisible(true);
+        } else if ("Consistency".equals(comboBoxsChoice)) {
+            PropertyAverageValueLabel.setVisible(false);
+            histogramGraphPane.setVisible(false);
+            ConsistencyValueLabel.setVisible(true);
+        } else if ("Property Average".equals(comboBoxsChoice)) {
+            ConsistencyValueLabel.setVisible(false);
+            histogramGraphPane.setVisible(false);
+            PropertyAverageValueLabel.setVisible(true);
+        }
 
     }
     public BarChart<String, Number> createHistogram(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID) {
@@ -138,9 +160,11 @@ public class ResultsController {
 
 
     public void handleSimulationSelection(int simulationID,SystemEngineAccess systemEngine) {
+
         TreeItem<String> rootItem = createEntitiesSubTree(simulationID, systemEngine);
         entityPropTreeView.setRoot(rootItem);
         entityPropTreeView.setShowRoot(false);
+        //entityPropTreeView.setVisible(true);
         entityPropTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue!=null)
                 handleSelectedItemChange(newValue,systemEngine,simulationID);
@@ -150,6 +174,7 @@ public class ResultsController {
 
 
     public void handleSelectedItemChange(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID){
+        //entityPropTreeView.setVisible(true);
         viewComboBox.setVisible(true);
 
         BarChart<String, Number> histogram = createHistogram(selectedItem,systemEngine,simulationID);
@@ -158,17 +183,6 @@ public class ResultsController {
         if(systemEngine.getDefinitionsDataFromSE().getPropertyDefinitionByName(selectedItem.getParent().getValue(),selectedItem.getValue()).getType().toLowerCase().equals("float"))
             PropertyAverageValueLabel.setText(String.valueOf(calculatePropertyAverage(simulationID,selectedItem.getParent().getValue(),selectedItem.getValue())));
 
-        String comboBoxsChoice = viewComboBox.getValue();
-        ConsistencyValueLabel.setVisible(false);
-        PropertyAverageValueLabel.setVisible(false);
-        histogramGraphPane.setVisible(false);
-        if ("Histogram".equals(comboBoxsChoice)) {
-            histogramGraphPane.setVisible(true);
-        } else if ("Consistency".equals(comboBoxsChoice)) {
-            ConsistencyValueLabel.setVisible(true);
-        } else if ("Property Average".equals(comboBoxsChoice)) {
-            PropertyAverageValueLabel.setVisible(true);
-        }
 
 
     }

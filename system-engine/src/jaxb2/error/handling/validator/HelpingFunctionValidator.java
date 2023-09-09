@@ -2,11 +2,11 @@ package jaxb2.error.handling.validator;
 
 import jaxb2.error.handling.exception.prdworld.EntityNotInContext;
 import jaxb2.error.handling.exception.prdworld.EnvironmentWrongParamsException;
+import jaxb2.error.handling.exception.prdworld.PropertNotExistInEntityException;
 import jaxb2.error.handling.exception.prdworld.RandomWrongParamException;
-import jaxb2.generated.PRDAction;
-import jaxb2.generated.PRDEnvProperty;
-import jaxb2.generated.PRDEnvironment;
-import jaxb2.generated.PRDRule;
+import jaxb2.generated.*;
+
+import java.util.List;
 
 public class HelpingFunctionValidator {
     public static boolean isInteger(String input) {
@@ -32,10 +32,11 @@ public class HelpingFunctionValidator {
             throw new EnvironmentWrongParamsException(input);
     }
 
-    public void checkEvaluateFunction(String input, PRDRule prdRule, PRDAction prdAction){
+    public void checkEvaluateFunction(String input, PRDRule prdRule, PRDAction prdAction, List<PRDEntity> prdEntityList){
         String entityName;
         String propertyName;
         String secondaryEntityName=null;
+
         String[] parts = input.split("\\.");
         if (parts.length == 2) {
             entityName = parts[0];
@@ -44,12 +45,32 @@ public class HelpingFunctionValidator {
                 secondaryEntityName=prdAction.getPRDSecondaryEntity().getEntity();
             if(prdAction.getType().equals("replace")){
                 String killEntityName=prdAction.getKill();
-                if(!(entityName.equals(killEntityName) || entityName.equals(secondaryEntityName)))
-                    throw new EntityNotInContext(prdRule.getName(),prdAction.getType(),entityName);
-            }
+                checkIfEntityInContext(entityName,killEntityName,secondaryEntityName,prdRule,prdAction);
 
-        } else {
+            }
+            else if(prdAction.getType().equals("proximity")){
+                String sourceEntity=prdAction.getPRDBetween().getSourceEntity();
+                checkIfEntityInContext(entityName,sourceEntity,secondaryEntityName,prdRule,prdAction);
+
+            }
+            else{
+                String primaryEntity=prdAction.getEntity();
+                checkIfEntityInContext(entityName,primaryEntity,secondaryEntityName,prdRule,prdAction);
+            }
+            //here entity is in context
+            PRDWorldValidator prdWorldValidator=new PRDWorldValidator();
+            if(!prdWorldValidator.isPropertyExistInEntity(propertyName,entityName,prdEntityList))
+                throw new PropertNotExistInEntityException(prdRule.getName(),prdAction.getType(),propertyName,entityName);
+        } else
             throw new IllegalArgumentException("the argument for evaluate function is invalid!");
-        }
+    }
+
+
+
+    public void checkIfEntityInContext(String checkedEntityName,String primaryEntityName,String secondaryEntityName,
+                              PRDRule prdRule,PRDAction prdAction){
+        if(!(checkedEntityName.equals(primaryEntityName) || checkedEntityName.equals(secondaryEntityName)))
+            throw new EntityNotInContext(prdRule.getName(),prdAction.getType(),checkedEntityName);
+
     }
 }
