@@ -5,10 +5,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane styleClass="tile" stylesheets="@../../../../tile.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen1.tile.rule.action.condition.multiple.MultipleConditionActionController">
+<GridPane prefHeight="250.0" prefWidth="253.0" styleClass="tile" stylesheets="@../../../../tile.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.screen1.tile.rule.action.condition.multiple.MultipleConditionActionController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="114.0" minWidth="10.0" prefWidth="114.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.5" minWidth="10.0" prefWidth="86.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="114.0" minWidth="10.0" prefWidth="113.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="87.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -22,13 +22,13 @@
    </rowConstraints>
    <children>
       <Label id="action-type-label" alignment="CENTER" prefHeight="25.0" prefWidth="100.0" styleClass="my-label" text="Action type" wrapText="true" />
-      <Label fx:id="actionTypeValLabel" alignment="CENTER" prefHeight="17.0" prefWidth="69.0" styleClass="my-label" text="Label" textFill="WHITE" GridPane.columnIndex="1" />
+      <Label fx:id="actionTypeValLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="69.0" styleClass="my-label" text="Label" textFill="WHITE" GridPane.columnIndex="1" />
       <Label id="primary-entity-label" alignment="CENTER" prefHeight="49.0" prefWidth="105.0" styleClass="my-label" text="Primary entity" GridPane.rowIndex="1" />
       <Label fx:id="primaryEntityValLabel" alignment="CENTER" prefHeight="17.0" prefWidth="68.0" styleClass="my-label" text="Label" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Label id="singularity-label" alignment="CENTER" prefHeight="43.0" prefWidth="130.0" styleClass="my-label" text="Singularity" textFill="WHITE" GridPane.rowIndex="5" />
       <Label fx:id="singularityValLabel" alignment="CENTER" prefHeight="17.0" prefWidth="63.0" styleClass="my-label" text="Label" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="5" />
       <Label id="primary-entity-label" alignment="CENTER" prefHeight="49.0" prefWidth="105.0" styleClass="my-label" text="Second entity" GridPane.rowIndex="2" />
-      <Label fx:id="secondEntitylValLabel" alignment="CENTER" prefHeight="17.0" prefWidth="68.0" styleClass="my-label" text="Label" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Label fx:id="secondEntitylValLabel" alignment="CENTER" prefHeight="17.0" prefWidth="68.0" styleClass="my-label" text="Label" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
       <Label id="singularity-label" alignment="CENTER" prefHeight="43.0" prefWidth="130.0" styleClass="my-label" text="Logical" textFill="WHITE" GridPane.rowIndex="6" />
       <Label id="singularity-label" alignment="CENTER" prefHeight="43.0" prefWidth="130.0" styleClass="my-label" text="Conditions number" textFill="WHITE" GridPane.rowIndex="7" />
       <Label fx:id="logicalLabel" alignment="CENTER" prefHeight="17.0" prefWidth="63.0" styleClass="my-label" text="Label" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="6" />

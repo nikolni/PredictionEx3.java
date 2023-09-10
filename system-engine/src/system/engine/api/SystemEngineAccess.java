@@ -38,6 +38,7 @@ public interface SystemEngineAccess {
                                                                                       String entityName,String propertyName);
     DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID);
     void addTaskToQueue(Runnable runSimulationRunnable);
+    public DTOThreadsPoolStatusForUi getThreadsPoolStatus();
     DTOWorldGridForUi getDTOWorldGridForUi();
     void pauseSimulation(int simulationID);
     void resumeSimulation(int simulationID);
