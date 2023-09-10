@@ -47,30 +47,31 @@ public class ProximityAction extends AbstractAction {
         if (!verifyNumericExpressionValue(expression, context)) {
             throw new IllegalArgumentException("proximity action can't operate with non numeric expression type");
         }
-        Integer of=  (Integer) expression.evaluateExpression(context);
+        Float of =  Float.parseFloat(expression.evaluateExpression(context).toString());
 
         EntityInstance primaryEntityInstance = context.getPrimaryEntityInstance();
-        EntityInstance secondEntityInstance = null;
+        EntityInstance targetEntityInstance;
         String targetEntityName = targetEntityDefinition.getUniqueName();
-        if(isThereSecondEntityThatCloseEnough(primaryEntityInstance, secondEntityInstance, targetEntityName, of)){
-            context.setSecondEntityInstance(secondEntityInstance);
+        targetEntityInstance = isThereSecondEntityThatCloseEnough(primaryEntityInstance, targetEntityName, of);
+        if(targetEntityInstance != null){
             for(Action action : actionsCollection){
                 action.executeAction(context);
             }
         }
     }
 
-    private Boolean isThereSecondEntityThatCloseEnough(EntityInstance primaryEntityInstance, EntityInstance secondEntityInstance,
-                                                       String targetEntityName, Integer of){
-        int currentOf=1;
+    private EntityInstance isThereSecondEntityThatCloseEnough(EntityInstance primaryEntityInstance, String targetEntityName, Float of){
+        Float currentOf=1f;
+        EntityInstance entityInstance =null;
 
         while(currentOf <= of){
-            if(worldGrid.isThereSecondEntityCloseEnough(primaryEntityInstance, secondEntityInstance, targetEntityName, currentOf)){
+            entityInstance = worldGrid.isThereSecondEntityCloseEnough(primaryEntityInstance, targetEntityName, currentOf);
+            if(entityInstance != null){
                 break;
             }
             currentOf++;
         }
-        return secondEntityInstance != null;
+        return entityInstance;
     }
 
     public void addActionToActionsCollection(Action action){

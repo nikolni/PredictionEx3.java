@@ -52,6 +52,7 @@ public class MultiplyAction extends CalculationAction {
                 }
 
                 propertyInstance.setValue(iResult);
+                propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), iResult);
                 break;
             case FLOAT:
                 Float f1 = (Float)(expression1.evaluateExpression(context));
@@ -65,9 +66,10 @@ public class MultiplyAction extends CalculationAction {
                 }
 
                 propertyInstance.setValue(fResult);
+                propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), fResult);
                 break;
         }
-        propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber());
+
     }
 
 

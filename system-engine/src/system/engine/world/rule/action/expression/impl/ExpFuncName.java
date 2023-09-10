@@ -105,7 +105,7 @@ public class ExpFuncName extends AbstractExpressionImpl {
         return ((float)percentNumValue / 100) * (float) wholeNumValue;
     }
 
-    private Integer ticks(String propertyByEntity, Context context) {
+    private Float ticks(String propertyByEntity, Context context) {
         String entityName;
         String propertyName;
 
@@ -129,6 +129,8 @@ public class ExpFuncName extends AbstractExpressionImpl {
             throw new IllegalArgumentException("in ticks function"+entityName+"instance is not exist");
 
         PropertyInstance propertyInstance =entityInstance.getPropertyByName(propertyName);
-        return context.getTickNumber() - propertyInstance.getLastTickNumberOfValueUpdate();
+        Integer result=context.getTickNumber() - propertyInstance.getLastTickNumberOfValueUpdate();
+        Float resultFloat = Float.parseFloat(result.toString());
+        return resultFloat;
     }
 }

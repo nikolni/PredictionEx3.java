@@ -16,7 +16,7 @@ public class Ui {
         SystemEngineAccess systemEngine = new SystemEngineAccessImpl();
         String userChoice = "";
 
-        while ((!userChoice.equals("1") & !userChoice.equals("2")) || (!systemEngine.getIsHaveValidFileInSystem())) {
+        while ((!userChoice.equals("1") && !userChoice.equals("2")) || (!systemEngine.getIsHaveValidFileInSystem())) {
             System.out.println("Here are the following options:\n" +
                     "1. Reading the system information file\n" +
                     "2. Exiting the system\n" +

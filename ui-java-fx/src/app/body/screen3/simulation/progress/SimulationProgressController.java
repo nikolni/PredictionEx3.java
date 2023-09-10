@@ -111,6 +111,16 @@ public class SimulationProgressController {
     public void addNewSimulationResultToBody3Controller(DTOSimulationEndingForUi dtoSimulationEndingForUi){
         body3ComponentController.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi);
     }
+
+    public void setPauseButtonDisable(boolean isActive){
+        pauseButton.setDisable(!isActive);
+    }
+    public void setResumeButtonDisable(boolean isActive){
+        resumeButton.setDisable(!isActive);
+    }
+    public void setStopButtonDisable(boolean isActive){
+        stopButton.setDisable(!isActive);
+    }
     @FXML
     synchronized void onPauseClick(MouseEvent event) {
         systemEngine.pauseSimulation(simulationID);

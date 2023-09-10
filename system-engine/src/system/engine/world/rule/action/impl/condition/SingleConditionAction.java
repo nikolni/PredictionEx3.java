@@ -113,7 +113,7 @@ public class SingleConditionAction extends ConditionAction {
                 result= (int) propertyValue > (int) expressionValue;
                 break;*/
             case FLOAT:
-                result= (float) propertyValue > (float) expressionValue;
+                result= (float) propertyValue > Float.parseFloat(expressionValue.toString());
                 break;
         }
         return result;

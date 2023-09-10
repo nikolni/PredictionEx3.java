@@ -120,12 +120,20 @@ public class RunSimulationImpl implements RunSimulation {
                 updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
                         worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
 
-                if(!(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun)){
+                if(!isTerminationConditionByUser(worldDefinition)  && !(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun)){
                     break;
                 }
                 sleepForAWhile(SLEEP_TIME);
             }
             if(isCanceled){
+                if(isTerminationConditionByUser(worldDefinition)){
+                    progressMassage = "Done!";
+                }
+                else{
+                    progressMassage = "Canceled!";
+                }
+                updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
+                        worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
                 System.out.println( "2 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
                 break;
             }
@@ -164,7 +172,10 @@ public class RunSimulationImpl implements RunSimulation {
                                             List<Action> actionsList, List<EntityInstance> entitiesToKill, Integer tickNumber){
 
         List<EntityInstance> currentEntitiesToKill = new ArrayList<>();
-        for(EntityInstance primaryEntityInstance : getAllEntityInstancesOfWorldInstance(worldInstance)){
+        List<EntityInstance> primaryEntityInstanceList = new ArrayList<>();
+        primaryEntityInstanceList.addAll(getAllEntityInstancesOfWorldInstance(worldInstance));
+
+        for(EntityInstance primaryEntityInstance : primaryEntityInstanceList){
             if(primaryEntityInstance!=null){
                 currentEntitiesToKill.clear();
                 for(Action action : actionsList){
@@ -197,8 +208,10 @@ public class RunSimulationImpl implements RunSimulation {
                         }
                     }
                 }
+                if (primaryEntityInstance.getRow() != null) {
+                    primaryEntityInstance.moveEntityInWorld();
+                }
 
-                primaryEntityInstance.moveEntityInWorld();
                 entitiesToKill.addAll(currentEntitiesToKill);
             }
 

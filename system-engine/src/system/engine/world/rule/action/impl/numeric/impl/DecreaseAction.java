@@ -58,6 +58,7 @@ public class DecreaseAction extends AbstractAction implements NumericVerify {
                 }
 
                 propertyInstance.setValue(iResult);
+                propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), iResult);
                 break;
             case FLOAT:
                 Float f1 = Type.FLOAT.convert(propertyInstance.getValue());
@@ -71,9 +72,10 @@ public class DecreaseAction extends AbstractAction implements NumericVerify {
                 }
 
                 propertyInstance.setValue(fResult);
+                propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), fResult);
                 break;
         }
-        propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber());
+
     }
 
     public String getPropertyName() {
