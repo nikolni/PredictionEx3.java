@@ -75,6 +75,7 @@ public class UpdateUiTask extends Task<Boolean> {
             }
             else if(dtoSimulationProgressForUi.getProgressMassage().equals("Running!")){
                 currentSimulationController.toggleTaskButtons(true);
+                currentSimulationController.setResumeButtonDisable(false);
             }
             else if(dtoSimulationProgressForUi.getProgressMassage().equals("Paused!")){
                 currentSimulationController.setPauseButtonDisable(false);
