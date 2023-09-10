@@ -19,7 +19,7 @@
                   <fx:include fx:id="simulationProgressComponent" source="../simulation/progress/simulationProgress.fxml" />
                </content>
             </ScrollPane>
-            <ScrollPane prefHeight="200.0" prefWidth="469.0" VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="simulationResultScrollPane" prefHeight="200.0" prefWidth="469.0" VBox.vgrow="ALWAYS">
                <content>
                </content>
             </ScrollPane>
