@@ -10,6 +10,5 @@ public interface WorldGrid {
    Boolean isPositionAvailable(Integer row, Integer column);
     Boolean isPositionAvailableForMovingEntity(EntityLocationInWorld currentEntityLocationInWorld,
                                                EntityLocationInWorld desirableEntityLocationInWorld);
-    Boolean isThereSecondEntityCloseEnough(EntityInstance primaryEntityInstance, EntityInstance secondEntityInstance,
-                                           String targetEntityName, Integer of);
+    EntityInstance isThereSecondEntityCloseEnough(EntityInstance primaryEntityInstance, String targetEntityName, Float of);
 }

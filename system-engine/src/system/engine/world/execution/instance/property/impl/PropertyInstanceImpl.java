@@ -31,8 +31,11 @@ public class PropertyInstanceImpl implements PropertyInstance {
         this.value = val;
     }
     @Override
-    public void setLastTickNumberOfValueUpdate(Integer lastTickNumberOfValueUpdate) {
-        this.lastTickNumberOfValueUpdate = lastTickNumberOfValueUpdate;
+    public void setLastTickNumberOfValueUpdate(Integer lastTickNumberOfValueUpdate, Object newValue) {
+        if(! value.equals(newValue)){
+            this.lastTickNumberOfValueUpdate = lastTickNumberOfValueUpdate;
+        }
+
     }
     @Override
     public Integer getLastTickNumberOfValueUpdate(){

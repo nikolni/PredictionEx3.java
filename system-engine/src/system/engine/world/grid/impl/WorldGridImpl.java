@@ -84,11 +84,11 @@ public final class WorldGridImpl implements WorldGrid {
     }
 
     @Override
-    public Boolean isThereSecondEntityCloseEnough(EntityInstance primaryEntityInstance, EntityInstance secondEntityInstance,
-                                                  String targetEntityName, Integer of){
+    public EntityInstance isThereSecondEntityCloseEnough(EntityInstance primaryEntityInstance, String targetEntityName, Float of){
         int centerX = primaryEntityInstance.getColumns();
         int centerY = primaryEntityInstance.getRow();
-        int radius = of;
+        Float radius = of;
+        EntityInstance entityInstance =null;
 
         for (int row = 0; row < gridRows; row++) {
             for (int col = 0; col < gridColumns; col++) {
@@ -99,15 +99,15 @@ public final class WorldGridImpl implements WorldGrid {
                 int distance = (int) Math.sqrt((row - centerY) * (row - centerY) + (col - centerX) * (col - centerX));
 
                 // Check if the square is at the specified distance from the center point.
-                if (Math.abs(distance - radius) < 0.5 || isAtEdge(row, col, gridRows, gridColumns)) {
-                    if(worldGrid[row][col] != null & worldGrid[row][col].getEntityDefinition().getUniqueName().equals(targetEntityName)){
-                        secondEntityInstance = worldGrid[row][col];
-                        return true;
+                if (Math.abs(distance - radius) < 0.5 || isAtEdge(centerY, centerX, gridRows, gridColumns)) {
+                    if(worldGrid[row][col] != null && worldGrid[row][col].getEntityDefinition().getUniqueName().equals(targetEntityName)){
+                        entityInstance = worldGrid[row][col];
+                        return entityInstance;
                     }
                 }
             }
         }
-        return false;
+        return entityInstance;
     }
 
         private boolean isAtEdge(int row, int col, int numRows, int numCols) {

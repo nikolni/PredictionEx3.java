@@ -76,6 +76,8 @@ public class EntityInstanceImpl extends AbstractEntityLocationInWorld implements
         int[] directionArr = {0,0,0,0};
 
         EntityLocationInWorld desirableEntityLocationInWorld = new EntityLocationInWorldImpl(worldGrid, this);
+        worldGrid.setPosition(desirableEntityLocationInWorld.getRow(), desirableEntityLocationInWorld.getColumn(), null);
+
         Boolean stillLooking = true;
 
         while (stillLooking & isDirectionsLeft(directionArr)) {
@@ -106,16 +108,20 @@ public class EntityInstanceImpl extends AbstractEntityLocationInWorld implements
             }
 
             if (worldGrid.isPositionAvailableForMovingEntity(entityLocationInWorld, desirableEntityLocationInWorld)) {
+                worldGrid.setPosition(entityLocationInWorld.getRow(), entityLocationInWorld.getColumn(), null);
                 entityLocationInWorld.setRow(desirableEntityLocationInWorld.getRow());
-                entityLocationInWorld.setColumn(entityLocationInWorld.getColumn());
+                entityLocationInWorld.setColumn(desirableEntityLocationInWorld.getColumn());
+                worldGrid.setPosition(entityLocationInWorld.getRow(), entityLocationInWorld.getColumn(), this);
+
                 stillLooking = false;
             }
         }
+
     }
 
     private Boolean isDirectionsLeft(int[] directionArr){
-        for(int i = 1; i < directionArr.length; i++){
-            if(directionArr[i-1] == 0){
+        for(int i = 0; i < directionArr.length; i++){
+            if(directionArr[i] == 0){
                 return true;
             }
         }

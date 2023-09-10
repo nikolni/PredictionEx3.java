@@ -39,7 +39,7 @@ public class SetAction extends AbstractAction {
             }
 
             setPropertyValue(propertyInstance, expressionVal);
-            propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber());
+            propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), expressionVal);
 
         }
 
