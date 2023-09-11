@@ -9,16 +9,10 @@ import dto.definition.entity.api.EntityDefinitionDTO;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.chart.*;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import system.engine.api.SystemEngineAccess;
 
 import java.util.ArrayList;
@@ -29,7 +23,7 @@ public class ResultsController {
 
 
     @FXML
-    private Pane entityTimeGraphPane;
+    private ScrollPane entityTimeGraphPane;
 
     @FXML
     private TreeView<String> entityPropTreeView;
@@ -44,7 +38,13 @@ public class ResultsController {
     private Label PropertyAverageValueLabel;
 
     @FXML
-    private Pane histogramGraphPane;
+    private ScrollPane histogramGraphPane;
+
+    @FXML
+    private Label ConsistencyLabel;
+
+    @FXML
+    private Label PropertyAverageLabel;
 
     private Body3Controller body3Controller;
     private SystemEngineAccess systemEngine;
@@ -62,59 +62,47 @@ public class ResultsController {
         return entityPropTreeView;
     }
 
-    public void primaryInitialize(DTOSimulationEndingForUi dtoSimulationEndingForUi, SystemEngineAccess systemEngine) {
-        Integer simulationID = dtoSimulationEndingForUi.getSimulationID();
+    public void primaryInitialize() {
 
-            //fillEntityInfoGridPane(simulationID, systemEngine);
             viewComboBox.getItems().addAll("Histogram", "Consistency", "Property Average");
             viewComboBox.setVisible(false);
             ConsistencyValueLabel.setVisible(false);
             PropertyAverageValueLabel.setVisible(false);
+            ConsistencyLabel.setVisible(false);
+            PropertyAverageLabel.setVisible(false);
             histogramGraphPane.setVisible(false);
-            entityPropTreeView.setVisible(true);
-            //handleSimulationSelection(simulationID,systemEngine);
+            entityPropTreeView.setVisible(false);
+            entityTimeGraphPane.setVisible(false);
+            viewComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                ConsistencyValueLabel.setVisible(false);
+                ConsistencyLabel.setVisible(false);
+                PropertyAverageValueLabel.setVisible(false);
+                PropertyAverageLabel.setVisible(false);
+                histogramGraphPane.setVisible(false);
+
+                if (newValue != null) {
+                    switch (newValue) {
+                        case "Histogram":
+                            histogramGraphPane.setVisible(true);
+                            break;
+                        case "Consistency":
+                            ConsistencyValueLabel.setVisible(true);
+                            ConsistencyLabel.setVisible(true);
+                            break;
+                        case "Property Average":
+                            PropertyAverageValueLabel.setVisible(true);
+                            PropertyAverageLabel.setVisible(true);
+                            break;
+
+                    }
+                }
+            });
     }
 
     public void setSystemEngine(SystemEngineAccess systemEngineAccess){
         this.systemEngine = systemEngineAccess;
     }
 
-    /*public void fillEntityInfoGridPane(int simulationID, SystemEngineAccess systemEngine){
-        DTOEntitiesAfterSimulationByQuantityForUi entitiesAfterSimulationForUi= systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID);
-        List<String> entitiesNames = entitiesAfterSimulationForUi.getEntitiesNames();
-        List<Integer> entitiesPopulationAfterSimulation =entitiesAfterSimulationForUi.getEntitiesPopulationAfterSimulation();
-
-        for (int i = 0; i < entitiesNames.size(); i++) {
-            String entityName = entitiesNames.get(i);
-            Integer population = entitiesPopulationAfterSimulation.get(i);
-
-            Label nameLabel = new Label(entityName);
-            Label populationLabel = new Label(Integer.toString(population));
-
-        }
-
-    }*/
-    @FXML
-    void comboBoxSelected(ActionEvent event) {
-        String comboBoxsChoice = viewComboBox.getValue();
-       /* ConsistencyValueLabel.setVisible(false);
-        PropertyAverageValueLabel.setVisible(false);
-        histogramGraphPane.setVisible(false);*/
-        if ("Histogram".equals(comboBoxsChoice)) {
-            ConsistencyValueLabel.setVisible(false);
-            PropertyAverageValueLabel.setVisible(false);
-            histogramGraphPane.setVisible(true);
-        } else if ("Consistency".equals(comboBoxsChoice)) {
-            PropertyAverageValueLabel.setVisible(false);
-            histogramGraphPane.setVisible(false);
-            ConsistencyValueLabel.setVisible(true);
-        } else if ("Property Average".equals(comboBoxsChoice)) {
-            ConsistencyValueLabel.setVisible(false);
-            histogramGraphPane.setVisible(false);
-            PropertyAverageValueLabel.setVisible(true);
-        }
-
-    }
     public BarChart<String, Number> createHistogram(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID) {
 
         // Create the X and Y axes
@@ -140,6 +128,19 @@ public class ResultsController {
         return barChart;
     }
 
+    public LineChart<Number, Number> createEntitiesByTickGraph(SystemEngineAccess systemEngine,int simulationID) {
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        for (Map.Entry<Integer, Integer> entry : systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID).getEntitiesLeftByTicks().entrySet())
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+
+        lineChart.getData().add(series);
+        return lineChart;
+    }
+
     public float calculatePropertyAverage(Integer simulationID,String entityName,String propertyName){
         DTOPropertyHistogramForUi dtoPropertyHistogramForUi;
         float sumOfProducts = 0.0f;
@@ -160,13 +161,16 @@ public class ResultsController {
 
 
     public void handleSimulationSelection(int simulationID,SystemEngineAccess systemEngine) {
+        entityTimeGraphPane.setContent(createEntitiesByTickGraph(systemEngine,simulationID));
+        entityTimeGraphPane.setVisible(true);
 
         TreeItem<String> rootItem = createEntitiesSubTree(simulationID, systemEngine);
         entityPropTreeView.setRoot(rootItem);
         entityPropTreeView.setShowRoot(false);
-        //entityPropTreeView.setVisible(true);
+        entityPropTreeView.setVisible(true);
+
         entityPropTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue!=null)
+            if(newValue!=null && newValue.isLeaf())
                 handleSelectedItemChange(newValue,systemEngine,simulationID);
         });
     }
@@ -174,11 +178,10 @@ public class ResultsController {
 
 
     public void handleSelectedItemChange(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID){
-        //entityPropTreeView.setVisible(true);
         viewComboBox.setVisible(true);
 
         BarChart<String, Number> histogram = createHistogram(selectedItem,systemEngine,simulationID);
-        histogramGraphPane.getChildren().add(histogram);
+        histogramGraphPane.setContent(histogram);
 
         if(systemEngine.getDefinitionsDataFromSE().getPropertyDefinitionByName(selectedItem.getParent().getValue(),selectedItem.getValue()).getType().toLowerCase().equals("float"))
             PropertyAverageValueLabel.setText(String.valueOf(calculatePropertyAverage(simulationID,selectedItem.getParent().getValue(),selectedItem.getValue())));

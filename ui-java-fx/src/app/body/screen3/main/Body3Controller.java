@@ -117,7 +117,7 @@ public class Body3Controller {
             ResultsController simulationResultController = loader.getController();
             simulationResultController.setBody3Controller(this);
             simulationResultController.setSystemEngine(systemEngine);
-            simulationResultController.primaryInitialize(dtoSimulationEndingForUi,systemEngine);
+            simulationResultController.primaryInitialize();
             Integer simulationID = dtoSimulationEndingForUi.getSimulationID();
             simulationResultsNodesMap.put(simulationID, simulationResultNode);
             simulationResultControllersMap.put(simulationID, simulationResultController);
