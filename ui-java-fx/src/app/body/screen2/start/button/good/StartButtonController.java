@@ -1,11 +1,9 @@
-package app.body.screen2.start.Button;
+package app.body.screen2.start.button.good;
 
 import app.body.screen2.main.Body2Controller;
 import app.body.screen2.tile.TileResourceConstants;
 import app.body.screen2.tile.entity.start.button.EntityStartButtonController;
-import app.body.screen2.tile.environment.variable.EnvironmentVariableController;
 import app.body.screen2.tile.environment.variable.start.button.EnvironmentVariableStartButtonController;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -70,6 +68,7 @@ public class StartButtonController {
                 EntityStartButtonController entityStartButtonController = loader.getController();
                 entityStartButtonController.setEntityNameLabel(key);
                 entityStartButtonController.setPopulationValueLabel(entityNameToSelectedPopulationValue.get(key));
+
                 simulationEntitiesPopulationFlowPane.getChildren().add(singleEnvVar);
             }
             catch (IOException e) {

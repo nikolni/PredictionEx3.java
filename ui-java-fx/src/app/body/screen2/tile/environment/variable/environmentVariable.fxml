@@ -40,7 +40,7 @@
                   <Insets top="10.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="valueTextField" onAction="#checkInputValidity" prefHeight="25.0" prefWidth="91.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <TextField fx:id="valueTextField" prefHeight="25.0" prefWidth="91.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
             <Label id="value-label" prefHeight="17.0" prefWidth="24.0" text="Value" textAlignment="CENTER" textFill="#fdfdfd" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                <padding>
                   <Insets left="-15.0" />
