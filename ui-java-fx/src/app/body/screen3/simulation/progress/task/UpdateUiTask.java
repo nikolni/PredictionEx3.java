@@ -69,11 +69,18 @@ public class UpdateUiTask extends Task<Boolean> {
             secondsPast.set(dtoSimulationProgressForUi.getSecondsPast());
 
             currentSimulationController.updateEntitiesLeftGridPane(dtoSimulationProgressForUi.getEntitiesLeft());
-            if (dtoSimulationProgressForUi.getProgressMassage().equals("Getting ready...")) {
+            if (dtoSimulationProgressForUi.getProgressMassage().equals("Getting ready...") ||
+                    dtoSimulationProgressForUi.getProgressMassage().equals("Done!")) {
                 currentSimulationController.toggleTaskButtons(false);
             }
             else if(dtoSimulationProgressForUi.getProgressMassage().equals("Running!")){
                 currentSimulationController.toggleTaskButtons(true);
+                currentSimulationController.setResumeButtonDisable(false);
+            }
+            else if(dtoSimulationProgressForUi.getProgressMassage().equals("Paused!")){
+                currentSimulationController.setPauseButtonDisable(false);
+                currentSimulationController.setResumeButtonDisable(true);
+                currentSimulationController.setStopButtonDisable(true);
             }
 
         });

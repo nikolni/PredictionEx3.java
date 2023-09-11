@@ -2,6 +2,7 @@ package app.main;
 
 import app.body.main.TabPaneBodyController;
 import app.header.HeaderController;
+import dto.api.DTOThreadsPoolStatusForUi;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
@@ -70,7 +71,10 @@ public class AppController {
     }
 
     public void onQueueManagementButtonClick() {
-
+        DTOThreadsPoolStatusForUi dtoThreadsPoolStatusForUi = systemEngine.getThreadsPoolStatus();
+        headerComponentController.setWaitingLabel(dtoThreadsPoolStatusForUi.getQueueSize().toString());
+        headerComponentController.setCurrentlyExecutingLabel(dtoThreadsPoolStatusForUi.getActiveThreadCount().toString());
+        headerComponentController.setOverLabel(dtoThreadsPoolStatusForUi.getCompletedTaskCount().toString());
     }
 
     public void onResultButtonClick() {

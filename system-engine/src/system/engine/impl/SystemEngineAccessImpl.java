@@ -177,7 +177,12 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
             DTOSimulationEndingForUi dtoSimulationEndingForUi = new DTOSimulationEndingForUiImpl(simulationID, terminationConditionArr);
             //simulationEndingForUiList.add(dtoSimulationEndingForUi);
+            runSimulationManager.increaseCompletedTaskCount();
             return dtoSimulationEndingForUi;
+    }
+    @Override
+    public DTOThreadsPoolStatusForUi getThreadsPoolStatus(){
+        return runSimulationManager.getThreadsPoolStatus();
     }
 
     @Override

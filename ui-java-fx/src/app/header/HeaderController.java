@@ -26,8 +26,28 @@ public class HeaderController {
 
     @FXML
     private Button loadFileButton;
+
+
+    /*@FXML
+    private StackPane queueManagementStackPane;*/
     @FXML
-    private Button queueManaementButton;
+    private Button queueManagementButton;
+    @FXML
+    private Label waitingLabel;
+    @FXML
+    private Label overLabel;
+    @FXML
+    private Label currentlyExecutingLabel;
+    @FXML
+    private Label valueCurrentlyExecutingLabel;
+    @FXML
+    private Label valueWaitingLabel;
+    @FXML
+    private GridPane queueManagementGridPane;
+
+
+    @FXML
+    private Label valueOverLabel;
     @FXML
     private Button detailsButton;
     @FXML
@@ -43,6 +63,7 @@ public class HeaderController {
     private AppController mainController;
     private Stage primaryStage;
 
+
     public void setSystemEngine(SystemEngineAccess systemEngineAccess){
         this.systemEngine = systemEngineAccess;
     }
@@ -54,10 +75,6 @@ public class HeaderController {
         this.primaryStage = primaryStage;
     }
 
-    @FXML
-    void onDetailsButtonClick(ActionEvent event) {
-        mainController.onDetailsButtonClick();
-    }
 
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty();
@@ -73,8 +90,12 @@ public class HeaderController {
     }
 
 
+
     @FXML
     void onLoadFileButtonClick(ActionEvent event) {
+        queueManagementGridPane.setVisible(false);
+        queueManagementButton.setStyle("-fx-text-fill: white;");
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select XML file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files", "*.xml"));
@@ -86,6 +107,7 @@ public class HeaderController {
         String absolutePath = selectedFile.getAbsolutePath();
         try {
             systemEngine.getXMLFromUser(absolutePath);
+            queueManagementButton.setDisable(false);
         } catch(RuntimeException | JAXBException | FileNotFoundException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
@@ -98,20 +120,49 @@ public class HeaderController {
 
         mainController.onLoadFileButtonClick();
 
-
     }
 
     @FXML
-    void onNewExecutionButtonClick(ActionEvent event) {mainController.onNewExecutionButtonClick();}
+    void onDetailsButtonClick(ActionEvent event) {
+        mainController.onDetailsButtonClick();
+
+        queueManagementGridPane.setVisible(false);
+        queueManagementButton.setStyle("-fx-text-fill: white;");
+    }
+
+    @FXML
+    void onNewExecutionButtonClick(ActionEvent event) {
+        mainController.onNewExecutionButtonClick();
+
+        queueManagementGridPane.setVisible(false);
+        queueManagementButton.setStyle("-fx-text-fill: white;");}
 
     @FXML
     void onQueueManagementButtonClick(ActionEvent event) {
 
+            mainController.onQueueManagementButtonClick();
+            queueManagementButton.setStyle("-fx-text-fill: blue;");
+            queueManagementGridPane.setVisible(true);
+
+    }
+
+    public void setCurrentlyExecutingLabel(String currentlyExecutingLabel) {
+        this.valueCurrentlyExecutingLabel.setText(currentlyExecutingLabel);
+    }
+
+    public void setWaitingLabel(String waitingLabel) {
+        this.valueWaitingLabel.setText(waitingLabel);
+    }
+
+    public void setOverLabel(String overLabel) {
+        this.valueOverLabel.setText(overLabel);
     }
 
     @FXML
     void onResultButtonClick(ActionEvent event) {
         mainController.onResultButtonClick();
+        queueManagementGridPane.setVisible(false);
+        queueManagementButton.setStyle("-fx-text-fill: white;");
     }
 
 }

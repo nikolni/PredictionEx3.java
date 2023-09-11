@@ -13,6 +13,7 @@ public class EntityLocationInWorldImpl extends AbstractEntityLocationInWorld imp
     private Integer row;
     private Integer column;
 
+
     public EntityLocationInWorldImpl(WorldGrid worldGrid, EntityInstance entityInstance) {
         this.worldGrid =worldGrid;
         this.entityInstance =entityInstance;
@@ -24,8 +25,8 @@ public class EntityLocationInWorldImpl extends AbstractEntityLocationInWorld imp
         column= random.nextInt(worldGrid.getGridColumns()-1);
 
         while (!worldGrid.isPositionAvailable(row, column)){
-            row= random.nextInt(worldGrid.getGridRows()-1);
-            column= random.nextInt(worldGrid.getGridColumns()-1);
+            row= random.nextInt(worldGrid.getGridRows());
+            column= random.nextInt(worldGrid.getGridColumns());
         }
         worldGrid.setPosition(row, column, entityInstance);
     }

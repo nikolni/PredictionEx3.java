@@ -47,7 +47,7 @@ public class DivideAction extends CalculationAction {
         }
 
         propertyInstance.setValue(fResult);
-        propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber());
+        propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), fResult);
         }
 }
 
