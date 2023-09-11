@@ -130,37 +130,6 @@ public class Body1Controller{
     }
 
 
-
-
-    /*
-    @FXML
-    void selectItem(MouseEvent event) {
-        detailsTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            //if (newValue != null && !newValue.isLeaf()) {
-                quantityOfSquaresLabel.setVisible(false);
-                quantityOfSquaresText.setVisible(false);
-                valueDefLabel.setVisible(false);
-                valueDefText.setVisible(false);
-                if (isBranchExpanded("World", detailsTreeView)) {
-                    if (isBranchExpanded("Entities", detailsTreeView)) {
-                        handleEntitySelection();
-                        //detailsTreeView.getRoot().setExpanded(false);
-                    } else if (isBranchExpanded("Rules", detailsTreeView)) {
-                        handleRulesSelection();
-                        //detailsTreeView.getRoot().setExpanded(false);
-                    } else if (isBranchExpanded("Termination conditions", detailsTreeView)) {
-                        handleTerminationConditionsSelection();
-                        //detailsTreeView.getRoot().setExpanded(false);
-                    } else if (isBranchExpanded("Environment Variables", detailsTreeView)) {
-                        handleEnvironmentVariablesSelection();
-                        //detailsTreeView.getRoot().setExpanded(false);
-
-                    }
-                }
-          //  }
-        });
-    }
-*/
     public void handleSingleEntitySelection(TreeItem<String> entitySelectedItem){
             valueDefText.getChildren().clear(); // Clear existing text
             quantityOfSquaresLabel.setVisible(false);

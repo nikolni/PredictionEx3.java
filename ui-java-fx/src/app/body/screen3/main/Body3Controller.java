@@ -103,6 +103,7 @@ public class Body3Controller {
 
 
         private void handleSimulationListItemSelection(String selectedItem) {
+            simulationResultScrollPane.setContent(null);
             if(oldUpdateUiThreadThread !=null && oldUpdateUiThreadThread.isAlive()){
                 System.out.println( "killing thread address   " + oldUpdateUiThreadThread);
                 oldUpdateUiThreadThread.interrupt();
