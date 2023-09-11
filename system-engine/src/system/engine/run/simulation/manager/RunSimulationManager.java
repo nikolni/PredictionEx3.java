@@ -20,6 +20,7 @@ public class RunSimulationManager {
     private final Map<Integer, WorldInstance> simulationIdToWorldInstance;
     private int completedTaskCount =0;
     private int taskCount=0;
+    private int activeThreadCount = 0;
 
     public RunSimulationManager(int threadPoolSize, Map<Integer, WorldInstance> simulationIdToWorldInstance) {
         threadPool = Executors.newFixedThreadPool(threadPoolSize);
@@ -62,7 +63,7 @@ public class RunSimulationManager {
         }
     }
     public DTOThreadsPoolStatusForUi getThreadsPoolStatus(){
-        int activeThreadCount = ((ThreadPoolExecutor) threadPool).getActiveCount();
+        //int activeThreadCount = ((ThreadPoolExecutor) threadPool).getActiveCount();
         int queueSize = taskCount - activeThreadCount - completedTaskCount;
 
         return new DTOThreadsPoolStatusForUiImpl(queueSize, activeThreadCount, completedTaskCount);
@@ -71,4 +72,11 @@ public class RunSimulationManager {
     public void increaseCompletedTaskCount(){
         completedTaskCount++;
     }
+    public void increaseActiveCount(){
+        activeThreadCount++;
+    }
+    public void decreaseActiveCount(){
+        activeThreadCount--;
+    }
+
 }

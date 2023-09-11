@@ -70,7 +70,7 @@ public class AppController {
         tabPaneBodyComponentController.switchToTab2();
     }
 
-    public void onQueueManagementButtonClick() {
+    public void onQueueManagementButtonUpdate() {
         DTOThreadsPoolStatusForUi dtoThreadsPoolStatusForUi = systemEngine.getThreadsPoolStatus();
         headerComponentController.setWaitingLabel(dtoThreadsPoolStatusForUi.getQueueSize().toString());
         headerComponentController.setCurrentlyExecutingLabel(dtoThreadsPoolStatusForUi.getActiveThreadCount().toString());

@@ -76,3 +76,8 @@
     -fx-font-size: 12px;
     -fx-font-weight: BOLD;
 }
+.my-label-world-grid{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 16px;
+    -fx-font-weight: BOLD;
+}
