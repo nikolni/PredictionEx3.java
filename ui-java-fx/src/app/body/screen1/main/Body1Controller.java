@@ -1,5 +1,6 @@
 package app.body.screen1.main;
 
+import app.body.screen1.tile.world.grid.WorldGridSizesController;
 import dto.definition.entity.api.EntityDefinitionDTO;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.definition.rule.action.KillActionDTO;
@@ -29,7 +30,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import app.body.screen1.tile.property.PropertyController;
-import app.body.screen1.tile.property.PropertyResourceConstants;
+import app.body.screen1.tile.ResourceConstants;
 import app.body.screen1.tile.rule.action.helper.ActionTileCreatorFactory;
 import app.body.screen1.tile.rule.action.helper.ActionTileCreatorFactoryImpl;
 import app.body.screen1.tile.termination.condition.TerminationConditionsController;
@@ -95,9 +96,10 @@ public class Body1Controller{
         TreeItem<String> entitiesBranch = createEntitiesSubTree(systemEngine);
         TreeItem<String> ruleBranch = createRulesSubTree(systemEngine);
         TreeItem<String> terminationBranch = new TreeItem<>("Termination conditions");
-        TreeItem<String> environmentBranch = new TreeItem<>("Environment Variables");
+        TreeItem<String> environmentBranch = new TreeItem<>("Environment variables");
+        TreeItem<String> worldGridBranch = new TreeItem<>("World grid sizes");
 
-        rootItem.getChildren().addAll(entitiesBranch, ruleBranch,terminationBranch,environmentBranch);
+        rootItem.getChildren().addAll(entitiesBranch, ruleBranch,terminationBranch,environmentBranch, worldGridBranch);
         detailsTreeView.setRoot(rootItem);
 
         detailsTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -126,42 +128,33 @@ public class Body1Controller{
             } else if (selectedItem.getValue().equals("Environment Variables")) {
                 handleEnvironmentVariablesSelection(selectedItem);
             }
+            else if (selectedItem.getValue().equals("World grid sizes")) {
+                handleWorldGridSizesSelection(selectedItem);}
+        }
+    }
+
+    private void handleWorldGridSizesSelection(TreeItem<String> selectedItem) {
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ResourceConstants.WORLD_GRID_FXML_RESOURCE);
+            Node singleNode = loader.load();
+            Integer rows= systemEngine.getDTOWorldGridForUi().getGridRows();
+            Integer columns = systemEngine.getDTOWorldGridForUi().getGridColumns();
+            Integer maxPopulationQuantity = rows * columns;
+
+            WorldGridSizesController worldGridSizesController = loader.getController();
+            worldGridSizesController.setRowsLabel(rows.toString());
+            worldGridSizesController.setColumnsLabel(columns.toString());
+            worldGridSizesController.setPopulationLabel(maxPopulationQuantity.toString());
+
+            detailsFlowPane.getChildren().add(singleNode);
+        }catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
 
-
-
-    /*
-    @FXML
-    void selectItem(MouseEvent event) {
-        detailsTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            //if (newValue != null && !newValue.isLeaf()) {
-                quantityOfSquaresLabel.setVisible(false);
-                quantityOfSquaresText.setVisible(false);
-                valueDefLabel.setVisible(false);
-                valueDefText.setVisible(false);
-                if (isBranchExpanded("World", detailsTreeView)) {
-                    if (isBranchExpanded("Entities", detailsTreeView)) {
-                        handleEntitySelection();
-                        //detailsTreeView.getRoot().setExpanded(false);
-                    } else if (isBranchExpanded("Rules", detailsTreeView)) {
-                        handleRulesSelection();
-                        //detailsTreeView.getRoot().setExpanded(false);
-                    } else if (isBranchExpanded("Termination conditions", detailsTreeView)) {
-                        handleTerminationConditionsSelection();
-                        //detailsTreeView.getRoot().setExpanded(false);
-                    } else if (isBranchExpanded("Environment Variables", detailsTreeView)) {
-                        handleEnvironmentVariablesSelection();
-                        //detailsTreeView.getRoot().setExpanded(false);
-
-                    }
-                }
-          //  }
-        });
-    }
-*/
-    public void handleSingleEntitySelection(TreeItem<String> entitySelectedItem){
+    private void handleSingleEntitySelection(TreeItem<String> entitySelectedItem){
             valueDefText.getChildren().clear(); // Clear existing text
             quantityOfSquaresLabel.setVisible(false);
             quantityOfSquaresText.setVisible(false);
@@ -194,10 +187,10 @@ public class Body1Controller{
     }
 
 
-    public void createPropertyChildrenInFlowPane(PropertyDefinitionDTO propertyDefinitionDTO){
+    private void createPropertyChildrenInFlowPane(PropertyDefinitionDTO propertyDefinitionDTO){
         try{
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(PropertyResourceConstants.PROPERTY_FXML_RESOURCE);
+            loader.setLocation(ResourceConstants.PROPERTY_FXML_RESOURCE);
             Node singleProperty = loader.load();
 
             PropertyController propertyController = loader.getController();
@@ -215,7 +208,7 @@ public class Body1Controller{
     }
 
 
-    public TreeItem<String> createEntitiesSubTree(SystemEngineAccess systemEngineAccess){
+    private TreeItem<String> createEntitiesSubTree(SystemEngineAccess systemEngineAccess){
         DTODefinitionsForUi dtoDefinitionsForUi = systemEngineAccess.getDefinitionsDataFromSE();
         List<EntityDefinitionDTO> entities = dtoDefinitionsForUi.getEntitiesDTO();
         List<TreeItem<String>> entitiesBrunches = new ArrayList<>();
@@ -229,7 +222,7 @@ public class Body1Controller{
         return entitiesBranch;
     }
 
-    public TreeItem<String> createSingleEntitySubTree(EntityDefinitionDTO entityDefinitionDTO){
+    private TreeItem<String> createSingleEntitySubTree(EntityDefinitionDTO entityDefinitionDTO){
         TreeItem<String> entityBranch = new TreeItem<>( entityDefinitionDTO.getUniqueName());
 
        /* TreeItem<String> leafPopulation = new TreeItem<>("population");
@@ -239,7 +232,7 @@ public class Body1Controller{
         return entityBranch;
     }
 
-    public TreeItem<String> createRulesSubTree(SystemEngineAccess systemEngineAccess){
+    private TreeItem<String> createRulesSubTree(SystemEngineAccess systemEngineAccess){
         DTODefinitionsForUi dtoDefinitionsForUi = systemEngineAccess.getDefinitionsDataFromSE();
         List<RuleDTO> rules = dtoDefinitionsForUi.getRulesDTO();
         List<TreeItem<String>> rulesBrunches = new ArrayList<>();
@@ -357,7 +350,7 @@ public class Body1Controller{
 
 
 
-    public void handleEnvironmentVariablesSelection(TreeItem<String> environmentVariablesSelectedItem){
+    private void handleEnvironmentVariablesSelection(TreeItem<String> environmentVariablesSelectedItem){
 
             quantityOfSquaresLabel.setVisible(false);
             quantityOfSquaresText.setVisible(false);
@@ -378,7 +371,7 @@ public class Body1Controller{
     }
 
 
-    public void handleTerminationConditionsSelection(TreeItem<String> terminationConditionsSelectedItem){
+    private void handleTerminationConditionsSelection(TreeItem<String> terminationConditionsSelectedItem){
 
             quantityOfSquaresLabel.setVisible(false);
             quantityOfSquaresText.setVisible(false);
@@ -417,8 +410,6 @@ public class Body1Controller{
                     terminationConditionsController.setTicksSecDefLabel("byUser");
                     terminationConditionsController.setTicksSecValueLabel("");
                 }
-                terminationConditionsController.setTicksSecValueLabel
-                        (((Integer) terminationConditionsDTO.getTerminationCondition()).toString());
                 detailsFlowPane.getChildren().add(terminationCondition);
             }
         }

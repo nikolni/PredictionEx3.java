@@ -166,8 +166,10 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     @Override
     public DTOSimulationEndingForUi runSimulation(Integer simulationID)
+
             throws IllegalArgumentException{
 
+            runSimulationManager.increaseActiveCount();
             int[] terminationConditionArr;
 
             RunSimulation runSimulationInstance = new RunSimulationImpl(simulationIdToWorldInstance.get(simulationID));
@@ -178,6 +180,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
             DTOSimulationEndingForUi dtoSimulationEndingForUi = new DTOSimulationEndingForUiImpl(simulationID, terminationConditionArr);
             //simulationEndingForUiList.add(dtoSimulationEndingForUi);
             runSimulationManager.increaseCompletedTaskCount();
+            runSimulationManager.decreaseActiveCount();
             return dtoSimulationEndingForUi;
     }
     @Override
