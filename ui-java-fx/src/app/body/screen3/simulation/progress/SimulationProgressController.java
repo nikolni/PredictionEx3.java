@@ -108,9 +108,6 @@ public class SimulationProgressController {
         resumeButton.setDisable(!isActive);
     }
 
-    public void addNewSimulationResultToBody3Controller(DTOSimulationEndingForUi dtoSimulationEndingForUi){
-        body3ComponentController.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi);
-    }
 
     public void setPauseButtonDisable(boolean isActive){
         pauseButton.setDisable(!isActive);
@@ -154,5 +151,9 @@ public class SimulationProgressController {
             entitiesLeftGridPane.add(population, 1, row);
             row++;
         }
+    }
+
+    public void updateQueueManagementInAppMain(){
+        body3ComponentController.updateQueueManagementInAppMain();
     }
 }

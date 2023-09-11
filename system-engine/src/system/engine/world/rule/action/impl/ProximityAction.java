@@ -11,6 +11,7 @@ import system.engine.world.rule.action.api.Action;
 import system.engine.world.rule.action.api.ActionType;
 import system.engine.world.rule.action.expression.api.Expression;
 import system.engine.world.rule.context.Context;
+import system.engine.world.rule.context.ContextImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,15 @@ public class ProximityAction extends AbstractAction {
         targetEntityInstance = isThereSecondEntityThatCloseEnough(primaryEntityInstance, targetEntityName, of);
         if(targetEntityInstance != null){
             for(Action action : actionsCollection){
-                action.executeAction(context);
+                if(action instanceof ReplaceAction  || action instanceof ProximityAction){
+                    action.executeAction(context);
+                }
+                else{
+                    Context newContext = new ContextImpl(context.getPrimaryEntityInstance(),targetEntityInstance,
+                            context.getEnvVariablesInstanceManager(),context.getEntitiesToKill(),
+                            context.getTickNumber(), context.getEntityInstanceManager());
+                    action.executeAction(newContext);
+                }
             }
         }
     }

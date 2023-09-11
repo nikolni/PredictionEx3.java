@@ -1,9 +1,9 @@
 package app.body.screen2.main;
 
+import app.body.screen2.start.button.error.ErrorScreen2Controller;
 import app.body.screen2.task.RunSimulationTask;
 import app.body.screen3.main.Body3Controller;
-import app.body.screen3.simulation.progress.SimulationProgressController;
-import app.body.screen2.start.Button.StartButtonController;
+import app.body.screen2.start.button.good.StartButtonController;
 import app.body.screen2.tile.TileResourceConstants;
 import app.body.screen2.tile.entity.EntityController;
 import app.body.screen2.tile.environment.variable.EnvironmentVariableController;
@@ -17,11 +17,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import system.engine.api.SystemEngineAccess;
 
@@ -29,8 +28,6 @@ import java.io.IOException;
 
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 public class Body2Controller {
@@ -65,8 +62,6 @@ public class Body2Controller {
 
     private Integer simulationsCounter = 0;
 
-
-
     private int maxPopulationQuantity;
 
 
@@ -91,16 +86,6 @@ public class Body2Controller {
         createEntitiesPopulationChildrenInFlowPane(entitiesNames);
     }
 
-
-    public void setVisibleTab(){
-        simulationEntitiesPopulationFlowPane.setVisible(true);
-        simulationEnvironmentInputsFlowPane.setVisible(true);
-    }
-
-    public void setUnVisibleTab(){
-        simulationEntitiesPopulationFlowPane.setVisible(false);
-        simulationEnvironmentInputsFlowPane.setVisible(false);
-    }
 
     public void setSystemEngine(SystemEngineAccess systemEngineAccess){
         this.systemEngine = systemEngineAccess;
@@ -176,45 +161,114 @@ public class Body2Controller {
         simulationEnvironmentInputsFlowPane.getChildren().clear();
         createEnvVarsChildrenInFlowPane(envVarsList );
         createEntitiesPopulationChildrenInFlowPane(entitiesNames);
-
-        /*for (String key : entityNameToTileController.keySet()) {
-            EntityController entityController = entityNameToTileController.get(key);
-            entityController.resetTextField();
-        }
-
-        for (String key : envVarNameToTileController.keySet()) {
-            EnvironmentVariableController environmentVariableController = envVarNameToTileController.get(key);
-            environmentVariableController.resetTextField();
-        }*/
     }
 
     @FXML
     void onClickStartButton(MouseEvent event) {
-        Stage primaryStage = new Stage();
+        if(checkInputsValidity()){
+            Stage primaryStage = new Stage();
+            try{
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen2/start/button/good/startButton.fxml"));
+                ScrollPane root = loader.load();
+
+                StartButtonController startButtonController = loader.getController();
+                startButtonController.setCallerController(this);
+                startButtonController.setStage(primaryStage);
+                setMapsForStartButtonController();
+
+                startButtonController.setSimulationEntitiesPopulationFlowPane(entityNameToSelectedPopulationValue);
+                startButtonController.setSimulationEnvironmentInputsFlowPane(envVarNameToSelectedInitValue);
+
+
+                Scene scene = new Scene(root, 620, 400);
+                primaryStage.setScene(scene);
+                primaryStage.setTitle("Warning!");
+                primaryStage.show();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private boolean checkInputsValidity(){
+        List<String> entitiesNamesWithInvalidPopulation = new ArrayList<>();
+        List<String> environmentVarsNames = new ArrayList<>();
+        int populationQuantity=0;
+        boolean invalidPopulationQuantity = false;
+
+        for (String key : entityNameToTileController.keySet()) {
+            EntityController entityController = entityNameToTileController.get(key);
+            if(! entityController.isPopulationQuantityValidity()){
+                entitiesNamesWithInvalidPopulation.add(key);
+            }
+            else{
+                populationQuantity += entityController.getPopulationValue();
+            }
+        }
+        if(populationQuantity > maxPopulationQuantity){
+            invalidPopulationQuantity = true;
+        }
+
+        for (String key : envVarNameToTileController.keySet()) {
+            EnvironmentVariableController environmentVariableController = envVarNameToTileController.get(key);
+            if(! environmentVariableController.isInputValid()){
+                environmentVarsNames.add(key);
+            }
+        }
+
+        if(entitiesNamesWithInvalidPopulation.size() > 0 || environmentVarsNames.size() > 0 || invalidPopulationQuantity){
+            showErrorWindow(entitiesNamesWithInvalidPopulation, environmentVarsNames, invalidPopulationQuantity);
+            return false;
+        }
+        return true;
+    }
+
+    private void showErrorWindow( List<String> entitiesNamesWithInvalidPopulation,
+                                  List<String> environmentVarsNames,
+                                  boolean invalidPopulationQuantity ){
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen2/start/Button/startButton.fxml"));
-            ScrollPane root = loader.load();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(TileResourceConstants.ERROR_SCREEN_FXML_RESOURCE);
+            GridPane root = loader.load();
+            ErrorScreen2Controller errorScreen2Controller  =loader.getController();
+            if(entitiesNamesWithInvalidPopulation.size() > 0) {
+                StringBuilder entitiesText = new StringBuilder();
+                for (String entityName : entitiesNamesWithInvalidPopulation) {
+                    entitiesText.append(entityName).append("\n");
+                }
+                errorScreen2Controller.setEntitiesText(entitiesText.toString());
 
-            StartButtonController startButtonController = loader.getController();
-            startButtonController.setCallerController(this);
-            startButtonController.setStage(primaryStage);
-            setMapsForStartButtonController();
+            }
+            if(environmentVarsNames.size() > 0) {
+                StringBuilder environmentVarsText = new StringBuilder();
+                for (String envVarName : environmentVarsNames) {
+                    environmentVarsText.append(envVarName).append("\n");
+                }
+                errorScreen2Controller.setEnvVarsText(environmentVarsText.toString());
+            }
+            if(entitiesNamesWithInvalidPopulation.size() == 0){
+                if(! invalidPopulationQuantity){
+                    errorScreen2Controller.setPopulationText("Valid!");
+                }
+                else{
+                    errorScreen2Controller.setPopulationText("Invalid population quantity!\n" +
+                            "Max total quantity is " + maxPopulationQuantity);
+                }
+            }
 
-            startButtonController.setSimulationEntitiesPopulationFlowPane(entityNameToSelectedPopulationValue);
-            startButtonController.setSimulationEnvironmentInputsFlowPane(envVarNameToSelectedInitValue);
 
-
-            Scene scene = new Scene(root, 620, 400);
+            Stage primaryStage = new Stage();
+            Scene scene = new Scene(root, 550, 300);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Warning!");
+            primaryStage.setTitle("Error Window");
             primaryStage.show();
         }
         catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //primaryStage.close();
-    }
 
+    }
     private void setMapsForStartButtonController(){
         for (String key : entityNameToTileController.keySet()) {
             EntityController entityController = entityNameToTileController.get(key);
@@ -222,7 +276,8 @@ public class Body2Controller {
                 entityNameToSelectedPopulationValue.put(key, entityController.getPopulationValue().toString());
             }
             else{
-                entityNameToSelectedPopulationValue.put(key, "");
+                Integer population = 0;
+                entityNameToSelectedPopulationValue.put(key, population.toString());
             }
         }
 
@@ -247,33 +302,6 @@ public class Body2Controller {
         RunSimulationTask runSimulationTask = new RunSimulationTask(systemEngine, simulationsCounter,body3ComponentController);
         systemEngine.addTaskToQueue(runSimulationTask);
         clearScreen();
-
-        /*try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen3/simulation/progress/simulationProgress.fxml"));
-            VBox simulationProgressNode = loader.load();
-            SimulationProgressController simulationProgressController = loader.getController();
-            System.out.println("simulation num " + simulationsCounter + " with controller address " + simulationProgressController);
-            body3ComponentController.addNewSimulationProgressToList(simulationProgressNode, simulationProgressController);
-            body3ComponentController.addNewSimulationToSimulationsList(simulationsCounter);
-            simulationProgressController.setBody3ComponentController(body3ComponentController);
-            simulationProgressController.setSimulationIdLabel(simulationsCounter.toString());
-            simulationProgressController.runSimulation(systemEngine, simulationsCounter);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }*/
-
-    }
-
-
-
-
-    public PropertyDefinitionDTO getEnvVarByName(String name) {
-        for (PropertyDefinitionDTO propertyDefinitionDTO : envVarsList) {
-            if (propertyDefinitionDTO.getUniqueName().equals(name)) {
-                return propertyDefinitionDTO;
-            }
-        }
-        throw new IllegalArgumentException("Can't find entity with name " + name);
     }
 
     public void setBody3Controller(Body3Controller body3ComponentController) {

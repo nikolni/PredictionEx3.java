@@ -82,7 +82,7 @@ public class UpdateUiTask extends Task<Boolean> {
                 currentSimulationController.setResumeButtonDisable(true);
                 currentSimulationController.setStopButtonDisable(true);
             }
-
+            currentSimulationController.updateQueueManagementInAppMain();
         });
     }
 }

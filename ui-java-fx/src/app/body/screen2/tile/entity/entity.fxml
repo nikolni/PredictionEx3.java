@@ -35,7 +35,7 @@
                   <Font size="10.0" />
                </font>
             </Label>
-            <TextField fx:id="populationTextField" onAction="#checkInputValidity" prefHeight="25.0" prefWidth="91.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <TextField fx:id="populationTextField" prefHeight="25.0" prefWidth="91.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <Label id="population-label" prefHeight="25.0" prefWidth="108.0" text="Population" textFill="#fdfdfd" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <padding>
                   <Insets left="-15.0" />
