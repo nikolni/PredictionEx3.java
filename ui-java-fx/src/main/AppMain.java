@@ -1,17 +1,12 @@
 package main;
 
-import app.body.screen1.tile.property.PropertyController;
-import app.body.screen1.tile.property.PropertyResourceConstants;
-import app.header.HeaderController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import static main.CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE;
-import static main.CommonResourcesPaths.HEADER_fXML_RESOURCE;
 
 
 import java.net.URL;

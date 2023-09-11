@@ -35,6 +35,7 @@ public class TabPaneBodyController {
         body1ComponentController.setSystemEngine(systemEngineAccess);
         body2ComponentController.setSystemEngine(systemEngineAccess);
         body3ComponentController.setSystemEngine(systemEngineAccess);
+        body3ComponentController.setMainController(mainController);
         initialChildren();
     }
     private void initialChildren(){
