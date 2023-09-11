@@ -125,7 +125,7 @@ public class RuleFromXML {
                     else
                         proximityAction.addActionToActionsCollection(createAction(entityDefinitionManager,proximityPrdAction.getEntity(),proximityPrdAction.getPRDSecondaryEntity(),proximityPrdAction,worldGrid));
                 }
-                return actionCreation.createActionProximity(primaryEntityDefinition,secondaryEntityDefinition,prdAction.getPRDEnvDepth().getOf(),worldGrid,targetEntityDefinition);
+                return proximityAction;
         }
         return null;
     }

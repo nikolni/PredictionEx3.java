@@ -24,6 +24,6 @@ public class CreateDTOEntitiesAfterSimulationByQuantityForUi {
         }
 
         return new DTOEntitiesAfterSimulationByQuantityForUiImpl(entitiesNames, entitiesPopulationBeforeSimulation,
-                entitiesPopulationAfterSimulation);
+                entitiesPopulationAfterSimulation,worldInstance.getEntityInstanceManager().getNumOfEntitiesLeftByTicks());
     }
 }
