@@ -20,18 +20,22 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private final List<EntityInstance> instancesBeforeKill;
     private final Map<String, Integer> entitiesPopulationAfterSimulationRunning;
     private Map<String,List<EntityInstance>> entityInstanceByEntityDef;
+
     private final WorldGrid worldGrid;
     private final EntityDefinitionManager entityDefinitionManager;
+  
+    private Map<Integer,Integer> NumOfEntitiesLeftByTicks;
+    private WorldGrid worldGrid;
 
 
     public EntityInstanceManagerImpl(EntityDefinitionManager entityDefinitionManager, WorldGrid worldGrid) {
         this.entityDefinitionManager = entityDefinitionManager;
         count = 0;
-        int entityDefinitionCount = 0;
         instances = new ArrayList<>();
         instancesBeforeKill = new ArrayList<>();
         entitiesPopulationAfterSimulationRunning = new HashMap<>();
         entityInstanceByEntityDef=new HashMap<>();
+        NumOfEntitiesLeftByTicks=new HashMap<>();
         this.worldGrid=worldGrid;
         for (EntityDefinition entityDefinition: entityDefinitionManager.getDefinitions()){
             for(int i = 0; i<entityDefinition.getPopulation(); i++) {
@@ -43,6 +47,11 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         instancesBeforeKill.addAll(instances);
         entityInstanceByEntityDef = instances.stream()
                 .collect(Collectors.groupingBy(entityInstance -> entityInstance.getEntityDefinition().getUniqueName()));
+        NumOfEntitiesLeftByTicks.put(0,instances.size());
+    }
+    @Override
+    public void setNumOfEntitiesLestByTicks(Integer currentTick, Integer numOfInstances){
+        NumOfEntitiesLeftByTicks.put(currentTick,numOfInstances);
     }
 
     @Override
@@ -107,6 +116,11 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     }
 
     @Override
+    public Map<Integer, Integer> getNumOfEntitiesLeftByTicks() {
+        return NumOfEntitiesLeftByTicks;
+    }
+
+    @Override
     public EntityInstance create(EntityDefinition entityDefinition, WorldGrid worldGrid) {
 
         count++;
@@ -147,6 +161,9 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     public void killEntity(int id) {
         String entityDefinitionName = instances.get(id - 1).getEntityDefinition().getUniqueName();
         int oldPopulation = entitiesPopulationAfterSimulationRunning.get(entityDefinitionName);
+        List<EntityInstance> entitiesInstanceByNameList=entityInstanceByEntityDef.get(entityDefinitionName);
+        if(entitiesInstanceByNameList!=null)
+            entitiesInstanceByNameList.remove(instances.get(id-1));
         entitiesPopulationAfterSimulationRunning.put(entityDefinitionName, oldPopulation - 1);
         instancesBeforeKill.set(id -1, instances.get(id-1));
         instances.set(id-1, null);

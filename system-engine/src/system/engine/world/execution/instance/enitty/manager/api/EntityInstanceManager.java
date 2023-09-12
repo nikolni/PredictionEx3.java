@@ -22,8 +22,15 @@ public interface EntityInstanceManager {
     int getEntityPopulationAfterRunning(String entityDefinitionName);
     void killEntity(int id);
     Map<String, List<EntityInstance>> getEntityInstanceByEntityDef();
-    void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate,EntityInstance entityInstanceToKill);
+
+    Map<Integer, Integer> getNumOfEntitiesLeftByTicks();
+
+    void setNumOfEntitiesLestByTicks(Integer currentTick, Integer numOfInstances);
+
+    void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate, EntityInstance entityInstanceToKill);
     void createEntityInstanceFromDerived(EntityDefinition entityDefinitionToCreate,EntityInstance derivedEntityInstance);
+
+
     Map<String, Integer> getEntitiesPopulationAfterSimulationRunning();
     void updateMembersAfterNewEntity(EntityDefinition entityDefinitionToCreate);
     EntityDefinitionManager getEntityDefinitionManager();

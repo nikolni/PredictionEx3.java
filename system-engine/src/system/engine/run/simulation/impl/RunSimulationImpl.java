@@ -116,6 +116,7 @@ public class RunSimulationImpl implements RunSimulation {
                     entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill, tick);
 
                     tick++;
+                  worldInstance.getEntityInstanceManager().setNumOfEntitiesLestByTicks(tick,entitiesLeft);
                     endTime = Instant.now();
                     duration = Duration.between(startTime, endTime);
                     seconds = (int) duration.getSeconds();
