@@ -25,7 +25,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private final EntityDefinitionManager entityDefinitionManager;
   
     private Map<Integer,Integer> NumOfEntitiesLeftByTicks;
-    private WorldGrid worldGrid;
+
 
 
     public EntityInstanceManagerImpl(EntityDefinitionManager entityDefinitionManager, WorldGrid worldGrid) {
