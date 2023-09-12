@@ -4,6 +4,12 @@
     -fx-font-weight: BOLD;
     -fx-background-color: BLUE;
 }
+#rerun-button{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: #d08a3f;
+}
 
 #stop-button{
     -fx-text-fill: WHITE;

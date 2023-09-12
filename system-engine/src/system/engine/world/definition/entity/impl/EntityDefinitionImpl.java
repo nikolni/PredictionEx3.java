@@ -16,6 +16,11 @@ public class EntityDefinitionImpl implements EntityDefinition {
         this.uniqueName = uniqueName;
         properties = new ArrayList<>();
     }
+    public EntityDefinitionImpl(String uniqueName, List<PropertyDefinition> properties, Integer populationQuantity) {
+        this.uniqueName = uniqueName;
+        this.properties =properties;
+       this.populationQuantity = populationQuantity;
+    }
 
     @Override
     public String getUniqueName() {
@@ -43,4 +48,12 @@ public class EntityDefinitionImpl implements EntityDefinition {
         properties.add(propertyDefinition);
     }
 
+    @Override
+    public EntityDefinition copyFromMe(){
+         String uniqueNameCopy = uniqueName;
+         List<PropertyDefinition> propertiesCopy = properties;
+         Integer populationQuantityCopy = 0;
+
+         return new EntityDefinitionImpl(uniqueName, properties, populationQuantityCopy);
+    }
 }

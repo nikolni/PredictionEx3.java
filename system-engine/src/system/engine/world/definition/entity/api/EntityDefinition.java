@@ -12,4 +12,5 @@ public interface EntityDefinition {
 
     List<PropertyDefinition> getProps();
     void addPropertyDefinition(PropertyDefinition propertyDefinition);
+    EntityDefinition copyFromMe();
 }

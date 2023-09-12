@@ -8,6 +8,7 @@ import dto.api.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import system.engine.api.SystemEngineAccess;
@@ -103,6 +104,11 @@ public class Body3Controller {
 
         }
 
+        public void setButtonsDisableIfThereIsNoSimulations(){
+            if(simulationsList.getItems().isEmpty() || simulationProgressComponentController.isSimulationWasChosen()){
+                simulationProgressComponentController.setButtonsDisableBeforeSimulationWasChosen();
+            }
+        }
 
     public void setSystemEngine(SystemEngineAccess systemEngineAccess){
         this.systemEngine = systemEngineAccess;
@@ -130,6 +136,10 @@ public class Body3Controller {
 
     public void updateQueueManagementInAppMain(){
         mainController.onQueueManagementButtonUpdate();
+    }
+
+    public void onRerunClick(int simulationID) {
+        mainController.onRerunClick( simulationID);
     }
 }
 

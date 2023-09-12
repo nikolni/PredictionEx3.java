@@ -20,11 +20,16 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private final List<EntityInstance> instancesBeforeKill;
     private final Map<String, Integer> entitiesPopulationAfterSimulationRunning;
     private Map<String,List<EntityInstance>> entityInstanceByEntityDef;
+
+    private final WorldGrid worldGrid;
+    private final EntityDefinitionManager entityDefinitionManager;
+  
     private Map<Integer,Integer> NumOfEntitiesLeftByTicks;
     private WorldGrid worldGrid;
 
 
     public EntityInstanceManagerImpl(EntityDefinitionManager entityDefinitionManager, WorldGrid worldGrid) {
+        this.entityDefinitionManager = entityDefinitionManager;
         count = 0;
         instances = new ArrayList<>();
         instancesBeforeKill = new ArrayList<>();
@@ -170,5 +175,8 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         return entitiesPopulationAfterSimulationRunning;
     }
 
-
+    @Override
+    public EntityDefinitionManager getEntityDefinitionManager() {
+        return entityDefinitionManager;
+    }
 }

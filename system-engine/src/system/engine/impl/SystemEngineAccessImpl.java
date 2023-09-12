@@ -5,6 +5,7 @@ import dto.api.*;
 import dto.creation.*;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
+import dto.impl.DTORerunValuesForUiImpl;
 import dto.impl.DTOSimulationEndingForUiImpl;
 import dto.impl.DTOWorldGridForUiImpl;
 import jaxb2.copy.WorldFromXml;
@@ -14,11 +15,24 @@ import system.engine.run.simulation.impl.RunSimulationImpl;
 import system.engine.run.simulation.manager.RunSimulationManager;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.api.WorldInstance;
+import system.engine.world.definition.entity.api.EntityDefinition;
+import system.engine.world.definition.entity.manager.api.EntityDefinitionManager;
+import system.engine.world.definition.environment.variable.api.EnvVariablesDefinitionManager;
+import system.engine.world.definition.environment.variable.impl.EnvVariableDefinitionManagerImpl;
 import system.engine.world.definition.property.api.PropertyDefinition;
+import system.engine.world.definition.property.impl.BooleanPropertyDefinition;
+import system.engine.world.definition.property.impl.FloatPropertyDefinition;
+import system.engine.world.definition.property.impl.StringPropertyDefinition;
 import system.engine.world.definition.value.generator.api.ValueGenerator;
 import system.engine.world.definition.value.generator.api.ValueGeneratorFactory;
+import system.engine.world.definition.value.generator.impl.random.impl.bool.RandomBooleanValueGenerator;
+import system.engine.world.definition.value.generator.impl.random.impl.numeric.RandomFloatGenerator;
+import system.engine.world.definition.value.generator.impl.random.impl.string.RandomStringGenerator;
+import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.execution.instance.environment.impl.EnvVariablesInstanceManagerImpl;
+import system.engine.world.execution.instance.property.api.PropertyInstance;
+import system.engine.world.rule.enums.Type;
 import system.engine.world.termination.condition.api.TerminationCondition;
 import system.engine.world.termination.condition.impl.TicksTerminationConditionImpl;
 
@@ -29,8 +43,6 @@ import java.util.*;
 public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     private WorldDefinition worldDefinition;
-    //private List< WorldInstance> worldInstances;
-    //private final List<DTOSimulationEndingForUi> simulationEndingForUiList;
     private EnvVariablesInstanceManager envVariablesInstanceManager;
     private boolean isHaveValidFileInSystem=false;
     private final Map<Integer, WorldInstance> simulationIdToWorldInstance;
@@ -39,7 +51,6 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     public SystemEngineAccessImpl() {
         this.simulationIdToWorldInstance = new HashMap<>();
-        //simulationEndingForUiList=new ArrayList<>();
 
     }
 
@@ -66,10 +77,10 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         return new CreateDTOEVDForUi().getData(worldDefinition);
     }
 
-    @Override
+   /* @Override
     public DTOEnvVarsInsForUi getEVIFromSE() {
         return new CreateDTOEVIForUi().getData(envVariablesInstanceManager);
-    }
+    }*/
 
     @Override
     public DTOSimulationsTimeRunDataForUi getSimulationsTimeRunDataFromSE() {
@@ -105,23 +116,46 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
-    public void updateEntitiesPopulation(DTOPopulationValuesForSE dtoPopulationValuesForSE) {
+    public EntityDefinitionManager updateEntitiesPopulation(DTOPopulationValuesForSE dtoPopulationValuesForSE) {
         Map<String, Integer> entityNameDefToPopulation = dtoPopulationValuesForSE.getEntityNameDefToPopulation();
-        worldDefinition.addPopulationToEntitiesDefinition(entityNameDefToPopulation);
+        return worldDefinition.createNewEntitiesDefinitionsManagerWithPopulations(entityNameDefToPopulation);
     }
     @Override
-    public void updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE) {
+    public EnvVariablesInstanceManager updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE) {
         int index = 0;
 
+        Map<String, PropertyDefinition> propNameToPropDefinition = new HashMap<>();
         List<Object> initValues = dtoEnvVarDefValuesForSE.getEnvironmentVarInitValues();
         List<PropertyDefinition> propertyDefinitions = createListOfPropertyDefinitionsFromDTO(dtoEnvVarDefValuesForSE.getPropertyDefinitionDTOList());
         for (PropertyDefinition propertyDefinition : propertyDefinitions) {
+            PropertyDefinition propertyDefinitionNew = propertyDefinition;
             if (initValues.get(index) != null) {
-                propertyDefinition.setValueGenerator(createInitValueGenerator(propertyDefinition, initValues.get(index)));
+                Type type = propertyDefinition.getType();
+                switch(type){
+                    case FLOAT:
+                        propertyDefinitionNew = new FloatPropertyDefinition(propertyDefinition.getUniqueName(),
+                                new RandomFloatGenerator((Float)propertyDefinition.getRange().get(0),
+                                        (Float)propertyDefinition.getRange().get(1)));
+                        break;
+                    case BOOLEAN:
+                        propertyDefinitionNew = new BooleanPropertyDefinition(propertyDefinition.getUniqueName(),
+                                new RandomBooleanValueGenerator());
+                        break;
+                    case STRING:
+                        propertyDefinitionNew = new StringPropertyDefinition(propertyDefinition.getUniqueName(),
+                                new RandomStringGenerator());
+                        break;
+                }
+                propertyDefinitionNew.setValueGenerator(createInitValueGenerator(propertyDefinitionNew, initValues.get(index)));
+
             }
             index++;
+            propNameToPropDefinition.put(propertyDefinitionNew.getUniqueName(), propertyDefinitionNew);
         }
-        createEnvVarInstanceManager();
+
+        EnvVariablesDefinitionManager envVariablesDefinitionManagerNew = new EnvVariableDefinitionManagerImpl(propNameToPropDefinition);
+
+        return new EnvVariablesInstanceManagerImpl(envVariablesDefinitionManagerNew);
     }
 
     private ValueGenerator createInitValueGenerator(PropertyDefinition propertyDefinition, Object initValue){
@@ -155,13 +189,9 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         return propertyDefinitions;
     }
 
-    private void createEnvVarInstanceManager(){
-        envVariablesInstanceManager= new EnvVariablesInstanceManagerImpl(worldDefinition.getEnvVariablesDefinitionManager());
-
-    }
     @Override
-    public void addWorldInstance(Integer simulationID){
-        simulationIdToWorldInstance.put(simulationID, worldDefinition.createWorldInstance(simulationID));
+    public void addWorldInstance(Integer simulationID, EnvVariablesInstanceManager envVariablesInstanceManager, EntityDefinitionManager entityDefinitionManager){
+        simulationIdToWorldInstance.put(simulationID, worldDefinition.createWorldInstance(simulationID, envVariablesInstanceManager, entityDefinitionManager));
     }
 
     @Override
@@ -175,10 +205,9 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
             RunSimulation runSimulationInstance = new RunSimulationImpl(simulationIdToWorldInstance.get(simulationID));
             runSimulationManager.addSimulationIdToRunSimulation(simulationID, runSimulationInstance);
             terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
-                    simulationIdToWorldInstance.get(simulationID), envVariablesInstanceManager);
+                    simulationIdToWorldInstance.get(simulationID));
 
             DTOSimulationEndingForUi dtoSimulationEndingForUi = new DTOSimulationEndingForUiImpl(simulationID, terminationConditionArr);
-            //simulationEndingForUiList.add(dtoSimulationEndingForUi);
             runSimulationManager.increaseCompletedTaskCount();
             runSimulationManager.decreaseActiveCount();
             return dtoSimulationEndingForUi;
@@ -243,5 +272,24 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     public TerminationConditionsDTO getTerminationConditions() {
         return new CreateDTODefinitionsForUi().getData(worldDefinition).
                 getTerminationConditionsDTOManager().getTerminationConditionsDTOList().get(0);
+    }
+    @Override
+    public DTORerunValuesForUi getValuesForRerun(Integer simulationID){
+        Map<String, Object> environmentVarsValues = new HashMap<>();
+        Map<String, Integer> entitiesPopulations = new HashMap<>();
+
+        for(PropertyInstance envVar: simulationIdToWorldInstance.get(simulationID).getEnvVariablesInstanceManager().getEnvVarsList()){
+            if(!envVar.getPropertyDefinition().isRandomInitialized()){
+                environmentVarsValues.put(envVar.getPropertyDefinition().getUniqueName(), envVar.getValue());
+            }
+            else{
+                environmentVarsValues.put(envVar.getPropertyDefinition().getUniqueName(), null);
+            }
+        }
+        for(EntityDefinition entityDefinition: simulationIdToWorldInstance.get(simulationID).getEntityInstanceManager().
+        getEntityDefinitionManager().getDefinitions()){
+            entitiesPopulations.put(entityDefinition.getUniqueName(), entityDefinition.getPopulation());
+        }
+        return new DTORerunValuesForUiImpl(environmentVarsValues, entitiesPopulations);
     }
 }

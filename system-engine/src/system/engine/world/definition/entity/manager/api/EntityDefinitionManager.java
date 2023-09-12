@@ -13,4 +13,5 @@ public interface EntityDefinitionManager {
     List<EntityDefinition> getDefinitions();
     EntityDefinition getEntityDefinitionByName(String name);
     EntityInstanceManager createEntityInstanceManager(WorldGrid worldGrid);
+    EntityDefinitionManager copyFromMe();
 }
