@@ -8,8 +8,7 @@ import system.engine.world.execution.instance.environment.api.EnvVariablesInstan
 
 public interface RunSimulation {
 
-    int[] runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
-                                          EnvVariablesInstanceManager envVariablesInstanceManager);
+    int[] runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance);
     DTOSimulationProgressForUi getDtoSimulationProgressForUi();
     void setCanceled(boolean canceled);
     IsSimulationPaused getIsSimulationPaused();

@@ -62,8 +62,14 @@ public class TabPaneBodyController {
 
     public void switchToTab3() {
         tabPaneBodyComponent.getSelectionModel().select(2);
+        body3ComponentController.setButtonsDisableIfThereIsNoSimulations();
        // body3ComponentController.setVisibleTab();
         //body1ComponentController.setUnVisibleTab();
         //body2ComponentController.setUnVisibleTab();
+    }
+
+    public void onRerunClick(int simulationID){
+        body2ComponentController.setTilesByRerun( simulationID);
+
     }
 }

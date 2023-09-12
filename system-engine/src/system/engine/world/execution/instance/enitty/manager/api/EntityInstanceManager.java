@@ -1,6 +1,7 @@
 package system.engine.world.execution.instance.enitty.manager.api;
 
 
+import system.engine.world.definition.entity.manager.api.EntityDefinitionManager;
 import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.grid.api.WorldGrid;
@@ -25,4 +26,5 @@ public interface EntityInstanceManager {
     void createEntityInstanceFromDerived(EntityDefinition entityDefinitionToCreate,EntityInstance derivedEntityInstance);
     Map<String, Integer> getEntitiesPopulationAfterSimulationRunning();
     void updateMembersAfterNewEntity(EntityDefinition entityDefinitionToCreate);
+    EntityDefinitionManager getEntityDefinitionManager();
 }

@@ -8,6 +8,7 @@ import app.body.screen2.tile.TileResourceConstants;
 import app.body.screen2.tile.entity.EntityController;
 import app.body.screen2.tile.environment.variable.EnvironmentVariableController;
 import dto.api.DTOEnvVarsDefForUi;
+import dto.api.DTORerunValuesForUi;
 import dto.api.DTOWorldGridForUi;
 import dto.creation.CreateDTOEnvVarsForSE;
 import dto.creation.CreateDTOPopulationForSE;
@@ -23,6 +24,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import system.engine.api.SystemEngineAccess;
+import system.engine.world.definition.entity.manager.api.EntityDefinitionManager;
+import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 
 import java.io.IOException;
 
@@ -294,9 +297,10 @@ public class Body2Controller {
     public void startSimulation(){
         simulationsCounter++;
 
-        systemEngine.updateEnvironmentVarDefinition(new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList));
-        systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
-        systemEngine.addWorldInstance(simulationsCounter);
+        EnvVariablesInstanceManager envVariablesInstanceManager = systemEngine.updateEnvironmentVarDefinition(
+                new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList));
+        EntityDefinitionManager entityDefinitionManager = systemEngine.updateEntitiesPopulation(new CreateDTOPopulationForSE().getData(entityNameToTileController));
+        systemEngine.addWorldInstance(simulationsCounter, envVariablesInstanceManager, entityDefinitionManager);
         body3ComponentController.addItemToSimulationListView(simulationsCounter);
 
         RunSimulationTask runSimulationTask = new RunSimulationTask(systemEngine, simulationsCounter,body3ComponentController);
@@ -306,6 +310,28 @@ public class Body2Controller {
 
     public void setBody3Controller(Body3Controller body3ComponentController) {
         this.body3ComponentController = body3ComponentController;
+    }
+
+    public void setTilesByRerun(Integer simulationID){
+        DTORerunValuesForUi dtoRerunValuesForUi= systemEngine.getValuesForRerun(simulationID);
+        Map<String, Object> environmentVarsValues =dtoRerunValuesForUi.getEnvironmentVarsValues();
+        Map<String, Integer> entitiesPopulations = dtoRerunValuesForUi.getEntitiesPopulations();
+
+        for (String key : entityNameToTileController.keySet()) {
+            EntityController entityController = entityNameToTileController.get(key);
+            entityController.setPopulationTextField(entitiesPopulations.get(key).toString());
+        }
+
+        for (String key : envVarNameToTileController.keySet()) {
+            EnvironmentVariableController environmentVariableController = envVarNameToTileController.get(key);
+            if(environmentVarsValues.get(key) != null){
+                environmentVariableController.setValueTextField(environmentVarsValues.get(key).toString());
+            }
+            else{
+                environmentVariableController.setValueTextField("");
+            }
+
+        }
     }
 }
 

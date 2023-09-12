@@ -65,6 +65,7 @@ public class UpdateUiTask extends Task<Boolean> {
             updateProgress(dtoSimulationProgressForUi.getTicksPast(), totalTicksNumber);
         }
         Platform.runLater(() -> {
+            currentSimulationController.setRerunButtonDisable(true);
             ticksPast.set(dtoSimulationProgressForUi.getTicksPast());
             secondsPast.set(dtoSimulationProgressForUi.getSecondsPast());
 

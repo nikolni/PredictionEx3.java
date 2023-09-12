@@ -13,5 +13,6 @@ public interface WorldInstance {
     LocalDateTime getSimulationRunTime();
 
     int getId();
+    EnvVariablesInstanceManager getEnvVariablesInstanceManager();
 
 }

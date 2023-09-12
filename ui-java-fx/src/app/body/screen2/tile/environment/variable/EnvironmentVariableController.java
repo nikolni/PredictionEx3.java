@@ -77,6 +77,6 @@ public class EnvironmentVariableController {
     public void setEnvVarTypeLabel(String envVarTypeLabel) {
         this.envVarTypeLabel.setText(envVarTypeLabel);
     }
-
+    public void setValueTextField(String value){valueTextField.setText(value);}
 
 }

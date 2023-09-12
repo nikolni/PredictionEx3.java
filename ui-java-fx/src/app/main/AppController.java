@@ -80,5 +80,9 @@ public class AppController {
     public void onResultButtonClick() {
         tabPaneBodyComponentController.switchToTab3();
     }
+    public void onRerunClick(int simulationID){
+        tabPaneBodyComponentController.switchToTab2();
+        tabPaneBodyComponentController.onRerunClick( simulationID);
+    }
 
 }

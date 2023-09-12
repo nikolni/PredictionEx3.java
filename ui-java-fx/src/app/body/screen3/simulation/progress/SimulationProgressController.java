@@ -42,9 +42,11 @@ public class SimulationProgressController {
     @FXML
     private Button stopButton;
     @FXML
+    private Button rerunButton;
+    @FXML
     private GridPane entitiesLeftGridPane;
 
-    private int simulationID;
+    private int simulationID=0;
     private Body3Controller body3ComponentController;
     private SystemEngineAccess systemEngine;
 
@@ -107,8 +109,17 @@ public class SimulationProgressController {
         pauseButton.setDisable(!isActive);
         resumeButton.setDisable(!isActive);
     }
+    public void setButtonsDisableBeforeSimulationWasChosen(){
+        stopButton.setDisable(true);
+        pauseButton.setDisable(true);
+        resumeButton.setDisable(true);
+        rerunButton.setDisable(true);
+    }
 
 
+    public void setRerunButtonDisable(boolean isActive){
+        rerunButton.setDisable(!isActive);
+    }
     public void setPauseButtonDisable(boolean isActive){
         pauseButton.setDisable(!isActive);
     }
@@ -141,6 +152,11 @@ public class SimulationProgressController {
         onTaskFinished();
     }
 
+    @FXML
+    void onRerunClick(MouseEvent event) {
+        body3ComponentController.onRerunClick(simulationID);
+    }
+
     public void updateEntitiesLeftGridPane(Map<String, Integer> entitiesPopulationAfterSimulationRunning) {
         int row = 0;
         entitiesLeftGridPane.getChildren().clear();
@@ -155,5 +171,8 @@ public class SimulationProgressController {
 
     public void updateQueueManagementInAppMain(){
         body3ComponentController.updateQueueManagementInAppMain();
+    }
+    public boolean isSimulationWasChosen(){
+        return simulationID == 0;
     }
 }

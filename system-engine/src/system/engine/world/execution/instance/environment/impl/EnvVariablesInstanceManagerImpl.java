@@ -14,6 +14,8 @@ import java.util.Map;
 public class EnvVariablesInstanceManagerImpl implements EnvVariablesInstanceManager {
     private final Map<String, PropertyInstance> envVariables;
 
+    private final EnvVariablesDefinitionManager envVariablesDefinitionManager;
+
     public EnvVariablesInstanceManagerImpl(EnvVariablesDefinitionManager envVariablesDefinitionManager) {
         envVariables = new HashMap<>();
         for (PropertyDefinition propertyDefinition : envVariablesDefinitionManager.getEnvVariables()){
@@ -21,6 +23,7 @@ public class EnvVariablesInstanceManagerImpl implements EnvVariablesInstanceMana
             PropertyInstance newPropertyInstance = new PropertyInstanceImpl(propertyDefinition, value);
             this.addPropertyInstance(newPropertyInstance);
         }
+        this.envVariablesDefinitionManager = envVariablesDefinitionManager;
     }
 
     @Override
@@ -42,4 +45,10 @@ public class EnvVariablesInstanceManagerImpl implements EnvVariablesInstanceMana
     public void addPropertyInstance(PropertyInstance propertyInstance) {
         envVariables.put(propertyInstance.getPropertyDefinition().getUniqueName(), propertyInstance);
     }
+
+    @Override
+    public EnvVariablesDefinitionManager getEnvVariablesDefinitionManager() {
+        return envVariablesDefinitionManager;
+    }
+
 }

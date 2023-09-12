@@ -56,9 +56,10 @@ public class RunSimulationImpl implements RunSimulation {
     }
 
     @Override
-    public int[] runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance,
-                                                 EnvVariablesInstanceManager envVariablesInstanceManager)
+    public int[] runSimulationOnLastWorldInstance(WorldDefinition worldDefinition, WorldInstance worldInstance)
             throws IllegalArgumentException {
+
+        EnvVariablesInstanceManager envVariablesInstanceManager = worldInstance.getEnvVariablesInstanceManager();
 
         int entitiesLeft = worldInstance.getEntityInstanceManager().getInstances().size();
         Instant startTime = Instant.now();
@@ -68,6 +69,7 @@ public class RunSimulationImpl implements RunSimulation {
         int seconds = 0;
         int numOfTicksToRun = 0;
         int numOfSecondsToRun = 0;
+        boolean errorHappened = false;
         if(!isTerminationConditionByUser(worldDefinition)){
              numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
              numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
@@ -78,7 +80,8 @@ public class RunSimulationImpl implements RunSimulation {
         List<Action> actionsList = new ArrayList<>();
         List<EntityInstance> entitiesToKill = new ArrayList<>();
 
-        while(isTerminationConditionByUser(worldDefinition) || (tick <= numOfTicksToRun && seconds <= numOfSecondsToRun) ) {
+        try{
+            while(isTerminationConditionByUser(worldDefinition) || (tick <= numOfTicksToRun && seconds <= numOfSecondsToRun) ) {
 
                 if(isPaused) {
                     progressMassage = "Paused!";
@@ -87,13 +90,45 @@ public class RunSimulationImpl implements RunSimulation {
                     isSimulationPaused.pause();
                 }
 
-            while (!isPaused) {
-                progressMassage = "Running!";
-                updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
-                        worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+                while (!isPaused) {
+                    progressMassage = "Running!";
+                    updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
+                            worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
 
+                    if(isCanceled){
+                        System.out.println( "1 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
+                        if(isTerminationConditionByUser(worldDefinition)){
+                            progressMassage = "Done!";
+                        }
+                        else{
+                            progressMassage = "Canceled!";
+                        }
+                        updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
+                                worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+                        break;
+                    }
+                    entitiesToKill.clear();
+                    actionsList.clear();
+                    for (Rule rule : getActiveRules(tick, worldDefinition)) {
+                        actionsList.addAll(rule.getActionsToPerform());
+                    }
+
+                    entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill, tick);
+
+                    tick++;
+                    endTime = Instant.now();
+                    duration = Duration.between(startTime, endTime);
+                    seconds = (int) duration.getSeconds();
+
+                    updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
+                            worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+
+                    if(!isTerminationConditionByUser(worldDefinition)  && !(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun)){
+                        break;
+                    }
+                    sleepForAWhile(SLEEP_TIME);
+                }
                 if(isCanceled){
-                    System.out.println( "1 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
                     if(isTerminationConditionByUser(worldDefinition)){
                         progressMassage = "Done!";
                     }
@@ -102,56 +137,31 @@ public class RunSimulationImpl implements RunSimulation {
                     }
                     updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
                             worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+                    System.out.println( "2 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
                     break;
                 }
-                entitiesToKill.clear();
-                actionsList.clear();
-                for (Rule rule : getActiveRules(tick, worldDefinition)) {
-                    actionsList.addAll(rule.getActionsToPerform());
-                }
-
-                entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill, tick);
-
-                tick++;
-                endTime = Instant.now();
-                duration = Duration.between(startTime, endTime);
-                seconds = (int) duration.getSeconds();
-
-                updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
-                        worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
-
-                if(!isTerminationConditionByUser(worldDefinition)  && !(tick <= numOfTicksToRun && seconds <= numOfSecondsToRun)){
-                    break;
-                }
-                sleepForAWhile(SLEEP_TIME);
             }
-            if(isCanceled){
-                if(isTerminationConditionByUser(worldDefinition)){
-                    progressMassage = "Done!";
-                }
-                else{
-                    progressMassage = "Canceled!";
-                }
-                updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
-                        worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
-                System.out.println( "2 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
-                break;
-            }
+        }
+        catch (Exception e) {
+            progressMassage = "terminated because of an error!";
+            updateDtoSimulationProgressForUi(seconds, tick, progressMassage,
+                    worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+            errorHappened  = true;
         }
 
 
-        int[] terminationCausePair=new int[4];
+        int[] terminationCausePair=new int[3];
         terminationCausePair[0]=tick;
         terminationCausePair[1]=seconds;
 
-        if(isCanceled) {terminationCausePair[3]=2;} //by user
+        if(isCanceled) {terminationCausePair[2]=2;} //by user
+        else if(errorHappened){terminationCausePair[2]=3;} //error
         else{
             if(tick>numOfTicksToRun){terminationCausePair[3]=0;} //last tick
             else {terminationCausePair[3]=1;} //time ran out
             progressMassage = "Done!";
             updateDtoSimulationProgressForUi(seconds-1, tick-1, progressMassage,
                     worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
-
         }
 
         return terminationCausePair;
