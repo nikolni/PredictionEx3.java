@@ -14,6 +14,8 @@ import system.engine.world.rule.api.Rule;
 import system.engine.world.rule.context.Context;
 import system.engine.world.rule.context.ContextImpl;
 import system.engine.world.termination.condition.impl.ByUserTerminationConditionImpl;
+import system.engine.world.termination.condition.impl.TicksTerminationConditionImpl;
+import system.engine.world.termination.condition.impl.TimeTerminationConditionImpl;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -76,8 +78,21 @@ public class RunSimulationImpl implements RunSimulation {
         int numOfSecondsToRun = 0;
         boolean errorHappened = false;
         if(!isTerminationConditionByUser(worldDefinition)){
-             numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
-             numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
+            if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().size()==2){
+                numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
+                numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
+            }
+            else{
+                if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0) instanceof TimeTerminationConditionImpl){
+                    numOfSecondsToRun=worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0).getTerminationCondition();
+                    numOfTicksToRun=Integer.MAX_VALUE;
+                }
+                else if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0) instanceof TicksTerminationConditionImpl){
+                    numOfTicksToRun=worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0).getTerminationCondition();
+                    numOfSecondsToRun=Integer.MAX_VALUE;
+                }
+            }
+
         }
 
         String progressMassage ;
