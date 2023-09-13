@@ -77,7 +77,12 @@ public class RunSimulationImpl implements RunSimulation {
         int numOfTicksToRun = 0;
         int numOfSecondsToRun = 0;
         boolean errorHappened = false;
-        if(!isTerminationConditionByUser(worldDefinition)){
+
+        if(!isTerminationConditionByUser(worldDefinition)) {
+            numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
+            numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
+        }
+        /*if(!isTerminationConditionByUser(worldDefinition)){
             if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().size()==2){
                 numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
                 numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
@@ -92,8 +97,7 @@ public class RunSimulationImpl implements RunSimulation {
                     numOfSecondsToRun=Integer.MAX_VALUE;
                 }
             }
-
-        }
+        }*/
 
         String progressMassage ;
 

@@ -61,11 +61,11 @@ public class DecreaseAction extends AbstractAction implements NumericVerify {
                 propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), iResult);
                 break;
             case FLOAT:
-                Float f1 = Type.FLOAT.convert(propertyInstance.getValue());
-                Float f2 = (Float) (expression.evaluateExpression(context));
+                Float f1 = Float.parseFloat(propertyInstance.getValue().toString());
+                Float f2 = Float.parseFloat(expression.evaluateExpression(context).toString());
                 Float fResult = f1 - f2;
                 if(propertyInstance.getPropertyDefinition().doesHaveRange()){
-                    Float fMinRange = (Float)propertyInstance.getPropertyDefinition().getRange().get(0);
+                    Float fMinRange = Float.parseFloat(propertyInstance.getPropertyDefinition().getRange().get(0).toString());
                     if(fResult < fMinRange){
                         fResult = fMinRange;
                     }

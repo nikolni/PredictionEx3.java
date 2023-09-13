@@ -59,8 +59,10 @@ public class EnvironmentVariableController {
                     case "STRING":
                         break;
                     case "BOOLEAN":
-                        if(! Boolean.parseBoolean(input)) {
-                            invalidBoolean = true;
+                        if(!(input.equals("false") || input.equals("False") || input.equals("FALSE"))) {
+                            if (!Boolean.parseBoolean(input)) {
+                                invalidBoolean = true;
+                            }
                         }
                         break;
                 }

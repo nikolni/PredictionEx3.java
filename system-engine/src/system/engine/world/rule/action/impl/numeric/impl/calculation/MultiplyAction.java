@@ -55,11 +55,11 @@ public class MultiplyAction extends CalculationAction {
                 propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), iResult);
                 break;
             case FLOAT:
-                Float f1 = (Float)(expression1.evaluateExpression(context));
-                Float f2 = (Float)(expression2.evaluateExpression(context));
+                Float f1 = Float.parseFloat(expression1.evaluateExpression(context).toString());
+                Float f2 = Float.parseFloat(expression2.evaluateExpression(context).toString());
                 Float fResult = f1 * f2;
                 if(propertyInstance.getPropertyDefinition().doesHaveRange()){
-                    Float fMaxRange = (Float)propertyInstance.getPropertyDefinition().getRange().get(1);
+                    Float fMaxRange = Float.parseFloat(propertyInstance.getPropertyDefinition().getRange().get(1).toString());
                     if(fResult > fMaxRange){
                         fResult = fMaxRange;
                     }

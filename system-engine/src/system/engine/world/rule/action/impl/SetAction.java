@@ -59,11 +59,11 @@ public class SetAction extends AbstractAction {
 
                         break;
                     case FLOAT:
-                        Float fMinRange = (Float) propertyInstance.getPropertyDefinition().getRange().get(0);
-                        Float fMaxRange = (Float) propertyInstance.getPropertyDefinition().getRange().get(1);
-                        if ((Float) expressionVal > fMaxRange) {
+                        Float fMinRange = Float.parseFloat(propertyInstance.getPropertyDefinition().getRange().get(0).toString());
+                        Float fMaxRange = Float.parseFloat(propertyInstance.getPropertyDefinition().getRange().get(1).toString());
+                        if (Float.parseFloat(expressionVal.toString()) > fMaxRange) {
                             expressionVal = fMaxRange;
-                        } else if ((Float) expressionVal < fMinRange) {
+                        } else if (Float.parseFloat(expressionVal.toString()) < fMinRange) {
                             expressionVal = fMinRange;
                         }
                         break;
