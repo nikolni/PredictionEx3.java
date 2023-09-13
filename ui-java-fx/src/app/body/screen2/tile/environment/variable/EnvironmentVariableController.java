@@ -46,6 +46,7 @@ public class EnvironmentVariableController {
             String input = valueTextField.getText();
             String envVarType = envVarTypeLabel.getText();
             boolean inputValid = true;
+            boolean invalidBoolean = false;
 
             try {
                 switch (envVarType) {
@@ -58,11 +59,16 @@ public class EnvironmentVariableController {
                     case "STRING":
                         break;
                     case "BOOLEAN":
-                        Boolean.parseBoolean(input);
+                        if(! Boolean.parseBoolean(input)) {
+                            invalidBoolean = true;
+                        }
                         break;
                 }
             } catch (NumberFormatException e) {
                 inputValid = false;
+            }
+            if(invalidBoolean){
+                return false;
             }
 
             return inputValid;

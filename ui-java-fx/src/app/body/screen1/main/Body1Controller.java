@@ -125,7 +125,7 @@ public class Body1Controller{
             } else if (selectedItem.getValue().equals("Termination conditions")) {
                 handleTerminationConditionsSelection(selectedItem);
                 //detailsTreeView.getRoot().setExpanded(false);
-            } else if (selectedItem.getValue().equals("Environment Variables")) {
+            } else if (selectedItem.getValue().equals("Environment variables")) {
                 handleEnvironmentVariablesSelection(selectedItem);
             }
             else if (selectedItem.getValue().equals("World grid sizes")) {
@@ -147,6 +147,7 @@ public class Body1Controller{
             worldGridSizesController.setColumnsLabel(columns.toString());
             worldGridSizesController.setPopulationLabel(maxPopulationQuantity.toString());
 
+            detailsFlowPane.getChildren().clear();
             detailsFlowPane.getChildren().add(singleNode);
         }catch (IOException e) {
             throw new RuntimeException(e);
@@ -391,7 +392,6 @@ public class Body1Controller{
     }
 
     private void createTerminationConditionsChildrenInFlowPane(List<TerminationConditionsDTO> terminationConditionsDTOList) {
-        System.out.println("Termination conditions:");
         try{
             for(TerminationConditionsDTO terminationConditionsDTO : terminationConditionsDTOList) {
                 FXMLLoader loader = new FXMLLoader();
