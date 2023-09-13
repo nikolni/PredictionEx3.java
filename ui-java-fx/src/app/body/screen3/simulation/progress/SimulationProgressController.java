@@ -1,11 +1,10 @@
 package app.body.screen3.simulation.progress;
 import app.body.screen3.main.Body3Controller;
 import app.body.screen3.simulation.progress.task.UpdateUiTask;
-import dto.api.DTOEntitiesAfterSimulationByQuantityForUi;
-import dto.api.DTOSimulationEndingForUi;
 import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
+import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
+import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,7 +14,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import system.engine.api.SystemEngineAccess;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -32,7 +30,8 @@ public class SimulationProgressController {
     @FXML
     private ProgressBar ticksProgressBar;
     @FXML
-    private ProgressBar secondsProgressBar;    @FXML
+    private ProgressBar secondsProgressBar;
+    @FXML
     private Label totalSecondsLabel;
 
     @FXML
@@ -79,27 +78,35 @@ public class SimulationProgressController {
         secondsLabel.textProperty().bind(Bindings.format("%,d", uiTask.getSecondsPastProperty()));
         //entitiesLeftLabel.textProperty().bind(Bindings.format("%,d", uiTask.getEntitiesLeftProperty()));
         ticksLabel.textProperty().bind(Bindings.format("%,d", uiTask.getTicksPastProperty()));
-        secondsProgressBar.progressProperty().bind(uiTask.secondsPast.divide((double) totalSeconds));
-        secondsPercentLabel.textProperty().bind(
-                Bindings.concat(
-                        Bindings.format(
-                                "%.0f",
-                                Bindings.multiply(
-                                        secondsProgressBar.progressProperty(),
-                                        100)),
-                        " %"));
+        if(systemEngine.getTerminationConditions().get(0) instanceof TimeTerminationConditionsDTOImpl  ||
+                ( systemEngine.getTerminationConditions().size() == 2 && systemEngine.getTerminationConditions().get(1) instanceof TimeTerminationConditionsDTOImpl)){
+            secondsProgressBar.progressProperty().bind(uiTask.secondsPast.divide((double) totalSeconds));
+            secondsPercentLabel.textProperty().bind(
+                    Bindings.concat(
+                            Bindings.format(
+                                    "%.0f",
+                                    Bindings.multiply(
+                                            secondsProgressBar.progressProperty(),
+                                            100)),
+                            " %"));
+        }
+        else{
+            secondsProgressBar.setDisable(true);
+            secondsPercentLabel.setDisable(true);
+        }
+
     }
 
     public void bindUiTaskToUiUpLevelComponents(Task<Boolean> uiTask) {
         // task message
         progressMassageLabel.textProperty().bind(uiTask.messageProperty());
 
-        if (systemEngine.getTerminationConditions() instanceof ByUserTerminationConditionDTOImpl) {
+        if (systemEngine.getTerminationConditions().get(0) instanceof ByUserTerminationConditionDTOImpl) {
             ticksProgressBar.setDisable(true);
             secondsProgressBar.setDisable(true);
             ticksPercentLabel.setDisable(true);
             secondsPercentLabel.setDisable(true);
-        } else {
+        } else if(systemEngine.getTerminationConditions().get(0) instanceof TicksTerminationConditionsDTOImpl) {
             // task progress bar
             ticksProgressBar.progressProperty().bind(uiTask.progressProperty());
 
@@ -113,6 +120,10 @@ public class SimulationProgressController {
                                             100)),
                             " %"));
 
+        }
+        else{
+            ticksProgressBar.setDisable(true);
+            ticksPercentLabel.setDisable(true);
         }
     }
 
