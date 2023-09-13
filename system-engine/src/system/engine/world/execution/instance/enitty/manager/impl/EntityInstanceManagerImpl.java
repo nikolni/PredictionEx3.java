@@ -24,7 +24,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private final WorldGrid worldGrid;
     private final EntityDefinitionManager entityDefinitionManager;
   
-    private Map<Integer,Integer> NumOfEntitiesLeftByTicks;
+    private final Map<Integer,Integer> NumOfEntitiesLeftByTicks;
 
 
 
@@ -68,7 +68,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         changeGridByKillEntity(newEntityInstance,derivedEntityInstance);
         instances.add(newEntityInstance);
 
-        boolean foundMatchProperty=false;
+        boolean foundMatchProperty;
         for (PropertyDefinition propertyDefinition : entityDefinitionToCreate.getProps()) {
             foundMatchProperty=false;
             for(PropertyDefinition derivedPropertyDefinition:derivedEntityInstance.getEntityDefinition().getProps()){

@@ -35,6 +35,7 @@ import system.engine.world.execution.instance.property.api.PropertyInstance;
 import system.engine.world.rule.enums.Type;
 import system.engine.world.termination.condition.api.TerminationCondition;
 import system.engine.world.termination.condition.impl.TicksTerminationConditionImpl;
+import system.engine.world.termination.condition.impl.TimeTerminationConditionImpl;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -232,6 +233,17 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         }
         return 0;
     }
+    @Override
+    public int getTotalSecondsNumber(){
+        List<TerminationCondition> terminationConditionList =  worldDefinition.getTerminationConditionsManager().getTerminationConditionsList();
+        for(TerminationCondition terminationCondition: terminationConditionList){
+            if(terminationCondition instanceof TimeTerminationConditionImpl){
+                return terminationCondition.getTerminationCondition();
+            }
+        }
+        return 0;
+    }
+
 
     /*@Override
     public List<DTOSimulationEndingForUi> getDTOSimulationEndingForUiList() {

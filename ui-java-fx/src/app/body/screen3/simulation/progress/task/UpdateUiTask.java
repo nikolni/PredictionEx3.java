@@ -16,10 +16,11 @@ public class UpdateUiTask extends Task<Boolean> {
     private final SimulationProgressController currentSimulationController;
     private final SystemEngineAccess systemEngine;
     private final Integer simulationID;
-    private final SimpleIntegerProperty secondsPast;
+    public final SimpleIntegerProperty secondsPast;
     private final SimpleIntegerProperty ticksPast;
     private final SimpleIntegerProperty entitiesLeft;
     private final Integer totalTicksNumber;
+    private final Integer totalSecondsNumber;
 
     public UpdateUiTask(SimulationProgressController currentSimulationController, SystemEngineAccess systemEngine, Integer simulationID) {
         this.currentSimulationController = currentSimulationController;
@@ -31,6 +32,7 @@ public class UpdateUiTask extends Task<Boolean> {
         this.entitiesLeft = new SimpleIntegerProperty(0);
         //this.isPaused =  new SimpleBooleanProperty(false);
         this.totalTicksNumber = systemEngine.getTotalTicksNumber();
+        this.totalSecondsNumber = systemEngine.getTotalSecondsNumber();
     }
 
     @Override
@@ -53,18 +55,16 @@ public class UpdateUiTask extends Task<Boolean> {
     public SimpleIntegerProperty getTicksPastProperty() {
         return ticksPast;
     }
-    public SimpleIntegerProperty getEntitiesLeftProperty() {
-        return entitiesLeft;
-    }
 
     public void updateSimulationProgress(DTOSimulationProgressForUi dtoSimulationProgressForUi) {
         updateMessage(dtoSimulationProgressForUi.getProgressMassage());
         if (!(systemEngine.getTerminationConditions() instanceof ByUserTerminationConditionDTOImpl)) {
             updateProgress(dtoSimulationProgressForUi.getTicksPast(), totalTicksNumber);
-        } else {
-            updateProgress(dtoSimulationProgressForUi.getTicksPast(), totalTicksNumber);
+            //updateProgress(dtoSimulationProgressForUi.getSecondsPast(), totalSecondsNumber);
         }
         Platform.runLater(() -> {
+            currentSimulationController.setTotalTicksLabel(totalTicksNumber.toString());
+            currentSimulationController.setTotalSecondsLabel(totalSecondsNumber.toString());
             currentSimulationController.setRerunButtonDisable(true);
             ticksPast.set(dtoSimulationProgressForUi.getTicksPast());
             secondsPast.set(dtoSimulationProgressForUi.getSecondsPast());
