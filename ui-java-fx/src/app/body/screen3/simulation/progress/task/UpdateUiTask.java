@@ -58,7 +58,7 @@ public class UpdateUiTask extends Task<Boolean> {
 
     public void updateSimulationProgress(DTOSimulationProgressForUi dtoSimulationProgressForUi) {
         updateMessage(dtoSimulationProgressForUi.getProgressMassage());
-        if (!(systemEngine.getTerminationConditions() instanceof ByUserTerminationConditionDTOImpl)) {
+        if (!(systemEngine.getTerminationConditions().get(0) instanceof ByUserTerminationConditionDTOImpl)) {
             updateProgress(dtoSimulationProgressForUi.getTicksPast(), totalTicksNumber);
             //updateProgress(dtoSimulationProgressForUi.getSecondsPast(), totalSecondsNumber);
         }

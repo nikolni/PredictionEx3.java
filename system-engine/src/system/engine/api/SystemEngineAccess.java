@@ -8,6 +8,7 @@ import system.engine.world.termination.condition.api.TerminationCondition;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 public interface SystemEngineAccess {
 
@@ -41,11 +42,11 @@ public interface SystemEngineAccess {
                                                                                       String entityName,String propertyName);
     DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID);
     void addTaskToQueue(Runnable runSimulationRunnable);
-    public DTOThreadsPoolStatusForUi getThreadsPoolStatus();
+     DTOThreadsPoolStatusForUi getThreadsPoolStatus();
     DTOWorldGridForUi getDTOWorldGridForUi();
     void pauseSimulation(int simulationID);
     void resumeSimulation(int simulationID);
     void cancelSimulation(int simulationID);
-    TerminationConditionsDTO getTerminationConditions();
+    List<TerminationConditionsDTO> getTerminationConditions();
     DTORerunValuesForUi getValuesForRerun(Integer simulationID);
 }

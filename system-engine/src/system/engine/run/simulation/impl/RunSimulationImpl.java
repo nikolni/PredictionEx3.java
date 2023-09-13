@@ -14,6 +14,7 @@ import system.engine.world.rule.api.Rule;
 import system.engine.world.rule.context.Context;
 import system.engine.world.rule.context.ContextImpl;
 import system.engine.world.termination.condition.impl.ByUserTerminationConditionImpl;
+import system.engine.world.termination.condition.impl.TicksTerminationConditionImpl;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -175,8 +176,20 @@ public class RunSimulationImpl implements RunSimulation {
             if(tick>numOfTicksToRun){terminationCausePair[2]=0;} //last tick
             else {terminationCausePair[2]=1;} //time ran out
             progressMassage = "Done!";
-            updateDtoSimulationProgressForUi(secondsRun-1, tick-1, progressMassage,
-                    worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+            if(secondsRun > 0 && tick >0){
+                updateDtoSimulationProgressForUi(secondsRun-1, tick-1, progressMassage,
+                        worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+            }
+            else{
+                if(secondsRun == 0  && tick >0){
+                    updateDtoSimulationProgressForUi(secondsRun, tick-1, progressMassage,
+                            worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+                }
+                else{
+                    updateDtoSimulationProgressForUi(secondsRun-1, tick, progressMassage,
+                            worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
+                }
+            }
         }
 
         return terminationCausePair;
@@ -260,12 +273,23 @@ public class RunSimulationImpl implements RunSimulation {
 
 
     private int getNumOfTicksToRun(WorldDefinition worldDefinition) {
-        return worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0).getTerminationCondition();
+        if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0) instanceof TicksTerminationConditionImpl){
+            return worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0).getTerminationCondition();
+        }
+        return 0;
     }
 
 
     private int getNumOfSecondsToRun(WorldDefinition worldDefinition) {
-        return worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(1).getTerminationCondition();
+        if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0) instanceof TicksTerminationConditionImpl){
+            if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().size() == 2){
+                return worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(1).getTerminationCondition();
+            }
+        }
+        else{
+            return worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0).getTerminationCondition();
+        }
+        return 0;
     }
 
 

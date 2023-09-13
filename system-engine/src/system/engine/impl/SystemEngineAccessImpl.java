@@ -281,9 +281,9 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
-    public TerminationConditionsDTO getTerminationConditions() {
+    public List<TerminationConditionsDTO> getTerminationConditions() {
         return new CreateDTODefinitionsForUi().getData(worldDefinition).
-                getTerminationConditionsDTOManager().getTerminationConditionsDTOList().get(0);
+                getTerminationConditionsDTOManager().getTerminationConditionsDTOList();
     }
     @Override
     public DTORerunValuesForUi getValuesForRerun(Integer simulationID){
