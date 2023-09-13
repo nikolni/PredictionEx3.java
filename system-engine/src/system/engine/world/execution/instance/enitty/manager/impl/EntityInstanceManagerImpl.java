@@ -27,6 +27,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private final Map<Integer,Integer> NumOfEntitiesLeftByTicks;
 
 
+
     public EntityInstanceManagerImpl(EntityDefinitionManager entityDefinitionManager, WorldGrid worldGrid) {
         this.entityDefinitionManager = entityDefinitionManager;
         count = 0;
@@ -56,6 +57,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     @Override
     public void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate,EntityInstance entityInstanceToKill) {
         EntityInstance newEntityInstance=create(entityDefinitionToCreate, this.worldGrid);
+        newEntityInstance.getEntityDefinition().setPopulation(entitiesPopulationAfterSimulationRunning.get(newEntityInstance.getEntityDefinition().getUniqueName()) + 1);
         updateMembersAfterNewEntity(entityDefinitionToCreate);
         changeGridByKillEntity(newEntityInstance,entityInstanceToKill);
     }
@@ -64,6 +66,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     public void createEntityInstanceFromDerived(EntityDefinition entityDefinitionToCreate, EntityInstance derivedEntityInstance) {
         count++;
         EntityInstance newEntityInstance = new EntityInstanceImpl(entityDefinitionToCreate, count, worldGrid);
+        newEntityInstance.getEntityDefinition().setPopulation(entitiesPopulationAfterSimulationRunning.get(newEntityInstance.getEntityDefinition().getUniqueName()) + 1);
         changeGridByKillEntity(newEntityInstance,derivedEntityInstance);
         instances.add(newEntityInstance);
 
@@ -89,7 +92,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     }
     @Override
     public void updateMembersAfterNewEntity(EntityDefinition entityDefinitionToCreate){
-        entityDefinitionToCreate.setPopulation(entityDefinitionToCreate.getPopulation()+1);
+        //entityDefinitionToCreate.setPopulation(entityDefinitionToCreate.getPopulation()+1);
         entitiesPopulationAfterSimulationRunning.put(entityDefinitionToCreate.getUniqueName(),
                 entityDefinitionToCreate.getPopulation());
         instancesBeforeKill.add(instances.get(instances.size()-1));
@@ -160,9 +163,13 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     public void killEntity(int id) {
         String entityDefinitionName = instances.get(id - 1).getEntityDefinition().getUniqueName();
         int oldPopulation = entitiesPopulationAfterSimulationRunning.get(entityDefinitionName);
+
+        instances.get(id - 1).getEntityDefinition().setPopulation(oldPopulation-1);
+
         List<EntityInstance> entitiesInstanceByNameList=entityInstanceByEntityDef.get(entityDefinitionName);
         if(entitiesInstanceByNameList!=null)
             entitiesInstanceByNameList.remove(instances.get(id-1));
+
         entitiesPopulationAfterSimulationRunning.put(entityDefinitionName, oldPopulation - 1);
         instancesBeforeKill.set(id -1, instances.get(id-1));
         instances.set(id-1, null);
