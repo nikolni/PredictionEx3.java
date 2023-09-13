@@ -102,7 +102,7 @@ public class ExpFuncName extends AbstractExpressionImpl {
 
         Object wholeNumValue = wholeNumExp.evaluateExpression(context);
         Object percentNumValue = percentNumExp.evaluateExpression(context);
-        return ((float)percentNumValue / 100) * (float) wholeNumValue;
+        return (Float.parseFloat(percentNumValue.toString()) / 100) * Float.parseFloat(wholeNumValue.toString());
     }
 
     private Float ticks(String propertyByEntity, Context context) {
