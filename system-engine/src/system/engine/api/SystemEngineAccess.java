@@ -34,6 +34,7 @@ public interface SystemEngineAccess {
     DTOSimulationEndingForUi runSimulation(Integer simulationID) ;
 
     int getTotalTicksNumber();
+    int getTotalSecondsNumber();
 
    // List<DTOSimulationEndingForUi> getDTOSimulationEndingForUiList();
     DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogramByNames(Integer simulationID,

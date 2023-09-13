@@ -32,6 +32,12 @@
     -fx-border-radius: 2px;
 }
 
+.my-label-no-background {
+    -fx-font-size: 12px;
+    -fx-padding: 4px;
+    -fx-border-radius: 2px;
+}
+
 .my-gridPane {
     -fx-alignment: center;
     -fx-padding: 10px;

@@ -7,10 +7,12 @@ import app.main.AppController;
 import dto.api.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import system.engine.api.SystemEngineAccess;
 
 import java.io.IOException;
@@ -89,6 +91,7 @@ public class Body3Controller {
             simulationProgressComponentController.setSystemEngine(systemEngine);
             simulationProgressComponentController.setSimulationIdLabel(simulationID.toString());
             simulationProgressComponentController.setSimulationID(simulationID);
+            simulationProgressComponentController.setTotalSeconds(systemEngine.getTotalSecondsNumber());
             simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
             simulationProgressComponentController.bindUiTaskToUiDownLevelComponents(updateUiTask);
 
@@ -117,6 +120,7 @@ public class Body3Controller {
 
 
     public void createAndAddNewSimulationResultToList(DTOSimulationEndingForUi dtoSimulationEndingForUi) {
+
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/body/screen3/result/results.fxml"));
             HBox simulationResultNode = loader.load();
@@ -125,13 +129,44 @@ public class Body3Controller {
             simulationResultController.setSystemEngine(systemEngine);
             simulationResultController.primaryInitialize();
             Integer simulationID = dtoSimulationEndingForUi.getSimulationID();
+            Integer simulationEndReason = dtoSimulationEndingForUi.getTerminationReason()[2];
+            createEndSimulationWindow(simulationID, simulationEndReason);
             simulationResultsNodesMap.put(simulationID, simulationResultNode);
             simulationResultControllersMap.put(simulationID, simulationResultController);
-            //simulationResultsNodesList.set(simulationID -1, simulationResultNode);
-            //simulationResultsControllerList.add(simulationResultController);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String createEndReasonString(Integer simulationEndReason){
+        String massage = null;
+        switch (simulationEndReason){
+            case 0:
+                massage = "last tick";
+                break;
+            case 1:
+                massage = "last second";
+                break;
+            case 2:
+                massage = "user";
+                break;
+            case 3:
+                massage = "an errors";
+                break;
+        }
+        return massage;
+    }
+    public void createEndSimulationWindow(Integer simulationID, Integer simulationEndReason){
+        Stage primaryStage = new Stage();
+        String message = "Simulation #" + simulationID + " is over because of " + createEndReasonString(simulationEndReason);
+
+        Label label = new Label(message);
+        StackPane root = new StackPane(label);
+        Scene scene = new Scene(root, 225, 100);
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("End simulation");
+        primaryStage.show();
     }
 
     public void updateQueueManagementInAppMain(){
