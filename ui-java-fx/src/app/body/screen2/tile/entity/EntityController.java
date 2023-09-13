@@ -54,14 +54,10 @@ public class EntityController {
         return true;
     }
 
-
-
-
     public void setEntityNameLabel(String entityNameLabel) {
         this.entityNameLabel.setText(entityNameLabel);
     }
-
-
+    public void setPopulationTextField(String value){populationTextField.setText(value);}
     public void setCallerController(Body2Controller callerController) {
         this.callerController = callerController;
     }

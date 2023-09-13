@@ -3,8 +3,8 @@ package system.engine.world.impl;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.definition.entity.manager.api.EntityDefinitionManager;
 import system.engine.world.definition.environment.variable.api.EnvVariablesDefinitionManager;
+import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.grid.api.WorldGrid;
-import system.engine.world.grid.impl.WorldGridImpl;
 import system.engine.world.rule.manager.api.RuleDefinitionManager;
 import system.engine.world.termination.condition.manager.api.TerminationConditionsManager;
 
@@ -40,22 +40,25 @@ public class WorldDefinitionImpl implements WorldDefinition {
     public EnvVariablesDefinitionManager getEnvVariablesDefinitionManager() {
         return envVariablesDefinitionManager;
     }
+
     public RuleDefinitionManager getRuleDefinitionManager(){return ruleDefinitionManager;}
 
     public TerminationConditionsManager getTerminationConditionsManager(){return terminationConditionsManager;}
 
     @Override
-    public WorldInstanceImpl createWorldInstance(int id) {
-        return new WorldInstanceImpl(this, id, worldGrid);
+    public WorldInstanceImpl createWorldInstance(int id, EnvVariablesInstanceManager envVariablesInstanceManager, EntityDefinitionManager entityDefinitionManager) {
+        return new WorldInstanceImpl(this, id, worldGrid, envVariablesInstanceManager, entityDefinitionManager);
     }
 
     @Override
-    public void addPopulationToEntitiesDefinition(Map<String, Integer> entityNameDefToPopulation){
+    public EntityDefinitionManager createNewEntitiesDefinitionsManagerWithPopulations(Map<String, Integer> entityNameDefToPopulation){
+        EntityDefinitionManager NewEntityDefinitionManager = entityDefinitionManager.copyFromMe();
         for (String key : entityNameDefToPopulation.keySet()) {
             if(entityNameDefToPopulation.get(key) != null){
-                entityDefinitionManager.getEntityDefinitionByName(key).setPopulation(entityNameDefToPopulation.get(key));
+                NewEntityDefinitionManager.getEntityDefinitionByName(key).setPopulation(entityNameDefToPopulation.get(key));
             }
         }
+        return NewEntityDefinitionManager;
     }
 
     @Override

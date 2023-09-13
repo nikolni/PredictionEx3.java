@@ -1,9 +1,13 @@
 package system.engine.run.simulation.manager;
 
+import java.time.Instant;
+
 public class IsSimulationPaused {
     private boolean isPaused =true;
 
+
     public synchronized void pause() {
+
         while (isPaused) {
             try {
                 this.wait();
@@ -16,23 +20,4 @@ public class IsSimulationPaused {
         isPaused = false;
         this.notifyAll();
     }
- /*   public synchronized void pause() {
-        while (!isPaused) {
-            try {
-                this.wait();
-            } catch (InterruptedException e) {}
-        }
-        isPaused = false;
-        this.notifyAll();
-    }
-
-    public synchronized void resume() {
-        while (isPaused) {
-            try {
-                this.wait();
-            } catch (InterruptedException e) {}
-        }
-        isPaused = true;
-        this.notifyAll();
-    }*/
 }

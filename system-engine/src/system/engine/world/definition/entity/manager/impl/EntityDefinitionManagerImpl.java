@@ -15,7 +15,9 @@ public class EntityDefinitionManagerImpl implements EntityDefinitionManager {
     public EntityDefinitionManagerImpl() {
         definitions = new ArrayList<>();
     }
-
+    public EntityDefinitionManagerImpl(List<EntityDefinition> definitions) {
+        this.definitions = definitions;
+    }
     @Override
     public void addEntityDefinition(EntityDefinition entityDefinition) {
         definitions.add(entityDefinition);
@@ -40,7 +42,14 @@ public class EntityDefinitionManagerImpl implements EntityDefinitionManager {
     public EntityInstanceManager createEntityInstanceManager(WorldGrid worldGrid) {
         return new EntityInstanceManagerImpl(this, worldGrid);
     }
+    @Override
+    public EntityDefinitionManager copyFromMe(){
+        List<EntityDefinition> definitionsNew = new ArrayList<>();
+        for (EntityDefinition entityDefinition : definitions) {
+            definitionsNew.add(entityDefinition.copyFromMe());
+        }
 
-
+        return new EntityDefinitionManagerImpl(definitionsNew);
+    }
 }
 

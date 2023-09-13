@@ -22,17 +22,23 @@ import java.util.Map;
 public class SimulationProgressController {
 
     @FXML
-    private ProgressBar simulationProgressBar;
+    private Label ticksPercentLabel;
     @FXML
-    private Label PercentLabel;
+    private Label secondsPercentLabel;
     @FXML
     private Label simulationIdLabel;
     @FXML
     private Label progressMassageLabel;
     @FXML
-    private Label secondsLabel;
+    private ProgressBar ticksProgressBar;
     @FXML
-    private Label entitiesLeftLabel;
+    private ProgressBar secondsProgressBar;    @FXML
+    private Label totalSecondsLabel;
+
+    @FXML
+    private Label totalTicksLabel;
+    @FXML
+    private Label secondsLabel;
     @FXML
     private Label ticksLabel;
     @FXML
@@ -42,14 +48,20 @@ public class SimulationProgressController {
     @FXML
     private Button stopButton;
     @FXML
+    private Button rerunButton;
+    @FXML
     private GridPane entitiesLeftGridPane;
 
-    private int simulationID;
+    private int simulationID=0;
     private Body3Controller body3ComponentController;
     private SystemEngineAccess systemEngine;
+    private int totalSeconds;
 
     public void setSimulationID(int simulationID) {
         this.simulationID = simulationID;
+    }
+    public void setTotalSeconds(int totalSeconds) {
+        this.totalSeconds = totalSeconds;
     }
 
     public void setSystemEngine(SystemEngineAccess systemEngine) {
@@ -67,20 +79,32 @@ public class SimulationProgressController {
         secondsLabel.textProperty().bind(Bindings.format("%,d", uiTask.getSecondsPastProperty()));
         //entitiesLeftLabel.textProperty().bind(Bindings.format("%,d", uiTask.getEntitiesLeftProperty()));
         ticksLabel.textProperty().bind(Bindings.format("%,d", uiTask.getTicksPastProperty()));
+        secondsProgressBar.progressProperty().bind(uiTask.secondsPast.divide((double) totalSeconds));
+        secondsPercentLabel.textProperty().bind(
+                Bindings.concat(
+                        Bindings.format(
+                                "%.0f",
+                                Bindings.multiply(
+                                        secondsProgressBar.progressProperty(),
+                                        100)),
+                        " %"));
     }
+
     public void bindUiTaskToUiUpLevelComponents(Task<Boolean> uiTask) {
         // task message
         progressMassageLabel.textProperty().bind(uiTask.messageProperty());
 
         if (systemEngine.getTerminationConditions() instanceof ByUserTerminationConditionDTOImpl) {
-            simulationProgressBar.setDisable(true);
-            PercentLabel.setDisable(true);
+            ticksProgressBar.setDisable(true);
+            secondsProgressBar.setDisable(true);
+            ticksPercentLabel.setDisable(true);
+            secondsPercentLabel.setDisable(true);
         } else {
             // task progress bar
-            simulationProgressBar.progressProperty().bind(uiTask.progressProperty());
+            ticksProgressBar.progressProperty().bind(uiTask.progressProperty());
 
             // task percent label
-            PercentLabel.textProperty().bind(
+            ticksPercentLabel.textProperty().bind(
                     Bindings.concat(
                             Bindings.format(
                                     "%.0f",
@@ -89,17 +113,15 @@ public class SimulationProgressController {
                                             100)),
                             " %"));
 
-            // task cleanup upon finish
-        /*aTask.valueProperty().addListener((observable, oldValue, newValue) -> {
-            onTaskFinished(Optional.ofNullable(onFinish));
-        });*/
         }
     }
 
     public void onTaskFinished() {
         this.progressMassageLabel.textProperty().unbind();
-        this.PercentLabel.textProperty().unbind();
-        this.simulationProgressBar.progressProperty().unbind();
+        this.ticksPercentLabel.textProperty().unbind();
+        this.secondsPercentLabel.textProperty().unbind();
+        this.ticksProgressBar.progressProperty().unbind();
+        this.secondsProgressBar.progressProperty().unbind();
     }
 
     public void toggleTaskButtons(boolean isActive) {
@@ -107,8 +129,17 @@ public class SimulationProgressController {
         pauseButton.setDisable(!isActive);
         resumeButton.setDisable(!isActive);
     }
+    public void setButtonsDisableBeforeSimulationWasChosen(){
+        stopButton.setDisable(true);
+        pauseButton.setDisable(true);
+        resumeButton.setDisable(true);
+        rerunButton.setDisable(true);
+    }
 
 
+    public void setRerunButtonDisable(boolean isActive){
+        rerunButton.setDisable(!isActive);
+    }
     public void setPauseButtonDisable(boolean isActive){
         pauseButton.setDisable(!isActive);
     }
@@ -141,6 +172,11 @@ public class SimulationProgressController {
         onTaskFinished();
     }
 
+    @FXML
+    void onRerunClick(MouseEvent event) {
+        body3ComponentController.onRerunClick(simulationID);
+    }
+
     public void updateEntitiesLeftGridPane(Map<String, Integer> entitiesPopulationAfterSimulationRunning) {
         int row = 0;
         entitiesLeftGridPane.getChildren().clear();
@@ -155,5 +191,17 @@ public class SimulationProgressController {
 
     public void updateQueueManagementInAppMain(){
         body3ComponentController.updateQueueManagementInAppMain();
+    }
+    public boolean isSimulationWasChosen(){
+        return simulationID == 0;
+    }
+
+
+    public void setTotalSecondsLabel(String totalSecondsLabel) {
+        this.totalSecondsLabel.setText(totalSecondsLabel);
+    }
+
+    public void setTotalTicksLabel(String totalTicksLabel) {
+        this.totalTicksLabel.setText(totalTicksLabel);
     }
 }

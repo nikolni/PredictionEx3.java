@@ -20,11 +20,16 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private final List<EntityInstance> instancesBeforeKill;
     private final Map<String, Integer> entitiesPopulationAfterSimulationRunning;
     private Map<String,List<EntityInstance>> entityInstanceByEntityDef;
-    private Map<Integer,Integer> NumOfEntitiesLeftByTicks;
-    private WorldGrid worldGrid;
+
+    private final WorldGrid worldGrid;
+    private final EntityDefinitionManager entityDefinitionManager;
+  
+    private final Map<Integer,Integer> NumOfEntitiesLeftByTicks;
+
 
 
     public EntityInstanceManagerImpl(EntityDefinitionManager entityDefinitionManager, WorldGrid worldGrid) {
+        this.entityDefinitionManager = entityDefinitionManager;
         count = 0;
         instances = new ArrayList<>();
         instancesBeforeKill = new ArrayList<>();
@@ -63,7 +68,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         changeGridByKillEntity(newEntityInstance,derivedEntityInstance);
         instances.add(newEntityInstance);
 
-        boolean foundMatchProperty=false;
+        boolean foundMatchProperty;
         for (PropertyDefinition propertyDefinition : entityDefinitionToCreate.getProps()) {
             foundMatchProperty=false;
             for(PropertyDefinition derivedPropertyDefinition:derivedEntityInstance.getEntityDefinition().getProps()){
@@ -170,5 +175,8 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         return entitiesPopulationAfterSimulationRunning;
     }
 
-
+    @Override
+    public EntityDefinitionManager getEntityDefinitionManager() {
+        return entityDefinitionManager;
+    }
 }

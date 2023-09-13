@@ -57,13 +57,12 @@ public class ProximityAction extends AbstractAction {
         if(targetEntityInstance != null){
             for(Action action : actionsCollection){
                 if(action instanceof ReplaceAction  || action instanceof ProximityAction){
+                    context.setSecondEntityInstance(null);
                     action.executeAction(context);
                 }
                 else{
-                    Context newContext = new ContextImpl(context.getPrimaryEntityInstance(),targetEntityInstance,
-                            context.getEnvVariablesInstanceManager(),context.getEntitiesToKill(),
-                            context.getTickNumber(), context.getEntityInstanceManager());
-                    action.executeAction(newContext);
+                    context.setSecondEntityInstance(targetEntityInstance);
+                    action.executeAction(context);
                 }
             }
         }

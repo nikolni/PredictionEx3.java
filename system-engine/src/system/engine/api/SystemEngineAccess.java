@@ -2,6 +2,8 @@ package system.engine.api;
 
 import dto.api.*;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
+import system.engine.world.definition.entity.manager.api.EntityDefinitionManager;
+import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.termination.condition.api.TerminationCondition;
 
 import javax.xml.bind.JAXBException;
@@ -15,7 +17,7 @@ public interface SystemEngineAccess {
     DTODefinitionsForUi getDefinitionsDataFromSE();
     DTOEnvVarsDefForUi getEVDFromSE();
 
-    DTOEnvVarsInsForUi getEVIFromSE();
+   // DTOEnvVarsInsForUi getEVIFromSE();
     DTOSimulationsTimeRunDataForUi getSimulationsTimeRunDataFromSE();
 
     DTOEntitiesAfterSimulationByQuantityForUi getEntitiesDataAfterSimulationRunningByQuantity(Integer simulationID);
@@ -25,13 +27,14 @@ public interface SystemEngineAccess {
     DTONamesListForUi getPropertiesNames(int entityDefinitionIndex );
     DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogram(Integer simulationID,
                                                                                int entityDefinitionIndex,int propertyIndex);
-    void updateEntitiesPopulation(DTOPopulationValuesForSE dtoPopulationValuesForSE);
-    void updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE);
-    void addWorldInstance(Integer simulationID);
+    EntityDefinitionManager updateEntitiesPopulation(DTOPopulationValuesForSE dtoPopulationValuesForSE);
+    EnvVariablesInstanceManager updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE);
+    void addWorldInstance(Integer simulationID, EnvVariablesInstanceManager envVariablesInstanceManager, EntityDefinitionManager entityDefinitionManager);
 
     DTOSimulationEndingForUi runSimulation(Integer simulationID) ;
 
     int getTotalTicksNumber();
+    int getTotalSecondsNumber();
 
    // List<DTOSimulationEndingForUi> getDTOSimulationEndingForUiList();
     DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogramByNames(Integer simulationID,
@@ -44,4 +47,5 @@ public interface SystemEngineAccess {
     void resumeSimulation(int simulationID);
     void cancelSimulation(int simulationID);
     TerminationConditionsDTO getTerminationConditions();
+    DTORerunValuesForUi getValuesForRerun(Integer simulationID);
 }
