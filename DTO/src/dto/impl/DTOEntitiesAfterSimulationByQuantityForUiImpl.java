@@ -13,6 +13,7 @@ public class DTOEntitiesAfterSimulationByQuantityForUiImpl implements DTOEntitie
     private Map<Integer,Integer> entitiesLeftByTicks;
 
 
+
     public DTOEntitiesAfterSimulationByQuantityForUiImpl(List<String> entitiesNames, List<Integer> entitiesPopulationBeforeSimulation,
                                                          List<Integer> entitiesPopulationAfterSimulation,Map<Integer,Integer> entitiesLeftByTicks){
         this.entitiesNames =entitiesNames;

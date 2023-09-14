@@ -28,7 +28,6 @@ import system.engine.world.definition.value.generator.api.ValueGeneratorFactory;
 import system.engine.world.definition.value.generator.impl.random.impl.bool.RandomBooleanValueGenerator;
 import system.engine.world.definition.value.generator.impl.random.impl.numeric.RandomFloatGenerator;
 import system.engine.world.definition.value.generator.impl.random.impl.string.RandomStringGenerator;
-import system.engine.world.execution.instance.enitty.api.EntityInstance;
 import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.execution.instance.environment.impl.EnvVariablesInstanceManagerImpl;
 import system.engine.world.execution.instance.property.api.PropertyInstance;
@@ -255,6 +254,13 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
                                                                                              String entityName,String propertyName) {
         return new CreateDTOPropertyHistogramForUi().getData(simulationIdToWorldInstance.get(simulationID), entityName, propertyName);
     }
+
+    @Override
+    public DTOEntityPropertyConsistency getConsistencyDTOByEntityPropertyName(Integer simulationID,
+                                                                           String entityName, String propertyName){
+        return new CreateDTOEntityPropertyConsistency().getData(simulationIdToWorldInstance.get(simulationID), entityName, propertyName);
+    }
+
 
     @Override
     public DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID){

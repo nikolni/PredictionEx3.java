@@ -109,6 +109,8 @@ public class ResultsController {
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
 
+        yAxis.setTickUnit(1.0);
+
         // Create the bar chart
         BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
         xAxis.setLabel("property value");
@@ -131,6 +133,10 @@ public class ResultsController {
     public LineChart<Number, Number> createEntitiesByTickGraph(SystemEngineAccess systemEngine,int simulationID) {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
+
+        xAxis.setTickUnit(1.0);
+        yAxis.setTickUnit(1.0);
+
         LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
 
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
@@ -171,13 +177,13 @@ public class ResultsController {
 
         entityPropTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue!=null && newValue.isLeaf())
-                handleSelectedItemChange(newValue,systemEngine,simulationID);
+                handleSelectedProperty(newValue,systemEngine,simulationID);
         });
     }
 
 
 
-    public void handleSelectedItemChange(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID){
+    public void handleSelectedProperty(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID){
         viewComboBox.setVisible(true);
 
         BarChart<String, Number> histogram = createHistogram(selectedItem,systemEngine,simulationID);
@@ -185,8 +191,10 @@ public class ResultsController {
 
         if(systemEngine.getDefinitionsDataFromSE().getPropertyDefinitionByName(selectedItem.getParent().getValue(),selectedItem.getValue()).getType().toLowerCase().equals("float"))
             PropertyAverageValueLabel.setText(String.valueOf(calculatePropertyAverage(simulationID,selectedItem.getParent().getValue(),selectedItem.getValue())));
+        else
+            PropertyAverageValueLabel.setText("Property's ype is not numeric");
 
-
+        ConsistencyValueLabel.setText(String.valueOf(systemEngine.getConsistencyDTOByEntityPropertyName(simulationID,selectedItem.getParent().getValue(),selectedItem.getValue()).getConsistency()));
 
     }
 

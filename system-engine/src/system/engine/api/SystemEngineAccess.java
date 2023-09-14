@@ -40,6 +40,12 @@ public interface SystemEngineAccess {
    // List<DTOSimulationEndingForUi> getDTOSimulationEndingForUiList();
     DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogramByNames(Integer simulationID,
                                                                                       String entityName,String propertyName);
+
+
+
+    DTOEntityPropertyConsistency getConsistencyDTOByEntityPropertyName(Integer simulationID,
+                                                                       String entityName, String propertyName);
+
     DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID);
     void addTaskToQueue(Runnable runSimulationRunnable);
      DTOThreadsPoolStatusForUi getThreadsPoolStatus();

@@ -9,6 +9,13 @@ public interface EntityInstance {
     PropertyInstance getPropertyByName(String name);
 
     EntityDefinition getEntityDefinition();
+
+
+
+    void createConsistencyMapInSingleEntityInstance();
+
+    Float getPropertyConsistencyByName(String PropertyName);
+
     void addPropertyInstance(PropertyInstance propertyInstance);
     Integer getRow() ;
     Integer getColumns();
