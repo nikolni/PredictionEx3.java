@@ -18,6 +18,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private int count;   //all instances of all entities
     private final List<EntityInstance> instances;
     private final List<EntityInstance> instancesBeforeKill;
+    private List<Float> entitiesConsistencyList;
     private final Map<String, Integer> entitiesPopulationAfterSimulationRunning;
     private Map<String,List<EntityInstance>> entityInstanceByEntityDef;
 
@@ -33,6 +34,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         count = 0;
         instances = new ArrayList<>();
         instancesBeforeKill = new ArrayList<>();
+        this.entitiesConsistencyList=new ArrayList<>();
         entitiesPopulationAfterSimulationRunning = new HashMap<>();
         entityInstanceByEntityDef=new HashMap<>();
         NumOfEntitiesLeftByTicks=new HashMap<>();
@@ -49,6 +51,17 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
                 .collect(Collectors.groupingBy(entityInstance -> entityInstance.getEntityDefinition().getUniqueName()));
         NumOfEntitiesLeftByTicks.put(0,instances.size());
     }
+    @Override
+    public Float getConsistencyByEntityAndPropertyName(String entityName,String propertyName){
+        float sum=0.0f;
+        List<EntityInstance> entityInstanceList=entityInstanceByEntityDef.get(entityName);
+        for(EntityInstance entityInstance:entityInstanceList){
+            if(entityInstance!=null)
+                sum+=entityInstance.getPropertyConsistencyByName(propertyName);
+        }
+        return sum/entitiesPopulationAfterSimulationRunning.get(entityName);
+    }
+
     @Override
     public void setNumOfEntitiesLestByTicks(Integer currentTick, Integer numOfInstances){
         NumOfEntitiesLeftByTicks.put(currentTick,numOfInstances);

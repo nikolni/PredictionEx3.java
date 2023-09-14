@@ -25,6 +25,9 @@ public interface EntityInstanceManager {
 
     Map<Integer, Integer> getNumOfEntitiesLeftByTicks();
 
+
+    Float getConsistencyByEntityAndPropertyName(String entityName, String propertyName);
+
     void setNumOfEntitiesLestByTicks(Integer currentTick, Integer numOfInstances);
 
     void createEntityInstanceFromScratch(EntityDefinition entityDefinitionToCreate, EntityInstance entityInstanceToKill);
