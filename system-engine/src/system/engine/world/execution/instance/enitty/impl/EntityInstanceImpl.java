@@ -18,6 +18,8 @@ public class EntityInstanceImpl extends AbstractEntityLocationInWorld implements
     private final EntityDefinition entityDefinition;
     private final int id;
     private final Map<String, PropertyInstance> properties;
+    private final Map<String, Float> propertiesConsistency;
+
     private final EntityLocationInWorld entityLocationInWorld;
     private final WorldGrid worldGrid;
 
@@ -25,6 +27,7 @@ public class EntityInstanceImpl extends AbstractEntityLocationInWorld implements
         this.entityDefinition = entityDefinition;
         this.id = id;
         properties = new HashMap<>();
+        propertiesConsistency=new HashMap<>();
         entityLocationInWorld  = new EntityLocationInWorldImpl(worldGrid, this);
         this.worldGrid = worldGrid;
     }
@@ -45,6 +48,16 @@ public class EntityInstanceImpl extends AbstractEntityLocationInWorld implements
         }
 
         return properties.get(name);
+    }
+    @Override
+    public void createConsistencyMapInSingleEntityInstance(){
+        for (Map.Entry<String, PropertyInstance> entry : properties.entrySet())
+           propertiesConsistency.put(entry.getKey(),entry.getValue().calculatePropertyAverage());
+    }
+
+    @Override
+    public Float getPropertyConsistencyByName(String PropertyName){
+       return propertiesConsistency.get(PropertyName);
     }
 
     @Override
