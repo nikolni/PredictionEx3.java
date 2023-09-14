@@ -11,6 +11,11 @@
     -fx-font-weight: BOLD;
     -fx-background-color: GREEN;
 }
+.button-with-shape{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+}
 
 #queue-man-button{
     -fx-text-fill: WHITE;
