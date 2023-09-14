@@ -76,6 +76,7 @@ public class HeaderController {
     private AppController mainController;
     private Stage primaryStage;
     private boolean activeAnimations = true;
+    private Animations animations;
 
 
     public void setSystemEngine(SystemEngineAccess systemEngineAccess){
@@ -93,6 +94,7 @@ public class HeaderController {
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty();
         isFileSelected = new SimpleBooleanProperty(false);
+        this.animations = new Animations();
     }
 
     @FXML
@@ -116,7 +118,7 @@ public class HeaderController {
         String absolutePath = selectedFile.getAbsolutePath();
         try {
             systemEngine.getXMLFromUser(absolutePath);
-            startFadeTransition(animationCircle, true);
+            animations.startFadeTransition(animationCircle, true);
         } catch(RuntimeException | JAXBException | FileNotFoundException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
@@ -135,43 +137,19 @@ public class HeaderController {
     void onDetailsButtonClick(ActionEvent event) {
         mainController.onDetailsButtonClick();
         if(activeAnimations){
-            startFillTransition();
+            animations.startFillTransition(detailsRec);
         }
 
     }
-    private void startFillTransition(){
-        FillTransition ft = new FillTransition(Duration.millis(2000), detailsRec, Color.GREY, Color.PINK);
 
-        ft.setCycleCount(4);
-        ft.setAutoReverse(true);
-        ft.play();
-    }
 
     @FXML
     void onNewExecutionButtonClick(ActionEvent event) {
         mainController.onNewExecutionButtonClick();
         if(activeAnimations){
-            startFadeTransition(executionRec, false);
+            animations.startFadeTransition(executionRec, false);
         }
     }
-
-    private void startFadeTransition(Shape shape, boolean longer){
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), shape);
-        fadeTransition.setFromValue(1.0); // Fully visible
-        fadeTransition.setToValue(0.2);   // 20% opacity
-
-        if(longer){
-            fadeTransition.setCycleCount(6);
-        }
-        else{
-            fadeTransition.setCycleCount(4);
-        }
-        fadeTransition.setAutoReverse(true); // Reverse the animation
-        fadeTransition.play();
-    }
-
-
-
 
     public void setCurrentlyExecutingLabel(String currentlyExecutingLabel) {
         this.valueCurrentlyExecutingLabel.setText(currentlyExecutingLabel);
@@ -185,48 +163,11 @@ public class HeaderController {
         this.valueOverLabel.setText(overLabel);
     }
 
-    private void startPathTransition(){
-        Line path = new Line();
-        path.setStartX(0);
-        path.setStartY(0);
-        path.setEndX(0);
-        path.setEndY(60); // Adjust the Y coordinate to control the vertical movement
-
-        // Create PathTransition animations for label pairs
-        PathTransition transition01 = createPathTransition(waitingLabel, valueWaitingLabel, path);
-        PathTransition transition02 = createPathTransition(currentlyExecutingLabel, valueCurrentlyExecutingLabel, path);
-        PathTransition transition03 = createPathTransition(overLabel, valueOverLabel, path);
-
-        // Set the cycle count and auto-reverse for animations
-        transition01.setCycleCount(2);
-        transition02.setCycleCount(2);
-        transition03.setCycleCount(2);
-
-        transition01.setAutoReverse(true);
-        transition02.setAutoReverse(true);
-        transition03.setAutoReverse(true);
-
-        transition01.play();
-        transition02.setDelay(Duration.seconds(1.0)); // Delay by 1 second
-        transition02.play();
-        transition03.setDelay(Duration.seconds(2)); // Delay by 2 seconds
-        transition03.play();
-    }
-
-    private PathTransition createPathTransition(Label label1, Label label2, Line path) {
-        PathTransition transition = new PathTransition();
-        transition.setDuration(Duration.seconds(2.0)); // Set the duration
-        transition.setPath(path);
-        transition.setNode(label1);
-        transition.setNode(label2);
-        return transition;
-    }
-
     @FXML
     void onResultButtonClick(ActionEvent event) {
         mainController.onResultButtonClick();
         if(activeAnimations){
-            startPathTransition();
+            animations.startPathTransition(valueWaitingLabel, valueCurrentlyExecutingLabel, valueOverLabel);
             Insets labelMargins = new Insets(20, 0, 0, 0);
             GridPane.setMargin(valueWaitingLabel, labelMargins);
             GridPane.setMargin(valueCurrentlyExecutingLabel, labelMargins);
@@ -237,6 +178,6 @@ public class HeaderController {
     @FXML
     void onCircleClick(MouseEvent event) {
         activeAnimations = !activeAnimations;
-        startFadeTransition(animationCircle, false);
+        animations.startFadeTransition(animationCircle, false);
     }
 }
