@@ -264,21 +264,40 @@ public class RunSimulationImpl implements RunSimulation {
                             action.executeAction(context);
                         }
                     }
+                    addNewEntitiesToKillList(entitiesToKill, currentEntitiesToKill);
                 }
                 if (primaryEntityInstance.getRow() != null) {
                     primaryEntityInstance.moveEntityInWorld();
                 }
 
-                entitiesToKill.addAll(currentEntitiesToKill);
+                //entitiesToKill.addAll(currentEntitiesToKill);
                 primaryEntityInstance.createConsistencyMapInSingleEntityInstance();
             }
 
-            }
+        }
 
         for(EntityInstance entityInstance : entitiesToKill){
             worldInstance.getEntityInstanceManager().killEntity(entityInstance.getId());
         }
         return entitiesToKill.size();
+    }
+
+    private void addNewEntitiesToKillList(List<EntityInstance> entitiesToKill, List<EntityInstance> currentEntitiesToKill){
+        List<EntityInstance> entitiesToKillCopy = new ArrayList<>();
+        entitiesToKillCopy.addAll(entitiesToKill);
+
+        boolean alreadyInList = false;
+        for(EntityInstance currentEntityInstance : currentEntitiesToKill){
+            for(EntityInstance entityInstance : entitiesToKillCopy){
+                if(entityInstance.getId() == currentEntityInstance.getId()){
+                    alreadyInList = true;
+                    break;
+                }
+            }
+            if(!alreadyInList){
+                entitiesToKill.add(currentEntityInstance);
+            }
+        }
     }
 
     private void updateDtoSimulationProgressForUi(Integer seconds, Integer tick, String progressMassage,
