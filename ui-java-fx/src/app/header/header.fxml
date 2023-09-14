@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
 <GridPane fx:id="headerComponent" alignment="TOP_CENTER" stylesheets="@header.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.header.HeaderController">
@@ -31,32 +30,25 @@
                   <Insets left="10.0" right="10.0" />
                </HBox.margin>
             </Label>
-            <StackPane fx:id="queueManagementStackPane" maxWidth="1.7976931348623157E308" styleClass="background" stylesheets="@header.css">
+            <GridPane fx:id="queueManagementGridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="background" stylesheets="@header.css">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="125.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="64.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
                <children>
-                  <GridPane fx:id="queueManagementGridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@header.css">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="125.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="64.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label fx:id="waitingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="Waiting to be executed" GridPane.halignment="CENTER" />
-                        <Label fx:id="overLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="Over" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                        <Label fx:id="currentlyExecutingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="Currently underway" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label fx:id="valueWaitingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-                        <Label fx:id="valueCurrentlyExecutingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                        <Label fx:id="valueOverLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                     </children>
-                  </GridPane>
+                  <Label fx:id="waitingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="Waiting to be executed" GridPane.halignment="CENTER" />
+                  <Label fx:id="overLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="Over" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <Label fx:id="currentlyExecutingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="Currently underway" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <Label fx:id="valueWaitingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                  <Label fx:id="valueCurrentlyExecutingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <Label fx:id="valueOverLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                </children>
-               <HBox.margin>
-                  <Insets bottom="3.0" right="-5.0" top="3.0" />
-               </HBox.margin>
-            </StackPane>
+            </GridPane>
          </children>
          <padding>
             <Insets left="10.0" right="10.0" />
