@@ -8,11 +8,13 @@ public final class WorldGridImpl implements WorldGrid {
     private final Integer gridRows;
     private final Integer gridColumns;
     private final EntityInstance[][] worldGrid;
+    private int numOfLocationsLeft;
 
 
     public WorldGridImpl(Integer gridRows, Integer gridColumns) {
         this.gridRows = gridRows;
         this.gridColumns = gridColumns;
+        this.numOfLocationsLeft = gridRows * gridColumns;
 
         this.worldGrid = new EntityInstance[gridRows][gridColumns];
         for (int i = 0; i < gridRows; i++) {
@@ -33,6 +35,11 @@ public final class WorldGridImpl implements WorldGrid {
     @Override
     public void setPosition(Integer row, Integer column, EntityInstance entityInstance){
         worldGrid[row][column] = entityInstance;
+        if(entityInstance == null){
+            numOfLocationsLeft++;
+        } else {
+            numOfLocationsLeft--;
+        }
     }
     @Override
     public Boolean isPositionAvailable(Integer row, Integer column){
@@ -113,4 +120,9 @@ public final class WorldGridImpl implements WorldGrid {
         private boolean isAtEdge(int row, int col, int numRows, int numCols) {
             return row == 0 || row == numRows - 1 || col == 0 || col == numCols - 1;
         }
+
+        @Override
+    public int getNumOfLocationsLeft() {
+        return numOfLocationsLeft;
+    }
 }

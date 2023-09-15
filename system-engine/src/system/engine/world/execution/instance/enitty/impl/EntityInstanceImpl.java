@@ -89,7 +89,9 @@ public class EntityInstanceImpl extends AbstractEntityLocationInWorld implements
         int[] directionArr = {0,0,0,0};
 
         EntityLocationInWorld desirableEntityLocationInWorld = new EntityLocationInWorldImpl(worldGrid, this);
-        worldGrid.setPosition(desirableEntityLocationInWorld.getRow(), desirableEntityLocationInWorld.getColumn(), null);
+        if(desirableEntityLocationInWorld.getRow() != null){
+            worldGrid.setPosition(desirableEntityLocationInWorld.getRow(), desirableEntityLocationInWorld.getColumn(), null);
+        }
 
         Boolean stillLooking = true;
 
