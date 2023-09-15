@@ -118,7 +118,9 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     }
     @Override
     public void changeGridByKillEntity(EntityInstance newEntityInstance, EntityInstance killEntityInstance){
-        worldGrid.setPosition(newEntityInstance.getRow(),newEntityInstance.getColumns(),null);
+        if(newEntityInstance.getRow() != null) {
+            worldGrid.setPosition(newEntityInstance.getRow(), newEntityInstance.getColumns(), null);
+        }
         worldGrid.setPosition(killEntityInstance.getRow(),killEntityInstance.getColumns(),newEntityInstance);
         newEntityInstance.setRow(killEntityInstance.getRow());
         newEntityInstance.setColumns(killEntityInstance.getColumns());
