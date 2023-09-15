@@ -78,7 +78,12 @@ public class RunSimulationImpl implements RunSimulation {
         int numOfTicksToRun = 0;
         int numOfSecondsToRun = 0;
         boolean errorHappened = false;
-        if(!isTerminationConditionByUser(worldDefinition)){
+
+        if(!isTerminationConditionByUser(worldDefinition)) {
+            numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
+            numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
+        }
+        /*if(!isTerminationConditionByUser(worldDefinition)){
             if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().size()==2){
                 numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
                 numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
@@ -93,8 +98,7 @@ public class RunSimulationImpl implements RunSimulation {
                     numOfSecondsToRun=Integer.MAX_VALUE;
                 }
             }
-
-        }
+        }*/
 
         String progressMassage ;
 
@@ -260,21 +264,40 @@ public class RunSimulationImpl implements RunSimulation {
                             action.executeAction(context);
                         }
                     }
+                    addNewEntitiesToKillList(entitiesToKill, currentEntitiesToKill);
                 }
                 if (primaryEntityInstance.getRow() != null) {
                     primaryEntityInstance.moveEntityInWorld();
                 }
 
-                entitiesToKill.addAll(currentEntitiesToKill);
+                //entitiesToKill.addAll(currentEntitiesToKill);
                 primaryEntityInstance.createConsistencyMapInSingleEntityInstance();
             }
 
-            }
+        }
 
         for(EntityInstance entityInstance : entitiesToKill){
             worldInstance.getEntityInstanceManager().killEntity(entityInstance.getId());
         }
         return entitiesToKill.size();
+    }
+
+    private void addNewEntitiesToKillList(List<EntityInstance> entitiesToKill, List<EntityInstance> currentEntitiesToKill){
+        List<EntityInstance> entitiesToKillCopy = new ArrayList<>();
+        entitiesToKillCopy.addAll(entitiesToKill);
+
+        boolean alreadyInList = false;
+        for(EntityInstance currentEntityInstance : currentEntitiesToKill){
+            for(EntityInstance entityInstance : entitiesToKillCopy){
+                if(entityInstance.getId() == currentEntityInstance.getId()){
+                    alreadyInList = true;
+                    break;
+                }
+            }
+            if(!alreadyInList){
+                entitiesToKill.add(currentEntityInstance);
+            }
+        }
     }
 
     private void updateDtoSimulationProgressForUi(Integer seconds, Integer tick, String progressMassage,

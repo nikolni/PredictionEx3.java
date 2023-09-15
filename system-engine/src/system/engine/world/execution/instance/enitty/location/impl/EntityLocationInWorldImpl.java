@@ -10,14 +10,16 @@ public class EntityLocationInWorldImpl extends AbstractEntityLocationInWorld imp
     private final EntityInstance entityInstance;
 
 
-    private Integer row;
-    private Integer column;
+    private Integer row = null;
+    private Integer column= null;
 
 
     public EntityLocationInWorldImpl(WorldGrid worldGrid, EntityInstance entityInstance) {
         this.worldGrid =worldGrid;
         this.entityInstance =entityInstance;
-        lotteryPosition();
+        if(worldGrid.getNumOfLocationsLeft() > 0){
+            lotteryPosition();
+        }
     }
 
     private void lotteryPosition() {

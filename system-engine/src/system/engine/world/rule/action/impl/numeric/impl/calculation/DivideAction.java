@@ -33,14 +33,14 @@ public class DivideAction extends CalculationAction {
             throw new IllegalArgumentException("can't cast one of expression value to type of property " + resultPropName);
         }
 
-        Float f1 = (Float)(expression1.evaluateExpression(context));
-        Float f2 = (Float)(expression2.evaluateExpression(context));
+        Float f1 = Float.parseFloat(expression1.evaluateExpression(context).toString());
+        Float f2 = Float.parseFloat(expression2.evaluateExpression(context).toString());
         if(f2 == 0f){
             throw new IllegalArgumentException("can't divide by zero!");
         }
         Float fResult = f1 / f2;
         if(propertyInstance.getPropertyDefinition().doesHaveRange()){
-            Float fMinRange = (Float)propertyInstance.getPropertyDefinition().getRange().get(0);
+            Float fMinRange = Float.parseFloat(propertyInstance.getPropertyDefinition().getRange().get(0).toString());;
             if(fResult < fMinRange){
                 fResult = fMinRange;
             }

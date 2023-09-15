@@ -9,6 +9,7 @@ public class ExpFreeValue extends AbstractExpressionImpl{
 
     public ExpFreeValue(String expressionStrParam, EntityInstance expressionEntityInstance) {
         super(expressionStrParam, expressionEntityInstance);
+        boolean validBoolean = true;
         try{
             expressionValue = Integer.parseInt(expressionStr);
         }
@@ -18,12 +19,17 @@ public class ExpFreeValue extends AbstractExpressionImpl{
             }
             catch (Exception exception2)
             {
-                try{
-                    expressionValue = Boolean.parseBoolean(expressionStr);
-                }
-                catch (Exception exception3)
-                {
+                if(expressionStr.equals("false") || expressionStr.equals("False") || expressionStr.equals("FALSE")) {
                     expressionValue = expressionStr;
+                }
+                else{
+                    validBoolean = Boolean.parseBoolean(expressionStr);
+                    if(!validBoolean){
+                        expressionValue = expressionStr;
+                    }
+                    else{
+                        expressionValue ="true";
+                    }
                 }
             }
         }

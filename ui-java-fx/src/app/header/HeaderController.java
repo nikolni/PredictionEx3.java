@@ -1,7 +1,9 @@
 package app.header;
 
 import app.main.AppController;
-import javafx.beans.binding.Bindings;
+import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
+import javafx.animation.PathTransition;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -9,14 +11,23 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import system.engine.api.SystemEngineAccess;
 
 import javax.xml.bind.JAXBException;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import javafx.scene.shape.Rectangle;
+import javafx.geometry.Insets;
 
 public class HeaderController {
 
@@ -40,8 +51,6 @@ public class HeaderController {
     private Label valueWaitingLabel;
     @FXML
     private GridPane queueManagementGridPane;
-
-
     @FXML
     private Label valueOverLabel;
     @FXML
@@ -52,12 +61,22 @@ public class HeaderController {
     private Button resultButtonClick;
     @FXML
     private Label selectedFileNameLabel;
+    @FXML
+    private Rectangle detailsRec;
+    @FXML
+    private Rectangle executionRec;
+    @FXML
+    private Rectangle resultsRec;
+    @FXML
+    private Circle animationCircle;
 
     private SystemEngineAccess systemEngine;
     private SimpleStringProperty selectedFileProperty;
     private SimpleBooleanProperty isFileSelected;
     private AppController mainController;
     private Stage primaryStage;
+    private boolean activeAnimations = true;
+    private Animations animations;
 
 
     public void setSystemEngine(SystemEngineAccess systemEngineAccess){
@@ -75,6 +94,7 @@ public class HeaderController {
     public HeaderController() {
         selectedFileProperty = new SimpleStringProperty();
         isFileSelected = new SimpleBooleanProperty(false);
+        this.animations = new Animations();
     }
 
     @FXML
@@ -87,8 +107,6 @@ public class HeaderController {
 
     @FXML
     void onLoadFileButtonClick(ActionEvent event) {
-
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select XML file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files", "*.xml"));
@@ -100,6 +118,7 @@ public class HeaderController {
         String absolutePath = selectedFile.getAbsolutePath();
         try {
             systemEngine.getXMLFromUser(absolutePath);
+            animations.startFadeTransition(animationCircle, true);
         } catch(RuntimeException | JAXBException | FileNotFoundException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
@@ -117,14 +136,20 @@ public class HeaderController {
     @FXML
     void onDetailsButtonClick(ActionEvent event) {
         mainController.onDetailsButtonClick();
+        if(activeAnimations){
+            animations.startFillTransition(detailsRec);
+        }
 
     }
+
 
     @FXML
     void onNewExecutionButtonClick(ActionEvent event) {
         mainController.onNewExecutionButtonClick();
+        if(activeAnimations){
+            animations.startFadeTransition(executionRec, false);
+        }
     }
-
 
     public void setCurrentlyExecutingLabel(String currentlyExecutingLabel) {
         this.valueCurrentlyExecutingLabel.setText(currentlyExecutingLabel);
@@ -141,6 +166,18 @@ public class HeaderController {
     @FXML
     void onResultButtonClick(ActionEvent event) {
         mainController.onResultButtonClick();
+        if(activeAnimations){
+            animations.startPathTransition(valueWaitingLabel, valueCurrentlyExecutingLabel, valueOverLabel);
+            Insets labelMargins = new Insets(20, 0, 0, 0);
+            GridPane.setMargin(valueWaitingLabel, labelMargins);
+            GridPane.setMargin(valueCurrentlyExecutingLabel, labelMargins);
+            GridPane.setMargin(valueOverLabel, labelMargins);
+        }
     }
 
+    @FXML
+    void onCircleClick(MouseEvent event) {
+        activeAnimations = !activeAnimations;
+        animations.startFadeTransition(animationCircle, false);
+    }
 }

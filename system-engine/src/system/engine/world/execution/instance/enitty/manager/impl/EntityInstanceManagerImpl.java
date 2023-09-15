@@ -118,7 +118,9 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     }
     @Override
     public void changeGridByKillEntity(EntityInstance newEntityInstance, EntityInstance killEntityInstance){
-        worldGrid.setPosition(newEntityInstance.getRow(),newEntityInstance.getColumns(),null);
+        if(newEntityInstance.getRow() != null) {
+            worldGrid.setPosition(newEntityInstance.getRow(), newEntityInstance.getColumns(), null);
+        }
         worldGrid.setPosition(killEntityInstance.getRow(),killEntityInstance.getColumns(),newEntityInstance);
         newEntityInstance.setRow(killEntityInstance.getRow());
         newEntityInstance.setColumns(killEntityInstance.getColumns());
@@ -181,6 +183,9 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
 
         List<EntityInstance> entitiesInstanceByNameList=entityInstanceByEntityDef.get(entityDefinitionName);
         if(entitiesInstanceByNameList!=null)
+            if (instances.get(id - 1).getRow() != null) {
+                worldGrid.setPosition(instances.get(id - 1).getRow(),instances.get(id - 1).getColumns(),null);
+            }
             entitiesInstanceByNameList.remove(instances.get(id-1));
 
         entitiesPopulationAfterSimulationRunning.put(entityDefinitionName, oldPopulation - 1);
