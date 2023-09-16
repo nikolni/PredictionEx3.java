@@ -50,9 +50,9 @@ public class MultiplyAction extends CalculationAction {
                         iResult = iMaxRange;
                     }
                 }
-
-                propertyInstance.setValue(iResult);
                 propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), iResult);
+                propertyInstance.setValue(iResult);
+
                 break;
             case FLOAT:
                 Float f1 = Float.parseFloat(expression1.evaluateExpression(context).toString());
@@ -64,9 +64,9 @@ public class MultiplyAction extends CalculationAction {
                         fResult = fMaxRange;
                     }
                 }
-
-                propertyInstance.setValue(fResult);
                 propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), fResult);
+                propertyInstance.setValue(fResult);
+
                 break;
         }
 

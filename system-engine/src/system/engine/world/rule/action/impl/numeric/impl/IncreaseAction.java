@@ -55,8 +55,9 @@ public class IncreaseAction extends AbstractAction implements NumericVerify {
                         iResult = iMaxRange;
                     }
                 }
-                propertyInstance.setValue(iResult);
                 propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(),iResult);
+                propertyInstance.setValue(iResult);
+
                 break;
             case FLOAT:
                 Float f1 = Float.parseFloat(propertyInstance.getValue().toString());
@@ -68,9 +69,9 @@ public class IncreaseAction extends AbstractAction implements NumericVerify {
                         fResult = fMaxRange;
                     }
                 }
-
-                propertyInstance.setValue(fResult);
                 propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), fResult);
+                propertyInstance.setValue(fResult);
+
                 break;
         }
 
