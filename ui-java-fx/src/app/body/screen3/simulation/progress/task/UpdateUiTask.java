@@ -60,7 +60,6 @@ public class UpdateUiTask extends Task<Boolean> {
         updateMessage(dtoSimulationProgressForUi.getProgressMassage());
         if (!(systemEngine.getTerminationConditions().get(0) instanceof ByUserTerminationConditionDTOImpl)) {
             updateProgress(dtoSimulationProgressForUi.getTicksPast(), totalTicksNumber);
-            //updateProgress(dtoSimulationProgressForUi.getSecondsPast(), totalSecondsNumber);
         }
         Platform.runLater(() -> {
             currentSimulationController.setTotalTicksLabel(totalTicksNumber.toString());

@@ -60,12 +60,23 @@ public class Body3Controller {
 
 
     public void primaryInitialize() {
+        simulationsList.getItems().clear();
+        simulationResultsNodesMap.clear();
+        simulationResultControllersMap.clear();
+        clearSimulationProgressScreen();
+        simulationResultScrollPane.setContent(null);
         simulationsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 handleSimulationListItemSelection(newValue);
             }
         });
         simulationProgressComponentController.setBody3ComponentController(this);
+    }
+    private void clearSimulationProgressScreen(){
+        if(oldUpdateUiThreadThread !=null && oldUpdateUiThreadThread.isAlive()){
+            oldUpdateUiThreadThread.interrupt();
+        }
+        simulationProgressComponentController.clearMyLabels();
     }
     public void setMainController(AppController mainController) {
         this.mainController = mainController;
