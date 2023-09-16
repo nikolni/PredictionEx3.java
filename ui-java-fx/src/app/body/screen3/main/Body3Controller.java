@@ -104,7 +104,6 @@ public class Body3Controller {
                 ResultsController resultsController = simulationResultControllersMap.get(simulationID);
                 resultsController.handleSimulationSelection(simulationID,systemEngine);
             }
-
         }
 
         public void setButtonsDisableIfThereIsNoSimulations(){
@@ -133,10 +132,18 @@ public class Body3Controller {
             createEndSimulationWindow(simulationID, simulationEndReason);
             simulationResultsNodesMap.put(simulationID, simulationResultNode);
             simulationResultControllersMap.put(simulationID, simulationResultController);
+
+            Object selectedItem = simulationsList.getSelectionModel().getSelectedItem();
+            String selectedString = selectedItem != null ? selectedItem.toString() : "";
+            if(selectedString.equals("Simulation ID: " + simulationID)){
+                simulationsList.getSelectionModel().clearSelection();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+
 
     private String createEndReasonString(Integer simulationEndReason){
         String massage = null;
