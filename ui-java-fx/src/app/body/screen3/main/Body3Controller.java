@@ -169,7 +169,7 @@ public class Body3Controller {
 
         Label label = new Label(message);
         StackPane root = new StackPane(label);
-        Scene scene = new Scene(root, 225, 100);
+        Scene scene = new Scene(root, 250, 100);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("End simulation");
