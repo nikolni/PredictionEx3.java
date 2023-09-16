@@ -44,8 +44,9 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
             for(int i = 0; i<entityDefinition.getPopulation(); i++) {
                 create(entityDefinition, this.worldGrid);
             }
+            Integer population = new Integer(entityDefinition.getPopulation());
             entitiesPopulationAfterSimulationRunning.put(entityDefinition.getUniqueName(),
-                    entityDefinition.getPopulation());
+                    population);
         }
         instancesBeforeKill.addAll(instances);
         entityInstanceByEntityDef = instances.stream()
@@ -203,7 +204,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         String entityDefinitionName = instances.get(id - 1).getEntityDefinition().getUniqueName();
         int oldPopulation = entitiesPopulationAfterSimulationRunning.get(entityDefinitionName);
 
-        instances.get(id - 1).getEntityDefinition().setPopulation(oldPopulation-1);
+        //instances.get(id - 1).getEntityDefinition().setPopulation(oldPopulation-1);
 
         List<EntityInstance> entitiesInstanceByNameList=entityInstanceByEntityDef.get(entityDefinitionName);
         if(entitiesInstanceByNameList!=null)
