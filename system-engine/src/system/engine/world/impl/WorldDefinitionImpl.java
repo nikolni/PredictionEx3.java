@@ -5,6 +5,7 @@ import system.engine.world.definition.entity.manager.api.EntityDefinitionManager
 import system.engine.world.definition.environment.variable.api.EnvVariablesDefinitionManager;
 import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.grid.api.WorldGrid;
+import system.engine.world.grid.impl.WorldGridImpl;
 import system.engine.world.rule.manager.api.RuleDefinitionManager;
 import system.engine.world.termination.condition.manager.api.TerminationConditionsManager;
 
@@ -47,7 +48,7 @@ public class WorldDefinitionImpl implements WorldDefinition {
 
     @Override
     public WorldInstanceImpl createWorldInstance(int id, EnvVariablesInstanceManager envVariablesInstanceManager, EntityDefinitionManager entityDefinitionManager) {
-        return new WorldInstanceImpl(this, id, worldGrid, envVariablesInstanceManager, entityDefinitionManager);
+        return new WorldInstanceImpl(this, id, new WorldGridImpl((worldGrid.getGridRows()), worldGrid.getGridColumns()), envVariablesInstanceManager, entityDefinitionManager);
     }
 
     @Override
