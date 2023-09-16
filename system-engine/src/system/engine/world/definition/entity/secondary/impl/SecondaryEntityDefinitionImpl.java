@@ -36,9 +36,15 @@ public class SecondaryEntityDefinitionImpl implements SecondaryEntityDefinition 
     }
 
     @Override
-    public List<EntityInstance> generateSecondaryEntityList(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager,Integer tickNumber) {
+    public List<EntityInstance> generateSecondaryEntityList(WorldInstance worldInstance, EnvVariablesInstanceManager envVariablesInstanceManager,Integer tickNumber,List<EntityInstance> deadEntities) {
         List<EntityInstance> entitiesToKill = new ArrayList<>();
         List<EntityInstance> allEntityInstancesOfDefinition = worldInstance.getEntityInstanceManager().getEntityInstanceByEntityDef().get(extendsEntityDefinition.getUniqueName());
+
+        for(EntityInstance entityInstance:allEntityInstancesOfDefinition){
+            if(deadEntities.contains(entityInstance))
+                allEntityInstancesOfDefinition.remove(entityInstance);
+        }
+
         if (count.equals("ALL"))
             return allEntityInstancesOfDefinition;
         else {

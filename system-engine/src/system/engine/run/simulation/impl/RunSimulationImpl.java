@@ -79,11 +79,11 @@ public class RunSimulationImpl implements RunSimulation {
         int numOfSecondsToRun = 0;
         boolean errorHappened = false;
 
-        if(!isTerminationConditionByUser(worldDefinition)) {
+        /*if(!isTerminationConditionByUser(worldDefinition)) {
             numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
             numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
-        }
-        /*if(!isTerminationConditionByUser(worldDefinition)){
+        }*/
+        if(!isTerminationConditionByUser(worldDefinition)){
             if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().size()==2){
                 numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
                 numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
@@ -98,7 +98,7 @@ public class RunSimulationImpl implements RunSimulation {
                     numOfSecondsToRun=Integer.MAX_VALUE;
                 }
             }
-        }*/
+        }
 
         String progressMassage ;
 
@@ -147,7 +147,7 @@ public class RunSimulationImpl implements RunSimulation {
                         actionsList.addAll(rule.getActionsToPerform());
                     }
 
-                    entitiesLeft -= runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill, tick);
+                    entitiesLeft = runAllActionsOnAllEntities(worldInstance, envVariablesInstanceManager, actionsList, entitiesToKill, tick);
                     updateDtoSimulationProgressForUi(secondsRun, tick, progressMassage,
                             worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
 
@@ -241,7 +241,7 @@ public class RunSimulationImpl implements RunSimulation {
                         Context context ;
                         //there is second entity
                         if(action.getSecondaryEntityDefinition() != null){
-                            List<EntityInstance> chosenSecondaryEntities=action.getSecondaryEntityDefinition().generateSecondaryEntityList(worldInstance,envVariablesInstanceManager, tickNumber);
+                            List<EntityInstance> chosenSecondaryEntities=action.getSecondaryEntityDefinition().generateSecondaryEntityList(worldInstance,envVariablesInstanceManager, tickNumber,entitiesToKill);
                             if(!chosenSecondaryEntities.isEmpty()){
                                 for(EntityInstance secondEntityInstance :chosenSecondaryEntities){
                                     context = new ContextImpl(primaryEntityInstance,secondEntityInstance, envVariablesInstanceManager,
@@ -279,7 +279,7 @@ public class RunSimulationImpl implements RunSimulation {
         for(EntityInstance entityInstance : entitiesToKill){
             worldInstance.getEntityInstanceManager().killEntity(entityInstance.getId());
         }
-        return entitiesToKill.size();
+        return worldInstance.getEntityInstanceManager().getWorldPopulation();
     }
 
     private void addNewEntitiesToKillList(List<EntityInstance> entitiesToKill, List<EntityInstance> currentEntitiesToKill){
@@ -311,9 +311,9 @@ public class RunSimulationImpl implements RunSimulation {
 
 
     private int getNumOfTicksToRun(WorldDefinition worldDefinition) {
-        if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0) instanceof TicksTerminationConditionImpl){
+        if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0) instanceof TicksTerminationConditionImpl)
             return worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0).getTerminationCondition();
-        }
+
         return 0;
     }
 

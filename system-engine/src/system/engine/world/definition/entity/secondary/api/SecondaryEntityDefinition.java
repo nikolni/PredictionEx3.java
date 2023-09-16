@@ -15,6 +15,6 @@ public interface SecondaryEntityDefinition {
 
      ConditionAction getSelectionCondition();
      List<EntityInstance> generateSecondaryEntityList(WorldInstance worldInstance,
-                                                      EnvVariablesInstanceManager envVariablesInstanceManager, Integer tickNumber);
+                                                      EnvVariablesInstanceManager envVariablesInstanceManager, Integer tickNumber,List<EntityInstance> deadEntities);
 
     }
