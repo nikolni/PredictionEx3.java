@@ -21,7 +21,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     private List<Float> entitiesConsistencyList;
     private final Map<String, Integer> entitiesPopulationAfterSimulationRunning;
     private Map<String,List<EntityInstance>> entityInstanceByEntityDef;
-
+    private Map<String,List<EntityInstance>> StartEntityInstanceByEntityDef;
     private final WorldGrid worldGrid;
     private final EntityDefinitionManager entityDefinitionManager;
   
@@ -38,6 +38,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         entitiesPopulationAfterSimulationRunning = new HashMap<>();
         entityInstanceByEntityDef=new HashMap<>();
         NumOfEntitiesLeftByTicks=new HashMap<>();
+        StartEntityInstanceByEntityDef=new HashMap<>();
         this.worldGrid=worldGrid;
         for (EntityDefinition entityDefinition: entityDefinitionManager.getDefinitions()){
             for(int i = 0; i<entityDefinition.getPopulation(); i++) {
@@ -49,22 +50,35 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         instancesBeforeKill.addAll(instances);
         entityInstanceByEntityDef = instances.stream()
                 .collect(Collectors.groupingBy(entityInstance -> entityInstance.getEntityDefinition().getUniqueName()));
+
         NumOfEntitiesLeftByTicks.put(0,instances.size());
+
+        StartEntityInstanceByEntityDef=instances.stream()
+                .collect(Collectors.groupingBy(entityInstance -> entityInstance.getEntityDefinition().getUniqueName()));
     }
     @Override
     public Float getConsistencyByEntityAndPropertyName(String entityName,String propertyName){
         float sum=0.0f;
-        List<EntityInstance> entityInstanceList=entityInstanceByEntityDef.get(entityName);
+        List<EntityInstance> entityInstanceList=StartEntityInstanceByEntityDef.get(entityName);
         for(EntityInstance entityInstance:entityInstanceList){
             if(entityInstance!=null)
                 sum+=entityInstance.getPropertyConsistencyByName(propertyName);
         }
-        return sum/entitiesPopulationAfterSimulationRunning.get(entityName);
+        if(entityInstanceList.size()!=0)
+            return sum/entityInstanceList.size();
+        return 0.0f;
     }
 
     @Override
     public void setNumOfEntitiesLestByTicks(Integer currentTick, Integer numOfInstances){
         NumOfEntitiesLeftByTicks.put(currentTick,numOfInstances);
+    }
+    @Override
+    public int getWorldPopulation(){
+        int sum=0;
+        for(int populationOfEntityDef:entitiesPopulationAfterSimulationRunning.values())
+            sum+=populationOfEntityDef;
+        return sum;
     }
 
     @Override
@@ -114,6 +128,12 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
             entityInstanceByEntityDef.put(entityDefinitionToCreate.getUniqueName(), new ArrayList<>());
         }
         List<EntityInstance> entityInstancesList = entityInstanceByEntityDef.get(entityDefinitionToCreate.getUniqueName());
+
+        if (!StartEntityInstanceByEntityDef.containsKey(entityDefinitionToCreate.getUniqueName())) {
+            StartEntityInstanceByEntityDef.put(entityDefinitionToCreate.getUniqueName(), new ArrayList<>());
+        }
+        List<EntityInstance> StartEntityInstancesList = StartEntityInstanceByEntityDef.get(entityDefinitionToCreate.getUniqueName());
+
         entityInstancesList.add(instances.get(instances.size()-1));
     }
     @Override
@@ -158,9 +178,13 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     public List<EntityInstance> getInstances() {
         return instances;
     }
-
+    @Override
     public Map<String, List<EntityInstance>> getEntityInstanceByEntityDef() {
         return entityInstanceByEntityDef;
+    }
+    @Override
+    public Map<String, List<EntityInstance>> getStartEntityInstanceByEntityDef() {
+        return StartEntityInstanceByEntityDef;
     }
 
     @Override

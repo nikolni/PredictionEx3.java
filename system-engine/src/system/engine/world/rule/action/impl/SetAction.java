@@ -37,8 +37,11 @@ public class SetAction extends AbstractAction {
             if (!verifySuitableType(propertyType, expressionVal)) {
                 throw new IllegalArgumentException("set action can't operate with expression type different from type of property " + propertyName);
             }
+
+
             propertyInstance.setLastTickNumberOfValueUpdate(context.getTickNumber(), expressionVal);
-            setPropertyValue(propertyInstance, expressionVal);
+            setPropertyValue(propertyInstance, expressionVal);           
+
 
 
         }
