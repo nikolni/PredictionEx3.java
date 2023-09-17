@@ -114,7 +114,7 @@ public class HeaderController {
         if (selectedFile == null) {
             return;
         }
-
+        boolean exceptionOccurred = false;
         String absolutePath = selectedFile.getAbsolutePath();
         try {
             systemEngine.getXMLFromUser(absolutePath);
@@ -122,14 +122,17 @@ public class HeaderController {
         } catch(RuntimeException | JAXBException | FileNotFoundException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
-            alert.setHeaderText("This is an error message.");
+            alert.setHeaderText("This is an error message - load other file");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
+            exceptionOccurred=true;
         }
-        selectedFileProperty.set(absolutePath);
-        isFileSelected.set(true);
+        if(!exceptionOccurred){
+            selectedFileProperty.set(absolutePath);
+            isFileSelected.set(true);
+            mainController.onLoadFileButtonClick();
+        }
 
-        mainController.onLoadFileButtonClick();
 
     }
 
