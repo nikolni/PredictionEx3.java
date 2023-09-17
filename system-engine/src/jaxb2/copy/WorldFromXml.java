@@ -2,6 +2,7 @@ package jaxb2.copy;
 
 
 import jaxb2.error.handling.validator.FileValidator;
+import jaxb2.error.handling.validator.PRDWorldValidator;
 import jaxb2.generated.PRDWorld;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.grid.api.WorldGrid;
@@ -22,8 +23,8 @@ public class WorldFromXml {
 
         PRDWorld PrdWorld = deserializeFrom(xmlPathName);
         //validation of PrdWorld
-       /* PRDWorldValidator prdWorldValidator=new PRDWorldValidator();
-        prdWorldValidator.validatePRDWorld(PrdWorld);*/
+        PRDWorldValidator prdWorldValidator=new PRDWorldValidator();
+        prdWorldValidator.validatePRDWorld(PrdWorld);
         return createWorldDefinitionFromPRDWorld(PrdWorld);
     }
 
