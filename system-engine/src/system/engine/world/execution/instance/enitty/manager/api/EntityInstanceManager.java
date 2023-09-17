@@ -41,4 +41,5 @@ public interface EntityInstanceManager {
     Map<String, Integer> getEntitiesPopulationAfterSimulationRunning();
     void updateMembersAfterNewEntity(EntityDefinition entityDefinitionToCreate);
     EntityDefinitionManager getEntityDefinitionManager();
+    WorldGrid getWorldGrid();
 }

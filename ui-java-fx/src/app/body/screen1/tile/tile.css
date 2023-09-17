@@ -7,7 +7,13 @@
 
 .my-label{
     -fx-text-fill: WHITE;
-    -fx-font-size: 12px;
+    -fx-font-size: 10px;
+    -fx-font-weight: BOLD;
+}
+
+.proximity-label{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 10px;
     -fx-font-weight: BOLD;
 }
 

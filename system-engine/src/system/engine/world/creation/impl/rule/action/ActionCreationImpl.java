@@ -50,7 +50,7 @@ public class ActionCreationImpl implements ActionCreation {
     }
     @Override
     public ProximityAction createActionProximity(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition,
-                                        String of, WorldGrid worldGrid, EntityDefinition targetEntityDefinition){
-        return new ProximityAction(entityDefinitionParam,secondaryEntityDefinition,of,worldGrid,targetEntityDefinition);
+                                        String of, EntityDefinition targetEntityDefinition){
+        return new ProximityAction(entityDefinitionParam,secondaryEntityDefinition,of,targetEntityDefinition);
     }
 }
