@@ -59,7 +59,6 @@ public class Body2Controller {
     private List<Object> initValues;
 
     private List<String> entitiesNames;
-    private List<Integer> entitiesPopulations;
     private SystemEngineAccess systemEngine;
     private Body3Controller body3ComponentController;
 
@@ -81,6 +80,13 @@ public class Body2Controller {
 
 
     public void primaryInitialize() {
+        simulationsCounter = 0;
+        simulationEntitiesPopulationFlowPane.getChildren().clear();
+        simulationEnvironmentInputsFlowPane.getChildren().clear();
+        envVarNameToTileController.clear();
+        entityNameToTileController.clear();
+        envVarNameToSelectedInitValue.clear();
+        entityNameToSelectedPopulationValue.clear();
         VBox.setVgrow(vBoxComponent, Priority.ALWAYS);
         DTOEnvVarsDefForUi dtoEnvVarsDefForUi = systemEngine.getEVDFromSE();
         createEnvVarsChildrenInFlowPane(envVarsList = dtoEnvVarsDefForUi.getEnvironmentVars());

@@ -33,7 +33,7 @@ public class RunSimulationImpl implements RunSimulation {
     private boolean isResumed = true;
     private boolean isCanceled = false;
     //private Task<Boolean> currentTask;
-    private final long SLEEP_TIME = 9;
+    private final long SLEEP_TIME = 0;
 
     public RunSimulationImpl(WorldInstance worldInstance){
         dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(0, 0 ,"Running!",

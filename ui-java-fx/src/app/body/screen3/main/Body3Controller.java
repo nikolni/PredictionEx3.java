@@ -60,12 +60,23 @@ public class Body3Controller {
 
 
     public void primaryInitialize() {
+        simulationsList.getItems().clear();
+        simulationResultsNodesMap.clear();
+        simulationResultControllersMap.clear();
+        clearSimulationProgressScreen();
+        simulationResultScrollPane.setContent(null);
         simulationsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 handleSimulationListItemSelection(newValue);
             }
         });
         simulationProgressComponentController.setBody3ComponentController(this);
+    }
+    private void clearSimulationProgressScreen(){
+        if(oldUpdateUiThreadThread !=null && oldUpdateUiThreadThread.isAlive()){
+            oldUpdateUiThreadThread.interrupt();
+        }
+        simulationProgressComponentController.clearMyLabels();
     }
     public void setMainController(AppController mainController) {
         this.mainController = mainController;
@@ -104,7 +115,6 @@ public class Body3Controller {
                 ResultsController resultsController = simulationResultControllersMap.get(simulationID);
                 resultsController.handleSimulationSelection(simulationID,systemEngine);
             }
-
         }
 
         public void setButtonsDisableIfThereIsNoSimulations(){
@@ -133,10 +143,18 @@ public class Body3Controller {
             createEndSimulationWindow(simulationID, simulationEndReason);
             simulationResultsNodesMap.put(simulationID, simulationResultNode);
             simulationResultControllersMap.put(simulationID, simulationResultController);
+
+            Object selectedItem = simulationsList.getSelectionModel().getSelectedItem();
+            String selectedString = selectedItem != null ? selectedItem.toString() : "";
+            if(selectedString.equals("Simulation ID: " + simulationID)){
+                simulationsList.getSelectionModel().clearSelection();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+
 
     private String createEndReasonString(Integer simulationEndReason){
         String massage = null;
@@ -162,7 +180,7 @@ public class Body3Controller {
 
         Label label = new Label(message);
         StackPane root = new StackPane(label);
-        Scene scene = new Scene(root, 225, 100);
+        Scene scene = new Scene(root, 250, 100);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("End simulation");

@@ -14,11 +14,13 @@
    <children>
       <GridPane maxHeight="1.7976931348623157E308" prefHeight="277.0" prefWidth="637.0" styleClass="my-gridPane">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="356.0" minWidth="10.0" prefWidth="188.5" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="356.0" minWidth="10.0" prefWidth="50.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="696.6666564941406" minWidth="10.0" prefWidth="234.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="696.6666564941406" minWidth="10.0" prefWidth="49.5" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="696.6666564941406" minWidth="10.0" prefWidth="87.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="356.0" minWidth="163.0" prefWidth="163.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="356.0" minWidth="2.0" prefWidth="54.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="92.0" minWidth="48.5" prefWidth="54.5" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="696.6666564941406" minWidth="10.0" prefWidth="190.5" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="696.6666564941406" minWidth="10.0" prefWidth="48.5" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="54.5" minWidth="36.0" prefWidth="41.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="68.5" minWidth="10.0" prefWidth="61.0" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints maxHeight="70.5" minHeight="5.0" prefHeight="27.5" vgrow="SOMETIMES" />
@@ -48,14 +50,14 @@
                <GridPane.margin>
                   <Insets top="4.0" />
                </GridPane.margin></Label>
-            <Label fx:id="progressMassageLabel" styleClass="my-label-no-background" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <Label fx:id="progressMassageLabel" styleClass="my-label-no-background" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
             <Label id="tick-number-label" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label" text="Simulation ID" GridPane.halignment="CENTER">
                <GridPane.margin>
                   <Insets top="4.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="simulationIdLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label-no-background" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-            <GridPane fx:id="entitiesLeftGridPane" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <Label fx:id="simulationIdLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label-no-background" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
+            <GridPane fx:id="entitiesLeftGridPane" GridPane.columnIndex="3" GridPane.rowIndex="3">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -64,21 +66,25 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
-            <Button id="rerun-button" fx:id="rerunButton" mnemonicParsing="false" onMouseClicked="#onRerunClick" prefHeight="33.0" prefWidth="71.0" stylesheets="@simulationProgress.css" text="Rerun" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowSpan="2" />
-            <Label fx:id="totalSecondsLabel" styleClass="my-label-no-background" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <Label fx:id="totalTicksLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label-no-background" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <Button id="rerun-button" fx:id="rerunButton" mnemonicParsing="false" onMouseClicked="#onRerunClick" prefHeight="33.0" prefWidth="71.0" stylesheets="@simulationProgress.css" text="Rerun" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowSpan="2" />
+            <Label fx:id="totalSecondsLabel" styleClass="my-label-no-background" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Label fx:id="totalTicksLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label-no-background" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <children>
                   <ProgressBar fx:id="ticksProgressBar" prefHeight="42.0" prefWidth="352.0" progress="0.0" />
                   <Label fx:id="ticksPercentLabel" styleClass="my-label-no-background" />
                </children>
             </StackPane>
-            <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                <children>
                   <ProgressBar fx:id="secondsProgressBar" prefHeight="42.0" prefWidth="352.0" progress="0.0" />
                   <Label fx:id="secondsPercentLabel" styleClass="my-label-no-background" />
                </children>
             </StackPane>
+            <Label fx:id="totalTicksLabel1" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label-no-background" text="(total)" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Label fx:id="totalTicksLabel2" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label-no-background" text="(total)" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Label fx:id="totalTicksLabel11" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label-no-background" text="(current)" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Label fx:id="totalTicksLabel12" alignment="CENTER" contentDisplay="CENTER" styleClass="my-label-no-background" text="(current)" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
          </children>
       </GridPane>
       <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="76.0" prefWidth="637.0" styleClass="my-gridPane">

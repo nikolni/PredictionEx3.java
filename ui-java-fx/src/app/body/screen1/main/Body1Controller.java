@@ -61,14 +61,6 @@ public class Body1Controller{
 
     private SystemEngineAccess systemEngine;
 
-
-    public Body1Controller(){}
-
-    public Body1Controller(SystemEngineAccess systemEngine){
-        this.systemEngine = systemEngine;
-    }
-
-
     @FXML
     public void initialize() {
         quantityOfSquaresLabel.setVisible(false);
@@ -92,6 +84,7 @@ public class Body1Controller{
     }
 
     public void primaryInitialize(){
+        detailsFlowPane.getChildren().clear();
         TreeItem<String> rootItem = new TreeItem<>("World");
         TreeItem<String> entitiesBranch = createEntitiesSubTree(systemEngine);
         TreeItem<String> ruleBranch = createRulesSubTree(systemEngine);
