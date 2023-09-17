@@ -60,7 +60,7 @@ public class SimulationProgressController {
         this.simulationID = simulationID;
     }
     public void setTotalSeconds(int totalSeconds) {
-        this.totalSeconds = totalSeconds;
+            this.totalSeconds = totalSeconds;
     }
 
     public void setSystemEngine(SystemEngineAccess systemEngine) {
@@ -74,6 +74,20 @@ public class SimulationProgressController {
         this.simulationIdLabel.setText(simulationIdLabel);
     }
 
+    public void clearMyLabels(){
+        onTaskFinished();
+        simulationIdLabel.setText("");
+        progressMassageLabel.setText("");
+        totalSecondsLabel.setText("");
+        totalTicksLabel.setText("");
+        secondsLabel.setText("");
+        ticksLabel.setText("");
+        ticksPercentLabel.setText("");
+        secondsPercentLabel.setText("");
+        entitiesLeftGridPane.getChildren().clear();
+        ticksProgressBar.setProgress(0);
+        secondsProgressBar.setProgress(0);
+    }
     public void bindUiTaskToUiDownLevelComponents(UpdateUiTask uiTask) {
         secondsLabel.textProperty().bind(Bindings.format("%,d", uiTask.getSecondsPastProperty()));
         //entitiesLeftLabel.textProperty().bind(Bindings.format("%,d", uiTask.getEntitiesLeftProperty()));
@@ -89,6 +103,8 @@ public class SimulationProgressController {
                                             secondsProgressBar.progressProperty(),
                                             100)),
                             " %"));
+            secondsProgressBar.setDisable(false);
+            secondsPercentLabel.setDisable(false);
         }
         else{
             secondsProgressBar.setDisable(true);
@@ -120,6 +136,8 @@ public class SimulationProgressController {
                                             100)),
                             " %"));
 
+            ticksProgressBar.setDisable(false);
+            ticksPercentLabel.setDisable(false);
         }
         else{
             ticksProgressBar.setDisable(true);
@@ -133,6 +151,8 @@ public class SimulationProgressController {
         this.secondsPercentLabel.textProperty().unbind();
         this.ticksProgressBar.progressProperty().unbind();
         this.secondsProgressBar.progressProperty().unbind();
+        this.secondsLabel.textProperty().unbind();
+        this.ticksLabel.textProperty().unbind();
     }
 
     public void toggleTaskButtons(boolean isActive) {
@@ -189,14 +209,16 @@ public class SimulationProgressController {
     }
 
     public void updateEntitiesLeftGridPane(Map<String, Integer> entitiesPopulationAfterSimulationRunning) {
-        int row = 0;
-        entitiesLeftGridPane.getChildren().clear();
-        for(String key: entitiesPopulationAfterSimulationRunning.keySet()){
-            Label entityName = new Label(key);
-            entitiesLeftGridPane.add(entityName, 0, row);
-            Label population = new Label(entitiesPopulationAfterSimulationRunning.get(key).toString());
-            entitiesLeftGridPane.add(population, 1, row);
-            row++;
+        if(! simulationIdLabel.getText().equals("")) {
+            int row = 0;
+            entitiesLeftGridPane.getChildren().clear();
+            for (String key : entitiesPopulationAfterSimulationRunning.keySet()) {
+                Label entityName = new Label(key);
+                entitiesLeftGridPane.add(entityName, 0, row);
+                Label population = new Label(entitiesPopulationAfterSimulationRunning.get(key).toString());
+                entitiesLeftGridPane.add(population, 1, row);
+                row++;
+            }
         }
     }
 
@@ -209,10 +231,14 @@ public class SimulationProgressController {
 
 
     public void setTotalSecondsLabel(String totalSecondsLabel) {
-        this.totalSecondsLabel.setText(totalSecondsLabel);
+        if(! simulationIdLabel.getText().equals("")) {
+            this.totalSecondsLabel.setText(totalSecondsLabel);
+        }
     }
 
     public void setTotalTicksLabel(String totalTicksLabel) {
-        this.totalTicksLabel.setText(totalTicksLabel);
+        if(! simulationIdLabel.getText().equals("")) {
+            this.totalTicksLabel.setText(totalTicksLabel);
+        }
     }
 }
