@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class PRDWorldValidator {
     public void validatePRDWorld(PRDWorld prdWorld){
+        checkGridSize(prdWorld);
         checkEnvVariableWithSameName(prdWorld.getPRDEnvironment());
         checkEntityPropertyWithTheSameName(prdWorld.getPRDEntities());
         checkIfEntityExistInAction(prdWorld);
@@ -19,6 +20,12 @@ public class PRDWorldValidator {
         checkIfAllPropertiesExist(prdWorld);
         checkNumericFunctionsParamType(prdWorld);
     }
+
+    public void checkGridSize(PRDWorld prdWorld){
+        if(prdWorld.getPRDGrid().getRows()<10||prdWorld.getPRDGrid().getRows()>100||prdWorld.getPRDGrid().getColumns()<10||prdWorld.getPRDGrid().getColumns()>100)
+            throw new RuntimeException("Grid size must be between 10 to 100");
+    }
+
     //2
     public void checkEnvVariableWithSameName(PRDEnvironment prdEvironment){
         Set<String> envVarNames=new HashSet<>();
@@ -50,7 +57,7 @@ public class PRDWorldValidator {
 
     public void checkEntityInSingleAction(PRDRule prdRule, PRDAction prdAction, List<PRDEntity> prdEntityList){
         if(!prdEntityList.contains(getEntityByName(getActionEntityName(prdAction),prdEntityList)))
-            throw new EntityNotExistException(prdRule.getName(),prdAction.getType(),prdAction.getEntity());
+            throw new EntityNotExistException(prdRule.getName(),prdAction.getType(),getActionEntityName(prdAction));
 
         if(prdAction.getType().equals("replace")){
             if(!prdEntityList.contains(getEntityByName(prdAction.getCreate(),prdEntityList)))
@@ -141,6 +148,21 @@ public class PRDWorldValidator {
         return null;
     }
 
+    public PRDEntity getSecondEntity(PRDAction.PRDSecondaryEntity prdSecondaryEntity, List<PRDEntity> prdEntityList){
+        if(prdSecondaryEntity!=null)
+            return getEntityByName(prdSecondaryEntity.getEntity(),prdEntityList);
+        else
+            return null;
+
+    }
+
+    public String getSecondEntityName(PRDAction.PRDSecondaryEntity prdSecondaryEntity){
+        if(prdSecondaryEntity!=null)
+            return prdSecondaryEntity.getEntity();
+        else
+            return null;
+    }
+
     public String getActionEntityName(PRDAction prdAction){
         if(prdAction.getType().equals("replace"))
             return prdAction.getKill();
@@ -188,7 +210,7 @@ public class PRDWorldValidator {
                     getEntityByName(bigPrdAction.getPRDBetween().getSourceEntity(),prdEntityList),getEntityByName(bigPrdAction.getPRDBetween().getTargetEntity(),prdEntityList),prdEvironment,bigPrdAction,prdEntityList);
         else
             enumByType=getExpressionType(expressionStr,getEntityByName(currEntityName,prdEntityList),
-                    getEntityByName(bigPrdAction.getEntity(),prdEntityList),getEntityByName(bigPrdAction.getPRDSecondaryEntity().getEntity(),prdEntityList),prdEvironment,bigPrdAction,prdEntityList);
+                    getEntityByName(bigPrdAction.getEntity(),prdEntityList),getSecondEntity(bigPrdAction.getPRDSecondaryEntity(),prdEntityList),prdEvironment,bigPrdAction,prdEntityList);
         return enumByType;
     }
 
@@ -244,12 +266,12 @@ public class PRDWorldValidator {
     public void checkEntityContextInSingleAction(PRDAction innerPrdAction,PRDAction bigPrdAction,PRDRule prdRule){
         if(!innerPrdAction.getType().equals("proximity") && !innerPrdAction.getType().equals("condition")){
             if(bigPrdAction.getType().equals("condition"))
-                checkIfEntityInContextByName(getActionEntityName(innerPrdAction),bigPrdAction.getEntity(),bigPrdAction.getPRDSecondaryEntity().getEntity(),bigPrdAction,prdRule);
+                checkIfEntityInContextByName(getActionEntityName(innerPrdAction),bigPrdAction.getEntity(),getSecondEntityName(bigPrdAction.getPRDSecondaryEntity()),bigPrdAction,prdRule);
             else if(bigPrdAction.getType().equals("proximity"))
                 checkIfEntityInContextByName(getActionEntityName(innerPrdAction),bigPrdAction.getPRDBetween().getSourceEntity(),bigPrdAction.getPRDBetween().getTargetEntity(),bigPrdAction,prdRule);
         }
         else if(innerPrdAction.getType().equals("condition")){
-            checkEntityContextInConditionAction(innerPrdAction.getEntity(),innerPrdAction.getPRDSecondaryEntity().getEntity(),innerPrdAction.getPRDCondition(),bigPrdAction,prdRule);
+            checkEntityContextInConditionAction(innerPrdAction.getEntity(),getSecondEntityName(innerPrdAction.getPRDSecondaryEntity()),innerPrdAction.getPRDCondition(),bigPrdAction,prdRule);
             for(PRDAction thenPrdAction:innerPrdAction.getPRDThen().getPRDAction())
                 checkEntityContextInSingleAction(thenPrdAction,bigPrdAction,prdRule);
             if(innerPrdAction.getPRDElse()!=null){
