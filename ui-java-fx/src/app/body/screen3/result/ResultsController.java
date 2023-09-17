@@ -142,16 +142,18 @@ public class ResultsController {
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         Map<Integer, Integer> entitiesData = systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID).getEntitiesLeftByTicks();
 
-        if (entitiesData.size() > 3000) {
-            int jump = 1000;
-            for (int i = 0; i < entitiesData.size(); i += jump) {
-                int key = (int) series.getData().get(series.getData().size() - 1).getXValue();
-                int value = entitiesData.get(key);
-                series.getData().add(new XYChart.Data<>(key, value));
-            }
-        } else {
-            for (Map.Entry<Integer, Integer> entry : entitiesData.entrySet()) {
-                series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        if (entitiesData.size() > 0) {
+            if (entitiesData.size() > 1000) {
+                int jump = 1000;
+                for (int i = 0; i < entitiesData.size(); i += jump) {
+                    int key = series.getData().isEmpty() ? 0 : (int) series.getData().get(series.getData().size() - 1).getXValue();
+                    int value = entitiesData.get(key);
+                    series.getData().add(new XYChart.Data<>(key, value));
+                }
+            } else {
+                for (Map.Entry<Integer, Integer> entry : entitiesData.entrySet()) {
+                    series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+                }
             }
         }
 
