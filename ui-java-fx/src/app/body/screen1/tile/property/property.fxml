@@ -33,7 +33,7 @@
       </Label>
       <Label fx:id="propertyTypeLabel" prefHeight="17.0" prefWidth="62.0" text="Label" textFill="WHITE" VBox.vgrow="NEVER">
          <VBox.margin>
-            <Insets left="120.0" top="-30.0" />
+            <Insets left="130.0" top="-30.0" />
          </VBox.margin>
       </Label>
       <Label id="range-label" prefHeight="48.0" prefWidth="82.0" text="Range" textFill="WHITE" VBox.vgrow="NEVER">

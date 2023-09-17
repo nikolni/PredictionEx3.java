@@ -84,6 +84,10 @@ public class Body1Controller{
     }
 
     public void primaryInitialize(){
+        quantityOfSquaresLabel.setVisible(false);
+        quantityOfSquaresText.setVisible(false);
+        valueDefLabel.setVisible(false);
+        valueDefText.setVisible(false);
         detailsFlowPane.getChildren().clear();
         TreeItem<String> rootItem = new TreeItem<>("World");
         TreeItem<String> entitiesBranch = createEntitiesSubTree(systemEngine);
@@ -190,8 +194,8 @@ public class Body1Controller{
             PropertyController propertyController = loader.getController();
             propertyController.setPropertyNameLabel(propertyDefinitionDTO.getUniqueName());
             propertyController.setPropertyTypeLabel(propertyDefinitionDTO.getType());
-            propertyController.setPropertyRangeLabel((propertyDefinitionDTO.doesHaveRange() ? "from " +
-                    propertyDefinitionDTO.getRange().get(0) + " to " + propertyDefinitionDTO.getRange().get(1) : " no range"));
+            propertyController.setPropertyRangeLabel((propertyDefinitionDTO.doesHaveRange() ?
+                    propertyDefinitionDTO.getRange().get(0) + " to " + propertyDefinitionDTO.getRange().get(1) : "no range"));
             propertyController.setPropertyIsRandomLabel(String.valueOf(propertyDefinitionDTO.isRandomInitialized()));
             detailsFlowPane.getChildren().add(singleProperty);
         }
