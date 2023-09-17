@@ -116,7 +116,7 @@ public class RuleFromXML {
                 return actionCreation.createActionReplace(primaryEntityDefinition,secondaryEntityDefinition,createEntityDefinition,prdAction.getMode());
             case "proximity":
                 EntityDefinition targetEntityDefinition= entityDefinitionManager.getEntityDefinitionByName(prdAction.getPRDBetween().getTargetEntity());
-                ProximityAction proximityAction=actionCreation.createActionProximity(primaryEntityDefinition,secondaryEntityDefinition,prdAction.getPRDEnvDepth().getOf(),worldGrid,targetEntityDefinition);
+                ProximityAction proximityAction=actionCreation.createActionProximity(primaryEntityDefinition,secondaryEntityDefinition,prdAction.getPRDEnvDepth().getOf(),targetEntityDefinition);
                 for(PRDAction proximityPrdAction:prdAction.getPRDActions().getPRDAction()){
                     if(proximityPrdAction.getType().equals("replace"))
                         proximityAction.addActionToActionsCollection(createAction(entityDefinitionManager,proximityPrdAction.getKill(),proximityPrdAction.getPRDSecondaryEntity(),proximityPrdAction,worldGrid));

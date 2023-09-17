@@ -24,14 +24,13 @@ public class ProximityAction extends AbstractAction {
     private final List<Action> actionsCollection;
 
     private final EntityDefinition targetEntityDefinition;
-    private final WorldGrid worldGrid;
+    private int count=0;
 
     public ProximityAction(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition,
-                           String of, WorldGrid worldGrid,EntityDefinition targetEntityDefinition) {
+                           String of ,EntityDefinition targetEntityDefinition) {
         super(ActionType.PROXIMITY,entityDefinitionParam,secondaryEntityDefinition);
         this.ofExp = of;
         this.actionsCollection= new ArrayList<>();
-        this.worldGrid = worldGrid;
         this.targetEntityDefinition=targetEntityDefinition;
     }
 
@@ -39,6 +38,7 @@ public class ProximityAction extends AbstractAction {
 
     @Override
     public void executeAction(Context context) {
+        WorldGrid worldGrid= context.getEntityInstanceManager().getWorldGrid();
         ExpressionCreation expressionCreation = new ExpressionCreationImpl();
         EntityInstance EntityInstanceSource=checkByDefinitionIfPrimaryOrSecondary(context);
         if(EntityInstanceSource==null) //cant execute the action
@@ -53,8 +53,10 @@ public class ProximityAction extends AbstractAction {
         EntityInstance primaryEntityInstance = context.getPrimaryEntityInstance();
         EntityInstance targetEntityInstance;
         String targetEntityName = targetEntityDefinition.getUniqueName();
-        targetEntityInstance = isThereSecondEntityThatCloseEnough(primaryEntityInstance, targetEntityName, of);
+        targetEntityInstance = isThereSecondEntityThatCloseEnough(primaryEntityInstance, targetEntityName, of, worldGrid);
         if(targetEntityInstance != null){
+            count++;
+            System.out.println(count);
             for(Action action : actionsCollection){
                 if(action instanceof ReplaceAction  || action instanceof ProximityAction){
                     context.setSecondEntityInstance(null);
@@ -68,7 +70,7 @@ public class ProximityAction extends AbstractAction {
         }
     }
 
-    private EntityInstance isThereSecondEntityThatCloseEnough(EntityInstance primaryEntityInstance, String targetEntityName, Float of){
+    private EntityInstance isThereSecondEntityThatCloseEnough(EntityInstance primaryEntityInstance, String targetEntityName, Float of, WorldGrid worldGrid){
         Float currentOf=1f;
         EntityInstance entityInstance =null;
 

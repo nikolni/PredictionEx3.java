@@ -23,7 +23,7 @@ public interface ActionCreation {
     Action createActionKill(EntityDefinition entityDefinition,SecondaryEntityDefinition secondaryEntityDefinition);
     Action createActionReplace(EntityDefinition primaryEntityDefinition, SecondaryEntityDefinition secondaryEntityDefinition,
                                EntityDefinition createEntityDefinition,String mode);
-    public ProximityAction createActionProximity(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition,
-                                                 String of, WorldGrid worldGrid, EntityDefinition targetEntityDefinition);
+    ProximityAction createActionProximity(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition,
+                                                 String of, EntityDefinition targetEntityDefinition);
 
 }

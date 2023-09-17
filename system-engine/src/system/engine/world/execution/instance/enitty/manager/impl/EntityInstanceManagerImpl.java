@@ -228,4 +228,11 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     public EntityDefinitionManager getEntityDefinitionManager() {
         return entityDefinitionManager;
     }
+
+    @Override
+    public WorldGrid getWorldGrid() {
+        return worldGrid;
+    }
+
+
 }
