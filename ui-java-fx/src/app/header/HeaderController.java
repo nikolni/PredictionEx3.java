@@ -122,7 +122,7 @@ public class HeaderController {
         } catch(RuntimeException | JAXBException | FileNotFoundException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
-            alert.setHeaderText("This is an error message - load other file");
+            alert.setHeaderText("Invalid XML file - Please load other file");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
             exceptionOccurred=true;
