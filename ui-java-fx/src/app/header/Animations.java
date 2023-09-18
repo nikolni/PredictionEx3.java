@@ -38,7 +38,7 @@ public class Animations {
         path.setStartX(0);
         path.setStartY(0);
         path.setEndX(0);
-        path.setEndY(60); // Adjust the Y coordinate to control the vertical movement
+        path.setEndY(100); // Adjust the Y coordinate to control the vertical movement
 
         // Create PathTransition animations for label pairs
         PathTransition transition01 = createPathTransition(label1, path);

@@ -32,9 +32,6 @@ public class RunSimulationImpl implements RunSimulation {
    private boolean isPaused = false;
     private boolean isResumed = true;
     private boolean isCanceled = false;
-    //private Task<Boolean> currentTask;
-    private final long SLEEP_TIME = 3
-            ;
 
     public RunSimulationImpl(WorldInstance worldInstance){
         dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(0, 0 ,"Running!",
@@ -131,7 +128,6 @@ public class RunSimulationImpl implements RunSimulation {
                             worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
 
                     if(isCanceled){
-                        System.out.println( "1 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
                         if(isTerminationConditionByUser(worldDefinition)){
                             progressMassage = "Done!";
                         }
@@ -157,12 +153,10 @@ public class RunSimulationImpl implements RunSimulation {
                     endTime = Instant.now();
                     duration = Duration.between(startTime, endTime);
                     secondsRun = (int) duration.getSeconds() - secondsWait;
-                    sleepForAWhile(SLEEP_TIME);
 
                     if(!isTerminationConditionByUser(worldDefinition)  && !(tick <= numOfTicksToRun && secondsRun <= numOfSecondsToRun)){
                         break;
                     }
-
                 }
                 if(isCanceled){
                     if(isTerminationConditionByUser(worldDefinition)){
@@ -173,7 +167,6 @@ public class RunSimulationImpl implements RunSimulation {
                     }
                     updateDtoSimulationProgressForUi(secondsRun, tick, progressMassage,
                             worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
-                    System.out.println( "2 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
                     break;
                 }
             }
