@@ -1,9 +1,6 @@
 package app.header;
 
 import app.main.AppController;
-import javafx.animation.FadeTransition;
-import javafx.animation.FillTransition;
-import javafx.animation.PathTransition;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -12,18 +9,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import system.engine.api.SystemEngineAccess;
 
 import javax.xml.bind.JAXBException;
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import javafx.scene.shape.Rectangle;
@@ -67,8 +58,18 @@ public class HeaderController {
     private Rectangle executionRec;
     @FXML
     private Rectangle resultsRec;
+
     @FXML
-    private Circle animationCircle;
+    private Button skin1Button;
+
+    @FXML
+    private Button skin2Button;
+
+    @FXML
+    private Button defaultSkinButton;
+
+    @FXML
+    private Button animationsButton;
 
     private SystemEngineAccess systemEngine;
     private SimpleStringProperty selectedFileProperty;
@@ -118,7 +119,6 @@ public class HeaderController {
         String absolutePath = selectedFile.getAbsolutePath();
         try {
             systemEngine.getXMLFromUser(absolutePath);
-            animations.startFadeTransition(animationCircle, true);
         } catch(RuntimeException | JAXBException | FileNotFoundException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
@@ -178,9 +178,24 @@ public class HeaderController {
         }
     }
 
+
     @FXML
-    void onCircleClick(MouseEvent event) {
+    void onAnimationsClick(MouseEvent event) {
         activeAnimations = !activeAnimations;
-        animations.startFadeTransition(animationCircle, false);
+    }
+
+    @FXML
+    void onDefaultSkinClick(MouseEvent event) {
+
+    }
+
+    @FXML
+    void onSkin1Click(MouseEvent event) {
+
+    }
+
+    @FXML
+    void onSkin2Click(MouseEvent event) {
+
     }
 }
