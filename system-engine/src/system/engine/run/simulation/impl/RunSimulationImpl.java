@@ -32,8 +32,6 @@ public class RunSimulationImpl implements RunSimulation {
    private boolean isPaused = false;
     private boolean isResumed = true;
     private boolean isCanceled = false;
-    //private Task<Boolean> currentTask;
-    private final long SLEEP_TIME = 9;
 
     public RunSimulationImpl(WorldInstance worldInstance){
         dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(0, 0 ,"Running!",
@@ -155,12 +153,10 @@ public class RunSimulationImpl implements RunSimulation {
                     endTime = Instant.now();
                     duration = Duration.between(startTime, endTime);
                     secondsRun = (int) duration.getSeconds() - secondsWait;
-                    sleepForAWhile(SLEEP_TIME);
 
                     if(!isTerminationConditionByUser(worldDefinition)  && !(tick <= numOfTicksToRun && secondsRun <= numOfSecondsToRun)){
                         break;
                     }
-
                 }
                 if(isCanceled){
                     if(isTerminationConditionByUser(worldDefinition)){
