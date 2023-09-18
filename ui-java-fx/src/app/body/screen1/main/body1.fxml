@@ -37,7 +37,7 @@
                   <TextFlow id="text-flow2" fx:id="quantityOfSquaresText" prefHeight="40.0" prefWidth="191.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                </children>
             </GridPane>
-            <ScrollPane fx:id="detailsScrollPane" VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="detailsScrollPane" fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
                <content>
                   <FlowPane fx:id="detailsFlowPane" hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" vgap="5.0" />
                </content>
