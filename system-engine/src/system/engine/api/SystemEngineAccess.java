@@ -55,4 +55,5 @@ public interface SystemEngineAccess {
     void cancelSimulation(int simulationID);
     List<TerminationConditionsDTO> getTerminationConditions();
     DTORerunValuesForUi getValuesForRerun(Integer simulationID);
+    List<String> getAllSimulationsStatus();
 }

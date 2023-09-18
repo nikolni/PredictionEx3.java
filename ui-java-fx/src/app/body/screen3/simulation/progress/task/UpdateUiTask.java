@@ -30,7 +30,6 @@ public class UpdateUiTask extends Task<Boolean> {
         this.secondsPast = new SimpleIntegerProperty(0);
         this.ticksPast = new SimpleIntegerProperty(0);
         this.entitiesLeft = new SimpleIntegerProperty(0);
-        //this.isPaused =  new SimpleBooleanProperty(false);
         this.totalTicksNumber = systemEngine.getTotalTicksNumber();
         this.totalSecondsNumber = systemEngine.getTotalSecondsNumber();
     }
@@ -57,11 +56,11 @@ public class UpdateUiTask extends Task<Boolean> {
     }
 
     public void updateSimulationProgress(DTOSimulationProgressForUi dtoSimulationProgressForUi) {
-        updateMessage(dtoSimulationProgressForUi.getProgressMassage());
         if (!(systemEngine.getTerminationConditions().get(0) instanceof ByUserTerminationConditionDTOImpl)) {
             updateProgress(dtoSimulationProgressForUi.getTicksPast(), totalTicksNumber);
         }
         Platform.runLater(() -> {
+            updateMessage(dtoSimulationProgressForUi.getProgressMassage());
             currentSimulationController.setTotalTicksLabel(totalTicksNumber.toString());
             currentSimulationController.setTotalSecondsLabel(totalSecondsNumber.toString());
             currentSimulationController.setRerunButtonDisable(true);
@@ -69,18 +68,24 @@ public class UpdateUiTask extends Task<Boolean> {
             secondsPast.set(dtoSimulationProgressForUi.getSecondsPast());
 
             currentSimulationController.updateEntitiesLeftGridPane(dtoSimulationProgressForUi.getEntitiesLeft());
-            if (dtoSimulationProgressForUi.getProgressMassage().equals("Getting ready...") ||
-                    dtoSimulationProgressForUi.getProgressMassage().equals("Done!")) {
+            if (dtoSimulationProgressForUi.getProgressMassage().equals("Getting ready...")){
+                currentSimulationController.toggleTaskButtons(false);
+            }
+            else if(dtoSimulationProgressForUi.getProgressMassage().equals("Done!")){
                 currentSimulationController.toggleTaskButtons(false);
             }
             else if(dtoSimulationProgressForUi.getProgressMassage().equals("Running!")){
                 currentSimulationController.toggleTaskButtons(true);
                 currentSimulationController.setResumeButtonDisable(false);
+
             }
             else if(dtoSimulationProgressForUi.getProgressMassage().equals("Paused!")){
                 currentSimulationController.setPauseButtonDisable(false);
                 currentSimulationController.setResumeButtonDisable(true);
                 currentSimulationController.setStopButtonDisable(true);
+            }
+            else if(dtoSimulationProgressForUi.getProgressMassage().equals("Canceled!")){
+                currentSimulationController.toggleTaskButtons(false);
             }
             currentSimulationController.updateQueueManagementInAppMain();
         });

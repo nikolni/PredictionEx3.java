@@ -7,7 +7,6 @@ import system.engine.run.simulation.manager.IsSimulationPaused;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.api.WorldInstance;
 import system.engine.world.execution.instance.enitty.api.EntityInstance;
-import system.engine.world.execution.instance.enitty.manager.api.EntityInstanceManager;
 import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.rule.action.api.Action;
 import system.engine.world.rule.action.api.ActionType;
@@ -177,7 +176,6 @@ public class RunSimulationImpl implements RunSimulation {
                     worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
             errorHappened  = true;
         }
-
 
         int[] terminationCausePair=new int[3];
         terminationCausePair[0]=tick;
