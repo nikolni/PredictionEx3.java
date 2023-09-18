@@ -94,7 +94,6 @@ public class Body3Controller {
         private void handleSimulationListItemSelection(String selectedItem) {
             simulationResultScrollPane.setContent(null);
             if(oldUpdateUiThreadThread !=null && oldUpdateUiThreadThread.isAlive()){
-                System.out.println( "killing thread address   " + oldUpdateUiThreadThread);
                 oldUpdateUiThreadThread.interrupt();
             }
             String[] words = selectedItem.split("\\s+");
@@ -113,7 +112,6 @@ public class Body3Controller {
 
             oldUpdateUiThreadThread  = new Thread(updateUiTask);
             oldUpdateUiThreadThread.start();
-            System.out.println( "thread address for simulation id "+ simulationID + "   " + oldUpdateUiThreadThread);
             if(simulationResultsNodesMap.get(simulationID) != null){
                 simulationResultScrollPane.setContent(simulationResultsNodesMap.get(simulationID));
                 ResultsController resultsController = simulationResultControllersMap.get(simulationID);
