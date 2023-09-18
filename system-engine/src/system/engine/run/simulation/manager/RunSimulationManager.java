@@ -7,12 +7,12 @@ import dto.impl.DTOThreadsPoolStatusForUiImpl;
 import system.engine.run.simulation.api.RunSimulation;
 import system.engine.world.api.WorldInstance;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class RunSimulationManager {
     private final ExecutorService threadPool;
@@ -79,4 +79,20 @@ public class RunSimulationManager {
         activeThreadCount--;
     }
 
+    public List<String> getAllSimulationsStatus(){
+        List<String> simulationsStatuses = new ArrayList<>();
+        int numOfSimulations = simulationIdToWorldInstance.size();
+        int i = 0;
+
+        while(i<numOfSimulations){
+            if(simulationIdToRunSimulation.get(i + 1) != null) {
+                simulationsStatuses.add(simulationIdToRunSimulation.get(i + 1).getDtoSimulationProgressForUi().getProgressMassage());
+            }
+            else{
+                simulationsStatuses.add("Getting ready...");
+            }
+            i++;
+        }
+        return simulationsStatuses;
+    }
 }
