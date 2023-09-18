@@ -24,7 +24,6 @@ public class ProximityAction extends AbstractAction {
     private final List<Action> actionsCollection;
 
     private final EntityDefinition targetEntityDefinition;
-    private int count=0;
 
     public ProximityAction(EntityDefinition entityDefinitionParam, SecondaryEntityDefinition secondaryEntityDefinition,
                            String of ,EntityDefinition targetEntityDefinition) {
@@ -55,8 +54,6 @@ public class ProximityAction extends AbstractAction {
         String targetEntityName = targetEntityDefinition.getUniqueName();
         targetEntityInstance = isThereSecondEntityThatCloseEnough(primaryEntityInstance, targetEntityName, of, worldGrid);
         if(targetEntityInstance != null){
-            count++;
-            System.out.println(count);
             for(Action action : actionsCollection){
                 if(action instanceof ReplaceAction  || action instanceof ProximityAction){
                     context.setSecondEntityInstance(null);

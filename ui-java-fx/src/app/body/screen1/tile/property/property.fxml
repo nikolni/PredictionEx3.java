@@ -15,7 +15,7 @@
             <Insets left="-15.0" />
          </padding>
       </Label>
-      <Label fx:id="propertyNameLabel" alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="34.0" prefWidth="86.0" text="Label" textAlignment="CENTER" textFill="WHITE" wrapText="true" VBox.vgrow="NEVER">
+      <Label fx:id="propertyNameLabel" alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="34.0" prefWidth="86.0" text="Label" textAlignment="CENTER" textFill="WHITE" wrapText="true" VBox.vgrow="NEVER">
          <VBox.margin>
             <Insets left="130.0" right="10.0" top="-20.0" />
          </VBox.margin>
@@ -31,7 +31,7 @@
             <Insets left="-15.0" />
          </padding>
       </Label>
-      <Label fx:id="propertyTypeLabel" prefHeight="17.0" prefWidth="62.0" text="Label" textFill="WHITE" VBox.vgrow="NEVER">
+      <Label fx:id="propertyTypeLabel" alignment="TOP_CENTER" prefHeight="17.0" prefWidth="62.0" text="Label" textFill="WHITE" VBox.vgrow="NEVER">
          <VBox.margin>
             <Insets left="130.0" top="-30.0" />
          </VBox.margin>
@@ -44,7 +44,7 @@
             <Insets left="-15.0" />
          </padding>
       </Label>
-      <Label fx:id="propertyRangeLabel" prefHeight="16.0" prefWidth="77.0" text="Label" textFill="#fffdfd" VBox.vgrow="NEVER">
+      <Label fx:id="propertyRangeLabel" alignment="TOP_CENTER" prefHeight="16.0" prefWidth="77.0" text="Label" textFill="#fffdfd" VBox.vgrow="NEVER">
          <VBox.margin>
             <Insets left="110.0" top="-30.0" />
          </VBox.margin>
@@ -57,7 +57,7 @@
             <Insets left="-15.0" />
          </padding>
       </Label>
-      <Label fx:id="propertyIsRandomLabel" prefHeight="17.0" prefWidth="59.0" text="Label" textFill="WHITE" VBox.vgrow="NEVER">
+      <Label fx:id="propertyIsRandomLabel" alignment="TOP_CENTER" prefHeight="17.0" prefWidth="59.0" text="Label" textFill="WHITE" VBox.vgrow="NEVER">
          <VBox.margin>
             <Insets left="130.0" top="-30.0" />
          </VBox.margin>

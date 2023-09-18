@@ -33,8 +33,7 @@ public class RunSimulationImpl implements RunSimulation {
     private boolean isResumed = true;
     private boolean isCanceled = false;
     //private Task<Boolean> currentTask;
-    private final long SLEEP_TIME = 3
-            ;
+    private final long SLEEP_TIME = 9;
 
     public RunSimulationImpl(WorldInstance worldInstance){
         dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(0, 0 ,"Running!",
@@ -131,7 +130,6 @@ public class RunSimulationImpl implements RunSimulation {
                             worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
 
                     if(isCanceled){
-                        System.out.println( "1 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
                         if(isTerminationConditionByUser(worldDefinition)){
                             progressMassage = "Done!";
                         }
@@ -173,7 +171,6 @@ public class RunSimulationImpl implements RunSimulation {
                     }
                     updateDtoSimulationProgressForUi(secondsRun, tick, progressMassage,
                             worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
-                    System.out.println( "2 canceled!!  simulation num " + worldInstance.getId() + "thread address  " + Thread.currentThread() );
                     break;
                 }
             }

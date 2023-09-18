@@ -196,7 +196,6 @@ public class SimulationProgressController {
 
     @FXML
     void onStopClick(MouseEvent event) {
-        System.out.println( "canceled!!  thread address  " + Thread.currentThread().getName() );
        systemEngine.cancelSimulation(simulationID);
 
         toggleTaskButtons(false);
