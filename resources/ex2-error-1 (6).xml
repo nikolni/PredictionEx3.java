@@ -3,7 +3,8 @@
 	<PRD-thread-count>1</PRD-thread-count>
 	<PRD-environment>
 		<PRD-env-property type="float">
-			<PRD-name>infection-proximity</PRD-name>			
+			<PRD-name>infection-proximity</PRD-name>
+			<PRD-range from="1" to="5"/>
 		</PRD-env-property>
 	</PRD-environment>
 	<PRD-grid rows="9" columns="30"/>
@@ -52,10 +53,10 @@
 		</PRD-rule>
 		<PRD-rule name="heal">
 			<PRD-actions>
-				<PRD-action type="condition">
+				<PRD-action type="condition" entity="Sick">
 					<PRD-condition singularity="multiple" logical="and">
 						<PRD-condition singularity="single" entity="Sick" property="vacinated" operator="=" value="true"/>
-						<PRD-condition singularity="single" entity="Sick" property="ticks(vacinated)" operator="bt" value="30"/>
+						<PRD-condition singularity="single" entity="Sick" property="ticks(Sick.vacinated)" operator="bt" value="30"/>
 					</PRD-condition>
 					<PRD-then>
 						<PRD-action type="replace" kill="Sick" create="Healthy" mode="derived"/>

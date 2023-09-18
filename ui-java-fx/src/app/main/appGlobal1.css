@@ -1,0 +1,46 @@
+.root {
+    -fx-background-color: #DACAAC; /* Change to your desired background color */
+}
+
+#headerContainer #load-file-button{
+    -fx-text-fill: BLACK;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-border-color:E8F90E;
+    -fx-background-color: E3EB84;
+    -fx-font-family: "Times New Roman";
+}
+
+#headerContainer .button-with-shape{
+    -fx-text-fill: BLACK;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-border-color: F1961C;
+    -fx-background-color: EDB161;
+    -fx-font-family: "Times New Roman";
+}
+
+/* Style all labels */
+#headerContainer .label {
+    -fx-font-size: 15px; /* Change label font size */
+    -fx-font-family: "Times New Roman"; /* Change label font family */
+    -fx-text-fill: #333; /* Change label text color */
+}
+
+#headerContainer .move-to-page-button{
+    -fx-fill: #EDB161;
+}
+
+#tab-pane-id .button{
+    -fx-text-fill: BLACK;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-border-color: F1961C;
+    -fx-background-color: EDB161;
+    -fx-font-family: "Times New Roman";
+}
+
+/*
+#body1 .root{
+    -fx-background-color: #DACAAC;
+}*/
