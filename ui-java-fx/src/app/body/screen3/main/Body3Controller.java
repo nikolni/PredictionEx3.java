@@ -7,11 +7,15 @@ import app.main.AppController;
 import dto.api.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import system.engine.api.SystemEngineAccess;
 
@@ -174,11 +178,20 @@ public class Body3Controller {
     }
     public void createEndSimulationWindow(Integer simulationID, Integer simulationEndReason){
         Stage primaryStage = new Stage();
-        String message = "Simulation #" + simulationID + " is over because of " + createEndReasonString(simulationEndReason);
+        String message = "Simulation #" + simulationID + " is over because of " + createEndReasonString(simulationEndReason)+ "\n\n\n";
 
         Label label = new Label(message);
-        StackPane root = new StackPane(label);
-        Scene scene = new Scene(root, 250, 100);
+        Font font = new Font(16);
+        label.setFont(font);
+        //Image image = new Image("file:ui-java-fx/src/resource/finishImage.jpg");
+        Image image = new Image(getClass().getResource("/resource/finishImage.jpg").toExternalForm());
+        ImageView imageView = new ImageView(image);
+        VBox vbox = new VBox(label, imageView);
+        vbox.setAlignment(Pos.CENTER);
+        StackPane root = new StackPane(vbox);
+
+        //StackPane root = new StackPane(label);
+        Scene scene = new Scene(root, 350, 250);
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("End simulation");

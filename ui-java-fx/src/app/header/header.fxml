@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="headerComponent" alignment="TOP_CENTER" stylesheets="@header.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.header.HeaderController">
+<GridPane id="headerContainer" fx:id="headerComponent" alignment="TOP_CENTER" stylesheets="@header.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.header.HeaderController">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
@@ -74,7 +74,7 @@
             <StackPane>
                <children>
                   <Rectangle fx:id="detailsRec" arcHeight="5.0" arcWidth="5.0" fill="GREY" height="27.0" stroke="BLACK" strokeType="INSIDE" style="-fx-background-color: tr;" styleClass="move-to-page-button" width="75.0" />
-                  <Button id="details-button" fx:id="detailsButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onDetailsButtonClick" prefHeight="30.0" prefWidth="79.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" styleClass="button-with-shape" text="Details" />
+                  <Button id="details-button" fx:id="detailsButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onDetailsButtonClick" prefHeight="30.0" prefWidth="79.0" styleClass="button-with-shape" text="Details" />
                </children>
                <HBox.margin>
                   <Insets left="-20.0" right="10.0" />
@@ -86,7 +86,7 @@
                </HBox.margin>
                <children>
                   <Rectangle fx:id="executionRec" arcHeight="5.0" arcWidth="5.0" fill="GREY" height="27.0" stroke="BLACK" strokeType="INSIDE" style="-fx-background-color: tr;" styleClass="move-to-page-button" width="121.0" />
-                  <Button id="new-execution-button" fx:id="newExecutionButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onNewExecutionButtonClick" style="-fx-background-color: transparent; -fx-border-color: transparent;" styleClass="button-with-shape" text="New Execution" />
+                  <Button id="new-execution-button" fx:id="newExecutionButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onNewExecutionButtonClick" styleClass="button-with-shape" text="New Execution" />
                </children>
             </StackPane>
             <StackPane>
@@ -95,7 +95,7 @@
                </HBox.margin>
                <children>
                   <Rectangle fx:id="resultsRec" arcHeight="5.0" arcWidth="5.0" fill="GREY" height="27.0" stroke="BLACK" strokeType="INSIDE" style="-fx-background-color: tr;" styleClass="move-to-page-button" width="75.0" />
-                  <Button id="results-button" fx:id="resultButtonClick" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onResultButtonClick" prefHeight="30.0" prefWidth="82.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" styleClass="button-with-shape" text="Results" />
+                  <Button id="results-button" fx:id="resultButtonClick" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onResultButtonClick" prefHeight="30.0" prefWidth="82.0" styleClass="button-with-shape" text="Results" />
                </children>
             </StackPane>
          </children>
