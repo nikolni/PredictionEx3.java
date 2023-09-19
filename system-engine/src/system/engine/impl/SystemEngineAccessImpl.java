@@ -310,4 +310,8 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         }
         return new DTORerunValuesForUiImpl(environmentVarsValues, entitiesPopulations);
     }
+    @Override
+    public List<String> getAllSimulationsStatus(){
+        return runSimulationManager.getAllSimulationsStatus();
+    }
 }

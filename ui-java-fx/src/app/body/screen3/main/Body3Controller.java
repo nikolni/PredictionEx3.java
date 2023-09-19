@@ -1,5 +1,6 @@
 package app.body.screen3.main;
 
+import app.body.screen3.list.view.update.UpdateListView;
 import app.body.screen3.result.ResultsController;
 import app.body.screen3.simulation.progress.SimulationProgressController;
 import app.body.screen3.simulation.progress.task.UpdateUiTask;
@@ -12,24 +13,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import system.engine.api.SystemEngineAccess;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Body3Controller {
-
     @FXML
     private ListView<String> simulationsList;
-
     @FXML
     private Button stopButton;
 
@@ -75,6 +70,8 @@ public class Body3Controller {
             }
         });
         simulationProgressComponentController.setBody3ComponentController(this);
+        UpdateListView updateListView = new UpdateListView(simulationsList, systemEngine);
+        new Thread(updateListView).start();
     }
     private void clearSimulationProgressScreen(){
         if(oldUpdateUiThreadThread !=null && oldUpdateUiThreadThread.isAlive()){
@@ -97,8 +94,17 @@ public class Body3Controller {
                 oldUpdateUiThreadThread.interrupt();
             }
             String[] words = selectedItem.split("\\s+");
+            Integer simulationID = 0;
 
-            Integer simulationID = (Integer.parseInt(words[words.length - 1]));
+            if(words.length == 3){
+                simulationID = (Integer.parseInt(words[words.length - 1]));
+            }
+            else if(words.length == 4) {
+                simulationID = (Integer.parseInt(words[words.length - 2]));
+            }
+            else{
+                simulationID = (Integer.parseInt(words[words.length - 3]));
+            }
             //simulationProgressScrollPane.setContent(simulationProgressNodesList.get(simulationID-1));
             UpdateUiTask updateUiTask = new UpdateUiTask(simulationProgressComponentController, systemEngine, simulationID);
 
