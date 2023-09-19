@@ -202,7 +202,7 @@ public class ResultsController {
 
     public void handleSelectedProperty(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID){
         viewComboBox.setVisible(true);
-
+        viewComboBox.setPromptText("select option");
         if(systemEngine.getDtoSimulationProgressForUi(simulationID).getEntitiesLeft().get(selectedItem.getParent().getValue())>0){
             if(systemEngine.getDefinitionsDataFromSE().getPropertyDefinitionByName(selectedItem.getParent().getValue(),selectedItem.getValue()).getType().toLowerCase().equals("float"))
                 PropertyAverageValueLabel.setText(String.valueOf(calculatePropertyAverage(simulationID,selectedItem.getParent().getValue(),selectedItem.getValue())));

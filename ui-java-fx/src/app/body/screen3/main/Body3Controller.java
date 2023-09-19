@@ -189,14 +189,11 @@ public class Body3Controller {
         Label label = new Label(message);
         Font font = new Font(16);
         label.setFont(font);
-        //Image image = new Image("file:ui-java-fx/src/resource/finishImage.jpg");
         Image image = new Image(getClass().getResource("/resource/finishImage.jpg").toExternalForm());
         ImageView imageView = new ImageView(image);
         VBox vbox = new VBox(label, imageView);
         vbox.setAlignment(Pos.CENTER);
         StackPane root = new StackPane(vbox);
-
-        //StackPane root = new StackPane(label);
         Scene scene = new Scene(root, 350, 250);
 
         primaryStage.setScene(scene);
