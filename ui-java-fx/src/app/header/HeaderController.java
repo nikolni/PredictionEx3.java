@@ -199,6 +199,10 @@ public class HeaderController {
     @FXML
     void onAnimationsClick(MouseEvent event) {
         activeAnimations = !activeAnimations;
+        if(!activeAnimations)
+            animationsButton.setText("Enable animations");
+        else
+            animationsButton.setText("Disable animations");
     }
 
 
