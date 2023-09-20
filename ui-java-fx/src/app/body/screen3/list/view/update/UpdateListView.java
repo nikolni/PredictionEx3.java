@@ -47,7 +47,9 @@ public class UpdateListView implements Runnable{
 
         }
         else {
-            items.set(simulationID - 1, "Simulation ID: " + simulationID + " (" + simulationStatus + ")");
+            if(! items.isEmpty()) {
+                items.set(simulationID - 1, "Simulation ID: " + simulationID + " (" + simulationStatus + ")");
+            }
         }
     }
 }
