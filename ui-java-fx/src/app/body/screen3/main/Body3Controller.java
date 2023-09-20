@@ -118,7 +118,8 @@ public class Body3Controller {
 
             oldUpdateUiThreadThread  = new Thread(updateUiTask);
             oldUpdateUiThreadThread.start();
-            if(simulationResultsNodesMap.get(simulationID) != null){
+            if(simulationResultsNodesMap.get(simulationID) != null &&
+                    ! systemEngine.getAllSimulationsStatus().get(simulationID-1).equals(("terminated because of an error!"))){
                 simulationResultScrollPane.setContent(simulationResultsNodesMap.get(simulationID));
                 ResultsController resultsController = simulationResultControllersMap.get(simulationID);
                 resultsController.handleSimulationSelection(simulationID,systemEngine);
