@@ -106,8 +106,8 @@ public final class WorldGridImpl implements WorldGrid {
                 int distance = (int) Math.sqrt((row - centerY) * (row - centerY) + (col - centerX) * (col - centerX));
 
                 // Check if the square is at the specified distance from the center point.
-                if (Math.abs(distance - radius) < 0.5 || (isAtEdge(centerY, centerX, gridRows, gridColumns) &&
-                        isAtEdge(row, col, gridRows, gridColumns))) {
+                if (Math.abs(distance - radius) < 0.5 || (isAtEdge(centerY, centerX) &&
+                        isAtEdge(row, col) && isInCircle(centerY, centerX,row, col))) {
                     if(worldGrid[row][col] != null && worldGrid[row][col].getEntityDefinition().getUniqueName().equals(targetEntityName)){
                         entityInstance = worldGrid[row][col];
                         return entityInstance;
@@ -118,8 +118,37 @@ public final class WorldGridImpl implements WorldGrid {
         return entityInstance;
     }
 
-        private boolean isAtEdge(int row, int col, int numRows, int numCols) {
-            return row == 0 || row == numRows - 1 || col == 0 || col == numCols - 1;
+    private boolean isInCircle(int centerY, int centerX, int row, int col){
+        if(isOnCorner(centerY, centerX)){
+            return ((centerY == row && isOnCorner(row, col)) || (centerX == col && isOnCorner(row, col)) ||  //same row and corner OR same col and corner
+                    row-1 == centerY || row+1 == centerY || col-1 == centerX || col+1 == centerX);
+        }
+        else if(centerY == 0){
+            return ((centerX == col && row == gridRows - 1) ||
+                    col - 1 == centerX || col + 1 == centerX );
+        }
+        else if(centerY == gridRows-1){
+            return ((centerX == col && row == 0) ||
+                    col - 1 == centerX || col + 1 == centerX );
+        }
+        else if(centerX == 0){
+            return ((centerY == row && col == gridColumns - 1) ||
+                    row - 1 == centerY || row + 1 == centerY);
+        }
+        else if(centerX == gridColumns-1){
+            return ((centerY == row && col == 0) ||
+                    row - 1 == centerY || row + 1 == centerY );
+        }
+        return false;
+    }
+
+    private boolean isOnCorner(int row, int col){
+        return (row == 0 && col == 0 || row == 0 && col == gridColumns - 1 ||
+                row == gridRows-1 && col == 0 || row == gridRows-1 && col == gridColumns - 1);
+    }
+
+        private boolean isAtEdge(int row, int col) {
+            return row == 0 || row == gridRows - 1 || col == 0 || col == gridColumns - 1;
         }
 
         @Override
