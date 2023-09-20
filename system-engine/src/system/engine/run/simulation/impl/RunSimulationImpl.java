@@ -275,12 +275,12 @@ public class RunSimulationImpl implements RunSimulation {
     }
 
     private void addNewEntitiesToKillList(List<EntityInstance> entitiesToKill, List<EntityInstance> currentEntitiesToKill){
-        List<EntityInstance> entitiesToKillCopy = new ArrayList<>();
-        entitiesToKillCopy.addAll(entitiesToKill);
 
-        boolean alreadyInList = false;
-        for(EntityInstance currentEntityInstance : currentEntitiesToKill){
-            for(EntityInstance entityInstance : entitiesToKillCopy){
+        for(EntityInstance currentEntityInstance : currentEntitiesToKill){//for every new entity to kill
+            boolean alreadyInList = false;
+            List<EntityInstance> entitiesToKillCopy = new ArrayList<>();
+            entitiesToKillCopy.addAll(entitiesToKill);
+            for(EntityInstance entityInstance : entitiesToKillCopy){  //for all entities that already need to kill
                 if(entityInstance.getId() == currentEntityInstance.getId()){
                     alreadyInList = true;
                     break;
