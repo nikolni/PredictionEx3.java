@@ -106,7 +106,8 @@ public final class WorldGridImpl implements WorldGrid {
                 int distance = (int) Math.sqrt((row - centerY) * (row - centerY) + (col - centerX) * (col - centerX));
 
                 // Check if the square is at the specified distance from the center point.
-                if (Math.abs(distance - radius) < 0.5 || isAtEdge(centerY, centerX, gridRows, gridColumns)) {
+                if (Math.abs(distance - radius) < 0.5 || (isAtEdge(centerY, centerX, gridRows, gridColumns) &&
+                        isAtEdge(row, col, gridRows, gridColumns))) {
                     if(worldGrid[row][col] != null && worldGrid[row][col].getEntityDefinition().getUniqueName().equals(targetEntityName)){
                         entityInstance = worldGrid[row][col];
                         return entityInstance;
