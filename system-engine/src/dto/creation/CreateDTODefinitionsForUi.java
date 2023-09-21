@@ -1,6 +1,5 @@
 package dto.creation;
 
-import dto.api.DTODefinitionsForUi;
 import dto.definition.entity.api.EntityDefinitionDTO;
 import dto.definition.entity.impl.EntityDefinitionDTOImpl;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
@@ -25,7 +24,7 @@ import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOIm
 import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
 import dto.definition.termination.condition.manager.api.TerminationConditionsDTOManager;
 import dto.definition.termination.condition.manager.impl.TerminationConditionsDTOManagerImpl;
-import dto.impl.DTODefinitionsForUiImpl;
+import dto.primary.DTODefinitionsForUi;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.property.api.PropertyDefinition;
@@ -73,7 +72,7 @@ public class CreateDTODefinitionsForUi {
         }
         TerminationConditionsDTOManager terminationConditionsDTOManager = new TerminationConditionsDTOManagerImpl(terminationConditionsDTO);
 
-        return new DTODefinitionsForUiImpl(entitiesDTO, rulesDTO, terminationConditionsDTOManager);
+        return new DTODefinitionsForUi(entitiesDTO, rulesDTO, terminationConditionsDTOManager);
     }
 
     private EntityDefinitionDTO createEntityDefinitionDTO(EntityDefinition entityDefinition){

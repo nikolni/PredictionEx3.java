@@ -1,11 +1,10 @@
 package dto.creation;
 
-import dto.api.DTOEnvVarsInsForUi;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.definition.property.definition.impl.PropertyDefinitionDTOImpl;
 import dto.definition.property.instance.api.PropertyInstanceDTO;
 import dto.definition.property.instance.impl.PropertyInstanceDTOImpl;
-import dto.impl.DTOEnvVarsInsForUiImpl;
+import dto.primary.DTOEnvVarsInsForUi;
 import system.engine.world.definition.property.api.PropertyDefinition;
 import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 import system.engine.world.execution.instance.property.api.PropertyInstance;
@@ -22,7 +21,7 @@ public class CreateDTOEVIForUi {
         for(PropertyInstance environmentVar : envVariablesInstanceManager.getEnvVarsList()){
             environmentVars.add(createEnvironmentVarDTO(environmentVar));
         }
-        return new DTOEnvVarsInsForUiImpl(environmentVars);
+        return new DTOEnvVarsInsForUi(environmentVars);
     }
 
     private PropertyInstanceDTO createEnvironmentVarDTO(PropertyInstance environmentVar){

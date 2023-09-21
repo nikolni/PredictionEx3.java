@@ -1,18 +1,17 @@
-package dto.impl;
+package dto.primary;
 
-import dto.api.DTOEnvVarsInsForUi;
 import dto.definition.property.instance.api.PropertyInstanceDTO;
 
 import java.util.List;
 
-public class DTOEnvVarsInsForUiImpl implements DTOEnvVarsInsForUi {
+public class DTOEnvVarsInsForUi {
     private final List<PropertyInstanceDTO> environmentVars;
 
-    public DTOEnvVarsInsForUiImpl(List<PropertyInstanceDTO> environmentVars){
+    public DTOEnvVarsInsForUi(List<PropertyInstanceDTO> environmentVars){
         this.environmentVars = environmentVars;
     }
 
-    @Override
+
     public List<PropertyInstanceDTO> getEnvironmentVars() {
         return environmentVars;
     }

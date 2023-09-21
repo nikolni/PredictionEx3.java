@@ -1,7 +1,6 @@
 package dto.creation;
 
-import dto.api.DTOSimulationsTimeRunDataForUi;
-import dto.impl.DTOSimulationsTimeRunDataForUiImpl;
+import dto.primary.DTOSimulationsTimeRunDataForUi;
 import system.engine.world.api.WorldInstance;
 
 import java.time.LocalDateTime;
@@ -20,7 +19,7 @@ public class CreateDTOSimulationsTimeRunDataForUi {
             simulationRunTimeList.add(simulationIdToWorldInstance.get(simulationIdToWorldInstance).getSimulationRunTime());
         }
 
-            return new DTOSimulationsTimeRunDataForUiImpl(idList,simulationRunTimeList );
+            return new DTOSimulationsTimeRunDataForUi(idList,simulationRunTimeList );
 
     }
 }

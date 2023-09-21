@@ -1,7 +1,6 @@
 package dto.creation;
 
-import dto.api.DTOEntitiesAfterSimulationByQuantityForUi;
-import dto.impl.DTOEntitiesAfterSimulationByQuantityForUiImpl;
+import dto.primary.DTOEntitiesAfterSimulationByQuantityForUi;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.api.WorldInstance;
 import system.engine.world.definition.entity.api.EntityDefinition;
@@ -23,7 +22,7 @@ public class CreateDTOEntitiesAfterSimulationByQuantityForUi {
                     getEntityPopulationAfterRunning(entityDefinition.getUniqueName()));
         }
 
-        return new DTOEntitiesAfterSimulationByQuantityForUiImpl(entitiesNames, entitiesPopulationBeforeSimulation,
+        return new DTOEntitiesAfterSimulationByQuantityForUi(entitiesNames, entitiesPopulationBeforeSimulation,
                 entitiesPopulationAfterSimulation,worldInstance.getEntityInstanceManager().getNumOfEntitiesLeftByTicks());
     }
 }

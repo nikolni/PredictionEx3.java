@@ -1,8 +1,6 @@
 package dto.creation;
 
-import dto.api.DTONamesListForUi;
-import dto.impl.DTONamesListForUiImpl;
-import system.engine.world.api.WorldDefinition;
+import dto.primary.DTONamesListForUi;
 import system.engine.world.definition.entity.api.EntityDefinition;
 import system.engine.world.definition.property.api.PropertyDefinition;
 
@@ -18,7 +16,7 @@ public class CreatePropertiesNamesListForUi {
             propertiesNames.add(propertyDefinition.getUniqueName());
         }
 
-        return new DTONamesListForUiImpl(propertiesNames);
+        return new DTONamesListForUi(propertiesNames);
 
     }
 }

@@ -2,15 +2,12 @@ package app.main;
 
 import app.body.main.TabPaneBodyController;
 import app.header.HeaderController;
-import dto.api.DTOThreadsPoolStatusForUi;
+import dto.primary.DTOThreadsPoolStatusForUi;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import system.engine.api.SystemEngineAccess;
 import system.engine.impl.SystemEngineAccessImpl;
-
-import javax.xml.bind.JAXBException;
-import java.io.FileNotFoundException;
 
 public class AppController {
 

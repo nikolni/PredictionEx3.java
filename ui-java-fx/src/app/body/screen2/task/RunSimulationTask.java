@@ -1,7 +1,7 @@
 package app.body.screen2.task;
 
 import app.body.screen3.main.Body3Controller;
-import dto.api.DTOSimulationEndingForUi;
+import dto.primary.DTOSimulationEndingForUi;
 import javafx.application.Platform;
 import system.engine.api.SystemEngineAccess;
 
