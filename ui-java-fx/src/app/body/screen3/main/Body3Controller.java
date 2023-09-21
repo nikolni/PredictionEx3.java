@@ -5,7 +5,7 @@ import app.body.screen3.result.ResultsController;
 import app.body.screen3.simulation.progress.SimulationProgressController;
 import app.body.screen3.simulation.progress.task.UpdateUiTask;
 import app.main.AppController;
-import dto.api.*;
+import dto.primary.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;

@@ -1,14 +1,9 @@
 package dto.creation;
 
-import dto.api.DTONamesListForUi;
-import dto.api.DTOSimulationsTimeRunDataForUi;
-import dto.impl.DTONamesListForUiImpl;
-import dto.impl.DTOSimulationsTimeRunDataForUiImpl;
+import dto.primary.DTONamesListForUi;
 import system.engine.world.api.WorldDefinition;
-import system.engine.world.api.WorldInstance;
 import system.engine.world.definition.entity.api.EntityDefinition;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +15,7 @@ public class CreateEntitiesNamesListForUi {
             entitiesNames.add(entityDefinition.getUniqueName());
         }
 
-        return new DTONamesListForUiImpl(entitiesNames);
+        return new DTONamesListForUi(entitiesNames);
 
     }
 }

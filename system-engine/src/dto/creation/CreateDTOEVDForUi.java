@@ -1,9 +1,8 @@
 package dto.creation;
 
-import dto.api.DTOEnvVarsDefForUi;
 import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.definition.property.definition.impl.PropertyDefinitionDTOImpl;
-import dto.impl.DTOEnvVarsDefForUiImpl;
+import dto.primary.DTOEnvVarsDefForUi;
 import system.engine.world.api.WorldDefinition;
 import system.engine.world.definition.property.api.PropertyDefinition;
 
@@ -18,7 +17,7 @@ public class CreateDTOEVDForUi {
         for(PropertyDefinition environmentVar : worldDefinition.getEnvVariablesDefinitionManager().getEnvVariables()){
             environmentVars.add(createEnvironmentVarDTO(environmentVar));
         }
-        return new DTOEnvVarsDefForUiImpl(environmentVars);
+        return new DTOEnvVarsDefForUi(environmentVars);
     }
 
     private PropertyDefinitionDTO createEnvironmentVarDTO(PropertyDefinition environmentVar){

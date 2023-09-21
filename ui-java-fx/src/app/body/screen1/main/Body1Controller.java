@@ -36,7 +36,7 @@ import app.body.screen1.tile.rule.action.helper.ActionTileCreatorFactoryImpl;
 import app.body.screen1.tile.termination.condition.TerminationConditionsController;
 import app.body.screen1.tile.termination.condition.TerminationConditionsResourceConstants;
 import system.engine.api.SystemEngineAccess;
-import dto.api.*;
+import dto.primary.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

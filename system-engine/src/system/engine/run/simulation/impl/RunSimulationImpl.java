@@ -1,7 +1,6 @@
 package system.engine.run.simulation.impl;
 
-import dto.api.DTOSimulationProgressForUi;
-import dto.impl.DTOSimulationProgressForUiImpl;
+import dto.primary.DTOSimulationProgressForUi;
 import system.engine.run.simulation.api.RunSimulation;
 import system.engine.run.simulation.manager.IsSimulationPaused;
 import system.engine.world.api.WorldDefinition;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RunSimulationImpl implements RunSimulation {
-    private DTOSimulationProgressForUi dtoSimulationProgressForUi;
+    private dto.primary.DTOSimulationProgressForUi dtoSimulationProgressForUi;
 
     private final IsSimulationPaused isSimulationPaused;
 
@@ -33,7 +32,7 @@ public class RunSimulationImpl implements RunSimulation {
     private boolean isCanceled = false;
 
     public RunSimulationImpl(WorldInstance worldInstance){
-        dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(0, 0 ,"Running!",
+        dtoSimulationProgressForUi = new DTOSimulationProgressForUi(0, 0 ,"Running!",
                 worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
         isSimulationPaused = new IsSimulationPaused();
     }
@@ -294,10 +293,10 @@ public class RunSimulationImpl implements RunSimulation {
 
     private void updateDtoSimulationProgressForUi(Integer seconds, Integer tick, String progressMassage,
                                                   Map<String, Integer> entitiesPopulationAfterSimulationRunning) {
-        dtoSimulationProgressForUi = new DTOSimulationProgressForUiImpl(seconds, tick, progressMassage, entitiesPopulationAfterSimulationRunning);
+        dtoSimulationProgressForUi = new DTOSimulationProgressForUi(seconds, tick, progressMassage, entitiesPopulationAfterSimulationRunning);
     }
     @Override
-    public DTOSimulationProgressForUi getDtoSimulationProgressForUi() {
+    public dto.primary.DTOSimulationProgressForUi getDtoSimulationProgressForUi() {
         return dtoSimulationProgressForUi;
     }
 

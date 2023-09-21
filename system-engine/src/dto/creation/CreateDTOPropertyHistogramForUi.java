@@ -1,7 +1,6 @@
 package dto.creation;
 
-import dto.api.DTOPropertyHistogramForUi;
-import dto.impl.DTOPropertyHistogramForUiImpl;
+import dto.primary.DTOPropertyHistogramForUi;
 import system.engine.world.api.WorldInstance;
 
 import java.util.Map;
@@ -21,7 +20,7 @@ public class CreateDTOPropertyHistogramForUi {
                 filter(e -> e.getEntityDefinition().getUniqueName().equals(entityName)).
                 collect(Collectors.groupingBy(e -> e.getPropertyByName(propertyName).getValue(), Collectors.counting()));
 
-        return new DTOPropertyHistogramForUiImpl(propertyHistogram, propertyName);
+        return new DTOPropertyHistogramForUi(propertyHistogram, propertyName);
 
     }
 }

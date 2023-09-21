@@ -1,9 +1,7 @@
 package system.engine.run.simulation.manager;
 
-import dto.api.DTOSimulationProgressForUi;
-import dto.api.DTOThreadsPoolStatusForUi;
-import dto.impl.DTOSimulationProgressForUiImpl;
-import dto.impl.DTOThreadsPoolStatusForUiImpl;
+import dto.primary.DTOSimulationProgressForUi;
+import dto.primary.DTOThreadsPoolStatusForUi;
 import system.engine.run.simulation.api.RunSimulation;
 import system.engine.world.api.WorldInstance;
 
@@ -35,11 +33,11 @@ public class RunSimulationManager {
         taskCount++;
     }
 
-    public DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID){
+    public dto.primary.DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID){
         if(simulationIdToRunSimulation.get(simulationID) != null){
             return simulationIdToRunSimulation.get(simulationID).getDtoSimulationProgressForUi();
         }
-        return new DTOSimulationProgressForUiImpl(0, 0 ,"Getting ready...",
+        return new DTOSimulationProgressForUi(0, 0 ,"Getting ready...",
                 simulationIdToWorldInstance.get(simulationID).getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
     }
     public void pauseSimulation(int simulationID){
@@ -62,11 +60,11 @@ public class RunSimulationManager {
             simulationIdToRunSimulation.get(simulationID).setCanceled(true);
         }
     }
-    public DTOThreadsPoolStatusForUi getThreadsPoolStatus(){
+    public dto.primary.DTOThreadsPoolStatusForUi getThreadsPoolStatus(){
         //int activeThreadCount = ((ThreadPoolExecutor) threadPool).getActiveCount();
         int queueSize = taskCount - activeThreadCount - completedTaskCount;
 
-        return new DTOThreadsPoolStatusForUiImpl(queueSize, activeThreadCount, completedTaskCount);
+        return new DTOThreadsPoolStatusForUi(queueSize, activeThreadCount, completedTaskCount);
     }
 
     public void increaseCompletedTaskCount(){

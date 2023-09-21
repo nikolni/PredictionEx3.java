@@ -1,29 +1,24 @@
-package dto.impl;
+package dto.primary;
 
-import dto.api.DTOThreadsPoolStatusForUi;
-
-public class DTOThreadsPoolStatusForUiImpl implements DTOThreadsPoolStatusForUi {
+public class DTOThreadsPoolStatusForUi {
     Integer queueSize;
     Integer activeThreadCount;
     Integer completedTaskCount;
 
-    public DTOThreadsPoolStatusForUiImpl(int queueSize, int activeThreadCount, int completedTaskCount) {
+    public DTOThreadsPoolStatusForUi(int queueSize, int activeThreadCount, int completedTaskCount) {
         this.queueSize = queueSize;
         this.activeThreadCount = activeThreadCount;
         this.completedTaskCount = completedTaskCount;
     }
 
-    @Override
     public Integer getQueueSize() {
         return queueSize;
     }
 
-    @Override
     public Integer getActiveThreadCount() {
         return activeThreadCount;
     }
 
-    @Override
     public Integer getCompletedTaskCount() {
         return completedTaskCount;
     }

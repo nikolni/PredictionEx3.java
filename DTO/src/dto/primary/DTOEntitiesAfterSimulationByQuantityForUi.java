@@ -1,12 +1,9 @@
-package dto.impl;
-
-import dto.api.DTOEntitiesAfterSimulationByQuantityForUi;
+package dto.primary;
 
 import java.util.List;
 import java.util.Map;
 
-public class DTOEntitiesAfterSimulationByQuantityForUiImpl implements DTOEntitiesAfterSimulationByQuantityForUi {
-    //private final List<EntityDefinitionDTO> entitiesDTO;
+public class DTOEntitiesAfterSimulationByQuantityForUi  {
     private final List<String> entitiesNames;
     private final List<Integer> entitiesPopulationBeforeSimulation;
     private final List<Integer> entitiesPopulationAfterSimulation;
@@ -14,8 +11,8 @@ public class DTOEntitiesAfterSimulationByQuantityForUiImpl implements DTOEntitie
 
 
 
-    public DTOEntitiesAfterSimulationByQuantityForUiImpl(List<String> entitiesNames, List<Integer> entitiesPopulationBeforeSimulation,
-                                                         List<Integer> entitiesPopulationAfterSimulation,Map<Integer,Integer> entitiesLeftByTicks){
+    public DTOEntitiesAfterSimulationByQuantityForUi(List<String> entitiesNames, List<Integer> entitiesPopulationBeforeSimulation,
+                                                     List<Integer> entitiesPopulationAfterSimulation, Map<Integer,Integer> entitiesLeftByTicks){
         this.entitiesNames =entitiesNames;
         this.entitiesPopulationBeforeSimulation =entitiesPopulationBeforeSimulation;
         this.entitiesPopulationAfterSimulation =entitiesPopulationAfterSimulation;
@@ -23,22 +20,17 @@ public class DTOEntitiesAfterSimulationByQuantityForUiImpl implements DTOEntitie
     }
 
 
-
-    @Override
     public List<String> getEntitiesNames() {
         return entitiesNames;
     }
 
-    @Override
     public List<Integer> getEntitiesPopulationAfterSimulation() {
         return entitiesPopulationAfterSimulation;
     }
 
-    @Override
     public List<Integer> getEntitiesPopulationBeforeSimulation() {
         return entitiesPopulationBeforeSimulation;
     }
 
-    @Override
     public Map<Integer,Integer> getEntitiesLeftByTicks(){return entitiesLeftByTicks;}
 }
