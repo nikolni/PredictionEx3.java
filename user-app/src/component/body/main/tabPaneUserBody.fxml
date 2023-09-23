@@ -6,18 +6,22 @@
 <TabPane id="tab-pane-id" fx:id="tabPaneBodyComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="custom-tab-pane" stylesheets="@../../main/default.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.body.main.TabPaneBodyController">
     <Tab id="tab1" text="Tab 1">
         <content>
-            <fx:include fx:id="body1Component" source="../screen1/main/body1.fxml" />
+            <fx:include fx:id="simulationDetailsComponent" source="../simulation/details/main/simulationsDetails.fxml" />
         </content>
     </Tab>
     <Tab id="tab2" text="Tab 2">
         <content>
-            <fx:include fx:id="body2Component" source="../screen2/main/body2.fxml" />
+            <fx:include fx:id="requestsComponent" source="../request/main/request.fxml" />
         </content>
     </Tab>
     <Tab id="tab3" text="Tab 3">
         <content>
-            <fx:include fx:id="body3Component" source="../screen3/main/body3.fxml" />
+            <fx:include fx:id="executionComponent" source="../execution/main/executionController.fxml" />
         </content>
     </Tab>
-
+    <Tab id="tab4" text="Tab 4">
+        <content>
+            <fx:include fx:id="resultsComponent" source="../running/main/progressAndResult.fxml" />
+        </content>
+    </Tab>
 </TabPane>

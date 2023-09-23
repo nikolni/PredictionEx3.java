@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="tile-background" stylesheets="@../../../../../../main/userGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.execution.tile.environment.variable.EnvironmentVariableController">
+   <children>
+      <GridPane prefHeight="129.0" prefWidth="175.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="91.0" minWidth="10.0" prefWidth="91.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.5" minWidth="10.0" prefWidth="84.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="58.0" minHeight="10.0" prefHeight="50.5" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="41.5" minHeight="10.0" prefHeight="41.5" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="29.5" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label id="environment-var-label" prefHeight="52.0" prefWidth="91.0" styleClass="my-label" text="Environment variable Name" textAlignment="CENTER" textFill="#fdfdfd" wrapText="true" GridPane.halignment="CENTER">
+               <padding>
+                  <Insets left="-15.0" />
+               </padding>
+            </Label>
+            <Label fx:id="envVarNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="86.0" styleClass="my-label" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="10.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets top="10.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField fx:id="valueTextField" prefHeight="25.0" prefWidth="91.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Label id="value-label" prefHeight="17.0" prefWidth="24.0" styleClass="my-label" text="Value" textAlignment="CENTER" textFill="#fdfdfd" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <padding>
+                  <Insets left="-15.0" />
+               </padding>
+            </Label>
+            <Label id="environment-var-label" prefHeight="55.0" prefWidth="67.0" styleClass="my-label" text="Environment variable Type" textAlignment="CENTER" textFill="#fdfdfd" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+               <padding>
+                  <Insets left="-15.0" />
+               </padding>
+            </Label>
+            <Label fx:id="envVarTypeLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="86.0" styleClass="my-label" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+   </children>
+</VBox>

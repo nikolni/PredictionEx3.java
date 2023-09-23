@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox prefHeight="441.0" prefWidth="719.0" stylesheets="@../../../../main/userGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.running.main.ProgressAndResultController">
+   <children>
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="NEVER">
+         <content>
+            <ListView fx:id="simulationsList" prefWidth="200.0" styleClass="background" />
+         </content>
+      </ScrollPane>
+      <VBox HBox.hgrow="ALWAYS">
+         <children>
+            <ScrollPane fx:id="simulationProgressScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="226.0" prefWidth="520.0" VBox.vgrow="ALWAYS">
+               <content>
+                  <fx:include fx:id="simulationProgressComponent" source="../simulation/progress/simulationProgress.fxml" />
+               </content>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ScrollPane>
+            <ScrollPane fx:id="simulationResultScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="227.0" prefWidth="520.0" VBox.vgrow="ALWAYS">
+               <content>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </children>
+</HBox>

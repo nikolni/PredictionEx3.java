@@ -14,6 +14,8 @@ import java.util.concurrent.Executors;
 
 public class RunSimulationManager {
     private final ExecutorService threadPool;
+    /*private final Map<String, Map<Integer, WorldInstance>>  userNameToSimulationsMap;
+    private final Map<String, Map<Integer, WorldInstance>> userNameToWorldInstancesMap;*/
     private final Map<Integer, RunSimulation>  simulationIdToRunSimulation;
     private final Map<Integer, WorldInstance> simulationIdToWorldInstance;
     private int completedTaskCount =0;
