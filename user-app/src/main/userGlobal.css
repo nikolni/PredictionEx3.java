@@ -1,0 +1,244 @@
+
+.button-header{
+    -fx-text-fill: BLACK;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-border-color: BLACK;
+    -fx-background-color: #de3883;
+    -fx-font-family: "Times New Roman";
+}
+
+.button-body{
+    -fx-text-fill: BLACK;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-border-color: BLACK;
+    -fx-background-color: #b67791;
+    -fx-font-family: "Times New Roman";
+}
+
+.title-label{
+    -fx-text-fill: #de3883;
+    -fx-font-size: 20px;
+    -fx-font-weight: BOLD;
+    -fx-font-family: "Times New Roman";
+}
+
+.body-label{
+    -fx-text-fill: BLack;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-font-family: "Times New Roman";
+}
+
+.background{
+    -fx-background-color: #d2a1b7;
+}
+
+
+
+.tile-background{
+    -fx-background-color: #883458;
+    -fx-border-color: BLACK;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ///////////////////////////////////////////////////////////////////////////////// */
+
+
+
+
+/*
+
+.root {
+    -fx-background-color: #E1F0F5; !* Change to your desired background color *!
+}
+
+.tree-cell {
+    -fx-text-fill: #1E96C2; !* Change this to your desired text color *!
+}
+
+#headerContainer #load-file-button{
+    -fx-text-fill: BLACK;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-border-color:BLACK;
+    -fx-background-color: #088CBC;
+    -fx-font-family: "Times New Roman";
+}
+
+#headerContainer .button-with-shape{
+    -fx-text-fill: BLACK;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-border-color: BLACK;
+    -fx-background-color: #1E96C2;
+    -fx-font-family: "Times New Roman";
+}
+
+!* Style all labels *!
+.label {
+    -fx-font-size: 15px; !* Change label font size *!
+    -fx-font-family: "Times New Roman"; !* Change label font family *!
+    -fx-text-fill: #333; !* Change label text color *!
+}
+
+
+#tab-pane-id .button{
+    -fx-text-fill: BLACK;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-border-color: BLACK;
+    -fx-background-color: #1E96C2;
+    -fx-font-family: "Times New Roman";
+}
+
+
+#tab-pane-id .tile {
+    -fx-background-color: lightblue;
+    -fx-border-width: 5px;
+    -fx-border-color: #10475B;
+    -fx-background-radius: 5.0;
+}
+
+
+.my-label{
+    -fx-text-fill: BLack;
+    -fx-font-size: 10px;
+    -fx-font-weight: BOLD;
+    -fx-font-family: "Times New Roman";
+}
+
+.my-label-def{
+    -fx-text-fill: BLack;
+    -fx-font-size: 12px;
+    -fx-font-weight: BOLD;
+    -fx-font-family: "Times New Roman";
+}
+
+.my-label-world-grid{
+    -fx-text-fill: Black;
+    -fx-font-size: 16px;
+    -fx-font-weight: BOLD;
+    -fx-font-family: "Times New Roman";
+}
+
+
+
+!*body1*!
+#label1{
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-font-family: "Times New Roman";
+}
+
+#label2{
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-font-family: "Times New Roman";
+}
+
+#text-flow-1{
+    color: blue;
+}
+
+#text-flow-2{
+    color: blue;
+}
+
+!*header*!
+.move-to-page-button{
+    -fx-fill: #1E96C2;
+    -fx-border-color: BLACK;
+    -fx-text-fill: BLACK;
+
+}
+
+
+#queue-man-button{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: BLUE;
+}
+.label-queue{
+    -fx-text-fill: WHITE;
+    -fx-font-size: 10px;
+    -fx-font-weight: BOLD;
+    -fx-background-color: BLUE;
+}
+.background{
+    -fx-background-color: BLUE;
+}
+
+
+!*tab pane*!
+.custom-tab-pane .tab-header-area {
+    visibility: hidden;
+    -fx-padding: 0;
+}
+
+.custom-tab-pane .tab-content-area {
+    -fx-padding: 0;
+
+}
+
+#tab-pane-id .simulation-label {
+    -fx-font-size: 12px;
+    -fx-background-color: #A4CAD6;
+    -fx-padding: 4px;
+    -fx-border-radius: 2px;
+}
+
+.my-label-no-background {
+    -fx-font-size: 12px;
+    -fx-padding: 4px;
+    -fx-border-radius: 2px;
+    -fx-font-family: "Times New Roman";
+}
+
+.my-gridPane {
+    -fx-alignment: center;
+    -fx-padding: 10px;
+    -fx-background-color: #F5F5F5;
+}
+
+!*body2*!
+#label1{
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-font-family: "Times New Roman";
+}
+
+#label2{
+    -fx-font-size: 14px;
+    -fx-font-weight: BOLD;
+    -fx-font-family: "Times New Roman";
+}
+
+#text-flow-1{
+    color: blue;
+}
+
+#text-flow-2{
+    color: blue;
+}
+
+*/
+
+
+

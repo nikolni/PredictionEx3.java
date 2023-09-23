@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="499.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.UserController">
+   <top>
+      <fx:include fx:id="headerComponent" source="/component/header/header.fxml" />
+   </top>
+    <center>
+        <fx:include fx:id="tabPaneUserBodyComponent" source="/component/body/main/tabPaneUserBody.fxml" />
+    </center>
+</BorderPane>
