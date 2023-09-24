@@ -2,13 +2,12 @@ package main;
 
 import component.body.main.TabPaneAdminBodyController;
 import component.header.HeaderController;
-import dto.primary.DTOThreadsPoolStatusForUi;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import system.engine.api.SystemEngineAccess;
-import system.engine.impl.SystemEngineAccessImpl;
+import engine.per.file.engine.api.SystemEngineAccess;
+import engine.per.file.engine.impl.SystemEngineAccessImpl;
 
 public class AdminController {
 
