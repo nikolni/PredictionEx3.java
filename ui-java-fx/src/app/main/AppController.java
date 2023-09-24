@@ -6,8 +6,8 @@ import dto.primary.DTOThreadsPoolStatusForUi;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
-import system.engine.api.SystemEngineAccess;
-import system.engine.impl.SystemEngineAccessImpl;
+import engine.per.file.engine.api.SystemEngineAccess;
+import engine.per.file.engine.impl.SystemEngineAccessImpl;
 
 public class AppController {
 

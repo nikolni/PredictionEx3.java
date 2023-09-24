@@ -22,9 +22,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import system.engine.api.SystemEngineAccess;
-import system.engine.world.definition.entity.manager.api.EntityDefinitionManager;
-import system.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
+import engine.per.file.engine.api.SystemEngineAccess;
+import engine.per.file.engine.world.definition.entity.manager.api.EntityDefinitionManager;
+import engine.per.file.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
 
 import java.io.IOException;
 

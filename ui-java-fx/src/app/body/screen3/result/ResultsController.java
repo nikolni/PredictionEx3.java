@@ -9,7 +9,7 @@ import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import system.engine.api.SystemEngineAccess;
+import engine.per.file.engine.api.SystemEngineAccess;
 
 import java.util.ArrayList;
 import java.util.List;

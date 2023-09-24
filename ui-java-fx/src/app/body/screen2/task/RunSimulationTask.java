@@ -3,7 +3,7 @@ package app.body.screen2.task;
 import app.body.screen3.main.Body3Controller;
 import dto.primary.DTOSimulationEndingForUi;
 import javafx.application.Platform;
-import system.engine.api.SystemEngineAccess;
+import engine.per.file.engine.api.SystemEngineAccess;
 
 public class RunSimulationTask implements Runnable{
     private final Integer simulationID;
