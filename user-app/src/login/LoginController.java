@@ -1,7 +1,6 @@
 package login;
 
-import chat.client.util.Constants;
-import chat.client.util.http.HttpClientUtil;
+import constants.Constants;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -24,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.net.URL;
 
-import static main.CommonResourcesPaths.APP_FXML_INCLUDE_RESOURCE;
 
 public class LoginController {
 
@@ -62,7 +60,6 @@ public class LoginController {
                 .build()
                 .toString();
 
-        updateHttpStatusLine("New request is launched for: " + finalUrl);
 
         HttpClientUtil.runAsync(finalUrl, new Callback() {
 
@@ -118,7 +115,7 @@ public class LoginController {
 
     private void popUpForSuccessfulLogin(){
         Stage SuccessfulLoginStage = new Stage();
-        String message = "You have successfully registered in the system!";
+        String message = "You have successfully registered to the system!";
 
         Label label = new Label(message);
         Font font = new Font(16);
@@ -128,8 +125,8 @@ public class LoginController {
         StackPane root = new StackPane(vbox);
         Scene scene = new Scene(root, 350, 250);
 
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Welcome!");
-        primaryStage.show();
+        SuccessfulLoginStage.setScene(scene);
+        SuccessfulLoginStage.setTitle("Welcome!");
+        SuccessfulLoginStage.show();
     }
 }
