@@ -15,20 +15,11 @@ public class UserController {
     @FXML private TabPane tabPaneUserBodyComponent;
     @FXML private TabPaneUserBodyController tabPaneUserBodyComponentController;
 
+    private String userName;
 
 
-    private SystemEngineAccess systemEngine;
-
-    public UserController(){
-        systemEngine = new SystemEngineAccessImpl();
-
-        /*try {
-            systemEngine.getXMLFromUser("C:/Users/maaya/javaProjects/PredictionsEX2_2.9/ex1-cigarets.xml");
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }*/
+    public void setUserName(String userName){
+        this.userName = userName;
     }
 
     @FXML
@@ -38,6 +29,10 @@ public class UserController {
             tabPaneUserBodyComponentController.setMainController(this);
         }
     }
+    public String getUserName() {
+        return userName;
+    }
+
 
     public void onExecutionClick() {
 

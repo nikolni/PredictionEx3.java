@@ -13,21 +13,20 @@
 
 <VBox styleClass="background" stylesheets="@../../../../main/userGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="after.login.component.body.request.main.RequestController">
    <children>
-      <GridPane prefHeight="113.0" prefWidth="600.0" styleClass="background">
+      <GridPane prefHeight="127.0" prefWidth="808.0" styleClass="background">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="286.5" minWidth="10.0" prefWidth="245.5" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.5" minWidth="10.0" prefWidth="369.5" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="320.0" minWidth="10.0" prefWidth="320.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.5" minWidth="10.0" prefWidth="315.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="262.5" minWidth="10.0" prefWidth="172.5" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label styleClass="body-label" text="Simulation Name" GridPane.halignment="CENTER" />
             <Label styleClass="body-label" text="Number of simulations for execution" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <Label styleClass="body-label" text="Termination conditions (',' for seperate)" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <TextField fx:id="simulationNameTextField" GridPane.columnIndex="1" />
             <TextField fx:id="simulationNumTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="terminationConditionsTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -36,6 +35,21 @@
                   <Insets right="20.0" />
                </GridPane.margin>
             </Button>
+            <GridPane GridPane.rowIndex="2">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="43.0" minHeight="10.0" prefHeight="18.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="43.0" minHeight="10.0" prefHeight="14.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label styleClass="body-label" text="       Termination conditions   " textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" />
+                  <Label prefHeight="26.0" prefWidth="175.0" text="(1-'by user', 2-'ticks', 3-seconds) " textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <Label text="  (e.g., 2=840,3=10)" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
          </children>
       </GridPane>
       <ScrollPane fitToHeight="true" fitToWidth="true">

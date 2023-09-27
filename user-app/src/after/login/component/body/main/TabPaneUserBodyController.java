@@ -46,6 +46,7 @@ public class TabPaneUserBodyController {
 
      public void setControllersForChildren(SystemEngineAccess systemEngineAccess){
         requestsComponentController.setExecutionController(executionComponentController);
+         requestsComponentController.setMainController(mainUserController);
         executionComponentController.setProgressAndResultController(resultsComponentController);
     }
 
