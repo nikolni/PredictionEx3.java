@@ -1,6 +1,7 @@
 package login;
 
-import constants.Constants;
+import after.login.main.UserController;
+import util.constants.Constants;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -104,6 +105,8 @@ public class LoginController {
             URL url = getClass().getResource("/after/login/main/user.fxml");
             fxmlLoader.setLocation(url);
             Parent root = fxmlLoader.load(url.openStream());
+            UserController userController = fxmlLoader.getController();
+            userController.setUserName(userNameTextField.getText());
 
             Scene scene = new Scene(root, 850, 680);
             primaryStage.setScene(scene);
