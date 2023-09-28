@@ -24,4 +24,12 @@
         <servlet-name>SimulationNamesServlet</servlet-name>
         <url-pattern>/simulationnames</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>GridSizesServlet</servlet-name>
+        <servlet-class>servlet.GridSizesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GridSizesServlet</servlet-name>
+        <url-pattern>/worldgrid</url-pattern>
+    </servlet-mapping>
 </web-app>

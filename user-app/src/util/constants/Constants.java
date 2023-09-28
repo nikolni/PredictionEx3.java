@@ -26,6 +26,7 @@ public class Constants {
     public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/login";
     public final static String USER_REQUEST_PAGE = FULL_SERVER_PATH + "/userrequest";
     public final static String SIMULATION_NAMES_LIST_PAGE = FULL_SERVER_PATH + "/simulationnames";
+    public final static String WORLD_GRID_SIZES_PAGE = FULL_SERVER_PATH + "/worldgrid";
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();

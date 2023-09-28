@@ -23,7 +23,7 @@ public class UserRequestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Map<String, List<UserRequest>> userNameToRequestsList= ServletUtils.getMapUserNameToRequestsList(getServletContext());
-        List<UserRequest> userRequestsList = userNameToRequestsList.get(request.getHeader("user name"));
+        List<UserRequest> userRequestsList = userNameToRequestsList.get(request.getHeader("user_name"));
 
         List<DTOUserRequestForUi> userRequestForUiList = new ArrayList<>();
         for(UserRequest userRequest : userRequestsList){

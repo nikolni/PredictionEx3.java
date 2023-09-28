@@ -13,6 +13,7 @@ import dto.definition.property.definition.api.PropertyDefinitionDTO;
 import dto.primary.DTOEnvVarsDefForUi;
 import dto.primary.DTORerunValuesForUi;
 import dto.primary.DTOWorldGridForUi;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -28,9 +29,15 @@ import javafx.stage.Stage;
 import engine.per.file.engine.api.SystemEngineAccess;
 import engine.per.file.engine.world.definition.entity.manager.api.EntityDefinitionManager;
 import engine.per.file.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
+import util.constants.Constants;
+import util.http.HttpClientUtil;
 
 import java.io.IOException;
 import java.util.*;
+
+import static util.constants.Constants.popUpWindow;
 
 
 public class ExecutionController {
@@ -61,6 +68,8 @@ public class ExecutionController {
     private ProgressAndResultController progressAndResultController;
     private Integer simulationsCounter = 0;
     private int maxPopulationQuantity;
+    private String simulationName;
+    private DTOWorldGridForUi dtoWorldGridForUi;
 
 
     public ExecutionController() {
@@ -75,9 +84,7 @@ public class ExecutionController {
     }
 
 
-    public void primaryInitialize(SystemEngineAccess systemEngine) {
-        this.systemEngine = systemEngine;
-
+    public void primaryInitialize() {
         simulationsCounter = 0;
         simulationEntitiesPopulationFlowPane.getChildren().clear();
         simulationEnvironmentInputsFlowPane.getChildren().clear();
@@ -90,6 +97,10 @@ public class ExecutionController {
         createEnvVarsChildrenInFlowPane(envVarsList = dtoEnvVarsDefForUi.getEnvironmentVars());
         entitiesNames = systemEngine.getEntitiesNames().getNames();
         createEntitiesPopulationChildrenInFlowPane(entitiesNames);
+    }
+
+    public void setSimulationName(String simulationName) {
+        this.simulationName = simulationName;
     }
 
     private void createEnvVarsChildrenInFlowPane(List<PropertyDefinitionDTO> envVarsList){
@@ -113,7 +124,7 @@ public class ExecutionController {
     }
 
     private void createEntitiesPopulationChildrenInFlowPane(List<String> entitiesNames){
-        DTOWorldGridForUi dtoWorldGridForUi = systemEngine.getDTOWorldGridForUi();
+        getDTOWorldGridForUi();
         maxPopulationQuantity = dtoWorldGridForUi.getGridRows() * dtoWorldGridForUi.getGridColumns();
 
         for(String entityName: entitiesNames){
@@ -315,6 +326,43 @@ public class ExecutionController {
             }
 
         }
+    }
+
+    private void getDTOWorldGridForUi() {
+        String finalUrl = HttpUrl
+                .parse(Constants.WORLD_GRID_SIZES_PAGE)
+                .newBuilder()
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    popUpWindow(e.getMessage(), "Error!");
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() -> {
+                        popUpWindow(responseBody, "Error!");
+                    });
+                } else {
+                    // Read and process the response content
+                    try (ResponseBody responseBody = response.body()) {
+                        if (responseBody != null) {
+                            String json = response.body().string();
+                            dtoWorldGridForUi = Constants.GSON_INSTANCE.fromJson(json, DTOWorldGridForUi.class);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }
 
