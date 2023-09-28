@@ -3,14 +3,14 @@ package after.login.component.body.execution.main;
 import after.login.component.body.execution.start.button.error.ErrorExecutionScreenController;
 import after.login.component.body.execution.tile.environment.variable.EnvironmentVariableController;
 import after.login.component.body.execution.start.button.good.StartButtonController;
-import after.login.component.body.execution.task.RunSimulationRunnable;
 import after.login.component.body.execution.tile.TileResourceConstants;
 import after.login.component.body.execution.tile.entity.EntityController;
 import after.login.component.body.execution.server.RequestsFromServer;
 import after.login.component.body.running.main.ProgressAndResultController;
 import after.login.dto.creation.CreateDTOEnvVarsForSE;
 import after.login.dto.creation.CreateDTOPopulationForSE;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import after.login.main.UserController;
+import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.include.DTOIncludeForExecutionForUi;
 import dto.primary.*;
 import javafx.fxml.FXML;
@@ -51,7 +51,6 @@ public class ExecutionController {
 
     private final Map<String, String> envVarNameToSelectedInitValue;
     private final Map<String, String> entityNameToSelectedPopulationValue;
-
     private List<PropertyDefinitionDTO> envVarsList;
     private List<String> entitiesNames;
     private ProgressAndResultController progressAndResultController;
@@ -60,6 +59,8 @@ public class ExecutionController {
     private String simulationName;
     private DTOWorldGridForUi dtoWorldGridForUi;
     private RequestsFromServer requestsFromServer = null;
+    private String requestID;
+    private UserController mainController;
 
 
     public ExecutionController() {
@@ -92,8 +93,12 @@ public class ExecutionController {
         createEntitiesPopulationChildrenInFlowPane(entitiesNames);
     }
 
-    public void setSimulationName(String simulationName) {
+    public void setSimulationNameAndRequestID(String simulationName, String requestID) {
         this.simulationName = simulationName;
+        this.requestID = requestID;
+    }
+    public void setMainController(UserController mainController) {
+        this.mainController = mainController;
     }
 
     private void createEnvVarsChildrenInFlowPane(List<PropertyDefinitionDTO> envVarsList){
@@ -280,11 +285,12 @@ public class ExecutionController {
         }
     }
     public void startSimulation(){
-        //simulationsCounter++;
+        simulationsCounter++;
         DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE = new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList);
         DTOPopulationValuesForSE dtoPopulationValuesForSE = new CreateDTOPopulationForSE().getData(entityNameToTileController);
-        requestsFromServer.postRequestExecutionToServer(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, simulationName);
-        //progressAndResultController.addItemToSimulationListView(simulationsCounter);
+        requestsFromServer.postRequestExecutionToServer(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, simulationName,
+                mainController.getUserName(), requestID());
+        progressAndResultController.addItemToSimulationListView(simulationsCounter);
         clearScreen();
     }
 

@@ -32,9 +32,14 @@ public class ExecutionServlet {
         DTOPopulationValuesForSE dtoPopulationValuesForSE = dtoIncludeForExecutionForServer.getDtoPopulationValuesForSE();
 
         String simulationName = request.getParameter("simulation_name");
+        String userName= request.getParameter("user_name");
+        Integer requestID=Integer.parseInt(request.getParameter("requestID"));
+
         SystemEngineAccess systemEngineAccess = ServletUtils.getSEInstanceBySimulationName
                 (getServletContext(), simulationName);
         Integer executionID = ServletUtils.increaseExecutionCounter(getServletContext());
+        ServletUtils.addExecutionByUserNameAndRequestID(getServletContext(), userName, requestID);
+
         systemEngineAccess.prepareForExecution(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, executionID);
         ServletUtils.addRunnableToThreadPool(getServletContext(), new Runnable() {
             @Override

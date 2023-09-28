@@ -1,14 +1,13 @@
-package dto.definition.rule.activation.impl;
+package dto.definition.rule.activation;
 
-import dto.definition.rule.activation.api.ActivationDTO;
 import dto.definition.rule.activation.tick.Tick;
 
 
-public class ActivationDTOImpl implements ActivationDTO {
+public class ActivationDTO {
     private Tick ticks = new Tick();
     private float probability = 1;
 
-    public ActivationDTOImpl(int tickNumber, float probability){
+    public ActivationDTO(int tickNumber, float probability){
         ticks.setTick(tickNumber);
         this.probability = probability;
     }

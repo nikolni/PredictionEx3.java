@@ -24,11 +24,10 @@ public class UserRequestServlet extends HttpServlet {
             throws ServletException, IOException {
         Map<String, List<UserRequest>> userNameToRequestsList= ServletUtils.getMapUserNameToRequestsList(getServletContext());
         List<UserRequest> userRequestsList = userNameToRequestsList.get(request.getHeader("user_name"));
-
         List<DTOUserRequestForUi> userRequestForUiList = new ArrayList<>();
         for(UserRequest userRequest : userRequestsList){
             userRequestForUiList.add(new DTOUserRequestForUi(userRequest.getRequestStatus(),
-                    userRequest.getNumOfSimulationsRunning(), userRequest.getNumOfSimulationsDone()));
+                    userRequest.getNumOfSimulationsRunning(), userRequest.getNumOfSimulationsDone(), userRequest.getRequestID()));
         }
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(userRequestForUiList);
@@ -50,13 +49,8 @@ public class UserRequestServlet extends HttpServlet {
         String terminationConditions = prop.getProperty("termination conditions");
 
         UserRequest userRequest = new UserRequest(simulationName,numberOfExecutions,terminationConditions);
-
-        synchronized (this){
-            List<UserRequest> allUsersRequestsList = ServletUtils.getUserRequestList(getServletContext());
-            Map<String, List<UserRequest>> userNameToRequestsList= ServletUtils.getMapUserNameToRequestsList(getServletContext());
-            allUsersRequestsList.add(userRequest);
-            List<UserRequest> userRequestsList = userNameToRequestsList.get(request.getHeader("user name"));
-            userRequestsList.add(userRequest);
-        }
+        userRequest.setRequestID(ServletUtils.getUserRequestListSize(getServletContext()));
+        ServletUtils.addRequestToAllUsersRequestsList(getServletContext(), userRequest);
+        ServletUtils.addRequestByUserName(getServletContext(), request.getHeader("user name"), userRequest);
     }
 }

@@ -1,7 +1,7 @@
 package dto.creation;
 
 import app.body.screen2.tile.environment.variable.EnvironmentVariableController;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.primary.DTOEnvVarDefValuesForSE;
 
 import java.util.ArrayList;

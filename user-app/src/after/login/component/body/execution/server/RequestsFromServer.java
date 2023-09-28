@@ -56,7 +56,8 @@ public class RequestsFromServer {
     }
 
     public void postRequestExecutionToServer(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE ,
-                                             DTOPopulationValuesForSE dtoPopulationValuesForSE ,String simulationName){
+                                             DTOPopulationValuesForSE dtoPopulationValuesForSE ,String simulationName,
+                                             String userName, String requestID){
         DTOIncludeForExecutionForServer dtoIncludeForExecutionForServer = new DTOIncludeForExecutionForServer(
                 dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE);
         String json = Constants.GSON_INSTANCE.toJson(dtoIncludeForExecutionForServer);
@@ -65,6 +66,8 @@ public class RequestsFromServer {
                 .url(Constants.EXECUTION_PAGE)
                 .post(RequestBody.create(json.getBytes()))
                 .addHeader("simulation_name", simulationName)
+                .addHeader("user_name", userName)
+                .addHeader("requestID", requestID)
                 .build();
 
         Call call = HTTP_CLIENT_PUBLIC.newCall(request);

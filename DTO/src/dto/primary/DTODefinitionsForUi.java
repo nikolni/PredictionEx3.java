@@ -1,9 +1,9 @@
 package dto.primary;
 
-import dto.definition.entity.api.EntityDefinitionDTO;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
-import dto.definition.rule.api.RuleDTO;
-import dto.definition.termination.condition.manager.api.TerminationConditionsDTOManager;
+import dto.definition.entity.EntityDefinitionDTO;
+import dto.definition.property.definition.PropertyDefinitionDTO;
+import dto.definition.rule.RuleDTO;
+import dto.definition.termination.condition.manager.TerminationConditionsDTOManager;
 
 import java.util.List;
 
