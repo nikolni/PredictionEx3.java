@@ -1,8 +1,8 @@
 package after.login.component.body.running.result;
 
 import after.login.component.body.running.main.ProgressAndResultController;
-import dto.definition.entity.api.EntityDefinitionDTO;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import dto.definition.entity.EntityDefinitionDTO;
+import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.primary.DTODefinitionsForUi;
 import dto.primary.DTOEntitiesAfterSimulationByQuantityForUi;
 import dto.primary.DTOPropertyHistogramForUi;

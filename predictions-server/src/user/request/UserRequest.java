@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRequest {
+    private Integer requestID = 0;
     private String simulationName;
     private Integer numOfSimulations=0;
     private List<TerminationCondition> terminationConditionList;
@@ -74,4 +75,12 @@ public class UserRequest {
     public void setNumOfSimulationsDone(Integer numOfSimulationsDone) {
         this.numOfSimulationsDone = numOfSimulationsDone;
     }
+
+    public void setRequestID(Integer requestID) {
+        this.requestID = requestID;
+    }
+    public Integer getRequestID() {
+        return requestID;
+    }
+
 }

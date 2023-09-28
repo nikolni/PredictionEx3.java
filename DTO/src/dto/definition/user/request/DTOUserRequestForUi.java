@@ -5,12 +5,14 @@ public class DTOUserRequestForUi {
 
     private Integer numOfSimulationsRunning = 0;
     private Integer numOfSimulationsDone = 0;
+    private Integer requestID = 0;
 
     public DTOUserRequestForUi(String requestStatus, Integer numOfSimulationsRunning,
-                               Integer getNumOfSimulationsDone) {
+                               Integer getNumOfSimulationsDone, Integer requestID) {
         this.requestStatus = requestStatus;
         this.numOfSimulationsRunning = numOfSimulationsRunning;
         this.numOfSimulationsDone = numOfSimulationsDone;
+        this.requestID = requestID;
     }
 
     public String getRequestStatus() {
@@ -21,5 +23,8 @@ public class DTOUserRequestForUi {
     }
     public Integer getNumOfSimulationsDone() {
         return numOfSimulationsDone;
+    }
+    public Integer getRequestID() {
+        return requestID;
     }
 }

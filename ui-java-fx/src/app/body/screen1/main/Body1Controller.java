@@ -1,8 +1,8 @@
 package app.body.screen1.main;
 
 import app.body.screen1.tile.world.grid.WorldGridSizesController;
-import dto.definition.entity.api.EntityDefinitionDTO;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import dto.definition.entity.EntityDefinitionDTO;
+import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.definition.rule.action.KillActionDTO;
 import dto.definition.rule.action.ProximityActionDTO;
 import dto.definition.rule.action.SetActionDTO;
@@ -14,11 +14,11 @@ import dto.definition.rule.action.numeric.IncreaseActionDTO;
 import dto.definition.rule.action.ReplaceActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
 import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
-import dto.definition.rule.api.RuleDTO;
+import dto.definition.rule.RuleDTO;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
-import dto.definition.termination.condition.manager.api.TerminationConditionsDTOManager;
+import dto.definition.termination.condition.manager.TerminationConditionsDTOManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

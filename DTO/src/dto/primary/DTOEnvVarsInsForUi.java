@@ -1,6 +1,6 @@
 package dto.primary;
 
-import dto.definition.property.instance.api.PropertyInstanceDTO;
+import dto.definition.property.instance.PropertyInstanceDTO;
 
 import java.util.List;
 

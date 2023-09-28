@@ -1,9 +1,9 @@
-package dto.definition.property.definition.impl;
+package dto.definition.property.definition;
 
 
 import java.util.List;
 
-public class PropertyDefinitionDTOImpl implements dto.definition.property.definition.api.PropertyDefinitionDTO {
+public class PropertyDefinitionDTO {
 
     private final String uniqueName;
     private final String propertyType;
@@ -11,8 +11,8 @@ public class PropertyDefinitionDTOImpl implements dto.definition.property.defini
     private final Boolean doesHaveRange;
     private final List<Object> rangeArray;
 
-    public PropertyDefinitionDTOImpl(String uniqueName, String propertyType, Boolean isRandomInitialized,
-                                     Boolean doesHaveRange, List<Object> rangeArray) {
+    public PropertyDefinitionDTO(String uniqueName, String propertyType, Boolean isRandomInitialized,
+                                 Boolean doesHaveRange, List<Object> rangeArray) {
         this.uniqueName = uniqueName;
         this.propertyType = propertyType;
         this.isRandomInitialized = isRandomInitialized;
@@ -20,27 +20,27 @@ public class PropertyDefinitionDTOImpl implements dto.definition.property.defini
         this.rangeArray = rangeArray;
     }
 
-    @Override
+
     public String getUniqueName() {
         return uniqueName;
     }
 
-    @Override
+
     public String getType() {
         return propertyType;
     }
 
-    @Override
+
     public Boolean isRandomInitialized(){
         return isRandomInitialized;
     }
 
-    @Override
+
     public Boolean doesHaveRange(){
         return doesHaveRange;
     }
 
-    @Override
+
     public List<Object> getRange(){
         return rangeArray;
     }

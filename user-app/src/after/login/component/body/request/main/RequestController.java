@@ -87,7 +87,8 @@ public class RequestController {
         Integer requestIndex = getRequestForExecution();
         if(requestIndex != null) {
             String simulationName = getSimulationNameChosen(requestIndex);
-            executionController.setSimulationName(simulationName);
+            String requestID = getRequestIDChosen(requestIndex);
+            executionController.setSimulationNameAndRequestID(simulationName, requestID);
         }
     }
 
@@ -131,6 +132,22 @@ public class RequestController {
     private String getSimulationNameChosen(int row){
         int targetRow = row;
         int targetColumn = 4;
+        Node childInGridPane = null;
+
+        for (Node child : requestGridPane.getChildren()) {
+            Integer rowIndex = GridPane.getRowIndex(child);
+            Integer columnIndex = GridPane.getColumnIndex(child);
+
+            if (rowIndex != null && columnIndex != null && rowIndex == targetRow && columnIndex == targetColumn) {
+                childInGridPane = child;
+                break;
+            }
+        }
+        return ((Label) childInGridPane).getText();
+    }
+    private String getRequestIDChosen(int row){
+        int targetRow = row;
+        int targetColumn = 0;
         Node childInGridPane = null;
 
         for (Node child : requestGridPane.getChildren()) {

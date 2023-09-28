@@ -1,9 +1,7 @@
 package engine.per.file.dto.creation;
 
-import dto.definition.entity.api.EntityDefinitionDTO;
-import dto.definition.entity.impl.EntityDefinitionDTOImpl;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
-import dto.definition.property.definition.impl.PropertyDefinitionDTOImpl;
+import dto.definition.entity.EntityDefinitionDTO;
+import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.definition.rule.action.KillActionDTO;
 import dto.definition.rule.action.ProximityActionDTO;
 import dto.definition.rule.action.SetActionDTO;
@@ -15,15 +13,13 @@ import dto.definition.rule.action.numeric.IncreaseActionDTO;
 import dto.definition.rule.action.ReplaceActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
 import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
-import dto.definition.rule.activation.impl.ActivationDTOImpl;
-import dto.definition.rule.api.RuleDTO;
-import dto.definition.rule.impl.RuleDTOImpl;
+import dto.definition.rule.activation.ActivationDTO;
+import dto.definition.rule.RuleDTO;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
 import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
-import dto.definition.termination.condition.manager.api.TerminationConditionsDTOManager;
-import dto.definition.termination.condition.manager.impl.TerminationConditionsDTOManagerImpl;
+import dto.definition.termination.condition.manager.TerminationConditionsDTOManager;
 import dto.primary.DTODefinitionsForUi;
 import engine.per.file.engine.world.definition.entity.api.EntityDefinition;
 import engine.per.file.engine.world.definition.property.api.PropertyDefinition;
@@ -63,15 +59,15 @@ public class CreateDTODefinitionsForUi {
 
         List<Rule> rules = worldDefinition.getRuleDefinitionManager().getDefinitions();
         for(Rule rule: rules){
-            rulesDTO.add(new RuleDTOImpl(rule.getName(), rule.getActionsNames(), createActionsDTOs(rule.getActionsToPerform()),
-                    new ActivationDTOImpl(rule.getActivation().getTicks(), rule.getActivation().getProbability())));
+            rulesDTO.add(new RuleDTO(rule.getName(), rule.getActionsNames(), createActionsDTOs(rule.getActionsToPerform()),
+                    new ActivationDTO(rule.getActivation().getTicks(), rule.getActivation().getProbability())));
         }
 
         TerminationConditionsManager terminationConditionsManager = worldDefinition.getTerminationConditionsManager();
         for(TerminationCondition terminationCondition : terminationConditionsManager.getTerminationConditionsList()){
             terminationConditionsDTO.add(createTerminationConditionsDTO(terminationCondition));
         }
-        TerminationConditionsDTOManager terminationConditionsDTOManager = new TerminationConditionsDTOManagerImpl(terminationConditionsDTO);
+        TerminationConditionsDTOManager terminationConditionsDTOManager = new TerminationConditionsDTOManager(terminationConditionsDTO);
 
         return new DTODefinitionsForUi(entitiesDTO, rulesDTO, terminationConditionsDTOManager);
     }
@@ -81,11 +77,11 @@ public class CreateDTODefinitionsForUi {
         for(PropertyDefinition propertyDefinition: entityDefinition.getProps()){
             propertiesDTO.add(createPropertyDefinitionDTO(propertyDefinition));
         }
-        return new EntityDefinitionDTOImpl(entityDefinition.getUniqueName(), entityDefinition.getPopulation(), propertiesDTO);
+        return new EntityDefinitionDTO(entityDefinition.getUniqueName(), entityDefinition.getPopulation(), propertiesDTO);
     }
 
     private PropertyDefinitionDTO createPropertyDefinitionDTO(PropertyDefinition propertyDefinition){
-        return  new PropertyDefinitionDTOImpl(propertyDefinition.getUniqueName(), propertyDefinition.getType().toString(),
+        return  new PropertyDefinitionDTO(propertyDefinition.getUniqueName(), propertyDefinition.getType().toString(),
                 propertyDefinition.isRandomInitialized(), propertyDefinition.doesHaveRange(), propertyDefinition.getRange());
     }
 

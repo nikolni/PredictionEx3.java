@@ -1,7 +1,7 @@
 package after.login.dto.creation;
 
 import after.login.component.body.execution.tile.environment.variable.EnvironmentVariableController;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.primary.DTOEnvVarDefValuesForSE;
 
 import java.util.ArrayList;

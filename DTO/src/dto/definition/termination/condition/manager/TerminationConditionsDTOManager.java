@@ -1,14 +1,13 @@
-package dto.definition.termination.condition.manager.impl;
+package dto.definition.termination.condition.manager;
 
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
-import dto.definition.termination.condition.manager.api.TerminationConditionsDTOManager;
 
 import java.util.List;
 
-public class TerminationConditionsDTOManagerImpl implements TerminationConditionsDTOManager {
+public class TerminationConditionsDTOManager implements TerminationConditionsDTOManager {
     private List<TerminationConditionsDTO> terminationConditionsDTOList;
 
-    public TerminationConditionsDTOManagerImpl (List<TerminationConditionsDTO> terminationConditionsDTOList){
+    public TerminationConditionsDTOManager(List<TerminationConditionsDTO> terminationConditionsDTOList){
         this.terminationConditionsDTOList = terminationConditionsDTOList;
     }
     @Override

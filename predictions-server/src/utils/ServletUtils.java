@@ -18,9 +18,10 @@ import java.util.concurrent.Executors;
 public class ServletUtils {
 
 	private static final String USER_MANAGER_ATTRIBUTE_NAME = "userManager";
-	private static final String USER_REQUEST_LIST_ATTRIBUTE_NAME = "userRequestList";
+	private static final String ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME = "userRequestList";
+	private static final String ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME = "userRequestListSize";
 	private static final String SIMULATION_NAMES_LIST_ATTRIBUTE_NAME = "simulationNamesList";
-	private static final String USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME = "userNameToRequestsList";
+	private static final String USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME = "mapOfUserNameToRequestsMap"; 	//Map<String, Map<UserRequest, List<Integer>>>
 	private static final String SIMULATION_NAME_TO_SE_MAP_ATTRIBUTE_NAME = "simulationNameToSE";
 	private static final String THREAD_POOL_SIZE_ATTRIBUTE_NAME = "threadPoolSize";
 	private static final String THREAD_POOL_ATTRIBUTE_NAME = "threadPool";
@@ -32,7 +33,8 @@ public class ServletUtils {
 	the actual fetch of them is remained un-synchronized for performance POV
 	 */
 	private static final Object userManagerLock = new Object();
-	private static final Object userRequestListLock = new Object();
+	private static final Object allUsersRequestsListLock = new Object();
+	private static final Object allUsersRequestsListSizeLock = new Object();
 	private static final Object simulationNamesListLock = new Object();
 	private static final Object userNameToRequestsListLock = new Object();
 	private static final Object simulationNameToSELock = new Object();
@@ -52,14 +54,23 @@ public class ServletUtils {
 		return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
 	}
 
-	public static List<UserRequest> getUserRequestList(ServletContext servletContext) {
+	public static void addRequestToAllUsersRequestsList(ServletContext servletContext, UserRequest userRequest) {
 
-		synchronized (userRequestListLock) {
-			if (servletContext.getAttribute(USER_REQUEST_LIST_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(USER_REQUEST_LIST_ATTRIBUTE_NAME, new ArrayList<>());
+		synchronized (allUsersRequestsListLock) {
+			if (servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME, new ArrayList<>());
 			}
+			((List<UserRequest>) servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME)).add(userRequest);
 		}
-		return (List<UserRequest>) servletContext.getAttribute(USER_REQUEST_LIST_ATTRIBUTE_NAME);
+	}
+	public static Integer getUserRequestListSize(ServletContext servletContext) {
+
+		synchronized (allUsersRequestsListSizeLock) {
+			if (servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME, 0);
+			}
+			return ++((Integer)servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME));
+		}
 	}
 	public static List<String> getSimulationNamesList(ServletContext servletContext) {
 
@@ -70,21 +81,36 @@ public class ServletUtils {
 		}
 		return (List<String>) servletContext.getAttribute(SIMULATION_NAMES_LIST_ATTRIBUTE_NAME);
 	}
-	public static List<UserRequest> getRequestsListByUserName(ServletContext servletContext, String userName) {
-		List<UserRequest> userRequestsList = null;
+	public static void addRequestByUserName(ServletContext servletContext, String userName ,UserRequest userRequest) {
+		Map<UserRequest, List<Integer>> userRequestListMap = null;
 
 		synchronized (userNameToRequestsListLock) {
 			if (servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME) == null) {
 				servletContext.setAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME, new HashMap<>());
 			}
-			Map<String, List<UserRequest>> requestsListByUserNameMap =
+			Map<String, Map<UserRequest, List<Integer>>> requestsListByUserNameMap =
 					servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME);
 			if(requestsListByUserNameMap.get(userName) == null){
-				userRequestsList = new ArrayList<>();
-				requestsListByUserNameMap.put(userName,userRequestsList);
+				userRequestListMap = new HashMap<>();
+				requestsListByUserNameMap.put(userName,userRequestListMap);
 			}
+			userRequestListMap.put(userRequest, null);
 		}
-		return userRequestsList;
+	}
+	public static void addExecutionByUserNameAndRequestID(ServletContext servletContext, String userName ,Integer requestID) {
+		List<Integer> userRequestList = null;
+
+		Map<String, Map<UserRequest, List<Integer>>> requestsListByUserNameMap =
+				servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME);
+		//if we got here, there is already user request to get.
+		Map<UserRequest, List<Integer>> userRequestListMap = requestsListByUserNameMap.get(userName);
+
+		synchronized (userNameToRequestsListLock) {
+			if((userRequestListMap.get(((List<UserRequest>) servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME)).get(requestID -1)))== null){
+				userRequestList = new ArrayList<>();
+			}
+			userRequestList.add((Integer)servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME));
+		}
 	}
 
 	//if we got here with simulation name, there must be SystemEngineAccess instance for this simulation.
@@ -124,5 +150,6 @@ public class ServletUtils {
 			return ++((Integer)servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME));
 		}
 	}
+
 
 }

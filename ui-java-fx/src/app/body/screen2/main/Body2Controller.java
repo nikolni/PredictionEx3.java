@@ -12,7 +12,7 @@ import dto.primary.DTORerunValuesForUi;
 import dto.primary.DTOWorldGridForUi;
 import dto.creation.CreateDTOEnvVarsForSE;
 import dto.creation.CreateDTOPopulationForSE;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import dto.definition.property.definition.PropertyDefinitionDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

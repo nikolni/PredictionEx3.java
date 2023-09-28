@@ -2,7 +2,7 @@
 package engine.per.file.engine.impl;
 
 import dto.primary.*;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
+import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import dto.primary.DTORerunValuesForUi;
 import dto.primary.DTOSimulationEndingForUi;
