@@ -47,6 +47,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     private boolean isHaveValidFileInSystem=false;
     private final Map<Integer, WorldInstance> simulationIdToWorldInstance;
     private RunSimulationManager runSimulationManager;
+    private DTOSimulationEndingForUi dtoSimulationEndingForUi = null;
 
 
     public SystemEngineAccessImpl() {
@@ -195,10 +196,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
-    public dto.primary.DTOSimulationEndingForUi runSimulation(Integer simulationID)
-
-            throws IllegalArgumentException{
-
+    public void runSimulation(Integer simulationID) throws IllegalArgumentException{
             runSimulationManager.increaseActiveCount();
             int[] terminationConditionArr;
 
@@ -207,10 +205,9 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
             terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
                     simulationIdToWorldInstance.get(simulationID));
 
-            dto.primary.DTOSimulationEndingForUi dtoSimulationEndingForUi = new DTOSimulationEndingForUi(simulationID, terminationConditionArr);
+            dtoSimulationEndingForUi = new DTOSimulationEndingForUi(simulationID, terminationConditionArr);
             runSimulationManager.increaseCompletedTaskCount();
             runSimulationManager.decreaseActiveCount();
-            return dtoSimulationEndingForUi;
     }
     @Override
     public DTOThreadsPoolStatusForUi getThreadsPoolStatus(){
@@ -313,5 +310,12 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     @Override
     public List<String> getAllSimulationsStatus(){
         return runSimulationManager.getAllSimulationsStatus();
+    }
+    @Override
+    public void prepareForExecution(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE ,
+                                    DTOPopulationValuesForSE dtoPopulationValuesForSE, Integer executionID){
+        EnvVariablesInstanceManager envVariablesInstanceManager = updateEnvironmentVarDefinition(dtoEnvVarDefValuesForSE);
+        EntityDefinitionManager entityDefinitionManager = updateEntitiesPopulation(dtoPopulationValuesForSE);
+        addWorldInstance(executionID, envVariablesInstanceManager, entityDefinitionManager);
     }
 }

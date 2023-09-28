@@ -25,11 +25,20 @@
         <url-pattern>/simulationnames</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>GridSizesServlet</servlet-name>
-        <servlet-class>servlet.GridSizesServlet</servlet-class>
+        <servlet-name>DataForExecutionServlet</servlet-name>
+        <servlet-class>servlet.DataForExecutionServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>GridSizesServlet</servlet-name>
-        <url-pattern>/worldgrid</url-pattern>
+        <servlet-name>DataForExecutionServlet</servlet-name>
+        <url-pattern>/dataexecution</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ExecutionServlet</servlet-name>
+        <servlet-class>servlet.ExecutionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExecutionServlet</servlet-name>
+        <url-pattern>/execution</url-pattern>
+    </servlet-mapping>
+
 </web-app>

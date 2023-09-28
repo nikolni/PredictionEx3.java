@@ -1,27 +1,19 @@
 package after.login.component.body.request.main;
 
 import after.login.component.body.execution.main.ExecutionController;
+import after.login.component.body.request.server.RequestsFromServer;
 import after.login.main.UserController;
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
-import util.constants.Constants;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
-import util.http.HttpClientUtil;
-
-import java.io.IOException;
 import java.util.*;
 
-import static util.constants.Constants.LINE_SEPARATOR;
 import static util.constants.Constants.popUpWindow;
-import static util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class RequestController {
 
@@ -47,6 +39,7 @@ public class RequestController {
     private Integer numOfRequests=0;
     private List<CheckBox> checkBoxes = null;
     private List<String> simulationNames;
+    private RequestsFromServer requestsFromServer = null;
 
 
     @FXML
@@ -68,7 +61,11 @@ public class RequestController {
                 try{
                     Integer.parseInt(simulationNumTextField.getText());
                     if(isTerminationConditionsValid()){
-                        postRequestToServer();
+                        String simulationName = simulationNameTextField.getText();
+                        String numberOfExecutions = simulationNumTextField.getText();
+                        String terminationConditions = terminationConditionsTextField.getText();
+                        requestsFromServer.postRequestToServer(simulationName, numberOfExecutions, terminationConditions,
+                                mainController.getUserName());
                         addNewRequestToGridPane();
                         clearTextFields();
                     }
@@ -154,10 +151,12 @@ public class RequestController {
     }
 
     private boolean isSimulationNameExist() {
-        getSimulationNamesFromServer();
-        for (String name : simulationNames) {
-            if (name.equals(simulationNameTextField.getText())) {
-                return true;
+        simulationNames = requestsFromServer.getSimulationNamesFromServer();
+        if(simulationNames != null) {
+            for (String name : simulationNames) {
+                if (name.equals(simulationNameTextField.getText())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -179,80 +178,5 @@ public class RequestController {
         return true;
     }
 
-    private void postRequestToServer(){
-        String simulationName = simulationNameTextField.getText();
-        String numberOfExecutions = simulationNumTextField.getText();
-        String terminationConditions = terminationConditionsTextField.getText();
-
-        String body = "simulation name="+simulationName + LINE_SEPARATOR +
-                "number of executions="+numberOfExecutions + LINE_SEPARATOR +
-                "termination conditions="+terminationConditions;
-
-        Request request = new Request.Builder()
-                .url(Constants.USER_REQUEST_PAGE)
-                .post(RequestBody.create(body.getBytes()))
-                .addHeader("user_name", mainController.getUserName())
-                .build();
-
-        Call call = HTTP_CLIENT_PUBLIC.newCall(request);
-        call.enqueue( new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> {
-                    popUpWindow(e.getMessage(), "Error!");
-                });
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = response.body().string();
-                    Platform.runLater(() -> {
-                        popUpWindow(responseBody, "Error!");
-                    });
-                } else {
-                    Platform.runLater(() -> {
-                        popUpWindow("Your request has been received and is being processed", "Request was accepted");
-                    });
-                }
-            }
-        });
-    }
-    private void getSimulationNamesFromServer() {
-        String finalUrl = HttpUrl
-                .parse(Constants.SIMULATION_NAMES_LIST_PAGE)
-                .newBuilder()
-                .build()
-                .toString();
-
-        HttpClientUtil.runAsync(finalUrl, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> {
-                    popUpWindow(e.getMessage(), "Error!");
-                });
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = response.body().string();
-                    Platform.runLater(() -> {
-                        popUpWindow(responseBody, "Error!");
-                    });
-                } else {
-                    // Read and process the response content
-                    try (ResponseBody responseBody = response.body()) {
-                        if (responseBody != null) {
-                            String json = response.body().string();
-                            simulationNames = Arrays.asList(Constants.GSON_INSTANCE.fromJson(json, String[].class));
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
 
 }

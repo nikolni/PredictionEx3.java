@@ -5,12 +5,12 @@ import dto.primary.DTOSimulationEndingForUi;
 import javafx.application.Platform;
 import engine.per.file.engine.api.SystemEngineAccess;
 
-public class RunSimulationTask implements Runnable{
+public class RunSimulationRunnable implements Runnable{
     private final Integer simulationID;
     private final SystemEngineAccess systemEngineAccess;
     private final ProgressAndResultController progressAndResultController;
 
-    public RunSimulationTask(SystemEngineAccess systemEngineAccess,Integer simulationID, ProgressAndResultController progressAndResultController) {
+    public RunSimulationRunnable(SystemEngineAccess systemEngineAccess, Integer simulationID, ProgressAndResultController progressAndResultController) {
         this.systemEngineAccess = systemEngineAccess;
         this.simulationID = simulationID;
         this.progressAndResultController = progressAndResultController;
