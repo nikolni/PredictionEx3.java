@@ -58,9 +58,5 @@ public class UserRequestServlet extends HttpServlet {
             List<UserRequest> userRequestsList = userNameToRequestsList.get(request.getHeader("user name"));
             userRequestsList.add(userRequest);
         }
-
-        // response header content-type can hint the client initiating this request regarding the nature of the response...
-        response.setContentType("text/plain");
-        response.getWriter().println("Your request is being processed");
     }
 }

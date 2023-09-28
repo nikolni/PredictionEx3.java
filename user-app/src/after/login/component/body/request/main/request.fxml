@@ -68,7 +68,6 @@
                <rowConstraints>
                   <RowConstraints maxHeight="97.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="25.5" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="75.0" minHeight="0.0" prefHeight="27.5" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
                   <Label prefHeight="46.0" prefWidth="68.0" styleClass="body-label" text="Request ID" textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" />

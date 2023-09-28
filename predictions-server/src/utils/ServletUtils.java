@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class ServletUtils {
@@ -20,6 +22,9 @@ public class ServletUtils {
 	private static final String SIMULATION_NAMES_LIST_ATTRIBUTE_NAME = "simulationNamesList";
 	private static final String USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME = "userNameToRequestsList";
 	private static final String SIMULATION_NAME_TO_SE_MAP_ATTRIBUTE_NAME = "simulationNameToSE";
+	private static final String THREAD_POOL_SIZE_ATTRIBUTE_NAME = "threadPoolSize";
+	private static final String THREAD_POOL_ATTRIBUTE_NAME = "threadPool";
+	private static final String EXECUTION_COUNTER_ATTRIBUTE_NAME = "executionsCounter";
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/*
@@ -31,6 +36,9 @@ public class ServletUtils {
 	private static final Object simulationNamesListLock = new Object();
 	private static final Object userNameToRequestsListLock = new Object();
 	private static final Object simulationNameToSELock = new Object();
+	private static final Object threadPoolSizeLock = new Object();
+	private static final Object threadPoolLock = new Object();
+	private static final Object executionsCounterLock = new Object();
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,4 +97,32 @@ public class ServletUtils {
 		return ((Map<String, SystemEngineAccess>) servletContext.getAttribute(SIMULATION_NAME_TO_SE_MAP_ATTRIBUTE_NAME))
 				.get(simulationName);
 	}
+	public static void addRunnableToThreadPool(ServletContext servletContext, Runnable runnable) {
+
+		synchronized (threadPoolLock) {
+			if (servletContext.getAttribute(THREAD_POOL_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(THREAD_POOL_ATTRIBUTE_NAME, Executors.newFixedThreadPool(
+						servletContext.getAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME)));
+			}
+			((ExecutorService)servletContext.getAttribute(THREAD_POOL_ATTRIBUTE_NAME)).submit(runnable);
+		}
+	}
+	public static void setSizeOfThreadPool(ServletContext servletContext, Integer size) {
+
+		synchronized (threadPoolSizeLock) {
+			if (servletContext.getAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME, size);
+			}
+		}
+	}
+	public static Integer increaseExecutionCounter(ServletContext servletContext) {
+
+		synchronized (executionsCounterLock) {
+			if (servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME, 0);
+			}
+			return ++((Integer)servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME));
+		}
+	}
+
 }

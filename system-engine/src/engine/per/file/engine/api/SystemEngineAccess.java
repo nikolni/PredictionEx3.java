@@ -31,7 +31,7 @@ public interface SystemEngineAccess {
     EnvVariablesInstanceManager updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE);
     void addWorldInstance(Integer simulationID, EnvVariablesInstanceManager envVariablesInstanceManager, EntityDefinitionManager entityDefinitionManager);
 
-    DTOSimulationEndingForUi runSimulation(Integer simulationID) ;
+    void runSimulation(Integer simulationID) ;
 
     int getTotalTicksNumber();
     int getTotalSecondsNumber();
@@ -55,4 +55,6 @@ public interface SystemEngineAccess {
     List<TerminationConditionsDTO> getTerminationConditions();
     DTORerunValuesForUi getValuesForRerun(Integer simulationID);
     List<String> getAllSimulationsStatus();
+    void prepareForExecution(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE ,
+                        DTOPopulationValuesForSE dtoPopulationValuesForSE, Integer executionID);
 }
