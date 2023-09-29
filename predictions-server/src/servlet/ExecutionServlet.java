@@ -2,23 +2,21 @@ package servlet;
 
 import com.google.gson.Gson;
 import dto.include.DTOIncludeForExecutionForServer;
-import dto.include.DTOIncludeForExecutionForUi;
 import dto.primary.DTOEnvVarDefValuesForSE;
 import dto.primary.DTOPopulationValuesForSE;
 import engine.per.file.engine.api.SystemEngineAccess;
-import user.request.UserRequest;
+import jakarta.servlet.http.HttpServlet;
 import utils.ServletUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-public class ExecutionServlet {
+public class ExecutionServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         StringBuilder requestBody = new StringBuilder();
         try (BufferedReader reader = request.getReader()) {
             String line;
@@ -37,15 +35,11 @@ public class ExecutionServlet {
 
         SystemEngineAccess systemEngineAccess = ServletUtils.getSEInstanceBySimulationName
                 (getServletContext(), simulationName);
-        Integer executionID = ServletUtils.increaseExecutionCounter(getServletContext());
+        Integer executionID = ServletUtils.getExecutionCounter(getServletContext());
         ServletUtils.addExecutionByUserNameAndRequestID(getServletContext(), userName, requestID);
+        ServletUtils.increaseExecutionCounter(getServletContext());
 
         systemEngineAccess.prepareForExecution(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, executionID);
-        ServletUtils.addRunnableToThreadPool(getServletContext(), new Runnable() {
-            @Override
-            public void run() {
-                systemEngineAccess.runSimulation(executionID);
-            }
-        });
+        ServletUtils.addRunnableToThreadPool(getServletContext(), () -> systemEngineAccess.runSimulation(executionID));
     }
 }

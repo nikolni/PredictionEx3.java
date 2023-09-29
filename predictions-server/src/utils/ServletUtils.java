@@ -3,7 +3,6 @@ package utils;
 
 import engine.per.file.engine.api.SystemEngineAccess;
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
 import user.manager.UserManager;
 import user.request.UserRequest;
 
@@ -36,7 +35,7 @@ public class ServletUtils {
 	private static final Object allUsersRequestsListLock = new Object();
 	private static final Object allUsersRequestsListSizeLock = new Object();
 	private static final Object simulationNamesListLock = new Object();
-	private static final Object userNameToRequestsListLock = new Object();
+	private static final Object userNameToRequestsMapLock = new Object();
 	private static final Object simulationNameToSELock = new Object();
 	private static final Object threadPoolSizeLock = new Object();
 	private static final Object threadPoolLock = new Object();
@@ -55,25 +54,64 @@ public class ServletUtils {
 	}
 
 	public static void addRequestToAllUsersRequestsList(ServletContext servletContext, UserRequest userRequest) {
-
 		synchronized (allUsersRequestsListLock) {
 			if (servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME) == null) {
 				servletContext.setAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME, new ArrayList<>());
 			}
 			((List<UserRequest>) servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME)).add(userRequest);
 		}
-	}
-	public static Integer getUserRequestListSize(ServletContext servletContext) {
-
+		//if we got here, there must be size initialized, no need to create
 		synchronized (allUsersRequestsListSizeLock) {
-			if (servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME, 0);
-			}
-			return ++((Integer)servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME));
+			//if we got here, there must be size initialized, no need to create
+			Integer value = ((Integer) servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME));
+			value++;
+			servletContext.setAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME, value);
 		}
 	}
-	public static List<String> getSimulationNamesList(ServletContext servletContext) {
+	public static Integer getAllUserRequestsListSize(ServletContext servletContext) {
+		synchronized (allUsersRequestsListSizeLock) {
+			if (servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME, 1);
+			}
+		}
+		return (Integer)servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME);
+	}
+	public static void addRequestByUserName(ServletContext servletContext, String userName ,UserRequest userRequest) {
+		Map<UserRequest, List<Integer>> userRequestListMap = null;
 
+		synchronized (userNameToRequestsMapLock) {
+			if (servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME, new HashMap<>());
+			}
+			Map<String, Map<UserRequest, List<Integer>>> requestsListByUserNameMap =
+					(Map<String, Map<UserRequest, List<Integer>>>) servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME);
+			if(requestsListByUserNameMap.get(userName) == null){
+				userRequestListMap = new HashMap<>();
+				requestsListByUserNameMap.put(userName,userRequestListMap);
+			}
+			userRequestListMap = requestsListByUserNameMap.get(userName);
+			userRequestListMap.put(userRequest, null);
+		}
+	}
+	public static Map<UserRequest, List<Integer>> getRequestsMApByUserName(ServletContext servletContext, String userName) {
+		Map<UserRequest, List<Integer>> userRequestListMap = null;
+
+		synchronized (userNameToRequestsMapLock) {
+			if (servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME, new HashMap<>());
+			}
+			Map<String, Map<UserRequest, List<Integer>>> requestsListByUserNameMap =
+					(Map<String, Map<UserRequest, List<Integer>>>) servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME);
+			if(requestsListByUserNameMap.get(userName) == null){
+				userRequestListMap = new HashMap<>();
+				requestsListByUserNameMap.put(userName,userRequestListMap);
+			}
+			return requestsListByUserNameMap.get(userName);
+		}
+	}
+
+
+	public static List<String> getSimulationNamesList(ServletContext servletContext) {
 		synchronized (simulationNamesListLock) {
 			if (servletContext.getAttribute(SIMULATION_NAMES_LIST_ATTRIBUTE_NAME) == null) {
 				servletContext.setAttribute(SIMULATION_NAMES_LIST_ATTRIBUTE_NAME, new ArrayList<>());
@@ -81,37 +119,40 @@ public class ServletUtils {
 		}
 		return (List<String>) servletContext.getAttribute(SIMULATION_NAMES_LIST_ATTRIBUTE_NAME);
 	}
-	public static void addRequestByUserName(ServletContext servletContext, String userName ,UserRequest userRequest) {
-		Map<UserRequest, List<Integer>> userRequestListMap = null;
-
-		synchronized (userNameToRequestsListLock) {
-			if (servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME, new HashMap<>());
-			}
-			Map<String, Map<UserRequest, List<Integer>>> requestsListByUserNameMap =
-					servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME);
-			if(requestsListByUserNameMap.get(userName) == null){
-				userRequestListMap = new HashMap<>();
-				requestsListByUserNameMap.put(userName,userRequestListMap);
-			}
-			userRequestListMap.put(userRequest, null);
-		}
-	}
 	public static void addExecutionByUserNameAndRequestID(ServletContext servletContext, String userName ,Integer requestID) {
 		List<Integer> userRequestList = null;
 
 		Map<String, Map<UserRequest, List<Integer>>> requestsListByUserNameMap =
-				servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME);
+		 	(Map<String, Map<UserRequest, List<Integer>>>)servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME);
 		//if we got here, there is already user request to get.
 		Map<UserRequest, List<Integer>> userRequestListMap = requestsListByUserNameMap.get(userName);
 
-		synchronized (userNameToRequestsListLock) {
-			if((userRequestListMap.get(((List<UserRequest>) servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME)).get(requestID -1)))== null){
+		synchronized (userNameToRequestsMapLock) {
+			UserRequest userRequest = ((List<UserRequest>)servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME)).get(requestID -1);
+			if(userRequestListMap.get(userRequest) == null){
 				userRequestList = new ArrayList<>();
 			}
-			userRequestList.add((Integer)servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME));
+			userRequestList.add(getExecutionCounter(servletContext));
 		}
 	}
+	public static Integer getExecutionCounter(ServletContext servletContext) {
+
+		synchronized (executionsCounterLock) {
+			if (servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME, 1);
+			}
+			return ((Integer)servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME));
+		}
+	}
+	public static void increaseExecutionCounter(ServletContext servletContext) {
+		synchronized (executionsCounterLock) {
+			//if we got here, there must be size initialized, no need to create
+			Integer value = ((Integer) servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME));
+			value++;
+			servletContext.setAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME, value);
+		}
+	}
+
 
 	//if we got here with simulation name, there must be SystemEngineAccess instance for this simulation.
 	public static SystemEngineAccess getSEInstanceBySimulationName(ServletContext servletContext, String simulationName) {
@@ -128,7 +169,7 @@ public class ServletUtils {
 		synchronized (threadPoolLock) {
 			if (servletContext.getAttribute(THREAD_POOL_ATTRIBUTE_NAME) == null) {
 				servletContext.setAttribute(THREAD_POOL_ATTRIBUTE_NAME, Executors.newFixedThreadPool(
-						servletContext.getAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME)));
+						(Integer) servletContext.getAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME)));
 			}
 			((ExecutorService)servletContext.getAttribute(THREAD_POOL_ATTRIBUTE_NAME)).submit(runnable);
 		}
@@ -139,15 +180,6 @@ public class ServletUtils {
 			if (servletContext.getAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME) == null) {
 				servletContext.setAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME, size);
 			}
-		}
-	}
-	public static Integer increaseExecutionCounter(ServletContext servletContext) {
-
-		synchronized (executionsCounterLock) {
-			if (servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME, 0);
-			}
-			return ++((Integer)servletContext.getAttribute(EXECUTION_COUNTER_ATTRIBUTE_NAME));
 		}
 	}
 
