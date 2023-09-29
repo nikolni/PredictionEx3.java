@@ -9,7 +9,6 @@ import dto.primary.DTOPropertyHistogramForUi;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import engine.per.file.engine.api.SystemEngineAccess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,6 @@ public class ResultsController {
     private Label PropertyAverageLabel;
 
     private ProgressAndResultController progressAndResultController;
-    private SystemEngineAccess systemEngine;
 
     public void setBody3Controller(ProgressAndResultController progressAndResultController) {
         this.progressAndResultController = progressAndResultController;
@@ -93,10 +91,6 @@ public class ResultsController {
                     }
                 }
             });
-    }
-
-    public void setSystemEngine(SystemEngineAccess systemEngineAccess){
-        this.systemEngine = systemEngineAccess;
     }
 
     public BarChart<String, Number> createHistogram(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID) {
@@ -179,7 +173,7 @@ public class ResultsController {
     }
 
 
-    public void handleSimulationSelection(int simulationID,SystemEngineAccess systemEngine) {
+    public void handleSimulationSelection(int simulationID) {
         entityTimeGraphPane.setContent(createEntitiesByTickGraph(systemEngine,simulationID));
         entityTimeGraphPane.setVisible(true);
 

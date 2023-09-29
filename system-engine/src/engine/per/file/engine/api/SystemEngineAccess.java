@@ -55,6 +55,7 @@ public interface SystemEngineAccess {
     List<TerminationConditionsDTO> getTerminationConditions();
     DTORerunValuesForUi getValuesForRerun(Integer simulationID);
     List<String> getAllSimulationsStatus();
+    String getSimulationStatusByID(Integer executionID);
     void prepareForExecution(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE ,
                         DTOPopulationValuesForSE dtoPopulationValuesForSE, Integer executionID);
 }

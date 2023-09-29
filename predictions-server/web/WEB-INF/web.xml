@@ -48,5 +48,13 @@
         <servlet-name>RerunServlet</servlet-name>
         <url-pattern>/rerun</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>UserExecutionsListUpdateServlet</servlet-name>
+        <servlet-class>servlet.UserExecutionsListUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserExecutionsListUpdateServlet</servlet-name>
+        <url-pattern>/executions/update</url-pattern>
+    </servlet-mapping>
 
 </web-app>

@@ -29,9 +29,9 @@ public class ExecutionServlet extends HttpServlet {
         DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE = dtoIncludeForExecutionForServer.getDtoEnvVarDefValuesForSE();
         DTOPopulationValuesForSE dtoPopulationValuesForSE = dtoIncludeForExecutionForServer.getDtoPopulationValuesForSE();
 
-        String simulationName = request.getParameter("simulation_name");
-        String userName= request.getParameter("user_name");
-        Integer requestID=Integer.parseInt(request.getParameter("requestID"));
+        String simulationName = request.getHeader("simulation_name");
+        String userName= request.getHeader("user_name");
+        Integer requestID=Integer.parseInt(request.getHeader("requestID"));
 
         SystemEngineAccess systemEngineAccess = ServletUtils.getSEInstanceBySimulationName
                 (getServletContext(), simulationName);

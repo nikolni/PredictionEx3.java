@@ -2,7 +2,6 @@ package servlet;
 
 import com.google.gson.GsonBuilder;
 import dto.definition.user.request.DTOUserRequestForUi;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,8 +20,8 @@ public class UserRequestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        Map<UserRequest, List<Integer>> userRequestsMap = ServletUtils.getRequestsMApByUserName(
-                getServletContext(), request.getHeader("user_name"));
+        Map<UserRequest, List<Integer>> userRequestsMap = ServletUtils.getRequestsMapByUserName(
+                getServletContext(), request.getParameter("user_name"));
 
         List<DTOUserRequestForUi> userRequestForUiList = new ArrayList<>();
         for(UserRequest userRequest : userRequestsMap.keySet()){

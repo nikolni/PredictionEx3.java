@@ -312,6 +312,10 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         return runSimulationManager.getAllSimulationsStatus();
     }
     @Override
+    public String getSimulationStatusByID(Integer executionID){
+        return runSimulationManager.getSimulationStatusByID(executionID);
+    }
+    @Override
     public void prepareForExecution(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE ,
                                     DTOPopulationValuesForSE dtoPopulationValuesForSE, Integer executionID){
         EnvVariablesInstanceManager envVariablesInstanceManager = updateEnvironmentVarDefinition(dtoEnvVarDefValuesForSE);

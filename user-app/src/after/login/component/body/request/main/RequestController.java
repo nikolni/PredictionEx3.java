@@ -39,12 +39,12 @@ public class RequestController {
     private Integer numOfRequests=0;
     private List<CheckBox> checkBoxes = null;
     private List<String> simulationNames;
-    private RequestsFromServer requestsFromServer = null;
+    private final RequestsFromServer requestsFromServer = new RequestsFromServer();
 
 
     @FXML
     public void initialize() {
-        UpdateRequestGridPane updateRequestGridPane = new UpdateRequestGridPane(requestGridPane);
+        UpdateRequestGridPane updateRequestGridPane = new UpdateRequestGridPane(requestGridPane, requestsFromServer, mainController.getUserName());
         new Thread(updateRequestGridPane).start();
     }
     public void setExecutionController(ExecutionController executionController) {

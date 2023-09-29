@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import engine.per.file.engine.api.SystemEngineAccess;
 
 import java.util.Map;
 
@@ -54,7 +53,6 @@ public class SimulationProgressController {
 
     private int executionID =0;
     private ProgressAndResultController progressAndResultController;
-    private SystemEngineAccess systemEngine;
     private int totalSeconds;
 
     public void setExecutionID(int executionID) {
@@ -64,9 +62,6 @@ public class SimulationProgressController {
             this.totalSeconds = totalSeconds;
     }
 
-    public void setSystemEngine(SystemEngineAccess systemEngine) {
-        this.systemEngine = systemEngine;
-    }
 
     public void setProgressAndResultController(ProgressAndResultController progressAndResultController) {
         this.progressAndResultController = progressAndResultController;

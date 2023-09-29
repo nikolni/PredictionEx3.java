@@ -29,6 +29,8 @@ public class Constants {
     public final static String DATA_EXECUTION_PAGE = FULL_SERVER_PATH + "/dataexecution";
     public final static String EXECUTION_PAGE = FULL_SERVER_PATH + "/execution";
     public final static String RERUN_PAGE = FULL_SERVER_PATH + "/rerun";
+    public final static String EXECUTIONS_STATUS_PAGE = FULL_SERVER_PATH + "/executions/update";
+
 
 
     // GSON instance

@@ -6,14 +6,12 @@ import dto.primary.DTOSimulationProgressForUi;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
-import engine.per.file.engine.api.SystemEngineAccess;
 
 import static java.lang.Thread.sleep;
 
 public class UpdateUiTask extends Task<Boolean> {
 
     private final SimulationProgressController currentSimulationController;
-    private final SystemEngineAccess systemEngine;
     private final Integer simulationID;
     public final SimpleIntegerProperty secondsPast;
     private final SimpleIntegerProperty ticksPast;
@@ -21,9 +19,8 @@ public class UpdateUiTask extends Task<Boolean> {
     private final Integer totalTicksNumber;
     private final Integer totalSecondsNumber;
 
-    public UpdateUiTask(SimulationProgressController currentSimulationController, SystemEngineAccess systemEngine, Integer simulationID) {
+    public UpdateUiTask(SimulationProgressController currentSimulationController, Integer simulationID) {
         this.currentSimulationController = currentSimulationController;
-        this.systemEngine = systemEngine;
         this.simulationID = simulationID;
 
         this.secondsPast = new SimpleIntegerProperty(0);
@@ -86,7 +83,6 @@ public class UpdateUiTask extends Task<Boolean> {
             else if(dtoSimulationProgressForUi.getProgressMassage().equals("Canceled!")){
                 currentSimulationController.toggleTaskButtons(false);
             }
-            currentSimulationController.updateQueueManagementInAppMain();
         });
     }
 }

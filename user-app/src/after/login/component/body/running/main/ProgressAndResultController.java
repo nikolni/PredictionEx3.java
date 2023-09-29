@@ -1,5 +1,6 @@
 package after.login.component.body.running.main;
 
+import after.login.component.body.running.server.RequestsFromServer;
 import after.login.component.body.running.list.view.update.UpdateListView;
 import after.login.component.body.running.result.ResultsController;
 import after.login.component.body.running.simulation.progress.SimulationProgressController;
@@ -21,7 +22,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import after.login.main.UserController;
-import engine.per.file.engine.api.SystemEngineAccess;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -44,11 +44,11 @@ public class ProgressAndResultController {
 
     @FXML private VBox simulationProgressComponent;
     @FXML private SimulationProgressController simulationProgressComponentController;
-    private SystemEngineAccess systemEngine;
     private final Map<Integer, HBox> simulationResultsNodesMap;
     private final Map<Integer, ResultsController> simulationResultControllersMap;
     private Thread oldUpdateUiThreadThread = null;
     private UserController mainController;
+    private final RequestsFromServer requestsFromServer = new RequestsFromServer();
 
 
     public ProgressAndResultController() {
@@ -70,7 +70,7 @@ public class ProgressAndResultController {
             }
         });
         simulationProgressComponentController.setProgressAndResultController(this);
-        UpdateListView updateListView = new UpdateListView(simulationsList, systemEngine);
+        UpdateListView updateListView = new UpdateListView(simulationsList, requestsFromServer, mainController.getUserName());
         new Thread(updateListView).start();
     }
     private void clearSimulationProgressScreen(){
@@ -105,9 +105,8 @@ public class ProgressAndResultController {
             else{
                 simulationID = (Integer.parseInt(words[words.length - 3]));
             }
-            UpdateUiTask updateUiTask = new UpdateUiTask(simulationProgressComponentController, systemEngine, simulationID);
+            UpdateUiTask updateUiTask = new UpdateUiTask(simulationProgressComponentController, simulationID);
 
-            simulationProgressComponentController.setSystemEngine(systemEngine);
             simulationProgressComponentController.setSimulationIdLabel(simulationID.toString());
             simulationProgressComponentController.setExecutionID(simulationID);
             simulationProgressComponentController.setTotalSeconds(systemEngine.getTotalSecondsNumber());
