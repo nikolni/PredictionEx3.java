@@ -1,8 +1,6 @@
 package dto.definition.rule.action.api;
 
 
-import dto.definition.entity.api.EntityDefinitionDTO;
-
 public abstract class AbstractActionDTO {
 
     private final ActionType actionType;

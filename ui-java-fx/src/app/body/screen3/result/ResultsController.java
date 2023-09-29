@@ -1,19 +1,15 @@
 package app.body.screen3.result;
 
 import app.body.screen3.main.Body3Controller;
-import dto.api.DTODefinitionsForUi;
-import dto.api.DTOEntitiesAfterSimulationByQuantityForUi;
-import dto.api.DTOPropertyHistogramForUi;
-import dto.api.DTOSimulationEndingForUi;
-import dto.definition.entity.api.EntityDefinitionDTO;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
-import javafx.event.ActionEvent;
+import dto.primary.DTODefinitionsForUi;
+import dto.primary.DTOEntitiesAfterSimulationByQuantityForUi;
+import dto.primary.DTOPropertyHistogramForUi;
+import dto.definition.entity.EntityDefinitionDTO;
+import dto.definition.property.definition.PropertyDefinitionDTO;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import system.engine.api.SystemEngineAccess;
+import engine.per.file.engine.api.SystemEngineAccess;
 
 import java.util.ArrayList;
 import java.util.List;

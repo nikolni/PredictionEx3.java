@@ -5,7 +5,7 @@ import app.body.screen3.result.ResultsController;
 import app.body.screen3.simulation.progress.SimulationProgressController;
 import app.body.screen3.simulation.progress.task.UpdateUiTask;
 import app.main.AppController;
-import dto.api.*;
+import dto.primary.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -16,7 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import system.engine.api.SystemEngineAccess;
+import engine.per.file.engine.api.SystemEngineAccess;
 
 import java.io.IOException;
 import java.util.HashMap;

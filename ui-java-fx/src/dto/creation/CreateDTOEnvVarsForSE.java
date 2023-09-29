@@ -1,9 +1,8 @@
 package dto.creation;
 
 import app.body.screen2.tile.environment.variable.EnvironmentVariableController;
-import dto.api.DTOEnvVarDefValuesForSE;
-import dto.definition.property.definition.api.PropertyDefinitionDTO;
-import dto.impl.DTOEnvVarDefValuesForSEImpl;
+import dto.definition.property.definition.PropertyDefinitionDTO;
+import dto.primary.DTOEnvVarDefValuesForSE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ public class CreateDTOEnvVarsForSE {
     }*/
 
     public DTOEnvVarDefValuesForSE getData(Map<String, EnvironmentVariableController> envVarNameToTileController,
-                                           List<PropertyDefinitionDTO> propertyDefinitionDTOList) {
+                                                   List<PropertyDefinitionDTO> propertyDefinitionDTOList) {
 
         List<Object> environmentVarInitValues= new ArrayList<>();
 
@@ -24,6 +23,6 @@ public class CreateDTOEnvVarsForSE {
             Object value= envVarNameToTileController.get(propertyDefinitionDTO.getUniqueName()).getValueTextField();
             environmentVarInitValues.add(value) ;
         }
-        return new DTOEnvVarDefValuesForSEImpl(environmentVarInitValues, propertyDefinitionDTOList);
+        return new DTOEnvVarDefValuesForSE(environmentVarInitValues, propertyDefinitionDTOList);
     }
 }

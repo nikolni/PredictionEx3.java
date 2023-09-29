@@ -2,12 +2,12 @@ package app.body.screen3.simulation.progress.task;
 
 import app.body.screen3.simulation.progress.SimulationProgressController;
 
-import dto.api.DTOSimulationProgressForUi;
+import dto.primary.DTOSimulationProgressForUi;
 import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
-import system.engine.api.SystemEngineAccess;
+import engine.per.file.engine.api.SystemEngineAccess;
 
 import static java.lang.Thread.sleep;
 

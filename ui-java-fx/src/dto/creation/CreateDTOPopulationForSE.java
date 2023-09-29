@@ -1,8 +1,7 @@
 package dto.creation;
 
 import app.body.screen2.tile.entity.EntityController;
-import dto.api.DTOPopulationValuesForSE;
-import dto.impl.DTOPopulationValuesForSEImpl;
+import dto.primary.DTOPopulationValuesForSE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +14,7 @@ public class CreateDTOPopulationForSE {
         for (String key : entityNameToTileController.keySet()) {
             entityNameDefToPopulation.put(key, entityNameToTileController.get(key).getPopulationValue());
         }
-        return new DTOPopulationValuesForSEImpl(entityNameDefToPopulation);
+        return new DTOPopulationValuesForSE(entityNameDefToPopulation);
     }
     /*public DTOPopulationValuesForSE getData(List<String> entitiesNames, List<Integer> entitiesPopulations) {
         return new DTOPopulationValuesForSEImpl(entitiesNames, entitiesPopulations);

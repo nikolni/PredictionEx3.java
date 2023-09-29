@@ -3,7 +3,7 @@ package app.body.screen3.list.view.update;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
-import system.engine.api.SystemEngineAccess;
+import engine.per.file.engine.api.SystemEngineAccess;
 
 import java.util.List;
 
@@ -47,7 +47,9 @@ public class UpdateListView implements Runnable{
 
         }
         else {
-            items.set(simulationID - 1, "Simulation ID: " + simulationID + " (" + simulationStatus + ")");
+            if(! items.isEmpty()) {
+                items.set(simulationID - 1, "Simulation ID: " + simulationID + " (" + simulationStatus + ")");
+            }
         }
     }
 }
