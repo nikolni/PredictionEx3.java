@@ -28,6 +28,8 @@ public class Constants {
     public final static String SIMULATION_NAMES_LIST_PAGE = FULL_SERVER_PATH + "/simulationnames";
     public final static String DATA_EXECUTION_PAGE = FULL_SERVER_PATH + "/dataexecution";
     public final static String EXECUTION_PAGE = FULL_SERVER_PATH + "/execution";
+    public final static String RERUN_PAGE = FULL_SERVER_PATH + "/rerun";
+
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();

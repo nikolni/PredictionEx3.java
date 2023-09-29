@@ -13,6 +13,7 @@ import after.login.main.UserController;
 import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.include.DTOIncludeForExecutionForUi;
 import dto.primary.*;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -91,6 +92,26 @@ public class ExecutionController {
         entitiesNames = dtoIncludeForExecutionForUi.getDtoNamesListForUi().getNames();
         dtoWorldGridForUi = dtoIncludeForExecutionForUi.getDtoWorldGridForUi();
         createEntitiesPopulationChildrenInFlowPane(entitiesNames);
+    }
+    public void disableController(){
+        for(EnvironmentVariableController tile : envVarNameToTileController.values()){
+            tile.disableTextField();
+        }
+        for(EntityController tile : entityNameToTileController.values()){
+            tile.disableTextField();
+        }
+        startButton.setDisable(true);
+        clearButton.setDisable(true);
+    }
+    public void enableController(){
+        for(EnvironmentVariableController tile : envVarNameToTileController.values()){
+            tile.enableTextField();
+        }
+        for(EntityController tile : entityNameToTileController.values()){
+            tile.enableTextField();
+        }
+        startButton.setDisable(false);
+        clearButton.setDisable(false);
     }
 
     public void setSimulationNameAndRequestID(String simulationName, String requestID) {
@@ -289,7 +310,7 @@ public class ExecutionController {
         DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE = new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList);
         DTOPopulationValuesForSE dtoPopulationValuesForSE = new CreateDTOPopulationForSE().getData(entityNameToTileController);
         requestsFromServer.postRequestExecutionToServer(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, simulationName,
-                mainController.getUserName(), requestID());
+                mainController.getUserName(), requestID);
         progressAndResultController.addItemToSimulationListView(simulationsCounter);
         clearScreen();
     }
@@ -298,8 +319,8 @@ public class ExecutionController {
         this.progressAndResultController = progressAndResultController;
     }
 
-    public void setTilesByRerun(Integer simulationID){
-        DTORerunValuesForUi dtoRerunValuesForUi= systemEngine.getValuesForRerun(simulationID);
+    public void setTilesByRerun(Integer executionID){
+        DTORerunValuesForUi dtoRerunValuesForUi= requestsFromServer.getRerunValuesFromServer(simulationName, executionID);
         Map<String, Object> environmentVarsValues =dtoRerunValuesForUi.getEnvironmentVarsValues();
         Map<String, Integer> entitiesPopulations = dtoRerunValuesForUi.getEntitiesPopulations();
 

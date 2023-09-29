@@ -109,7 +109,7 @@ public class ProgressAndResultController {
 
             simulationProgressComponentController.setSystemEngine(systemEngine);
             simulationProgressComponentController.setSimulationIdLabel(simulationID.toString());
-            simulationProgressComponentController.setSimulationID(simulationID);
+            simulationProgressComponentController.setExecutionID(simulationID);
             simulationProgressComponentController.setTotalSeconds(systemEngine.getTotalSecondsNumber());
             simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
             simulationProgressComponentController.bindUiTaskToUiDownLevelComponents(updateUiTask);
@@ -196,8 +196,8 @@ public class ProgressAndResultController {
         primaryStage.show();
     }
 
-    public void onRerunClick(int simulationID) {
-        mainController.onRerunClick( simulationID);
+    public void onRerunClick(int executionID) {
+        mainController.onRerunClick( executionID);
     }
 }
 

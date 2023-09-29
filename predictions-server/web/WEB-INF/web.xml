@@ -40,5 +40,13 @@
         <servlet-name>ExecutionServlet</servlet-name>
         <url-pattern>/execution</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>RerunServlet</servlet-name>
+        <servlet-class>servlet.RerunServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RerunServlet</servlet-name>
+        <url-pattern>/rerun</url-pattern>
+    </servlet-mapping>
 
 </web-app>
