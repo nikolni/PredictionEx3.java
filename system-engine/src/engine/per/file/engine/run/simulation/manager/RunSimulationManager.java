@@ -99,4 +99,17 @@ public class RunSimulationManager {
         }
         return simulationsStatuses;
     }
+
+    public String getSimulationStatusByID(Integer simulationID){
+        String simulationStatus ;
+
+        if(simulationIdToRunSimulation.get(simulationID) != null) {
+            simulationStatus = simulationIdToRunSimulation.get(simulationID).getDtoSimulationProgressForUi().getProgressMassage();
+        }
+        else{
+            simulationStatus = "Getting ready...";
+        }
+
+        return simulationStatus;
+    }
 }

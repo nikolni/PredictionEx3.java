@@ -27,18 +27,14 @@ public class RequestsFromServer {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> {
-                    popUpWindow(e.getMessage(), "Error!");
-                });
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> {
-                        popUpWindow(responseBody, "Error!");
-                    });
+                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
@@ -74,22 +70,16 @@ public class RequestsFromServer {
         call.enqueue( new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> {
-                    popUpWindow(e.getMessage(), "Error!");
-                });
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> {
-                        popUpWindow(responseBody, "Error!");
-                    });
+                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
                 } else {
-                    Platform.runLater(() -> {
-                        popUpWindow("Your simulation execution is being processed", "Simulation Executed");
-                    });
+                    Platform.runLater(() -> popUpWindow("Your simulation execution is being processed", "Simulation Executed"));
                 }
             }
         });
@@ -108,18 +98,14 @@ public class RequestsFromServer {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> {
-                    popUpWindow(e.getMessage(), "Error!");
-                });
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> {
-                        popUpWindow(responseBody, "Error!");
-                    });
+                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {

@@ -93,8 +93,8 @@ public class ServletUtils {
 			userRequestListMap.put(userRequest, null);
 		}
 	}
-	public static Map<UserRequest, List<Integer>> getRequestsMApByUserName(ServletContext servletContext, String userName) {
-		Map<UserRequest, List<Integer>> userRequestListMap = null;
+	public static Map<UserRequest, List<Integer>> getRequestsMapByUserName(ServletContext servletContext, String userName) {
+		Map<UserRequest, List<Integer>> userRequestListMap;
 
 		synchronized (userNameToRequestsMapLock) {
 			if (servletContext.getAttribute(USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME) == null) {
