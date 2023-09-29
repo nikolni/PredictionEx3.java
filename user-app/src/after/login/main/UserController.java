@@ -34,8 +34,11 @@ public class UserController {
     }
 
 
-    public void onExecutionClick() {
-
+    public void onExecutionClickFromRequest() {
+        tabPaneUserBodyComponentController.switchToTab3FromRequest();
+    }
+    public void onExecutionClickFromHeader() {
+        tabPaneUserBodyComponentController.switchToTab3FromHeader();
     }
 
     public void onRequestClick() {
@@ -50,9 +53,9 @@ public class UserController {
         tabPaneUserBodyComponentController.switchToTab1();
     }
 
-
-        public void onRerunClick(int simulationID){
+    public void onRerunClick(int executionID){
         tabPaneUserBodyComponentController.switchToTab2();
-        tabPaneUserBodyComponentController.onRerunClick( simulationID);
+        tabPaneUserBodyComponentController.onRerunClick(executionID);
     }
+
 }

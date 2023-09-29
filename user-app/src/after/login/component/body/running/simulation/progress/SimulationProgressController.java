@@ -52,13 +52,13 @@ public class SimulationProgressController {
     @FXML
     private GridPane entitiesLeftGridPane;
 
-    private int simulationID=0;
+    private int executionID =0;
     private ProgressAndResultController progressAndResultController;
     private SystemEngineAccess systemEngine;
     private int totalSeconds;
 
-    public void setSimulationID(int simulationID) {
-        this.simulationID = simulationID;
+    public void setExecutionID(int executionID) {
+        this.executionID = executionID;
     }
     public void setTotalSeconds(int totalSeconds) {
             this.totalSeconds = totalSeconds;
@@ -183,21 +183,21 @@ public class SimulationProgressController {
     }
     @FXML
     synchronized void onPauseClick(MouseEvent event) {
-        systemEngine.pauseSimulation(simulationID);
+        systemEngine.pauseSimulation(executionID);
         pauseButton.setDisable(true);
         resumeButton.setDisable(false);
     }
 
     @FXML
     synchronized void onResumeClick(MouseEvent event) {
-        systemEngine.resumeSimulation(simulationID);
+        systemEngine.resumeSimulation(executionID);
         pauseButton.setDisable(false);
         resumeButton.setDisable(true);
     }
 
     @FXML
     void onStopClick(MouseEvent event) {
-       systemEngine.cancelSimulation(simulationID);
+       systemEngine.cancelSimulation(executionID);
 
         toggleTaskButtons(false);
         onTaskFinished();
@@ -205,7 +205,7 @@ public class SimulationProgressController {
 
     @FXML
     void onRerunClick(MouseEvent event) {
-        progressAndResultController.onRerunClick(simulationID);
+        progressAndResultController.onRerunClick(executionID);
     }
 
     public void updateEntitiesLeftGridPane(Map<String, Integer> entitiesPopulationAfterSimulationRunning) {
@@ -223,7 +223,7 @@ public class SimulationProgressController {
     }
 
     public boolean isSimulationWasChosen(){
-        return simulationID == 0;
+        return executionID == 0;
     }
 
 

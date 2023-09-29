@@ -58,5 +58,11 @@ public class EntityController {
     public void setCallerController(ExecutionController executionController) {
         this.callerController = executionController;
     }
+    public void disableTextField(){
+        populationTextField.setDisable(true);
+    }
+    public void enableTextField(){
+        populationTextField.setDisable(false);
+    }
 }
 

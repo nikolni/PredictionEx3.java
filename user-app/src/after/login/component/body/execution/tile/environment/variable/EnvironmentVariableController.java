@@ -87,4 +87,10 @@ public class EnvironmentVariableController {
     }
     public void setValueTextField(String value){valueTextField.setText(value);}
 
+    public void disableTextField(){
+        valueTextField.setDisable(true);
+    }
+    public void enableTextField(){
+        valueTextField.setDisable(false);
+    }
 }
