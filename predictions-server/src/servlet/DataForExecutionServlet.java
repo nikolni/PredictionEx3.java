@@ -11,7 +11,11 @@ import utils.ServletUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class DataForExecutionServlet {
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+public class DataForExecutionServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String simulationName = request.getParameter("simulation_name");
         //returning JSON objects, not HTML
