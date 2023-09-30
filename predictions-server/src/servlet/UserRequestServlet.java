@@ -1,6 +1,7 @@
 package servlet;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import dto.definition.user.request.DTOUserRequestForUi;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import user.request.UserRequest;
 import utils.ServletUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,14 +40,13 @@ public class UserRequestServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Properties prop = new Properties();
         prop.load(request.getInputStream());
 
-        String simulationName = prop.getProperty("simulation name");
-        Integer numberOfExecutions = Integer.parseInt(prop.getProperty("number of executions"));
-        String terminationConditions = prop.getProperty("termination conditions");
+        String simulationName = prop.getProperty("simulation_name");
+        Integer numberOfExecutions = Integer.parseInt(prop.getProperty("number_of_executions"));
+        String terminationConditions = prop.getProperty("termination_conditions");
 
         UserRequest userRequest = new UserRequest(simulationName,numberOfExecutions,terminationConditions);
         userRequest.setRequestID(ServletUtils.getAllUserRequestsListSize(getServletContext()));

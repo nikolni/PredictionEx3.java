@@ -13,7 +13,6 @@ import after.login.main.UserController;
 import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.include.DTOIncludeForExecutionForUi;
 import dto.primary.*;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -55,11 +54,10 @@ public class ExecutionController {
     private List<PropertyDefinitionDTO> envVarsList;
     private List<String> entitiesNames;
     private ProgressAndResultController progressAndResultController;
-    private Integer simulationsCounter = 0;
     private int maxPopulationQuantity;
     private String simulationName;
     private DTOWorldGridForUi dtoWorldGridForUi;
-    private RequestsFromServer requestsFromServer = null;
+    private final RequestsFromServer requestsFromServer = new RequestsFromServer();
     private String requestID;
     private UserController mainController;
 
@@ -77,7 +75,6 @@ public class ExecutionController {
 
 
     public void primaryInitialize() {
-        simulationsCounter = 0;
         simulationEntitiesPopulationFlowPane.getChildren().clear();
         simulationEnvironmentInputsFlowPane.getChildren().clear();
         envVarNameToTileController.clear();
@@ -306,12 +303,11 @@ public class ExecutionController {
         }
     }
     public void startSimulation(){
-        simulationsCounter++;
         DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE = new CreateDTOEnvVarsForSE().getData(envVarNameToTileController, envVarsList);
         DTOPopulationValuesForSE dtoPopulationValuesForSE = new CreateDTOPopulationForSE().getData(entityNameToTileController);
         requestsFromServer.postRequestExecutionToServer(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, simulationName,
                 mainController.getUserName(), requestID);
-        progressAndResultController.addItemToSimulationListView(simulationsCounter);
+        progressAndResultController.addItemToSimulationListView(requestsFromServer.getExecutionIDFromServer());
         clearScreen();
     }
 

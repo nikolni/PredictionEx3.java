@@ -8,7 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="DTO" />
-    <orderEntry type="module" module-name="system-engine" />
     <orderEntry type="library" name="OK-http" level="project" />
     <orderEntry type="library" name="gson-2.8" level="project" />
   </component>

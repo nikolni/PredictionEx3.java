@@ -20,9 +20,9 @@ import static util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 public class RequestsFromServer {
     public void postRequestToServer(String simulationName, String numberOfExecutions, String terminationConditions,
                                     String userName){
-               String body = "simulation name="+simulationName + LINE_SEPARATOR +
-                "number of executions="+numberOfExecutions + LINE_SEPARATOR +
-                "termination conditions="+terminationConditions;
+        String body = "simulation_name="+simulationName + LINE_SEPARATOR +
+                "number_of_executions="+numberOfExecutions + LINE_SEPARATOR +
+                "termination_conditions="+terminationConditions;
 
         Request request = new Request.Builder()
                 .url(Constants.USER_REQUEST_PAGE)

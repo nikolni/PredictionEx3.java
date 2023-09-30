@@ -10,7 +10,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import after.login.main.UserController;
-import engine.per.file.engine.api.SystemEngineAccess;
 
 public class TabPaneUserBodyController {
 
@@ -31,24 +30,20 @@ public class TabPaneUserBodyController {
 
     public void setMainController(UserController mainUserController) {
         this.mainUserController = mainUserController;
+        setControllersForChildren();
+        initialChildren();
     }
 
-   /* public void setSystemEngineToChildren(SystemEngineAccess systemEngineAccess){
-        simulationDetailsComponentController.setSystemEngine(systemEngineAccess);
-        requestsComponentController.setSystemEngine(systemEngineAccess);
-        executionComponentController.setSystemEngine(systemEngineAccess);
-        resultsComponentController.setSystemEngine(systemEngineAccess);
-        initialChildren();
-    }*/
     private void initialChildren(){
         resultsComponentController.primaryInitialize();
     }
 
-     public void setControllersForChildren(SystemEngineAccess systemEngineAccess){
+     public void setControllersForChildren(){
         requestsComponentController.setExecutionController(executionComponentController);
         requestsComponentController.setMainController(mainUserController);
         executionComponentController.setProgressAndResultController(resultsComponentController);
         executionComponentController.setMainController(mainUserController);
+        resultsComponentController.setMainController(mainUserController);
     }
 
     public void switchToTab1() {
