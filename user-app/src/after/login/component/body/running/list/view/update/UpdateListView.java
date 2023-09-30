@@ -1,6 +1,6 @@
 package after.login.component.body.running.list.view.update;
 
-import after.login.component.body.running.server.RequestsFromServer;
+import after.login.component.body.running.main.server.RequestsFromServer;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;

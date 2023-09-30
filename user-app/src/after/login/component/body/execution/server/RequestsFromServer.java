@@ -15,6 +15,41 @@ import static util.constants.Constants.popUpWindow;
 import static util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class RequestsFromServer {
+
+    public Integer getExecutionIDFromServer() {
+        final Integer[] executionID = new Integer[1];
+        String finalUrl = HttpUrl
+                .parse(Constants.RERUN_PAGE)
+                .newBuilder()
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                } else {
+                    // Read and process the response content
+                    try (ResponseBody responseBody = response.body()) {
+                        if (responseBody != null) {
+                            String json = response.body().string();
+                            executionID[0] = Constants.GSON_INSTANCE.fromJson(json, Integer.class);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        return executionID[0];
+    }
     public DTOIncludeForExecutionForUi getDataForExecutionFromServer(String simulationName) {
         final DTOIncludeForExecutionForUi[] dtoIncludeForExecutionForUi = {null};
         String finalUrl = HttpUrl

@@ -1,7 +1,9 @@
 package after.login.component.body.running.simulation.progress;
 
 import after.login.component.body.running.main.ProgressAndResultController;
+import after.login.component.body.running.main.server.RequestsFromServer;
 import after.login.component.body.running.simulation.progress.task.UpdateUiTask;
+import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
 import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
@@ -14,6 +16,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -54,6 +57,9 @@ public class SimulationProgressController {
     private int executionID =0;
     private ProgressAndResultController progressAndResultController;
     private int totalSeconds;
+    private RequestsFromServer requestsFromServer ;
+    private String userName;
+
 
     public void setExecutionID(int executionID) {
         this.executionID = executionID;
@@ -63,8 +69,11 @@ public class SimulationProgressController {
     }
 
 
-    public void setProgressAndResultController(ProgressAndResultController progressAndResultController) {
+    public void setMembers(ProgressAndResultController progressAndResultController, String userName,
+                           RequestsFromServer requestsFromServer) {
         this.progressAndResultController = progressAndResultController;
+        this.userName = userName;
+        this.requestsFromServer = requestsFromServer;
     }
     public void setSimulationIdLabel(String simulationIdLabel) {
         this.simulationIdLabel.setText(simulationIdLabel);
@@ -88,8 +97,10 @@ public class SimulationProgressController {
         secondsLabel.textProperty().bind(Bindings.format("%,d", uiTask.getSecondsPastProperty()));
         //entitiesLeftLabel.textProperty().bind(Bindings.format("%,d", uiTask.getEntitiesLeftProperty()));
         ticksLabel.textProperty().bind(Bindings.format("%,d", uiTask.getTicksPastProperty()));
-        if(systemEngine.getTerminationConditions().get(0) instanceof TimeTerminationConditionsDTOImpl  ||
-                ( systemEngine.getTerminationConditions().size() == 2 && systemEngine.getTerminationConditions().get(1) instanceof TimeTerminationConditionsDTOImpl)){
+
+        List<TerminationConditionsDTO> terminationConditionsDTOList = requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
+        if(terminationConditionsDTOList.get(0) instanceof TimeTerminationConditionsDTOImpl  ||
+                ( terminationConditionsDTOList.size() == 2 && terminationConditionsDTOList.get(1) instanceof TimeTerminationConditionsDTOImpl)){
             secondsProgressBar.progressProperty().bind(uiTask.secondsPast.divide((double) totalSeconds));
             secondsPercentLabel.textProperty().bind(
                     Bindings.concat(
@@ -113,12 +124,13 @@ public class SimulationProgressController {
         // task message
         progressMassageLabel.textProperty().bind(uiTask.messageProperty());
 
-        if (systemEngine.getTerminationConditions().get(0) instanceof ByUserTerminationConditionDTOImpl) {
+        List<TerminationConditionsDTO> terminationConditionsDTOList = requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
+        if (terminationConditionsDTOList.get(0) instanceof ByUserTerminationConditionDTOImpl) {
             ticksProgressBar.setDisable(true);
             secondsProgressBar.setDisable(true);
             ticksPercentLabel.setDisable(true);
             secondsPercentLabel.setDisable(true);
-        } else if(systemEngine.getTerminationConditions().get(0) instanceof TicksTerminationConditionsDTOImpl) {
+        } else if(terminationConditionsDTOList.get(0) instanceof TicksTerminationConditionsDTOImpl) {
             // task progress bar
             ticksProgressBar.progressProperty().bind(uiTask.progressProperty());
 
@@ -178,21 +190,21 @@ public class SimulationProgressController {
     }
     @FXML
     synchronized void onPauseClick(MouseEvent event) {
-        systemEngine.pauseSimulation(executionID);
+        requestsFromServer.postControlRequestToServer(userName, executionID, "pause");
         pauseButton.setDisable(true);
         resumeButton.setDisable(false);
     }
 
     @FXML
     synchronized void onResumeClick(MouseEvent event) {
-        systemEngine.resumeSimulation(executionID);
+        requestsFromServer.postControlRequestToServer(userName, executionID, "resume");
         pauseButton.setDisable(false);
         resumeButton.setDisable(true);
     }
 
     @FXML
     void onStopClick(MouseEvent event) {
-       systemEngine.cancelSimulation(executionID);
+        requestsFromServer.postControlRequestToServer(userName, executionID, "stop");
 
         toggleTaskButtons(false);
         onTaskFinished();

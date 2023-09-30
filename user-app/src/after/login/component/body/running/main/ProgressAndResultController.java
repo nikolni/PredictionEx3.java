@@ -1,11 +1,13 @@
 package after.login.component.body.running.main;
 
-import after.login.component.body.running.server.RequestsFromServer;
+import after.login.component.body.running.main.server.RequestsFromServer;
 import after.login.component.body.running.list.view.update.UpdateListView;
 import after.login.component.body.running.result.ResultsController;
 import after.login.component.body.running.simulation.progress.SimulationProgressController;
 import after.login.component.body.running.simulation.progress.task.UpdateUiTask;
+import dto.primary.DTOSecTicksForUi;
 import dto.primary.DTOSimulationEndingForUi;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -24,7 +26,9 @@ import javafx.stage.Stage;
 import after.login.main.UserController;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProgressAndResultController {
@@ -69,7 +73,8 @@ public class ProgressAndResultController {
                 handleSimulationListItemSelection(newValue);
             }
         });
-        simulationProgressComponentController.setProgressAndResultController(this);
+        simulationProgressComponentController.setMembers(this, mainController.getUserName(),
+                requestsFromServer);
         UpdateListView updateListView = new UpdateListView(simulationsList, requestsFromServer, mainController.getUserName());
         new Thread(updateListView).start();
     }
@@ -82,47 +87,66 @@ public class ProgressAndResultController {
     public void setMainController(UserController mainController) {
         this.mainController = mainController;
     }
-
-
     public void addItemToSimulationListView(int idNum){
         simulationsList.getItems().add("Simulation ID: " + idNum);
     }
 
-        private void handleSimulationListItemSelection(String selectedItem) {
-            simulationResultScrollPane.setContent(null);
-            if(oldUpdateUiThreadThread !=null && oldUpdateUiThreadThread.isAlive()){
-                oldUpdateUiThreadThread.interrupt();
-            }
-            String[] words = selectedItem.split("\\s+");
-            Integer simulationID = 0;
+    private void handleSimulationListItemSelection(String selectedItem) {
+        simulationResultScrollPane.setContent(null);
+        if(oldUpdateUiThreadThread !=null && oldUpdateUiThreadThread.isAlive()){
+            oldUpdateUiThreadThread.interrupt();
+        }
+        String[] words = selectedItem.split("\\s+");
+        Integer simulationID;
 
-            if(words.length == 3){
-                simulationID = (Integer.parseInt(words[words.length - 1]));
-            }
-            else if(words.length == 4) {
-                simulationID = (Integer.parseInt(words[words.length - 2]));
-            }
-            else{
-                simulationID = (Integer.parseInt(words[words.length - 3]));
-            }
-            UpdateUiTask updateUiTask = new UpdateUiTask(simulationProgressComponentController, simulationID);
+        if(words.length == 3){
+            simulationID = (Integer.parseInt(words[words.length - 1]));
+        }
+        else if(words.length == 4) {
+            simulationID = (Integer.parseInt(words[words.length - 2]));
+        }
+        else{
+            simulationID = (Integer.parseInt(words[words.length - 3]));
+        }
+        UpdateUiTask updateUiTask = new UpdateUiTask(simulationProgressComponentController, simulationID,
+                requestsFromServer, mainController.getUserName());
 
-            simulationProgressComponentController.setSimulationIdLabel(simulationID.toString());
-            simulationProgressComponentController.setExecutionID(simulationID);
-            simulationProgressComponentController.setTotalSeconds(systemEngine.getTotalSecondsNumber());
-            simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
-            simulationProgressComponentController.bindUiTaskToUiDownLevelComponents(updateUiTask);
+        simulationProgressComponentController.setSimulationIdLabel(simulationID.toString());
+        simulationProgressComponentController.setExecutionID(simulationID);
+
+        DTOSecTicksForUi dtoSecTicksForUis  = requestsFromServer.getTotalSecAndTickFromServer(mainController.getUserName(), simulationID);
+        simulationProgressComponentController.setTotalSeconds(dtoSecTicksForUis.getSeconds());
+
+        simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
+        simulationProgressComponentController.bindUiTaskToUiDownLevelComponents(updateUiTask);
 
 
-            oldUpdateUiThreadThread  = new Thread(updateUiTask);
-            oldUpdateUiThreadThread.start();
-            if(simulationResultsNodesMap.get(simulationID) != null &&
-                    ! systemEngine.getAllSimulationsStatus().get(simulationID-1).equals(("terminated because of an error!"))){
-                simulationResultScrollPane.setContent(simulationResultsNodesMap.get(simulationID));
-                ResultsController resultsController = simulationResultControllersMap.get(simulationID);
-                resultsController.handleSimulationSelection(simulationID,systemEngine);
+        oldUpdateUiThreadThread  = new Thread(updateUiTask);
+        oldUpdateUiThreadThread.start();
+
+        boolean flag = false;
+        List<Integer> executionsIdList = buildListFromExistingSimulations();
+        Map<Integer, String> simulationIdToStatuses = requestsFromServer.getSimulationsStatusesFromServer(
+                mainController.getUserName(), executionsIdList);
+        for (Integer id : simulationIdToStatuses.keySet()) {
+            if(id.equals(simulationID) && simulationIdToStatuses.get(id).equals("terminated because of an error!")){
+                flag  = true;
             }
         }
+        if(simulationResultsNodesMap.get(simulationID) != null && !flag){
+            simulationResultScrollPane.setContent(simulationResultsNodesMap.get(simulationID));
+            ResultsController resultsController = simulationResultControllersMap.get(simulationID);
+            resultsController.handleSimulationSelection(simulationID);
+        }
+    }
+    private List<Integer> buildListFromExistingSimulations(){
+        List<Integer> executionsIdList = new ArrayList<>();
+        ObservableList<String> items = simulationsList.getItems();
+        for(String id : items){
+            executionsIdList.add(Integer.parseInt(id));
+        }
+        return executionsIdList;
+    }
 
         public void setButtonsDisableIfThereIsNoSimulations(){
             if(simulationsList.getItems().isEmpty() || simulationProgressComponentController.isSimulationWasChosen()){
@@ -137,8 +161,7 @@ public class ProgressAndResultController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/after/login/component/body/running/result/results.fxml"));
             HBox simulationResultNode = loader.load();
             ResultsController simulationResultController = loader.getController();
-            simulationResultController.setBody3Controller(this);
-            simulationResultController.setSystemEngine(systemEngine);
+            simulationResultController.setMembers(this, mainController.getUserName(), requestsFromServer);
             simulationResultController.primaryInitialize();
             Integer simulationID = dtoSimulationEndingForUi.getSimulationID();
             Integer simulationEndReason = dtoSimulationEndingForUi.getTerminationReason()[2];

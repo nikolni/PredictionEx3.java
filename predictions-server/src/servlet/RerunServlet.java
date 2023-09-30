@@ -7,13 +7,13 @@ import utils.ServletUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class RerunServlet extends HttpServlet {
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //returning JSON objects, not HTML
         String simulationName = request.getParameter("simulation_name");
