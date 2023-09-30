@@ -1,6 +1,6 @@
 package after.login.component.body.running.main;
 
-import after.login.component.body.running.main.server.RequestsFromServer;
+import after.login.component.body.running.server.RequestsFromServer;
 import after.login.component.body.running.list.view.update.UpdateListView;
 import after.login.component.body.running.result.ResultsController;
 import after.login.component.body.running.simulation.progress.SimulationProgressController;

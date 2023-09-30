@@ -1,4 +1,4 @@
-package after.login.component.body.running.main.server;
+package after.login.component.body.running.server;
 
 import com.google.gson.reflect.TypeToken;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;

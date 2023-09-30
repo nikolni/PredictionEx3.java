@@ -34,6 +34,7 @@ public class Constants {
     public final static String TERMINATION_CONDITIONS_PAGE = FULL_SERVER_PATH + "/termination/conditions";
     public final static String SEC_TICK_PAGE = FULL_SERVER_PATH + "/ticks/seconds";
     public final static String RESULTS_PAGE = FULL_SERVER_PATH + "/execution/results";
+    public final static String SIMULATION_DETAILS_PAGE = FULL_SERVER_PATH + "/simulation/details";
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();

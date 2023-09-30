@@ -1,5 +1,6 @@
 package after.login.component.body.simulation.details.single.simulation.main;
 
+import after.login.component.body.simulation.details.server.RequestsFromServer;
 import after.login.component.body.simulation.details.single.simulation.tile.ResourceConstants;
 import after.login.component.body.simulation.details.single.simulation.tile.rule.action.helper.ActionTileCreatorFactory;
 import after.login.component.body.simulation.details.single.simulation.tile.termination.condition.TerminationConditionsController;
@@ -25,6 +26,7 @@ import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
 import dto.definition.termination.condition.manager.TerminationConditionsDTOManager;
+import dto.include.DTOIncludeSimulationDetailsForUi;
 import dto.primary.DTODefinitionsForUi;
 import dto.primary.DTOEnvVarsDefForUi;
 import javafx.fxml.FXMLLoader;
@@ -50,12 +52,8 @@ public class SingleSimulationController {
     private final TextFlow quantityOfSquaresText;
     private final FlowPane detailsFlowPane;
     private final ScrollPane detailsScrollPane;
-
-    private SystemEngineAccess systemEngine;
-    private SimulationsDetailsController simulationsDetailsController;
-
-    public SingleSimulationController(SystemEngineAccess systemEngine, SimulationsDetailsController simulationsDetailsController){
-        this.systemEngine = systemEngine;
+    private final RequestsFromServer requestsFromServer;
+    public SingleSimulationController(SimulationsDetailsController simulationsDetailsController, RequestsFromServer requestsFromServer){
         detailsTreeView = simulationsDetailsController.getDetailsTreeView();
         valueDefLabel= simulationsDetailsController.getValueDefLabel();  //for population
         quantityOfSquaresLabel= simulationsDetailsController.getQuantityOfSquaresLabel(); //for quantity of properties
@@ -63,26 +61,20 @@ public class SingleSimulationController {
         quantityOfSquaresText= simulationsDetailsController.getQuantityOfSquaresText();
         detailsFlowPane= simulationsDetailsController.getDetailsFlowPane();
         detailsScrollPane= simulationsDetailsController.getDetailsScrollPane();
+        this.requestsFromServer = requestsFromServer;
     }
-
-    public void setVisibleTab(){
-        detailsTreeView.setVisible(true);
-        detailsFlowPane.setVisible(true);
-        detailsScrollPane.setVisible(true);
-    }
-
-
     public void primaryInitialize(String simulationName){
         quantityOfSquaresLabel.setVisible(false);
         quantityOfSquaresText.setVisible(false);
         valueDefLabel.setVisible(false);
         valueDefText.setVisible(false);
-        //detailsTreeView.setVisible(false);
-        //detailsScrollPane.setVisible(false);
         detailsFlowPane.getChildren().clear();
+
+        DTOIncludeSimulationDetailsForUi simulationDetails = requestsFromServer.getSimulationDetailsFromServer(simulationName);
+
         TreeItem<String> rootItem = new TreeItem<>(simulationName);
-        TreeItem<String> entitiesBranch = createEntitiesSubTree(systemEngine);
-        TreeItem<String> ruleBranch = createRulesSubTree(systemEngine);
+        TreeItem<String> entitiesBranch = createEntitiesSubTree(simulationDetails);
+        TreeItem<String> ruleBranch = createRulesSubTree(simulationDetails);
         TreeItem<String> terminationBranch = new TreeItem<>("Termination conditions");
         TreeItem<String> environmentBranch = new TreeItem<>("Environment variables");
         TreeItem<String> worldGridBranch = new TreeItem<>("World grid sizes");
@@ -93,39 +85,37 @@ public class SingleSimulationController {
 
     }
 
-    public void setSystemEngine(SystemEngineAccess systemEngineAccess){
-        this.systemEngine = systemEngineAccess;
-    }
-
-    public void handleSelectedItemChange(TreeItem<String> selectedItem) {
+    public void handleSelectedItemChange(TreeItem<String> selectedItem, String simulationName) {
         detailsTreeView.setVisible(true);
         detailsScrollPane.setVisible(true);
+
+        DTOIncludeSimulationDetailsForUi simulationDetails = requestsFromServer.getSimulationDetailsFromServer(simulationName);
 
         // Check if the selected item is a leaf (entity)
         if (selectedItem != null && selectedItem.isLeaf()) {
             // Check if "Entities" branch is expanded
             if (selectedItem.getParent().getValue().equals("Entities")) {
-                handleSingleEntitySelection(selectedItem);
+                handleSingleEntitySelection(selectedItem, simulationDetails);
             } else if (selectedItem.getParent().getValue().equals("Rules")) {
-                handleSingleRuleSelection(selectedItem);
+                handleSingleRuleSelection(selectedItem, simulationDetails);
             } else if (selectedItem.getValue().equals("Termination conditions")) {
-                handleTerminationConditionsSelection(selectedItem);
+                handleTerminationConditionsSelection(selectedItem, simulationDetails);
                 //detailsTreeView.getRoot().setExpanded(false);
             } else if (selectedItem.getValue().equals("Environment variables")) {
-                handleEnvironmentVariablesSelection(selectedItem);
+                handleEnvironmentVariablesSelection(selectedItem, simulationDetails);
             }
             else if (selectedItem.getValue().equals("World grid sizes")) {
-                handleWorldGridSizesSelection(selectedItem);}
+                handleWorldGridSizesSelection(simulationDetails);}
         }
     }
 
-    private void handleWorldGridSizesSelection(TreeItem<String> selectedItem) {
+    private void handleWorldGridSizesSelection(DTOIncludeSimulationDetailsForUi simulationDetails) {
         try{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(ResourceConstants.WORLD_GRID_FXML_RESOURCE);
             Node singleNode = loader.load();
-            Integer rows= systemEngine.getDTOWorldGridForUi().getGridRows();
-            Integer columns = systemEngine.getDTOWorldGridForUi().getGridColumns();
+            Integer rows= simulationDetails.getWorldGridForUi().getGridRows();
+            Integer columns = simulationDetails.getWorldGridForUi().getGridColumns();
             Integer maxPopulationQuantity = rows * columns;
 
             WorldGridSizesController worldGridSizesController = loader.getController();
@@ -141,7 +131,7 @@ public class SingleSimulationController {
     }
 
 
-    private void handleSingleEntitySelection(TreeItem<String> entitySelectedItem){
+    private void handleSingleEntitySelection(TreeItem<String> entitySelectedItem, DTOIncludeSimulationDetailsForUi simulationDetails){
             valueDefText.getChildren().clear(); // Clear existing text
             quantityOfSquaresLabel.setVisible(false);
             quantityOfSquaresText.setVisible(false);
@@ -150,18 +140,11 @@ public class SingleSimulationController {
         detailsFlowPane.getChildren().clear();
         if (entitySelectedItem != null) {
                 String selectedValue = entitySelectedItem.getValue();
-                DTODefinitionsForUi dtoDefinitionsForUi = systemEngine.getDefinitionsDataFromSE();
+                DTODefinitionsForUi dtoDefinitionsForUi = simulationDetails.getDefinitions();
                 List<EntityDefinitionDTO> entities = dtoDefinitionsForUi.getEntitiesDTO();
                 for(EntityDefinitionDTO entityDefinitionDTO : entities){
 
                     if(entityDefinitionDTO.getUniqueName().equals(selectedValue)){
-                        //valueDefLabel.setVisible(true);
-                        //valueDefText.setVisible(true);
-                        //population
-                        //valueDefLabel.setText("entity's population:");
-                        //Text entityPopulation = new Text(String.valueOf(entityDefinitionDTO.getPopulation()));
-                       // valueDefText.getChildren().add(entityPopulation);
-                        //property list
                         for(PropertyDefinitionDTO propertyDefinitionDTO:entityDefinitionDTO.getProps()){
                             createPropertyChildrenInFlowPane(propertyDefinitionDTO);
                         }
@@ -169,8 +152,6 @@ public class SingleSimulationController {
                     }
                 }
             }
-
-        //detailsTreeView.getRoot().setExpanded(false);
     }
 
 
@@ -195,8 +176,8 @@ public class SingleSimulationController {
     }
 
 
-    private TreeItem<String> createEntitiesSubTree(SystemEngineAccess systemEngineAccess){
-        DTODefinitionsForUi dtoDefinitionsForUi = systemEngineAccess.getDefinitionsDataFromSE();
+    private TreeItem<String> createEntitiesSubTree(DTOIncludeSimulationDetailsForUi simulationDetails){
+        DTODefinitionsForUi dtoDefinitionsForUi = simulationDetails.getDefinitions();
         List<EntityDefinitionDTO> entities = dtoDefinitionsForUi.getEntitiesDTO();
         List<TreeItem<String>> entitiesBrunches = new ArrayList<>();
 
@@ -214,8 +195,8 @@ public class SingleSimulationController {
         return entityBranch;
     }
 
-    private TreeItem<String> createRulesSubTree(SystemEngineAccess systemEngineAccess){
-        DTODefinitionsForUi dtoDefinitionsForUi = systemEngineAccess.getDefinitionsDataFromSE();
+    private TreeItem<String> createRulesSubTree(DTOIncludeSimulationDetailsForUi simulationDetails){
+        DTODefinitionsForUi dtoDefinitionsForUi = simulationDetails.getDefinitions();
         List<RuleDTO> rules = dtoDefinitionsForUi.getRulesDTO();
         List<TreeItem<String>> rulesBrunches = new ArrayList<>();
 
@@ -229,13 +210,13 @@ public class SingleSimulationController {
     }
 
 
-    private void handleSingleRuleSelection(TreeItem<String> ruleSelectedItem) {
+    private void handleSingleRuleSelection(TreeItem<String> ruleSelectedItem, DTOIncludeSimulationDetailsForUi simulationDetails) {
             valueDefText.getChildren().clear(); // Clear existing text
             quantityOfSquaresText.getChildren().clear(); // Clear existing text
         detailsFlowPane.getChildren().clear();
             if (ruleSelectedItem != null) {
                 String selectedRuleName = ruleSelectedItem.getValue();
-                DTODefinitionsForUi dtoDefinitionsForUi = systemEngine.getDefinitionsDataFromSE();
+                DTODefinitionsForUi dtoDefinitionsForUi = simulationDetails.getDefinitions();
                 List<RuleDTO> rules = dtoDefinitionsForUi.getRulesDTO();
                 for (RuleDTO ruleDTO : rules) {
 
@@ -314,28 +295,14 @@ public class SingleSimulationController {
         }
     }
 
-
-
-    public RuleDTO searchName(String searchName, List<RuleDTO> rules) {
-        for (RuleDTO rule : rules) {
-            if (searchName.equalsIgnoreCase(rule.getName())) {
-                return rule;
-            }
-        }
-        return null;
-    }
-
-
-
-    private void handleEnvironmentVariablesSelection(TreeItem<String> environmentVariablesSelectedItem){
+    private void handleEnvironmentVariablesSelection(TreeItem<String> environmentVariablesSelectedItem, DTOIncludeSimulationDetailsForUi simulationDetails){
 
             quantityOfSquaresLabel.setVisible(false);
             quantityOfSquaresText.setVisible(false);
             valueDefLabel.setVisible(false);
             valueDefText.setVisible(false);
             if (environmentVariablesSelectedItem != null) {
-                String selectedValue = environmentVariablesSelectedItem.getValue();
-                DTOEnvVarsDefForUi dtoEnvVarsDefForUi = systemEngine.getEVDFromSE();
+                DTOEnvVarsDefForUi dtoEnvVarsDefForUi = simulationDetails.getEnvVarsDef();
                 List<PropertyDefinitionDTO> propertyDefinitionDTOS = dtoEnvVarsDefForUi.getEnvironmentVars();
 
                 detailsFlowPane.getChildren().clear();
@@ -348,23 +315,18 @@ public class SingleSimulationController {
     }
 
 
-    private void handleTerminationConditionsSelection(TreeItem<String> terminationConditionsSelectedItem){
-
-            quantityOfSquaresLabel.setVisible(false);
-            quantityOfSquaresText.setVisible(false);
-            valueDefLabel.setVisible(false);
-            valueDefText.setVisible(false);
-            if (terminationConditionsSelectedItem != null) {
-                String selectedValue = terminationConditionsSelectedItem.getValue();
-                DTODefinitionsForUi dtoDefinitionsForUi = systemEngine.getDefinitionsDataFromSE();
-                TerminationConditionsDTOManager terminationConditionsDTOManager = dtoDefinitionsForUi.getTerminationConditionsDTOManager();
-                List<TerminationConditionsDTO> terminationConditionsDTOList = terminationConditionsDTOManager.getTerminationConditionsDTOList();
-                detailsFlowPane.getChildren().clear();
-                createTerminationConditionsChildrenInFlowPane(terminationConditionsDTOList);
-            }
-
-        DTODefinitionsForUi dtoDefinitionsForUi = systemEngine.getDefinitionsDataFromSE();
-        TerminationConditionsDTOManager terminationConditionsDTOManager = dtoDefinitionsForUi.getTerminationConditionsDTOManager();
+    private void handleTerminationConditionsSelection(TreeItem<String> terminationConditionsSelectedItem, DTOIncludeSimulationDetailsForUi simulationDetails){
+        quantityOfSquaresLabel.setVisible(false);
+        quantityOfSquaresText.setVisible(false);
+        valueDefLabel.setVisible(false);
+        valueDefText.setVisible(false);
+        if (terminationConditionsSelectedItem != null) {
+            DTODefinitionsForUi dtoDefinitionsForUi = simulationDetails.getDefinitions();
+            TerminationConditionsDTOManager terminationConditionsDTOManager = dtoDefinitionsForUi.getTerminationConditionsDTOManager();
+            List<TerminationConditionsDTO> terminationConditionsDTOList = terminationConditionsDTOManager.getTerminationConditionsDTOList();
+            detailsFlowPane.getChildren().clear();
+            createTerminationConditionsChildrenInFlowPane(terminationConditionsDTOList);
+        }
     }
 
     private void createTerminationConditionsChildrenInFlowPane(List<TerminationConditionsDTO> terminationConditionsDTOList) {
