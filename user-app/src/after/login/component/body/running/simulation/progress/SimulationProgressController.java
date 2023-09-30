@@ -1,7 +1,7 @@
 package after.login.component.body.running.simulation.progress;
 
 import after.login.component.body.running.main.ProgressAndResultController;
-import after.login.component.body.running.main.server.RequestsFromServer;
+import after.login.component.body.running.server.RequestsFromServer;
 import after.login.component.body.running.simulation.progress.task.UpdateUiTask;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;

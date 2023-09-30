@@ -1,7 +1,7 @@
 package after.login.component.body.running.result;
 
 import after.login.component.body.running.main.ProgressAndResultController;
-import after.login.component.body.running.main.server.RequestsFromServer;
+import after.login.component.body.running.server.RequestsFromServer;
 import dto.definition.entity.EntityDefinitionDTO;
 import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.include.DTOIncludeForResultsAdditionalForUi;

@@ -96,4 +96,12 @@
         <servlet-name>ExecutionResultsServlet</servlet-name>
         <url-pattern>/execution/results</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>SimulationDetailsServlet</servlet-name>
+        <servlet-class>servlet.SimulationDetailsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SimulationDetailsServlet</servlet-name>
+        <url-pattern>/simulation/details</url-pattern>
+    </servlet-mapping>
 </web-app>
