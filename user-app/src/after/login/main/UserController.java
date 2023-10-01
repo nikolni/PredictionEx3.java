@@ -5,8 +5,6 @@ import after.login.component.header.HeaderController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
-import engine.per.file.engine.api.SystemEngineAccess;
-import engine.per.file.engine.impl.SystemEngineAccessImpl;
 
 public class UserController {
 
@@ -34,8 +32,11 @@ public class UserController {
     }
 
 
-    public void onExecutionClick() {
-
+    public void onExecutionClickFromRequest() {
+        tabPaneUserBodyComponentController.switchToTab3FromRequest();
+    }
+    public void onExecutionClickFromHeader() {
+        tabPaneUserBodyComponentController.switchToTab3FromHeader();
     }
 
     public void onRequestClick() {
@@ -50,9 +51,9 @@ public class UserController {
         tabPaneUserBodyComponentController.switchToTab1();
     }
 
-
-        public void onRerunClick(int simulationID){
+    public void onRerunClick(int executionID){
         tabPaneUserBodyComponentController.switchToTab2();
-        tabPaneUserBodyComponentController.onRerunClick( simulationID);
+        tabPaneUserBodyComponentController.onRerunClick(executionID);
     }
+
 }

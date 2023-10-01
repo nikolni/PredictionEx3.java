@@ -56,13 +56,14 @@
          <content>
             <GridPane fx:id="requestGridPane" gridLinesVisible="true" prefHeight="108.0" prefWidth="806.0">
                <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="85.0" minWidth="10.0" prefWidth="63.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="97.0" minWidth="10.0" prefWidth="87.5" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.5" minWidth="10.0" prefWidth="78.5" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="112.0" minWidth="10.0" prefWidth="81.5" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.5" minWidth="10.0" prefWidth="164.5" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="183.5" minWidth="10.0" prefWidth="110.5" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="308.0" minWidth="10.0" prefWidth="173.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="85.0" minWidth="10.0" prefWidth="54.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="97.0" minWidth="10.0" prefWidth="80.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.5" minWidth="10.0" prefWidth="76.5" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="112.0" minWidth="10.0" prefWidth="69.5" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.5" minWidth="10.0" prefWidth="143.5" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="183.5" minWidth="10.0" prefWidth="81.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="183.5" minWidth="10.0" prefWidth="87.5" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="308.0" minWidth="10.0" prefWidth="170.5" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.5" minWidth="10.0" prefWidth="53.0" />
                </columnConstraints>
                <rowConstraints>
@@ -79,7 +80,7 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label id="range-label" alignment="CENTER" prefHeight="53.0" prefWidth="78.0" styleClass="body-label" text="Executions total number" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.columnIndex="5" GridPane.halignment="CENTER">
+                  <Label id="range-label" alignment="CENTER" prefHeight="53.0" prefWidth="53.0" styleClass="body-label" text="Executions total number" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.columnIndex="5" GridPane.halignment="CENTER">
                      <padding>
                         <Insets left="-15.0" />
                      </padding>
@@ -87,7 +88,7 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label id="random-label" alignment="CENTER" prefHeight="30.0" prefWidth="148.0" styleClass="body-label" text="Termination Conditions" textFill="WHITE" GridPane.columnIndex="6" GridPane.halignment="CENTER">
+                  <Label id="random-label" alignment="CENTER" prefHeight="30.0" prefWidth="148.0" styleClass="body-label" text="Termination Conditions" textFill="WHITE" GridPane.columnIndex="7" GridPane.halignment="CENTER">
                      <padding>
                         <Insets left="-15.0" />
                      </padding>
@@ -102,7 +103,12 @@
                   </Label>
                   <Label styleClass="body-label" text="Executions that done" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
                   <Label prefHeight="58.0" prefWidth="77.0" styleClass="body-label" text="Executions running at the moment" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-                  <CheckBox mnemonicParsing="false" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <CheckBox mnemonicParsing="false" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <Label id="range-label" alignment="CENTER" prefHeight="60.0" prefWidth="58.0" styleClass="body-label" text="  Executions left for execute" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.columnIndex="6" GridPane.halignment="CENTER">
+                     <padding>
+                        <Insets left="-15.0" />
+                     </padding>
+                  </Label>
                </children>
             </GridPane>
          </content>

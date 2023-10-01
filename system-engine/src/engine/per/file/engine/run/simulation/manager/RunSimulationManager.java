@@ -1,5 +1,6 @@
 package engine.per.file.engine.run.simulation.manager;
 
+import dto.primary.DTOSimulationEndingForUi;
 import dto.primary.DTOSimulationProgressForUi;
 import dto.primary.DTOThreadsPoolStatusForUi;
 import engine.per.file.engine.run.simulation.api.RunSimulation;
@@ -14,10 +15,9 @@ import java.util.concurrent.Executors;
 
 public class RunSimulationManager {
     private final ExecutorService threadPool;
-    /*private final Map<String, Map<Integer, WorldInstance>>  userNameToSimulationsMap;
-    private final Map<String, Map<Integer, WorldInstance>> userNameToWorldInstancesMap;*/
     private final Map<Integer, RunSimulation>  simulationIdToRunSimulation;
     private final Map<Integer, WorldInstance> simulationIdToWorldInstance;
+    private final Map<Integer, DTOSimulationEndingForUi> simulationIdToSimulationEnding;
     private int completedTaskCount =0;
     private int taskCount=0;
     private int activeThreadCount = 0;
@@ -25,10 +25,14 @@ public class RunSimulationManager {
     public RunSimulationManager(int threadPoolSize, Map<Integer, WorldInstance> simulationIdToWorldInstance) {
         threadPool = Executors.newFixedThreadPool(threadPoolSize);
         simulationIdToRunSimulation = new HashMap<>();
+        simulationIdToSimulationEnding = new HashMap<>();
         this.simulationIdToWorldInstance = simulationIdToWorldInstance;
     }
     public void addSimulationIdToRunSimulation(Integer simulationID, RunSimulation runSimulation){
         simulationIdToRunSimulation.put(simulationID, runSimulation);
+    }
+    public void addSimulationEndingDto(Integer simulationID, DTOSimulationEndingForUi dtoSimulationEndingForUi){
+        simulationIdToSimulationEnding.put(simulationID, dtoSimulationEndingForUi);
     }
     public void addTaskToQueue(Runnable runSimulationRunnable){
         threadPool.submit(runSimulationRunnable);
@@ -94,5 +98,18 @@ public class RunSimulationManager {
             i++;
         }
         return simulationsStatuses;
+    }
+
+    public String getSimulationStatusByID(Integer simulationID){
+        String simulationStatus ;
+
+        if(simulationIdToRunSimulation.get(simulationID) != null) {
+            simulationStatus = simulationIdToRunSimulation.get(simulationID).getDtoSimulationProgressForUi().getProgressMassage();
+        }
+        else{
+            simulationStatus = "Getting ready...";
+        }
+
+        return simulationStatus;
     }
 }

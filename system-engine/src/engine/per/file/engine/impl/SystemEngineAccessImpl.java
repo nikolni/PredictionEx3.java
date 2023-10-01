@@ -47,7 +47,6 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     private boolean isHaveValidFileInSystem=false;
     private final Map<Integer, WorldInstance> simulationIdToWorldInstance;
     private RunSimulationManager runSimulationManager;
-    private DTOSimulationEndingForUi dtoSimulationEndingForUi = null;
 
 
     public SystemEngineAccessImpl() {
@@ -205,7 +204,8 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
             terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
                     simulationIdToWorldInstance.get(simulationID));
 
-            dtoSimulationEndingForUi = new DTOSimulationEndingForUi(simulationID, terminationConditionArr);
+            runSimulationManager.addSimulationEndingDto(simulationID,
+                    new DTOSimulationEndingForUi(simulationID, terminationConditionArr));
             runSimulationManager.increaseCompletedTaskCount();
             runSimulationManager.decreaseActiveCount();
     }
@@ -310,6 +310,10 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     @Override
     public List<String> getAllSimulationsStatus(){
         return runSimulationManager.getAllSimulationsStatus();
+    }
+    @Override
+    public String getSimulationStatusByID(Integer executionID){
+        return runSimulationManager.getSimulationStatusByID(executionID);
     }
     @Override
     public void prepareForExecution(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE ,

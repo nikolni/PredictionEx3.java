@@ -1,15 +1,17 @@
 package after.login.component.body.running.result;
 
 import after.login.component.body.running.main.ProgressAndResultController;
+import after.login.component.body.running.server.RequestsFromServer;
 import dto.definition.entity.EntityDefinitionDTO;
 import dto.definition.property.definition.PropertyDefinitionDTO;
+import dto.include.DTOIncludeForResultsAdditionalForUi;
+import dto.include.DTOIncludeForResultsPrimaryForUi;
 import dto.primary.DTODefinitionsForUi;
 import dto.primary.DTOEntitiesAfterSimulationByQuantityForUi;
 import dto.primary.DTOPropertyHistogramForUi;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import engine.per.file.engine.api.SystemEngineAccess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +43,15 @@ public class ResultsController {
 
     @FXML
     private Label PropertyAverageLabel;
-
     private ProgressAndResultController progressAndResultController;
-    private SystemEngineAccess systemEngine;
+    private RequestsFromServer requestsFromServer ;
+    private String userName;
 
-    public void setBody3Controller(ProgressAndResultController progressAndResultController) {
+    public void setMembers(ProgressAndResultController progressAndResultController, String userName,
+                           RequestsFromServer requestsFromServer) {
         this.progressAndResultController = progressAndResultController;
-    }
-
-    @FXML
-    public void initialize() {
-
+        this.userName = userName;
+        this.requestsFromServer = requestsFromServer;
     }
 
     public TreeView<String> getEntityPropTreeView() {
@@ -95,38 +95,24 @@ public class ResultsController {
             });
     }
 
-    public void setSystemEngine(SystemEngineAccess systemEngineAccess){
-        this.systemEngine = systemEngineAccess;
+    public void handleSimulationSelection(int simulationID) {
+        DTOIncludeForResultsPrimaryForUi primaryResults =
+                requestsFromServer.getPrimaryResults(userName, simulationID);
+
+        entityTimeGraphPane.setContent(createEntitiesByTickGraph(primaryResults.getEntitiesAfterSimulationByQuantity()));
+        entityTimeGraphPane.setVisible(true);
+
+        TreeItem<String> rootItem = createEntitiesSubTree(primaryResults);
+        entityPropTreeView.setRoot(rootItem);
+        entityPropTreeView.setShowRoot(false);
+        entityPropTreeView.setVisible(true);
+
+        entityPropTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue!=null && newValue.isLeaf())
+                handleSelectedProperty(newValue,simulationID, primaryResults);
+        });
     }
-
-    public BarChart<String, Number> createHistogram(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID) {
-
-        // Create the X and Y axes
-        CategoryAxis xAxis = new CategoryAxis();
-        NumberAxis yAxis = new NumberAxis();
-
-        yAxis.setTickUnit(1.0);
-
-        // Create the bar chart
-        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-        xAxis.setLabel("property value");
-        yAxis.setLabel("quantity of entities");
-
-        // Prepare data for the chart
-        XYChart.Series<String, Number> dataSeries = new XYChart.Series<>();
-
-        DTOPropertyHistogramForUi dtoPropertyHistogramForUi = systemEngine.getPropertyDataAfterSimulationRunningByHistogramByNames(simulationID,selectedItem.getParent().getValue(),selectedItem.getValue());
-        Map< Object, Long> propertyHistogramMap = dtoPropertyHistogramForUi.getPropertyHistogram();
-
-        for (Map.Entry<Object, Long> entry : propertyHistogramMap.entrySet()) {
-            dataSeries.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
-        }
-
-        barChart.getData().add(dataSeries);
-        return barChart;
-    }
-
-    public LineChart<Number, Number> createEntitiesByTickGraph(SystemEngineAccess systemEngine,int simulationID) {
+    public LineChart<Number, Number> createEntitiesByTickGraph(DTOEntitiesAfterSimulationByQuantityForUi dtoEntitiesAfterSimulationByQuantity) {
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
 
@@ -136,7 +122,7 @@ public class ResultsController {
         LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
 
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        Map<Integer, Integer> entitiesData = systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID).getEntitiesLeftByTicks();
+        Map<Integer, Integer> entitiesData = dtoEntitiesAfterSimulationByQuantity.getEntitiesLeftByTicks();
 
         if (entitiesData.size() > 0) {
             if (entitiesData.size() > 1000) {
@@ -159,12 +145,76 @@ public class ResultsController {
         /*for (Map.Entry<Integer, Integer> entry : systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID).getEntitiesLeftByTicks().entrySet())
             series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));*/
     }
+    public TreeItem<String> createEntitiesSubTree(DTOIncludeForResultsPrimaryForUi primaryResults){
+        List<String> entitiesNames = primaryResults.getEntitiesAfterSimulationByQuantity().getEntitiesNames();
 
-    public float calculatePropertyAverage(Integer simulationID,String entityName,String propertyName){
-        DTOPropertyHistogramForUi dtoPropertyHistogramForUi;
+        List<TreeItem<String>> entitiesBrunches = new ArrayList<>();
+        for(String entityName : entitiesNames){
+            entitiesBrunches.add(createSingleEntitySubTree(entityName,primaryResults.getDtoDefinitions()));
+        }
+
+        TreeItem<String> entitiesBranch = new TreeItem<>("Entities");
+        entitiesBranch.getChildren().addAll(entitiesBrunches);
+        return entitiesBranch;
+    }
+    public void handleSelectedProperty(TreeItem<String> selectedItem, int simulationID, DTOIncludeForResultsPrimaryForUi primaryResults){
+        viewComboBox.setVisible(true);
+        viewComboBox.setPromptText("select option");
+
+        DTOIncludeForResultsAdditionalForUi additionalResults = requestsFromServer.getAdditionalResults(
+                userName, simulationID, selectedItem.getParent().getValue(), selectedItem.getValue());
+
+        if(additionalResults.getDtoSimulationProgress().getEntitiesLeft().get(selectedItem.getParent().getValue())>0){
+            if(primaryResults.getDtoDefinitions().getPropertyDefinitionByName(selectedItem.getParent().getValue(),
+                    selectedItem.getValue()).getType().toLowerCase().equals("float")) {
+                PropertyAverageValueLabel.setText(String.valueOf(calculatePropertyAverage(additionalResults.getDtoPropertyHistogram())));
+            }else{
+                PropertyAverageValueLabel.setText("Property's type is not numeric");
+                PropertyAverageValueLabel.setWrapText(true);
+            }
+
+            BarChart<String, Number> histogram = createHistogram(additionalResults.getDtoPropertyHistogram());
+            histogramGraphPane.setContent(histogram);
+        }
+        else{
+
+            PropertyAverageValueLabel.setText("Entity's population is 0");
+            PropertyAverageValueLabel.setWrapText(true);
+            Label zeroPopulation=new Label("Entity's population is 0 - no data to show");
+            zeroPopulation.setWrapText(true);
+            histogramGraphPane.setContent(zeroPopulation);
+        }
+        ConsistencyValueLabel.setText(String.valueOf(additionalResults.getDtoEntityPropertyConsistency().getConsistency()));
+    }
+    public BarChart<String, Number> createHistogram(DTOPropertyHistogramForUi dtoPropertyHistogramForUi) {
+
+        // Create the X and Y axes
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+
+        yAxis.setTickUnit(1.0);
+
+        // Create the bar chart
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        xAxis.setLabel("property value");
+        yAxis.setLabel("quantity of entities");
+
+        // Prepare data for the chart
+        XYChart.Series<String, Number> dataSeries = new XYChart.Series<>();
+
+        Map< Object, Long> propertyHistogramMap = dtoPropertyHistogramForUi.getPropertyHistogram();
+
+        for (Map.Entry<Object, Long> entry : propertyHistogramMap.entrySet()) {
+            dataSeries.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
+        }
+
+        barChart.getData().add(dataSeries);
+        return barChart;
+    }
+
+    public float calculatePropertyAverage(DTOPropertyHistogramForUi dtoPropertyHistogramForUi){
         float sumOfProducts = 0.0f;
         float sumOfValues = 0.0f;
-            dtoPropertyHistogramForUi=systemEngine.getPropertyDataAfterSimulationRunningByHistogramByNames(simulationID,entityName,propertyName);
             for (Map.Entry<Object, Long> entry : dtoPropertyHistogramForUi.getPropertyHistogram().entrySet()) {
                 float key = Float.parseFloat(entry.getKey().toString());
                 float value = Float.parseFloat(entry.getValue().toString());
@@ -178,69 +228,9 @@ public class ResultsController {
 
     }
 
-
-    public void handleSimulationSelection(int simulationID,SystemEngineAccess systemEngine) {
-        entityTimeGraphPane.setContent(createEntitiesByTickGraph(systemEngine,simulationID));
-        entityTimeGraphPane.setVisible(true);
-
-        TreeItem<String> rootItem = createEntitiesSubTree(simulationID, systemEngine);
-        entityPropTreeView.setRoot(rootItem);
-        entityPropTreeView.setShowRoot(false);
-        entityPropTreeView.setVisible(true);
-
-        entityPropTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue!=null && newValue.isLeaf())
-                handleSelectedProperty(newValue,systemEngine,simulationID);
-        });
-    }
-
-
-
-    public void handleSelectedProperty(TreeItem<String> selectedItem,SystemEngineAccess systemEngine,int simulationID){
-        viewComboBox.setVisible(true);
-        viewComboBox.setPromptText("select option");
-        if(systemEngine.getDtoSimulationProgressForUi(simulationID).getEntitiesLeft().get(selectedItem.getParent().getValue())>0){
-            if(systemEngine.getDefinitionsDataFromSE().getPropertyDefinitionByName(selectedItem.getParent().getValue(),selectedItem.getValue()).getType().toLowerCase().equals("float"))
-                PropertyAverageValueLabel.setText(String.valueOf(calculatePropertyAverage(simulationID,selectedItem.getParent().getValue(),selectedItem.getValue())));
-            else{
-                PropertyAverageValueLabel.setText("Property's type is not numeric");
-                PropertyAverageValueLabel.setWrapText(true);
-            }
-
-            BarChart<String, Number> histogram = createHistogram(selectedItem,systemEngine,simulationID);
-            histogramGraphPane.setContent(histogram);
-        }
-        else{
-
-            PropertyAverageValueLabel.setText("Entity's population is 0");
-            PropertyAverageValueLabel.setWrapText(true);
-            Label zeroPopulation=new Label("Entity's population is 0 - no data to show");
-            zeroPopulation.setWrapText(true);
-            histogramGraphPane.setContent(zeroPopulation);
-        }
-        ConsistencyValueLabel.setText(String.valueOf(systemEngine.getConsistencyDTOByEntityPropertyName(simulationID,selectedItem.getParent().getValue(),selectedItem.getValue()).getConsistency()));
-    }
-
-
-
-        public TreeItem<String> createEntitiesSubTree(int simulationID, SystemEngineAccess systemEngine){
-            DTOEntitiesAfterSimulationByQuantityForUi entitiesAfterSimulationForUi= systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID);
-            List<String> entitiesNames = entitiesAfterSimulationForUi.getEntitiesNames();
-
-            List<TreeItem<String>> entitiesBrunches = new ArrayList<>();
-            for(String entityName : entitiesNames){
-                entitiesBrunches.add(createSingleEntitySubTree(entityName,systemEngine));
-            }
-
-            TreeItem<String> entitiesBranch = new TreeItem<>("Entities");
-            entitiesBranch.getChildren().addAll(entitiesBrunches);
-            return entitiesBranch;
-        }
-
-    public TreeItem<String> createSingleEntitySubTree(String entityName,SystemEngineAccess systemEngine) {
+    public TreeItem<String> createSingleEntitySubTree(String entityName,DTODefinitionsForUi dtoDefinitionsForUi) {
 
         TreeItem<String> entityBranch = new TreeItem<>(entityName);
-        DTODefinitionsForUi dtoDefinitionsForUi = systemEngine.getDefinitionsDataFromSE();
         List<EntityDefinitionDTO> entities = dtoDefinitionsForUi.getEntitiesDTO();
         for (EntityDefinitionDTO entityDefinitionDTO : entities) {
             if (entityDefinitionDTO.getUniqueName().equals(entityName)) {

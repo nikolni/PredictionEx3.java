@@ -10,7 +10,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import after.login.main.UserController;
-import engine.per.file.engine.api.SystemEngineAccess;
 
 public class TabPaneUserBodyController {
 
@@ -31,24 +30,20 @@ public class TabPaneUserBodyController {
 
     public void setMainController(UserController mainUserController) {
         this.mainUserController = mainUserController;
+        setControllersForChildren();
+        initialChildren();
     }
 
-   /* public void setSystemEngineToChildren(SystemEngineAccess systemEngineAccess){
-        simulationDetailsComponentController.setSystemEngine(systemEngineAccess);
-        requestsComponentController.setSystemEngine(systemEngineAccess);
-        executionComponentController.setSystemEngine(systemEngineAccess);
-        resultsComponentController.setSystemEngine(systemEngineAccess);
-        initialChildren();
-    }*/
     private void initialChildren(){
         resultsComponentController.primaryInitialize();
     }
 
-     public void setControllersForChildren(SystemEngineAccess systemEngineAccess){
+     public void setControllersForChildren(){
         requestsComponentController.setExecutionController(executionComponentController);
         requestsComponentController.setMainController(mainUserController);
         executionComponentController.setProgressAndResultController(resultsComponentController);
         executionComponentController.setMainController(mainUserController);
+        resultsComponentController.setMainController(mainUserController);
     }
 
     public void switchToTab1() {
@@ -56,20 +51,28 @@ public class TabPaneUserBodyController {
         simulationDetailsComponentController.setVisibleTab();
     }
 
+    //requests
     public void switchToTab2() {
         tabPaneBodyComponent.getSelectionModel().select(1);
     }
 
-    public void switchToTab3(SystemEngineAccess systemEngineAccess) {
+    //execution
+    public void switchToTab3FromRequest() {
+        executionComponentController.enableController();
         tabPaneBodyComponent.getSelectionModel().select(2);
-        executionComponentController.primaryInitialize(systemEngineAccess);
     }
+    public void switchToTab3FromHeader() {
+        executionComponentController.disableController();
+        tabPaneBodyComponent.getSelectionModel().select(2);
+    }
+
+    //results
     public void switchToTab4() {
         tabPaneBodyComponent.getSelectionModel().select(3);
     }
 
-    public void onRerunClick(int simulationID){
-        executionComponentController.setTilesByRerun(simulationID);
+    public void onRerunClick(int executionID){
+        executionComponentController.setTilesByRerun(executionID);
 
     }
 }

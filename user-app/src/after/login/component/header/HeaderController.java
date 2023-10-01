@@ -26,7 +26,7 @@ public class HeaderController {
 
     @FXML
     void onExecutionClick(MouseEvent event) {
-
+        mainController.onExecutionClickFromHeader();
     }
 
     @FXML

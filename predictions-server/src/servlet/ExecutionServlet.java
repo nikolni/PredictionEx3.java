@@ -10,6 +10,8 @@ import utils.ServletUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -29,9 +31,9 @@ public class ExecutionServlet extends HttpServlet {
         DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE = dtoIncludeForExecutionForServer.getDtoEnvVarDefValuesForSE();
         DTOPopulationValuesForSE dtoPopulationValuesForSE = dtoIncludeForExecutionForServer.getDtoPopulationValuesForSE();
 
-        String simulationName = request.getParameter("simulation_name");
-        String userName= request.getParameter("user_name");
-        Integer requestID=Integer.parseInt(request.getParameter("requestID"));
+        String simulationName = request.getHeader("simulation_name");
+        String userName= request.getHeader("user_name");
+        Integer requestID=Integer.parseInt(request.getHeader("requestID"));
 
         SystemEngineAccess systemEngineAccess = ServletUtils.getSEInstanceBySimulationName
                 (getServletContext(), simulationName);
@@ -41,5 +43,18 @@ public class ExecutionServlet extends HttpServlet {
 
         systemEngineAccess.prepareForExecution(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, executionID);
         ServletUtils.addRunnableToThreadPool(getServletContext(), () -> systemEngineAccess.runSimulation(executionID));
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //returning JSON objects, not HTML
+        response.setContentType("application/json");
+        try (PrintWriter out = response.getWriter()) {
+            Gson gson = new Gson();
+            Integer executionID = (ServletUtils.getExecutionCounter(getServletContext()));
+            String json = gson.toJson(executionID);
+            out.println(json);
+            out.flush();
+        }
     }
 }

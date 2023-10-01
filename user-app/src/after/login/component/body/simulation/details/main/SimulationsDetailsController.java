@@ -1,5 +1,6 @@
 package after.login.component.body.simulation.details.main;
 
+import after.login.component.body.simulation.details.server.RequestsFromServer;
 import after.login.component.body.simulation.details.single.simulation.main.SingleSimulationController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -8,7 +9,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.TextFlow;
-import engine.per.file.engine.api.SystemEngineAccess;
 
 import java.util.List;
 
@@ -34,6 +34,8 @@ public class SimulationsDetailsController {
     @FXML
     private FlowPane detailsFlowPane;
     private List<SingleSimulationController> singleSimulationControllerList;
+    private final RequestsFromServer requestsFromServer  = new RequestsFromServer();
+    private String simulationName;
 
     @FXML
     public void initialize() {
@@ -55,8 +57,9 @@ public class SimulationsDetailsController {
         detailsFlowPane.setVisible(true);
         detailsScrollPane.setVisible(true);
     }
-    public void addSimulationItemToTreeView(String simulationName, SystemEngineAccess systemEngineAccess){
-        SingleSimulationController singleSimulationController = new SingleSimulationController(systemEngineAccess, this);
+    public void addSimulationItemToTreeView(String simulationName){
+        this.simulationName = simulationName;
+        SingleSimulationController singleSimulationController = new SingleSimulationController(this, requestsFromServer);
         singleSimulationController.primaryInitialize(simulationName);
         singleSimulationControllerList.add(singleSimulationController);
     }
@@ -66,7 +69,7 @@ public class SimulationsDetailsController {
         if (selectedItem != null) {
             for (TreeItem<String> item : detailsTreeView.getTreeItem(0).getChildren()) {
                 if (selectedItem.getParent().getParent().getValue().equals(item.getValue())) {
-                    singleSimulationControllerList.get(count).handleSelectedItemChange(selectedItem);
+                    singleSimulationControllerList.get(count).handleSelectedItemChange(selectedItem, simulationName);
                     break;
                 }
                 count++;

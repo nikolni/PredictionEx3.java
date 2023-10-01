@@ -39,12 +39,12 @@ public class RequestController {
     private Integer numOfRequests=0;
     private List<CheckBox> checkBoxes = null;
     private List<String> simulationNames;
-    private RequestsFromServer requestsFromServer = null;
+    private final RequestsFromServer requestsFromServer = new RequestsFromServer();
 
 
     @FXML
     public void initialize() {
-        UpdateRequestGridPane updateRequestGridPane = new UpdateRequestGridPane(requestGridPane);
+        UpdateRequestGridPane updateRequestGridPane = new UpdateRequestGridPane(requestGridPane, requestsFromServer, mainController.getUserName());
         new Thread(updateRequestGridPane).start();
     }
     public void setExecutionController(ExecutionController executionController) {
@@ -85,16 +85,29 @@ public class RequestController {
     @FXML
     void onExecuteClick(MouseEvent event) {
         Integer requestIndex = getRequestForExecution();
-        if(requestIndex != null) {
+        if(requestIndex != null && isExecutionLeft(requestIndex)) {
+            decreaseExecutionLeftLabel(requestIndex);
             String simulationName = getSimulationNameChosen(requestIndex);
             String requestID = getRequestIDChosen(requestIndex);
             executionController.setSimulationNameAndRequestID(simulationName, requestID);
+            executionController.primaryInitialize();
+            mainController.onExecutionClickFromRequest();
         }
+    }
+    private boolean isExecutionLeft(int requestIndex){
+        String executionsLeftForExecute = getExecutionsLeftOfRequestChosen(requestIndex).getText();
+        return (Integer.parseInt(executionsLeftForExecute) > 0);
+    }
+    private void decreaseExecutionLeftLabel(int requestIndex){
+        Label executionsLeftForExecute = getExecutionsLeftOfRequestChosen(requestIndex);
+        Integer newValue = Integer.parseInt(executionsLeftForExecute.getText()) - 1;
+        executionsLeftForExecute.setText(newValue.toString());
     }
 
     private void addNewRequestToGridPane() {
         Label simulationName= new Label(simulationNameTextField.getText());
         Label simulationNum= new Label(simulationNumTextField.getText());
+        Label executionsLeftForExecute= new Label(simulationNumTextField.getText());
         Label terminationConditions= new Label(terminationConditionsTextField.getText());
         requestGridPane.add(simulationName, 4, numOfRequests);
         requestGridPane.add(simulationNum, 5, numOfRequests);
@@ -128,6 +141,22 @@ public class RequestController {
             index++;
         }
         return requestIndex;
+    }
+    private Label getExecutionsLeftOfRequestChosen(int row){
+        int targetRow = row;
+        int targetColumn = 6;
+        Node childInGridPane = null;
+
+        for (Node child : requestGridPane.getChildren()) {
+            Integer rowIndex = GridPane.getRowIndex(child);
+            Integer columnIndex = GridPane.getColumnIndex(child);
+
+            if (rowIndex != null && columnIndex != null && rowIndex == targetRow && columnIndex == targetColumn) {
+                childInGridPane = child;
+                break;
+            }
+        }
+        return ((Label) childInGridPane);
     }
     private String getSimulationNameChosen(int row){
         int targetRow = row;

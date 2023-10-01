@@ -6,7 +6,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>UserRequestServlet</servlet-name>
-        <url-pattern>/userrequest</url-pattern>
+        <url-pattern>/user/request</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -22,7 +22,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>SimulationNamesServlet</servlet-name>
-        <url-pattern>/simulationnames</url-pattern>
+        <url-pattern>/simulation/names</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>DataForExecutionServlet</servlet-name>
@@ -30,7 +30,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>DataForExecutionServlet</servlet-name>
-        <url-pattern>/dataexecution</url-pattern>
+        <url-pattern>/data/execution</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>ExecutionServlet</servlet-name>
@@ -40,5 +40,68 @@
         <servlet-name>ExecutionServlet</servlet-name>
         <url-pattern>/execution</url-pattern>
     </servlet-mapping>
-
+    <servlet>
+        <servlet-name>RerunServlet</servlet-name>
+        <servlet-class>servlet.RerunServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RerunServlet</servlet-name>
+        <url-pattern>/rerun</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserExecutionsListUpdateServlet</servlet-name>
+        <servlet-class>servlet.UserExecutionsListUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserExecutionsListUpdateServlet</servlet-name>
+        <url-pattern>/executions/update</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>TerminationConditionsServlet</servlet-name>
+        <servlet-class>servlet.TerminationConditionsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TerminationConditionsServlet</servlet-name>
+        <url-pattern>/termination/conditions</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ExecutionProgressServlet</servlet-name>
+        <servlet-class>servlet.ExecutionProgressServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExecutionProgressServlet</servlet-name>
+        <url-pattern>/update/execution/progress</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ControlExecutionServlet</servlet-name>
+        <servlet-class>servlet.ControlExecutionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControlExecutionServlet</servlet-name>
+        <url-pattern>/control/execution</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SecTicksServlet</servlet-name>
+        <servlet-class>servlet.SecTicksServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SecTicksServlet</servlet-name>
+        <url-pattern>/ticks/seconds</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ExecutionResultsServlet</servlet-name>
+        <servlet-class>servlet.ExecutionResultsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExecutionResultsServlet</servlet-name>
+        <url-pattern>/execution/results</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SimulationDetailsServlet</servlet-name>
+        <servlet-class>servlet.SimulationDetailsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SimulationDetailsServlet</servlet-name>
+        <url-pattern>/simulation/details</url-pattern>
+    </servlet-mapping>
 </web-app>
