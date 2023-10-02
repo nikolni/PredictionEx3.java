@@ -28,7 +28,11 @@ public class WorldFromXml {
         return createWorldDefinitionFromPRDWorld(PrdWorld);
     }
 
-
+    public WorldDefinition createWorldDefinition(PRDWorld prdWorld){
+        PRDWorldValidator prdWorldValidator=new PRDWorldValidator();
+        prdWorldValidator.validatePRDWorld(prdWorld);
+        return createWorldDefinitionFromPRDWorld(prdWorld);
+    }
 
     private static PRDWorld deserializeFrom(String xmlPathName) throws JAXBException, FileNotFoundException {
         JAXBContext jc = JAXBContext.newInstance(PRDWorld.class);

@@ -4,6 +4,7 @@ import dto.primary.*;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import engine.per.file.engine.world.definition.entity.manager.api.EntityDefinitionManager;
 import engine.per.file.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
+import engine.per.file.jaxb2.generated.PRDWorld;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -12,7 +13,10 @@ import java.util.List;
 public interface SystemEngineAccess {
 
     void getXMLFromUser(String xmlPath) throws JAXBException, FileNotFoundException;
-    boolean getIsHaveValidFileInSystem();
+
+ void fromFileToSE(PRDWorld prdWorld);
+
+ boolean getIsHaveValidFileInSystem();
 
     DTODefinitionsForUi getDefinitionsDataFromSE();
     DTOEnvVarsDefForUi getEVDFromSE();

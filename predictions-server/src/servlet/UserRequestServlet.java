@@ -48,7 +48,7 @@ public class UserRequestServlet extends HttpServlet {
         Integer numberOfExecutions = Integer.parseInt(prop.getProperty("number_of_executions"));
         String terminationConditions = prop.getProperty("termination_conditions");
 
-        UserRequest userRequest = new UserRequest(simulationName,numberOfExecutions,terminationConditions);
+        UserRequest userRequest = new UserRequest(simulationName,numberOfExecutions,terminationConditions,request.getHeader("user name"));
         userRequest.setRequestID(ServletUtils.getAllUserRequestsListSize(getServletContext()));
         ServletUtils.addRequestToAllUsersRequestsList(getServletContext(), userRequest);
         ServletUtils.addRequestByUserName(getServletContext(), request.getHeader("user name"), userRequest);

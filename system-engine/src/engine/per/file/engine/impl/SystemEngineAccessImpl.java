@@ -35,6 +35,7 @@ import engine.per.file.jaxb2.copy.WorldFromXml;
 import engine.per.file.engine.world.api.WorldDefinition;
 import engine.per.file.engine.world.api.WorldInstance;
 import engine.per.file.engine.world.rule.enums.Type;
+import engine.per.file.jaxb2.generated.PRDWorld;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -58,6 +59,14 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     public void getXMLFromUser(String xmlPath) throws JAXBException, FileNotFoundException {
         WorldFromXml worldFromXml = new WorldFromXml();
         worldDefinition = worldFromXml.FromXmlToPRDWorld(xmlPath);
+        runSimulationManager = new RunSimulationManager( worldDefinition.getThreadPoolSize(), simulationIdToWorldInstance);
+        isHaveValidFileInSystem=true;
+        simulationIdToWorldInstance.clear();
+    }
+    @Override
+    public void fromFileToSE(PRDWorld prdWorld){
+        WorldFromXml worldFromXml = new WorldFromXml();
+        worldDefinition = worldFromXml.createWorldDefinition(prdWorld);
         runSimulationManager = new RunSimulationManager( worldDefinition.getThreadPoolSize(), simulationIdToWorldInstance);
         isHaveValidFileInSystem=true;
         simulationIdToWorldInstance.clear();

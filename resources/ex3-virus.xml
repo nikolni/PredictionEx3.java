@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PRD-world xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="predictions-v2.xsd">
-	<PRD-thread-count>1</PRD-thread-count>
+<PRD-world name="virus" sleep="100" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="predictions-v3.xsd">
 	<PRD-environment>
 		<PRD-env-property type="float">
 			<PRD-name>infection-proximity</PRD-name>
@@ -65,7 +64,4 @@
 			</PRD-actions>
 		</PRD-rule>
 	</PRD-rules>
-	<PRD-termination>
-		<PRD-by-user/>
-	</PRD-termination>
 </PRD-world>
