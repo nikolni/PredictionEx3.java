@@ -6,8 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import engine.per.file.engine.api.SystemEngineAccess;
-import engine.per.file.engine.impl.SystemEngineAccessImpl;
+
 
 public class AdminController {
 
@@ -18,19 +17,7 @@ public class AdminController {
 
 
 
-    private SystemEngineAccess systemEngine;
 
-    public AdminController(){
-        systemEngine = new SystemEngineAccessImpl();
-
-        /*try {
-            systemEngine.getXMLFromUser("C:/Users/maaya/javaProjects/PredictionsEX2_2.9/ex1-cigarets.xml");
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }*/
-    }
 
     @FXML
     public void initialize() {
@@ -38,23 +25,21 @@ public class AdminController {
             headerComponentController.setMainController(this);
             tabPaneAdminBodyComponentController.setMainController(this);
         }
-        headerComponentController.setSystemEngine(systemEngine);
-    }
 
-    public SystemEngineAccess getSystemEngine() {
-        return systemEngine;
     }
 
 
-    public void onAllocationsClick(MouseEvent event) {
+
+
+    public void onAllocationsClick() {
         tabPaneAdminBodyComponentController.switchToTab2();
     }
 
-    public void onExecutionsHistoryClick(MouseEvent event) {
+    public void onExecutionsHistoryClick() {
         tabPaneAdminBodyComponentController.switchToTab3();
     }
 
-    public void onManagementClick(MouseEvent event) {
+    public void onManagementClick() {
         tabPaneAdminBodyComponentController.switchToTab1();
     }
 

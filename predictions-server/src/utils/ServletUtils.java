@@ -2,10 +2,15 @@ package utils;
 
 
 import engine.per.file.engine.api.SystemEngineAccess;
+import engine.per.file.engine.impl.SystemEngineAccessImpl;
+import engine.per.file.jaxb2.generated.PRDWorld;
 import jakarta.servlet.ServletContext;
 import user.manager.UserManager;
 import user.request.UserRequest;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +30,8 @@ public class ServletUtils {
 	private static final String THREAD_POOL_SIZE_ATTRIBUTE_NAME = "threadPoolSize";
 	private static final String THREAD_POOL_ATTRIBUTE_NAME = "threadPool";
 	private static final String EXECUTION_COUNTER_ATTRIBUTE_NAME = "executionsCounter";
+	private static final String ENGINE_ATTRIBUTE_NAME = "engine";
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/*
@@ -40,6 +47,7 @@ public class ServletUtils {
 	private static final Object threadPoolSizeLock = new Object();
 	private static final Object threadPoolLock = new Object();
 	private static final Object executionsCounterLock = new Object();
+	private static final Object engineLock = new Object();
 
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,6 +60,15 @@ public class ServletUtils {
 		}
 		return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
 	}
+	public static SystemEngineAccess initEngineAttributeName(ServletContext servletContext){
+		synchronized (engineLock) {
+			servletContext.setAttribute(ENGINE_ATTRIBUTE_NAME,new SystemEngineAccessImpl());
+		}
+		return (SystemEngineAccessImpl) servletContext.getAttribute(ENGINE_ATTRIBUTE_NAME);
+	}
+
+
+
 
 	public static void addRequestToAllUsersRequestsList(ServletContext servletContext, UserRequest userRequest) {
 		synchronized (allUsersRequestsListLock) {
@@ -68,6 +85,16 @@ public class ServletUtils {
 			servletContext.setAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME, value);
 		}
 	}
+
+	public static List<UserRequest> getAllUsersRequestsList(ServletContext servletContext){
+		synchronized (allUsersRequestsListLock) {
+			if (servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME, new ArrayList<>());
+			}
+		}
+		return (List<UserRequest>) servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME);
+	}
+
 	public static Integer getAllUserRequestsListSize(ServletContext servletContext) {
 		synchronized (allUsersRequestsListSizeLock) {
 			if (servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME) == null) {
@@ -164,6 +191,16 @@ public class ServletUtils {
 		return ((Map<String, SystemEngineAccess>) servletContext.getAttribute(SIMULATION_NAME_TO_SE_MAP_ATTRIBUTE_NAME))
 				.get(simulationName);
 	}
+
+	public static void addSEInstanceBySimulationName(ServletContext servletContext, String simulationName,SystemEngineAccess systemEngineAccess) {
+		synchronized (simulationNameToSELock) {
+			if (servletContext.getAttribute(SIMULATION_NAME_TO_SE_MAP_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(SIMULATION_NAME_TO_SE_MAP_ATTRIBUTE_NAME, new HashMap<>());
+			}
+		}
+		((Map<String, SystemEngineAccess>) servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME)).put(simulationName,systemEngineAccess);
+	}
+
 	public static void addRunnableToThreadPool(ServletContext servletContext, Runnable runnable) {
 
 		synchronized (threadPoolLock) {

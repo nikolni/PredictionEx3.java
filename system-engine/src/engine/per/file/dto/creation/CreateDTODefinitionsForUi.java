@@ -29,7 +29,6 @@ import engine.per.file.engine.world.termination.condition.impl.TicksTerminationC
 import engine.per.file.engine.world.termination.condition.impl.TimeTerminationConditionImpl;
 import engine.per.file.engine.world.termination.condition.manager.api.TerminationConditionsManager;
 import engine.per.file.engine.world.api.WorldDefinition;
-import system.engine.world.rule.action.api.*;
 import engine.per.file.engine.world.rule.action.impl.KillAction;
 import engine.per.file.engine.world.rule.action.impl.ProximityAction;
 import engine.per.file.engine.world.rule.action.impl.ReplaceAction;

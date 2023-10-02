@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import main.AdminController;
-import engine.per.file.engine.api.SystemEngineAccess;
+
 
 public class HeaderController {
 
@@ -17,29 +17,27 @@ public class HeaderController {
     @FXML
     private Button executionsHistoryButton;
 
-    private SystemEngineAccess systemEngine;
+
     private AdminController mainAdminController;
 
-    public void setSystemEngine(SystemEngineAccess systemEngineAccess){
-        this.systemEngine = systemEngineAccess;
-    }
+
     public void setMainController(AdminController mainAdminController) {
         this.mainAdminController = mainAdminController;
     }
 
     @FXML
     void onAllocationsClick(MouseEvent event) {
-
+        mainAdminController.onAllocationsClick();
     }
 
     @FXML
     void onExecutionsHistoryClick(MouseEvent event) {
-
+        mainAdminController.onExecutionsHistoryClick();
     }
 
     @FXML
     void onManagementClick(MouseEvent event) {
-
+        mainAdminController.onManagementClick();
     }
 
 }
