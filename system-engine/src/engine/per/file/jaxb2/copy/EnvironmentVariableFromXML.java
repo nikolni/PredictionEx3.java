@@ -1,7 +1,5 @@
 package engine.per.file.jaxb2.copy;
 
-import engine.per.file.jaxb2.generated.PRDEnvProperty;
-import engine.per.file.jaxb2.generated.PRDEnvironment;
 import engine.per.file.engine.world.definition.environment.variable.api.EnvVariablesDefinitionManager;
 import engine.per.file.engine.world.definition.environment.variable.impl.EnvVariableDefinitionManagerImpl;
 import engine.per.file.engine.world.definition.property.api.PropertyDefinition;
@@ -10,6 +8,8 @@ import engine.per.file.engine.world.definition.property.impl.FloatPropertyDefini
 import engine.per.file.engine.world.definition.property.impl.StringPropertyDefinition;
 import engine.per.file.engine.world.definition.value.generator.api.ValueGeneratorFactory;
 import engine.per.file.engine.world.rule.enums.Type;
+import engine.per.file.jaxb2.generated.PRDEnvProperty;
+import engine.per.file.jaxb2.generated.PRDEnvironment;
 
 public class EnvironmentVariableFromXML {
     private EnvVariablesDefinitionManager envVariablesDefinitionManager=new EnvVariableDefinitionManagerImpl();

@@ -3,14 +3,10 @@ package utils;
 
 import engine.per.file.engine.api.SystemEngineAccess;
 import engine.per.file.engine.impl.SystemEngineAccessImpl;
-import engine.per.file.jaxb2.generated.PRDWorld;
 import jakarta.servlet.ServletContext;
 import user.manager.UserManager;
 import user.request.UserRequest;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,12 +56,12 @@ public class ServletUtils {
 		}
 		return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
 	}
-	public static SystemEngineAccess initEngineAttributeName(ServletContext servletContext){
+	/*public static SystemEngineAccess initEngineAttributeName(ServletContext servletContext){
 		synchronized (engineLock) {
 			servletContext.setAttribute(ENGINE_ATTRIBUTE_NAME,new SystemEngineAccessImpl());
 		}
 		return (SystemEngineAccessImpl) servletContext.getAttribute(ENGINE_ATTRIBUTE_NAME);
-	}
+	}*/
 
 
 
@@ -146,6 +142,16 @@ public class ServletUtils {
 		}
 		return (List<String>) servletContext.getAttribute(SIMULATION_NAMES_LIST_ATTRIBUTE_NAME);
 	}
+
+	public static void addSimulationNamesToList(ServletContext servletContext,String newSimulationName) {
+		synchronized (simulationNamesListLock) {
+			if (servletContext.getAttribute(SIMULATION_NAMES_LIST_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(SIMULATION_NAMES_LIST_ATTRIBUTE_NAME, new ArrayList<>());
+			}
+		}
+		((List<String>) servletContext.getAttribute(SIMULATION_NAMES_LIST_ATTRIBUTE_NAME)).add(newSimulationName);
+	}
+
 	public static void addExecutionByUserNameAndRequestID(ServletContext servletContext, String userName ,Integer requestID) {
 		List<Integer> userRequestList = null;
 

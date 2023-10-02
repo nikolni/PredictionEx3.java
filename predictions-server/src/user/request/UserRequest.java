@@ -15,6 +15,7 @@ public class UserRequest {
     private final String userName;
     private Integer numOfSimulations=0;
     private final List<TerminationCondition> terminationConditionList;
+    private List<String> terminationConditionListString;
     private String requestStatus = "in process";
 
      private Integer numOfSimulationsRunning = 0;
@@ -49,6 +50,10 @@ public class UserRequest {
         } else if (sentence.equals("3")) {
             terminationConditionList.add(new TimeTerminationConditionImpl(Integer.parseInt(sentencesSecondery[1])));
         }
+    }
+
+    public List<String> getTerminationConditionListString() {
+        return terminationConditionListString;
     }
 
     public String getRequestStatus() {

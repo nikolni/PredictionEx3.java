@@ -3,7 +3,6 @@ package engine.per.file.jaxb2.copy;
 import engine.per.file.engine.world.creation.impl.rule.RuleCreation;
 import engine.per.file.engine.world.creation.impl.rule.action.ActionCreationImpl;
 import engine.per.file.jaxb2.generated.*;
-import jaxb2.generated.*;
 import engine.per.file.engine.world.creation.api.ActionCreation;
 import engine.per.file.engine.world.definition.entity.api.EntityDefinition;
 import engine.per.file.engine.world.definition.entity.manager.api.EntityDefinitionManager;

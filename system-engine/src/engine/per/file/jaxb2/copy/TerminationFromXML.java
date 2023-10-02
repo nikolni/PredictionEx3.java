@@ -1,8 +1,5 @@
 package engine.per.file.jaxb2.copy;
 
-import engine.per.file.jaxb2.generated.PRDBySecond;
-import engine.per.file.jaxb2.generated.PRDByTicks;
-import engine.per.file.jaxb2.generated.PRDTermination;
 import engine.per.file.engine.world.termination.condition.api.TerminationCondition;
 import engine.per.file.engine.world.termination.condition.impl.ByUserTerminationConditionImpl;
 import engine.per.file.engine.world.termination.condition.impl.TicksTerminationConditionImpl;
@@ -10,6 +7,9 @@ import engine.per.file.engine.world.termination.condition.impl.TimeTerminationCo
 import engine.per.file.engine.world.termination.condition.manager.api.TerminationConditionsManager;
 import engine.per.file.engine.world.termination.condition.manager.impl.TerminationConditionsManagerImpl;
 import engine.per.file.engine.world.tick.Tick;
+import engine.per.file.jaxb2.generated.PRDBySecond;
+import engine.per.file.jaxb2.generated.PRDByTicks;
+import engine.per.file.jaxb2.generated.PRDTermination;
 
 public class TerminationFromXML {
     private TerminationConditionsManager terminationConditionsManager= new TerminationConditionsManagerImpl();
