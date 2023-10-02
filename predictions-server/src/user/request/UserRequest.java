@@ -2,16 +2,19 @@ package user.request;
 
 import engine.per.file.engine.world.termination.condition.api.TerminationCondition;
 import engine.per.file.engine.world.termination.condition.impl.ByUserTerminationConditionImpl;
+import engine.per.file.engine.world.termination.condition.impl.TicksTerminationConditionImpl;
+import engine.per.file.engine.world.termination.condition.impl.TimeTerminationConditionImpl;
+import engine.per.file.engine.world.tick.Tick;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserRequest {
     private Integer requestID = 0;
-    private String simulationName;
-    private String userName;
+    private final String simulationName;
+    private final String userName;
     private Integer numOfSimulations=0;
-    private List<TerminationCondition> terminationConditionList;
+    private final List<TerminationCondition> terminationConditionList;
     private String requestStatus = "in process";
 
      private Integer numOfSimulationsRunning = 0;
@@ -30,18 +33,22 @@ public class UserRequest {
     private List<TerminationCondition> buildTerminationConditionList(String terminationConditions) {
         List<TerminationCondition> terminationConditionList = new ArrayList<>();
 
-        String[] sentences = terminationConditions.split(",");
-        // Process the sentences
-        for (String sentence : sentences) {
-            if (sentence.equals("1")) {
-                terminationConditionList.add(new ByUserTerminationConditionImpl());
-            } else if (sentence.equals("2")) {
-
-            } else {
-
-            }
+        String[] sentencesPrimary = terminationConditions.split(",");
+        for (String sentence : sentencesPrimary) {
+            splitSentence(sentence);
         }
         return terminationConditionList;
+    }
+
+    private void splitSentence(String sentence) {
+        String[] sentencesSecondery = sentence.split("=");
+        if (sentencesSecondery[0].equals("1")) {
+            terminationConditionList.add(new ByUserTerminationConditionImpl());
+        }else if (sentencesSecondery[0].equals("2")) {
+            terminationConditionList.add(new TicksTerminationConditionImpl(new Tick(Integer.parseInt(sentencesSecondery[1]))));
+        } else if (sentence.equals("3")) {
+            terminationConditionList.add(new TimeTerminationConditionImpl(Integer.parseInt(sentencesSecondery[1])));
+        }
     }
 
     public String getRequestStatus() {

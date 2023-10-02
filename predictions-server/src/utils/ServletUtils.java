@@ -212,7 +212,6 @@ public class ServletUtils {
 		}
 	}
 	public static void setSizeOfThreadPool(ServletContext servletContext, Integer size) {
-
 		synchronized (threadPoolSizeLock) {
 			if (servletContext.getAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME) == null) {
 				servletContext.setAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME, size);
