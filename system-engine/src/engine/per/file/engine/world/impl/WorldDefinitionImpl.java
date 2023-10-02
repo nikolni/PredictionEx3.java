@@ -12,26 +12,28 @@ import engine.per.file.engine.world.rule.manager.api.RuleDefinitionManager;
 import java.util.Map;
 
 public class WorldDefinitionImpl implements WorldDefinition {
+    private final String simulationName;
+    private final Integer sleepTime;
     private final EntityDefinitionManager entityDefinitionManager;
     private final EnvVariablesDefinitionManager envVariablesDefinitionManager;
     private final RuleDefinitionManager ruleDefinitionManager;
-    private final TerminationConditionsManager terminationConditionsManager;
+    //private final TerminationConditionsManager terminationConditionsManager;
     private final WorldGrid worldGrid;
 
-
-    private final int threadPoolSize;
+    //private final int threadPoolSize;
 
     public WorldDefinitionImpl(EntityDefinitionManager entityDefinitionManager,
                                EnvVariablesDefinitionManager envVariablesDefinitionManager,
                                RuleDefinitionManager ruleDefinitionManager,
-                               TerminationConditionsManager terminationConditionsManager,
-                               WorldGrid worldGrid,int threadPoolSize){
+                               WorldGrid worldGrid,String simulationName,Integer sleepTime){
         this.entityDefinitionManager = entityDefinitionManager;
         this.envVariablesDefinitionManager = envVariablesDefinitionManager;
         this.ruleDefinitionManager = ruleDefinitionManager;
-        this.terminationConditionsManager = terminationConditionsManager;
+        this.simulationName=simulationName;
+        //this.terminationConditionsManager = terminationConditionsManager;
         this.worldGrid = worldGrid;
-        this.threadPoolSize=threadPoolSize;
+        this.sleepTime=sleepTime;
+        //this.threadPoolSize=threadPoolSize;
     }
 
     public EntityDefinitionManager getEntityDefinitionManager() {
@@ -44,7 +46,7 @@ public class WorldDefinitionImpl implements WorldDefinition {
 
     public RuleDefinitionManager getRuleDefinitionManager(){return ruleDefinitionManager;}
 
-    public TerminationConditionsManager getTerminationConditionsManager(){return terminationConditionsManager;}
+    //public TerminationConditionsManager getTerminationConditionsManager(){return terminationConditionsManager;}
 
     @Override
     public WorldInstanceImpl createWorldInstance(int id, EnvVariablesInstanceManager envVariablesInstanceManager, EntityDefinitionManager entityDefinitionManager) {
@@ -71,10 +73,7 @@ public class WorldDefinitionImpl implements WorldDefinition {
     public Integer getGridColumns() {
         return worldGrid.getGridColumns();
     }
-    @Override
-    public int getThreadPoolSize() {
-        return threadPoolSize;
-    }
+
 
 
 }

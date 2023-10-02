@@ -3,11 +3,11 @@ package engine.per.file.jaxb2.copy;
 
 import engine.per.file.jaxb2.error.handling.validator.FileValidator;
 import engine.per.file.jaxb2.error.handling.validator.PRDWorldValidator;
-import engine.per.file.jaxb2.generated.PRDWorld;
 import engine.per.file.engine.world.api.WorldDefinition;
 import engine.per.file.engine.world.grid.api.WorldGrid;
 import engine.per.file.engine.world.grid.impl.WorldGridImpl;
 import engine.per.file.engine.world.impl.WorldDefinitionImpl;
+import engine.per.file.jaxb2.generated.PRDWorld;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -42,16 +42,16 @@ public class WorldFromXml {
 
 
     WorldDefinition createWorldDefinitionFromPRDWorld(PRDWorld prdWorld){
-        int threadPoolSize=prdWorld.getPRDThreadCount();
+        //int threadPoolSize=prdWorld.getPRDThreadCount();
         WorldGrid worldGrid=new WorldGridImpl(prdWorld.getPRDGrid().getRows(),prdWorld.getPRDGrid().getColumns());
         EnvironmentVariableFromXML environmentVariableFromXML=new EnvironmentVariableFromXML(prdWorld.getPRDEnvironment());
         EntityFromXML entityFromXML=new EntityFromXML(prdWorld.getPRDEntities());
         RuleFromXML ruleFromXML=new RuleFromXML(prdWorld.getPRDRules(),entityFromXML.getEntityDefinitionManager(),worldGrid);
-        TerminationFromXML terminationFromXML=new TerminationFromXML(prdWorld.getPRDTermination());
+        //TerminationFromXML terminationFromXML=new TerminationFromXML(prdWorld.getPRDTermination());
 
 
         WorldDefinition worldDefinition=new WorldDefinitionImpl(entityFromXML.getEntityDefinitionManager(),environmentVariableFromXML.getEnvVariablesDefinitionManager()
-                ,ruleFromXML.getRuleDefinitionManager(),terminationFromXML.getTerminationConditionsManager(),worldGrid,threadPoolSize);
+                ,ruleFromXML.getRuleDefinitionManager(),worldGrid,prdWorld.getName(),prdWorld.getSleep());
         return worldDefinition;
     }
 

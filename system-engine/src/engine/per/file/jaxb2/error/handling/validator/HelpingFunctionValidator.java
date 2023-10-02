@@ -4,7 +4,6 @@ import engine.per.file.jaxb2.error.handling.exception.prdworld.EnvironmentWrongP
 import engine.per.file.jaxb2.error.handling.exception.prdworld.RandomWrongParamException;
 import engine.per.file.jaxb2.generated.PRDEnvProperty;
 import engine.per.file.jaxb2.generated.PRDEnvironment;
-import jaxb2.generated.*;
 
 public class HelpingFunctionValidator {
     public static boolean isInteger(String input) {

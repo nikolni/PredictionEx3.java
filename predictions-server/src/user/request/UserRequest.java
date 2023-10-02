@@ -12,6 +12,7 @@ public class UserRequest {
     private String userName;
     private Integer numOfSimulations=0;
     private List<TerminationCondition> terminationConditionList;
+    private List<String> terminationConditionListString;
     private String requestStatus = "in process";
 
      private Integer numOfSimulationsRunning = 0;
@@ -42,6 +43,10 @@ public class UserRequest {
             }
         }
         return terminationConditionList;
+    }
+
+    public List<String> getTerminationConditionListString() {
+        return terminationConditionListString;
     }
 
     public String getRequestStatus() {
