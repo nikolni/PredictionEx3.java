@@ -9,6 +9,7 @@ import java.util.List;
 public class UserRequest {
     private Integer requestID = 0;
     private String simulationName;
+    private String userName;
     private Integer numOfSimulations=0;
     private List<TerminationCondition> terminationConditionList;
     private String requestStatus = "in process";
@@ -19,10 +20,11 @@ public class UserRequest {
 
 
     public UserRequest(String simulationName, Integer numOfSimulations,
-                       String terminationConditions) {
+                       String terminationConditions,String userName) {
         this.simulationName = simulationName;
         this.numOfSimulations = numOfSimulations;
         this.terminationConditionList = buildTerminationConditionList(terminationConditions);
+        this.userName=userName;
     }
 
     private List<TerminationCondition> buildTerminationConditionList(String terminationConditions) {
@@ -39,6 +41,7 @@ public class UserRequest {
 
             }
         }
+        return terminationConditionList;
     }
 
     public String getRequestStatus() {
@@ -70,6 +73,10 @@ public class UserRequest {
 
     public void setNumOfSimulationsRunning(Integer numOfSimulationsRunning) {
         this.numOfSimulationsRunning = numOfSimulationsRunning;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public void setNumOfSimulationsDone(Integer numOfSimulationsDone) {

@@ -1,24 +1,37 @@
 package component.body.management.main;
 
 import component.body.management.update.thread.status.UpdateThreadsPoolDetails;
+import dto.definition.user.request.DTOUserRequestForUi;
+import dto.include.DTOIncludeSimulationDetailsForUi;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import engine.per.file.engine.api.SystemEngineAccess;
+
+import main.AdminController;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
+import util.constants.Constants;
+import util.http.HttpClientUtil;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Arrays;
+
+import static util.constants.Constants.*;
+import static util.constants.Constants.GSON_INSTANCE;
 
 public class ManagementController {
 
     @FXML
     private Label filePathLabel;
+    private SimpleStringProperty selectedFileProperty;
 
     @FXML
     private Button loadFileButton;
@@ -27,7 +40,7 @@ public class ManagementController {
     private Button setThreadsCountButton;
 
     @FXML
-    private ListView<?> availableSimulationsDetailsList;
+    private TreeView<String> simulationsDetailsTree;
 
     @FXML
     private Label valueWaitingLabel;
@@ -37,32 +50,59 @@ public class ManagementController {
 
     @FXML
     private Label valueOverLabel;
-    private SystemEngineAccess systemEngine;
+    private AdminController mainController;
 
-    public void setSystemEngine(SystemEngineAccess systemEngineAccess){
-        this.systemEngine = systemEngineAccess;
+
+
+
+    public void setMainController(AdminController mainController) {
+        this.mainController = mainController;
     }
 
-    public void primaryInitialize() {
-        UpdateThreadsPoolDetails updateThreadsPoolDetails = new UpdateThreadsPoolDetails(this, systemEngine);
-        new Thread(updateThreadsPoolDetails).start();
+    public ManagementController() {
+        selectedFileProperty = new SimpleStringProperty();
     }
 
     @FXML
-    void onLoadFileClick(MouseEvent event) {
+    private void initialize() {
+        filePathLabel.textProperty().bind(selectedFileProperty);
+        TreeItem<String> rootItem = new TreeItem<>("Simulations");
+        simulationsDetailsTree.setRoot(rootItem);
+    }
+
+    @FXML
+    void onLoadFileClick(MouseEvent event) throws IOException {
+        String RESOURCE = "/upload-file";
         Stage primaryStage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select XML file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files", "*.xml"));
-        File selectedFile = fileChooser.showOpenDialog(primaryStage);
-        if (selectedFile == null) {
+        File f = fileChooser.showOpenDialog(primaryStage);
+        String absolutePath = f.getAbsolutePath();
+        if (f == null) {
             return;
         }
         boolean exceptionOccurred = false;
-        String absolutePath = selectedFile.getAbsolutePath();
+
+        RequestBody body =
+                new MultipartBody.Builder()
+                        .addFormDataPart("file1", f.getName(), RequestBody.create(f, MediaType.parse("text/xml")))
+                        .build();
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + RESOURCE)
+                .post(body)
+                .build();
+
+        Call call = HTTP_CLIENT.newCall(request);
+
         try {
-            systemEngine.getXMLFromUser(absolutePath);
-        } catch(RuntimeException | JAXBException | FileNotFoundException e){
+            Response response = call.execute();
+            if (response.code() != 200) {
+                String responseBody = response.body().string();
+                Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+            }
+        } catch(RuntimeException | FileNotFoundException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("Invalid XML file - Please load other file");
@@ -72,9 +112,8 @@ public class ManagementController {
         }
         if(!exceptionOccurred){
             selectedFileProperty.set(absolutePath);
-            isFileSelected.set(true);
-           // mainController.onLoadFileButtonClick();
         }
+
     }
 
     @FXML

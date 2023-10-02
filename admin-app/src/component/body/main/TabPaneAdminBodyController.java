@@ -9,7 +9,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import main.AdminController;
-import engine.per.file.engine.api.SystemEngineAccess;
+
 
 public class TabPaneAdminBodyController {
 
@@ -30,26 +30,29 @@ public class TabPaneAdminBodyController {
 
     public void setMainController(AdminController mainAdminController) {
         this.mainAdminController = mainAdminController;
+        setControllersForChildren();
     }
 
-    public void setSystemEngineToChildren(SystemEngineAccess systemEngineAccess){
-        managementComponentController.setSystemEngine(systemEngineAccess);
-        allocationsComponentController.setSystemEngine(systemEngineAccess);
-        executionHistoryComponentController.setSystemEngine(systemEngineAccess);
-        //body3ComponentController.setMainController(mainController);
-        initialChildren();
+
+
+    public void setControllersForChildren(){
+        managementComponentController.setMainController(mainAdminController);
+        allocationsComponentController.setMainController(mainAdminController);
+        executionHistoryComponentController.setMainController(mainAdminController);
     }
+
+
     private void initialChildren(){
-        managementComponentController.primaryInitialize();
-        allocationsComponentController.primaryInitialize();
-        executionHistoryComponentController.primaryInitialize();
+        //managementComponentController.primaryInitialize();
+        //allocationsComponentController.primaryInitialize();
+        //executionHistoryComponentController.primaryInitialize();
         //body2ComponentController.setBody3Controller(body3ComponentController);
     }
 
 
     public void switchToTab1() {
         tabPaneBodyComponent.getSelectionModel().select(0);
-        managementComponentController.setVisibleTab();
+        //managementComponentController.setVisibleTab();
     }
 
     public void switchToTab2() {
