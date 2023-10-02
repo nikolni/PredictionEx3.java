@@ -3,6 +3,7 @@ package servlet;
 
 
 import engine.per.file.engine.api.SystemEngineAccess;
+import engine.per.file.engine.impl.SystemEngineAccessImpl;
 import engine.per.file.jaxb2.generated.PRDWorld;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -19,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.Scanner;
 
 @WebServlet("/upload-file")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
@@ -39,9 +39,10 @@ public class FileUploadServlet extends HttpServlet {
                     prdWorld =deserializeFrom(part.getInputStream());
                     String simulationName=prdWorld.getName();
                     if(ServletUtils.getSEInstanceBySimulationName(getServletContext(),simulationName)==null){ //the simulation not exist
-                        ServletUtils.addSEInstanceBySimulationName(getServletContext(),simulationName,ServletUtils.initEngineAttributeName(getServletContext()));
+                        ServletUtils.addSEInstanceBySimulationName(getServletContext(),simulationName,new SystemEngineAccessImpl());
                         SystemEngineAccess systemEngineAccess = ServletUtils.getSEInstanceBySimulationName(
                                 getServletContext(), simulationName);
+                        ServletUtils.addSimulationNamesToList(getServletContext(),simulationName);
                         systemEngineAccess.fromFileToSE(prdWorld);
                     }
                     else

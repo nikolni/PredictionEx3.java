@@ -28,7 +28,8 @@ public class UserRequestServlet extends HttpServlet {
         List<DTOUserRequestForUi> userRequestForUiList = new ArrayList<>();
         for(UserRequest userRequest : userRequestsMap.keySet()){
             userRequestForUiList.add(new DTOUserRequestForUi(userRequest.getRequestStatus(),
-                    userRequest.getNumOfSimulationsRunning(), userRequest.getNumOfSimulationsDone(), userRequest.getRequestID()));
+                    userRequest.getNumOfSimulationsRunning(), userRequest.getNumOfSimulationsDone(), userRequest.getRequestID(),userRequest.getSimulationName(),
+                    userRequest.getUserName(),userRequest.getTerminationConditionListString(),userRequest.getNumOfSimulations()));
         }
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(userRequestForUiList);

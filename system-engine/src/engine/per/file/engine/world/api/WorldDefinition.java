@@ -17,9 +17,9 @@ public interface WorldDefinition {
     EnvVariablesDefinitionManager getEnvVariablesDefinitionManager();
     RuleDefinitionManager getRuleDefinitionManager();
 
-    TerminationConditionsManager getTerminationConditionsManager();
+
     EntityDefinitionManager createNewEntitiesDefinitionsManagerWithPopulations(Map<String, Integer> entityNameDefToPopulation);
     Integer getGridRows();
     Integer getGridColumns();
-    int getThreadPoolSize();
+
 }

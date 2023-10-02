@@ -28,7 +28,7 @@ public class getAllRequestsServlet extends HttpServlet {
             for(UserRequest userRequest:allAdminRequests){
                 dtoUserRequestForUi=new DTOUserRequestForUi(userRequest.getRequestStatus(),
                         userRequest.getNumOfSimulationsRunning(), userRequest.getNumOfSimulationsDone(), userRequest.getRequestID(), userRequest.getSimulationName(),userRequest.getUserName(),
-                        userRequest.getTerminationConditionList(),userRequest.getNumOfSimulations());
+                        userRequest.getTerminationConditionListString(),userRequest.getNumOfSimulations());
                 dtoUserRequestForUiList.add(dtoUserRequestForUi);
             }
             String json = gson.toJson(dtoUserRequestForUiList);

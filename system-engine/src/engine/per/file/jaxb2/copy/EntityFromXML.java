@@ -1,8 +1,5 @@
 package engine.per.file.jaxb2.copy;
 
-import engine.per.file.jaxb2.generated.PRDEntities;
-import engine.per.file.jaxb2.generated.PRDEntity;
-import engine.per.file.jaxb2.generated.PRDProperty;
 import engine.per.file.engine.world.definition.entity.api.EntityDefinition;
 import engine.per.file.engine.world.definition.entity.impl.EntityDefinitionImpl;
 import engine.per.file.engine.world.definition.entity.manager.api.EntityDefinitionManager;
@@ -13,6 +10,9 @@ import engine.per.file.engine.world.definition.property.impl.FloatPropertyDefini
 import engine.per.file.engine.world.definition.property.impl.StringPropertyDefinition;
 import engine.per.file.engine.world.definition.value.generator.api.ValueGeneratorFactory;
 import engine.per.file.engine.world.rule.enums.Type;
+import engine.per.file.jaxb2.generated.PRDEntities;
+import engine.per.file.jaxb2.generated.PRDEntity;
+import engine.per.file.jaxb2.generated.PRDProperty;
 
 public class EntityFromXML {
     private EntityDefinitionManager entityDefinitionManager=new EntityDefinitionManagerImpl();

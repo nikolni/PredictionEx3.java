@@ -2,9 +2,9 @@ package engine.per.file.jaxb2.error.handling.validator;
 
 import engine.per.file.jaxb2.error.handling.exception.prdworld.*;
 import engine.per.file.jaxb2.generated.*;
-import jaxb2.generated.*;
+
 import engine.per.file.engine.world.rule.enums.Type;
-import jaxb2.error.handling.exception.prdworld.*;
+
 
 import java.util.HashSet;
 import java.util.List;
