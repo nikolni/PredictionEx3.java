@@ -1,5 +1,6 @@
 package after.login.component.body.simulation.details.main;
 
+import after.login.component.body.request.main.UpdateRequestGridPane;
 import after.login.component.body.simulation.details.server.RequestsFromServer;
 import after.login.component.body.simulation.details.single.simulation.main.SingleSimulationController;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.TextFlow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SimulationsDetailsController {
@@ -50,6 +52,9 @@ public class SimulationsDetailsController {
 
         detailsTreeView.getSelectionModel().selectedItemProperty().
                 addListener((observable, oldValue, newValue) -> handleSelectedItemChange(newValue));
+
+        UpdateSimulationsTreeView updateSimulationsTreeView = new UpdateSimulationsTreeView(this);
+        new Thread(updateSimulationsTreeView).start();
     }
 
     public void setVisibleTab(){

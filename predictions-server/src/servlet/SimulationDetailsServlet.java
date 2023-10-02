@@ -1,16 +1,16 @@
 package servlet;
 
 import com.google.gson.Gson;
+import dto.include.DTOIncludeForExecutionForServer;
 import dto.include.DTOIncludeSimulationDetailsForUi;
-import dto.primary.DTODefinitionsForUi;
-import dto.primary.DTOEnvVarsDefForUi;
-import dto.primary.DTOWorldGridForUi;
+import dto.primary.*;
 import engine.per.file.engine.api.SystemEngineAccess;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import utils.ServletUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -36,5 +36,20 @@ public class SimulationDetailsServlet extends HttpServlet {
             out.println(json);
             out.flush();
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        StringBuilder requestBody = new StringBuilder();
+        try (BufferedReader reader = request.getReader()) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                requestBody.append(line);
+            }
+        }
+        String json = requestBody.toString();
+        DTOIncludeForExecutionForServer dtoIncludeForExecutionForServer = new Gson().fromJson(json, DTOIncludeForExecutionForServer.class);
+
     }
 }
