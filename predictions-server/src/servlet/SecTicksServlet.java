@@ -18,8 +18,8 @@ public class SecTicksServlet extends CommonServletsUtils {
         Integer executionID = Integer.parseInt(request.getParameter("executionID"));
 
         SystemEngineAccess systemEngineAccess = getSEInstance(userName, executionID);
-        Integer seconds = systemEngineAccess.getTotalSecondsNumber();
-        Integer ticks = systemEngineAccess.getTotalTicksNumber();
+        Integer seconds = systemEngineAccess.getTotalSecondsNumber(executionID);
+        Integer ticks = systemEngineAccess.getTotalTicksNumber(executionID);
         DTOSecTicksForUi dtoSecTicksForUi = new DTOSecTicksForUi(seconds, ticks);
         //returning JSON objects, not HTML
         response.setContentType("application/json");

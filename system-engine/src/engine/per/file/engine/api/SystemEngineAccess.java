@@ -4,6 +4,7 @@ import dto.primary.*;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import engine.per.file.engine.world.definition.entity.manager.api.EntityDefinitionManager;
 import engine.per.file.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
+import engine.per.file.engine.world.termination.condition.api.TerminationCondition;
 import engine.per.file.jaxb2.generated.PRDWorld;
 
 import javax.xml.bind.JAXBException;
@@ -35,28 +36,24 @@ public interface SystemEngineAccess {
     EnvVariablesInstanceManager updateEnvironmentVarDefinition(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE);
     void addWorldInstance(Integer simulationID, EnvVariablesInstanceManager envVariablesInstanceManager, EntityDefinitionManager entityDefinitionManager);
 
-    void runSimulation(Integer simulationID) ;
+    void runSimulation(Integer simulationID, List<TerminationCondition> terminationConditionsList) ;
 
-    int getTotalTicksNumber();
-    int getTotalSecondsNumber();
+    int getTotalTicksNumber(Integer executionID);
+    int getTotalSecondsNumber(Integer executionID);
 
    // List<DTOSimulationEndingForUi> getDTOSimulationEndingForUiList();
     DTOPropertyHistogramForUi getPropertyDataAfterSimulationRunningByHistogramByNames(Integer simulationID,
                                                                                       String entityName,String propertyName);
-
-
-
     DTOEntityPropertyConsistencyForUi getConsistencyDTOByEntityPropertyName(Integer simulationID,
                                                                             String entityName, String propertyName);
-
     DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID);
-    void addTaskToQueue(Runnable runSimulationRunnable);
+    //void addTaskToQueue(Runnable runSimulationRunnable);
      DTOThreadsPoolStatusForUi getThreadsPoolStatus();
     DTOWorldGridForUi getDTOWorldGridForUi();
     void pauseSimulation(int simulationID);
     void resumeSimulation(int simulationID);
     void cancelSimulation(int simulationID);
-    List<TerminationConditionsDTO> getTerminationConditions();
+    List<TerminationConditionsDTO> getTerminationConditions(int simulationID);
     DTORerunValuesForUi getValuesForRerun(Integer simulationID);
     List<String> getAllSimulationsStatus();
     String getSimulationStatusByID(Integer executionID);

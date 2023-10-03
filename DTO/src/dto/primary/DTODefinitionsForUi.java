@@ -11,14 +11,13 @@ public class DTODefinitionsForUi{
 
         private final List<EntityDefinitionDTO> entitiesDTO;
         private final List<RuleDTO> rulesDTO;
-        private final TerminationConditionsDTOManager terminationConditionsDTOManager;
+        //private final TerminationConditionsDTOManager terminationConditionsDTOManager;
 
 
-        public DTODefinitionsForUi(List<EntityDefinitionDTO> entitiesDTO, List<RuleDTO> rulesDTO,
-                                   TerminationConditionsDTOManager terminationConditionsDTOManager){
+        public DTODefinitionsForUi(List<EntityDefinitionDTO> entitiesDTO, List<RuleDTO> rulesDTO){
                 this.entitiesDTO =entitiesDTO;
                 this.rulesDTO =rulesDTO;
-                this.terminationConditionsDTOManager = terminationConditionsDTOManager;
+                //this.terminationConditionsDTOManager = terminationConditionsDTOManager;
         }
 
         public List<EntityDefinitionDTO> getEntitiesDTO() {
@@ -29,9 +28,9 @@ public class DTODefinitionsForUi{
                 return rulesDTO;
         }
 
-        public TerminationConditionsDTOManager getTerminationConditionsDTOManager() {
+       /* public TerminationConditionsDTOManager getTerminationConditionsDTOManager() {
                 return terminationConditionsDTOManager;
-        }
+        }*/
 
         public PropertyDefinitionDTO getPropertyDefinitionByName(String EntityName,String propertyName){
                 for(EntityDefinitionDTO entityDefinitionDTO:entitiesDTO){

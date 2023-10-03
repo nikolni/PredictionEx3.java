@@ -5,6 +5,7 @@ import dto.primary.DTOSimulationProgressForUi;
 import dto.primary.DTOThreadsPoolStatusForUi;
 import engine.per.file.engine.run.simulation.api.RunSimulation;
 import engine.per.file.engine.world.api.WorldInstance;
+import engine.per.file.engine.world.termination.condition.api.TerminationCondition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,18 +15,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class RunSimulationManager {
-    private final ExecutorService threadPool;
+    //private final ExecutorService threadPool;
     private final Map<Integer, RunSimulation>  simulationIdToRunSimulation;
     private final Map<Integer, WorldInstance> simulationIdToWorldInstance;
     private final Map<Integer, DTOSimulationEndingForUi> simulationIdToSimulationEnding;
+    private final Map<Integer, List<TerminationCondition>> simulationIdToTerminationConditions;
     private int completedTaskCount =0;
     private int taskCount=0;
     private int activeThreadCount = 0;
 
-    public RunSimulationManager(int threadPoolSize, Map<Integer, WorldInstance> simulationIdToWorldInstance) {
-        threadPool = Executors.newFixedThreadPool(threadPoolSize);
+    public RunSimulationManager( Map<Integer, WorldInstance> simulationIdToWorldInstance) {
         simulationIdToRunSimulation = new HashMap<>();
         simulationIdToSimulationEnding = new HashMap<>();
+        simulationIdToTerminationConditions = new HashMap<>();
         this.simulationIdToWorldInstance = simulationIdToWorldInstance;
     }
     public void addSimulationIdToRunSimulation(Integer simulationID, RunSimulation runSimulation){
@@ -34,10 +36,10 @@ public class RunSimulationManager {
     public void addSimulationEndingDto(Integer simulationID, DTOSimulationEndingForUi dtoSimulationEndingForUi){
         simulationIdToSimulationEnding.put(simulationID, dtoSimulationEndingForUi);
     }
-    public void addTaskToQueue(Runnable runSimulationRunnable){
+    /*public void addTaskToQueue(Runnable runSimulationRunnable){
         threadPool.submit(runSimulationRunnable);
         taskCount++;
-    }
+    }*/
 
     public dto.primary.DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID){
         if(simulationIdToRunSimulation.get(simulationID) != null){
@@ -112,4 +114,15 @@ public class RunSimulationManager {
 
         return simulationStatus;
     }
+
+    public void addTerminationConditionsList(Integer simulationID, List<TerminationCondition>  terminationConditionsList){
+        simulationIdToTerminationConditions.put(simulationID, terminationConditionsList);
+    }
+
+
+    public List<TerminationCondition> getTerminationConditionsListByID(Integer executionID) {
+        return simulationIdToTerminationConditions.get(executionID);
+    }
+
+
 }

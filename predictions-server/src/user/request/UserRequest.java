@@ -21,8 +21,6 @@ public class UserRequest {
      private Integer numOfSimulationsRunning = 0;
     private Integer numOfSimulationsDone = 0;
 
-
-
     public UserRequest(String simulationName, Integer numOfSimulations,
                        String terminationConditions,String userName) {
         this.simulationName = simulationName;
