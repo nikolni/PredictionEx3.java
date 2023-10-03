@@ -5,12 +5,14 @@ import dto.include.DTOIncludeForExecutionForServer;
 import dto.primary.DTOEnvVarDefValuesForSE;
 import dto.primary.DTOPopulationValuesForSE;
 import engine.per.file.engine.api.SystemEngineAccess;
+import engine.per.file.engine.world.termination.condition.api.TerminationCondition;
 import jakarta.servlet.http.HttpServlet;
 import utils.ServletUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +37,9 @@ public class ExecutionServlet extends HttpServlet {
         String userName= request.getHeader("user_name");
         Integer requestID=Integer.parseInt(request.getHeader("requestID"));
 
+        List<TerminationCondition> terminationConditionsList = ServletUtils.getAllUsersRequestsList(getServletContext()).
+                get(requestID -1).getTerminationConditionList();
+
         SystemEngineAccess systemEngineAccess = ServletUtils.getSEInstanceBySimulationName
                 (getServletContext(), simulationName);
         Integer executionID = ServletUtils.getExecutionCounter(getServletContext());
@@ -42,7 +47,8 @@ public class ExecutionServlet extends HttpServlet {
         ServletUtils.increaseExecutionCounter(getServletContext());
 
         systemEngineAccess.prepareForExecution(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, executionID);
-        ServletUtils.addRunnableToThreadPool(getServletContext(), () -> systemEngineAccess.runSimulation(executionID));
+        ServletUtils.addRunnableToThreadPool(getServletContext(), () -> systemEngineAccess.runSimulation(executionID,
+                terminationConditionsList));
     }
 
     @Override

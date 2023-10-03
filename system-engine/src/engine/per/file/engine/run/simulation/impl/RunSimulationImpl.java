@@ -4,6 +4,7 @@ import dto.primary.DTOSimulationProgressForUi;
 import engine.per.file.engine.run.simulation.api.RunSimulation;
 import engine.per.file.engine.world.execution.instance.enitty.api.EntityInstance;
 import engine.per.file.engine.world.execution.instance.environment.api.EnvVariablesInstanceManager;
+import engine.per.file.engine.world.termination.condition.api.TerminationCondition;
 import engine.per.file.engine.world.termination.condition.impl.ByUserTerminationConditionImpl;
 import engine.per.file.engine.world.termination.condition.impl.TicksTerminationConditionImpl;
 import engine.per.file.engine.world.termination.condition.impl.TimeTerminationConditionImpl;
@@ -26,15 +27,17 @@ public class RunSimulationImpl implements RunSimulation {
     private dto.primary.DTOSimulationProgressForUi dtoSimulationProgressForUi;
 
     private final IsSimulationPaused isSimulationPaused;
+    private final List<TerminationCondition> terminationConditionList;
 
    private boolean isPaused = false;
     private boolean isResumed = true;
     private boolean isCanceled = false;
 
-    public RunSimulationImpl(WorldInstance worldInstance){
+    public RunSimulationImpl(WorldInstance worldInstance, List<TerminationCondition> terminationConditionList){
         dtoSimulationProgressForUi = new DTOSimulationProgressForUi(0, 0 ,"Running!",
                 worldInstance.getEntityInstanceManager().getEntitiesPopulationAfterSimulationRunning());
         isSimulationPaused = new IsSimulationPaused();
+        this.terminationConditionList = terminationConditionList;
     }
     @Override
     public void setCanceled(boolean canceled) {
@@ -80,17 +83,17 @@ public class RunSimulationImpl implements RunSimulation {
             numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
         }*/
         if(!isTerminationConditionByUser(worldDefinition)){
-            if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().size()==2){
+            if(terminationConditionList.size()==2){
                 numOfTicksToRun = getNumOfTicksToRun(worldDefinition);
                 numOfSecondsToRun = getNumOfSecondsToRun(worldDefinition);
             }
             else{
-                if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0) instanceof TimeTerminationConditionImpl){
-                    numOfSecondsToRun=worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0).getTerminationCondition();
+                if(terminationConditionList.get(0) instanceof TimeTerminationConditionImpl){
+                    numOfSecondsToRun = terminationConditionList.get(0).getTerminationCondition();
                     numOfTicksToRun=Integer.MAX_VALUE;
                 }
-                else if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0) instanceof TicksTerminationConditionImpl){
-                    numOfTicksToRun=worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0).getTerminationCondition();
+                else if(terminationConditionList.get(0) instanceof TicksTerminationConditionImpl){
+                    numOfTicksToRun= terminationConditionList.get(0).getTerminationCondition();
                     numOfSecondsToRun=Integer.MAX_VALUE;
                 }
             }
@@ -302,21 +305,21 @@ public class RunSimulationImpl implements RunSimulation {
 
 
     private int getNumOfTicksToRun(WorldDefinition worldDefinition) {
-        if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0) instanceof TicksTerminationConditionImpl)
-            return worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0).getTerminationCondition();
+        if(terminationConditionList.get(0) instanceof TicksTerminationConditionImpl)
+            return terminationConditionList.get(0).getTerminationCondition();
 
         return 0;
     }
 
 
     private int getNumOfSecondsToRun(WorldDefinition worldDefinition) {
-        if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0) instanceof TicksTerminationConditionImpl){
-            if(worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().size() == 2){
-                return worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(1).getTerminationCondition();
+        if(terminationConditionList.get(0) instanceof TicksTerminationConditionImpl){
+            if(terminationConditionList.size() == 2){
+                return terminationConditionList.get(1).getTerminationCondition();
             }
         }
         else{
-            return worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0).getTerminationCondition();
+            return terminationConditionList.get(0).getTerminationCondition();
         }
         return 0;
     }
@@ -339,7 +342,7 @@ public class RunSimulationImpl implements RunSimulation {
     }
 
     private boolean isTerminationConditionByUser(WorldDefinition worldDefinition){
-        return (worldDefinition.getTerminationConditionsManager().getTerminationConditionsList().get(0)
+        return (terminationConditionList.get(0)
                 instanceof ByUserTerminationConditionImpl);
     }
 

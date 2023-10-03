@@ -62,13 +62,15 @@ public class CreateDTODefinitionsForUi {
                     new ActivationDTO(rule.getActivation().getTicks(), rule.getActivation().getProbability())));
         }
 
-        TerminationConditionsManager terminationConditionsManager = worldDefinition.getTerminationConditionsManager();
+        /*TerminationConditionsManager terminationConditionsManager = worldDefinition.getTerminationConditionsManager();
         for(TerminationCondition terminationCondition : terminationConditionsManager.getTerminationConditionsList()){
             terminationConditionsDTO.add(createTerminationConditionsDTO(terminationCondition));
         }
         TerminationConditionsDTOManager terminationConditionsDTOManager = new TerminationConditionsDTOManager(terminationConditionsDTO);
 
-        return new DTODefinitionsForUi(entitiesDTO, rulesDTO, terminationConditionsDTOManager);
+        return new DTODefinitionsForUi(entitiesDTO, rulesDTO, terminationConditionsDTOManager);*/
+        return new DTODefinitionsForUi(entitiesDTO, rulesDTO);
+
     }
 
     private EntityDefinitionDTO createEntityDefinitionDTO(EntityDefinition entityDefinition){

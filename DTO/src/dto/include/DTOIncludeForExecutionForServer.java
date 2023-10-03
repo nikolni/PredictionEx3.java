@@ -1,13 +1,12 @@
 package dto.include;
 
+import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import dto.primary.DTOEnvVarDefValuesForSE;
-import dto.primary.DTOEnvVarsDefForUi;
-import dto.primary.DTONamesListForUi;
 import dto.primary.DTOPopulationValuesForSE;
 
 public class DTOIncludeForExecutionForServer {
-    private DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE;
-    private DTOPopulationValuesForSE dtoPopulationValuesForSE;
+    private final DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE;
+    private final DTOPopulationValuesForSE dtoPopulationValuesForSE;
 
     public DTOIncludeForExecutionForServer(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE,
                                            DTOPopulationValuesForSE dtoPopulationValuesForSE) {

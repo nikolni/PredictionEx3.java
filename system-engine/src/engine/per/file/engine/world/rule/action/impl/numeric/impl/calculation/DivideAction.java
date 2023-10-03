@@ -28,7 +28,7 @@ public class DivideAction extends CalculationAction {
         //can assume that property type is float
 
         if (!NumericVerify.verifyNumericExpressionValue(expression1, context) |
-        (!verifyNumericExpressionValue(expression2, context)) ) {
+        (!NumericVerify.verifyNumericExpressionValue(expression2, context)) ) {
             throw new IllegalArgumentException("can't cast one of expression value to type of property " + resultPropName);
         }
 

@@ -1,6 +1,9 @@
 
 package engine.per.file.engine.impl;
 
+import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
+import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
+import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
 import dto.primary.*;
 import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
@@ -59,7 +62,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     public void getXMLFromUser(String xmlPath) throws JAXBException, FileNotFoundException {
         WorldFromXml worldFromXml = new WorldFromXml();
         worldDefinition = worldFromXml.FromXmlToPRDWorld(xmlPath);
-        runSimulationManager = new RunSimulationManager( worldDefinition.getThreadPoolSize(), simulationIdToWorldInstance);
+        runSimulationManager = new RunSimulationManager( simulationIdToWorldInstance);
         isHaveValidFileInSystem=true;
         simulationIdToWorldInstance.clear();
     }
@@ -67,7 +70,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     public void fromFileToSE(PRDWorld prdWorld){
         WorldFromXml worldFromXml = new WorldFromXml();
         worldDefinition = worldFromXml.createWorldDefinition(prdWorld);
-        runSimulationManager = new RunSimulationManager( worldDefinition.getThreadPoolSize(), simulationIdToWorldInstance);
+        runSimulationManager = new RunSimulationManager(simulationIdToWorldInstance);
         isHaveValidFileInSystem=true;
         simulationIdToWorldInstance.clear();
     }
@@ -204,12 +207,14 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
-    public void runSimulation(Integer simulationID) throws IllegalArgumentException{
+    public void runSimulation(Integer simulationID, List<TerminationCondition> terminationConditionList) throws IllegalArgumentException{
             runSimulationManager.increaseActiveCount();
             int[] terminationConditionArr;
 
-            RunSimulation runSimulationInstance = new RunSimulationImpl(simulationIdToWorldInstance.get(simulationID));
+            RunSimulation runSimulationInstance = new RunSimulationImpl(simulationIdToWorldInstance.get(simulationID),
+                     terminationConditionList);
             runSimulationManager.addSimulationIdToRunSimulation(simulationID, runSimulationInstance);
+            runSimulationManager.addTerminationConditionsList(simulationID, terminationConditionList);
             terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
                     simulationIdToWorldInstance.get(simulationID));
 
@@ -223,14 +228,14 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         return runSimulationManager.getThreadsPoolStatus();
     }
 
-    @Override
+    /*@Override
     public void addTaskToQueue(Runnable runSimulationRunnable){
         runSimulationManager.addTaskToQueue(runSimulationRunnable);
-    }
+    }*/
 
     @Override
-    public int getTotalTicksNumber(){
-        List<TerminationCondition> terminationConditionList =  worldDefinition.getTerminationConditionsManager().getTerminationConditionsList();
+    public int getTotalTicksNumber(Integer executionID){
+        List<TerminationCondition> terminationConditionList =  runSimulationManager.getTerminationConditionsListByID(executionID);
         for(TerminationCondition terminationCondition: terminationConditionList){
             if(terminationCondition instanceof TicksTerminationConditionImpl){
                 return terminationCondition.getTerminationCondition();
@@ -239,8 +244,8 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         return 0;
     }
     @Override
-    public int getTotalSecondsNumber(){
-        List<TerminationCondition> terminationConditionList =  worldDefinition.getTerminationConditionsManager().getTerminationConditionsList();
+    public int getTotalSecondsNumber(Integer executionID){
+        List<TerminationCondition> terminationConditionList =  runSimulationManager.getTerminationConditionsListByID(executionID);
         for(TerminationCondition terminationCondition: terminationConditionList){
             if(terminationCondition instanceof TimeTerminationConditionImpl){
                 return terminationCondition.getTerminationCondition();
@@ -293,9 +298,23 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
-    public List<TerminationConditionsDTO> getTerminationConditions() {
-        return new CreateDTODefinitionsForUi().getData(worldDefinition).
-                getTerminationConditionsDTOManager().getTerminationConditionsDTOList();
+    public List<TerminationConditionsDTO> getTerminationConditions(int simulationID) {
+        List<TerminationConditionsDTO> terminationConditionsDTO= new ArrayList<>();
+        for(TerminationCondition terminationCondition : runSimulationManager.getTerminationConditionsListByID(simulationID)){
+            terminationConditionsDTO.add(createTerminationConditionsDTO(terminationCondition));
+        }
+        return terminationConditionsDTO;
+    }
+    private TerminationConditionsDTO createTerminationConditionsDTO (TerminationCondition terminationCondition){
+        if(terminationCondition instanceof TicksTerminationConditionImpl){
+            return new TicksTerminationConditionsDTOImpl(terminationCondition.getTerminationCondition());
+        }
+        else if(terminationCondition instanceof TimeTerminationConditionImpl){
+            return new TimeTerminationConditionsDTOImpl(terminationCondition.getTerminationCondition());
+        }
+        else{
+            return new ByUserTerminationConditionDTOImpl();
+        }
     }
     @Override
     public DTORerunValuesForUi getValuesForRerun(Integer simulationID){

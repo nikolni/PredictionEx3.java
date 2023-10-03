@@ -18,7 +18,7 @@ public class TerminationConditionsServlet extends CommonServletsUtils {
 
         SystemEngineAccess systemEngineAccess = getSEInstance(userName, executionID);
         TerminationConditionsDTO[] terminationConditionsDTOList= systemEngineAccess.
-                getTerminationConditions().toArray(new TerminationConditionsDTO[0]);
+                getTerminationConditions(executionID).toArray(new TerminationConditionsDTO[0]);
         //returning JSON objects, not HTML
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
