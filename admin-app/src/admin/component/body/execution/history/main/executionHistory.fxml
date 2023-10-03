@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox stylesheets="@../../../../../main/adminGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.component.body.execution.history.main.ExecutionsHistoryController">
+   <children>
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="260.0" prefWidth="199.0" styleClass="background">
+         <content>
+            <ListView fx:id="SimulationsDoneDetailsList" prefHeight="258.0" prefWidth="317.0" />
+         </content>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </ScrollPane>
+      <ScrollPane fx:id="simulationResultScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="260.0" prefWidth="421.0" styleClass="background">
+         <HBox.margin>
+            <Insets left="5.0" />
+         </HBox.margin>
+      </ScrollPane>
+   </children>
+</HBox>
