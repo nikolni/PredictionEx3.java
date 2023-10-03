@@ -9,6 +9,7 @@ import engine.per.file.jaxb2.generated.PRDWorld;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
+import java.util.Collection;
 import java.util.List;
 
 public interface SystemEngineAccess {
@@ -48,7 +49,7 @@ public interface SystemEngineAccess {
                                                                             String entityName, String propertyName);
     DTOSimulationProgressForUi getDtoSimulationProgressForUi(Integer simulationID);
     //void addTaskToQueue(Runnable runSimulationRunnable);
-     DTOThreadsPoolStatusForUi getThreadsPoolStatus();
+     //DTOThreadsPoolStatusForUi getThreadsPoolStatus();
     DTOWorldGridForUi getDTOWorldGridForUi();
     void pauseSimulation(int simulationID);
     void resumeSimulation(int simulationID);
@@ -59,4 +60,5 @@ public interface SystemEngineAccess {
     String getSimulationStatusByID(Integer executionID);
     void prepareForExecution(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE ,
                         DTOPopulationValuesForSE dtoPopulationValuesForSE, Integer executionID);
+    Collection<DTOSimulationEndingForUi> getExecutionsDone();
 }

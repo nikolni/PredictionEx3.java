@@ -18,11 +18,13 @@ public class RunSimulationManager {
     //private final ExecutorService threadPool;
     private final Map<Integer, RunSimulation>  simulationIdToRunSimulation;
     private final Map<Integer, WorldInstance> simulationIdToWorldInstance;
+
+
     private final Map<Integer, DTOSimulationEndingForUi> simulationIdToSimulationEnding;
     private final Map<Integer, List<TerminationCondition>> simulationIdToTerminationConditions;
-    private int completedTaskCount =0;
+    /*private int completedTaskCount =0;
     private int taskCount=0;
-    private int activeThreadCount = 0;
+    private int activeThreadCount = 0;*/
 
     public RunSimulationManager( Map<Integer, WorldInstance> simulationIdToWorldInstance) {
         simulationIdToRunSimulation = new HashMap<>();
@@ -68,14 +70,14 @@ public class RunSimulationManager {
             simulationIdToRunSimulation.get(simulationID).setCanceled(true);
         }
     }
-    public dto.primary.DTOThreadsPoolStatusForUi getThreadsPoolStatus(){
+    /*public dto.primary.DTOThreadsPoolStatusForUi getThreadsPoolStatus(){
         //int activeThreadCount = ((ThreadPoolExecutor) threadPool).getActiveCount();
         int queueSize = taskCount - activeThreadCount - completedTaskCount;
 
         return new DTOThreadsPoolStatusForUi(queueSize, activeThreadCount, completedTaskCount);
-    }
+    }*/
 
-    public void increaseCompletedTaskCount(){
+ /*   public void increaseCompletedTaskCount(){
         completedTaskCount++;
     }
     public void increaseActiveCount(){
@@ -83,7 +85,7 @@ public class RunSimulationManager {
     }
     public void decreaseActiveCount(){
         activeThreadCount--;
-    }
+    }*/
 
     public List<String> getAllSimulationsStatus(){
         List<String> simulationsStatuses = new ArrayList<>();
@@ -124,5 +126,8 @@ public class RunSimulationManager {
         return simulationIdToTerminationConditions.get(executionID);
     }
 
+    public Map<Integer, DTOSimulationEndingForUi> getSimulationIdToSimulationEnding() {
+        return simulationIdToSimulationEnding;
+    }
 
 }

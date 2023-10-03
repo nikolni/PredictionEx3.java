@@ -98,10 +98,10 @@ public class SingleSimulationController {
                 handleSingleEntitySelection(selectedItem, simulationDetails);
             } else if (selectedItem.getParent().getValue().equals("Rules")) {
                 handleSingleRuleSelection(selectedItem, simulationDetails);
-            } else if (selectedItem.getValue().equals("Termination conditions")) {
+            } /*else if (selectedItem.getValue().equals("Termination conditions")) {
                 handleTerminationConditionsSelection(selectedItem, simulationDetails);
                 //detailsTreeView.getRoot().setExpanded(false);
-            } else if (selectedItem.getValue().equals("Environment variables")) {
+            }*/ else if (selectedItem.getValue().equals("Environment variables")) {
                 handleEnvironmentVariablesSelection(selectedItem, simulationDetails);
             }
             else if (selectedItem.getValue().equals("World grid sizes")) {
@@ -315,7 +315,7 @@ public class SingleSimulationController {
     }
 
 
-    private void handleTerminationConditionsSelection(TreeItem<String> terminationConditionsSelectedItem, DTOIncludeSimulationDetailsForUi simulationDetails){
+    /*private void handleTerminationConditionsSelection(TreeItem<String> terminationConditionsSelectedItem, DTOIncludeSimulationDetailsForUi simulationDetails){
         quantityOfSquaresLabel.setVisible(false);
         quantityOfSquaresText.setVisible(false);
         valueDefLabel.setVisible(false);
@@ -327,7 +327,7 @@ public class SingleSimulationController {
             detailsFlowPane.getChildren().clear();
             createTerminationConditionsChildrenInFlowPane(terminationConditionsDTOList);
         }
-    }
+    }*/
 
     private void createTerminationConditionsChildrenInFlowPane(List<TerminationConditionsDTO> terminationConditionsDTOList) {
         try{

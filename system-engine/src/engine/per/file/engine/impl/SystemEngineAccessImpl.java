@@ -208,7 +208,6 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     @Override
     public void runSimulation(Integer simulationID, List<TerminationCondition> terminationConditionList) throws IllegalArgumentException{
-            runSimulationManager.increaseActiveCount();
             int[] terminationConditionArr;
 
             RunSimulation runSimulationInstance = new RunSimulationImpl(simulationIdToWorldInstance.get(simulationID),
@@ -220,13 +219,12 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
             runSimulationManager.addSimulationEndingDto(simulationID,
                     new DTOSimulationEndingForUi(simulationID, terminationConditionArr));
-            runSimulationManager.increaseCompletedTaskCount();
-            runSimulationManager.decreaseActiveCount();
+
     }
-    @Override
+    /*@Override
     public DTOThreadsPoolStatusForUi getThreadsPoolStatus(){
         return runSimulationManager.getThreadsPoolStatus();
-    }
+    }*/
 
     /*@Override
     public void addTaskToQueue(Runnable runSimulationRunnable){
@@ -349,5 +347,9 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         EnvVariablesInstanceManager envVariablesInstanceManager = updateEnvironmentVarDefinition(dtoEnvVarDefValuesForSE);
         EntityDefinitionManager entityDefinitionManager = updateEntitiesPopulation(dtoPopulationValuesForSE);
         addWorldInstance(executionID, envVariablesInstanceManager, entityDefinitionManager);
+    }
+    @Override
+    public Collection<DTOSimulationEndingForUi> getExecutionsDone(){
+        return runSimulationManager.getSimulationIdToSimulationEnding().values();
     }
 }

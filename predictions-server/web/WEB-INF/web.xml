@@ -104,4 +104,30 @@
         <servlet-name>SimulationDetailsServlet</servlet-name>
         <url-pattern>/simulation/details</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ThreadPoolStatusServlet</servlet-name>
+        <servlet-class>servlet.ThreadPoolStatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ThreadPoolStatusServlet</servlet-name>
+        <url-pattern>/thread/pool</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ExecutionEndingServlet</servlet-name>
+        <servlet-class>servlet.ExecutionEndingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExecutionEndingServlet</servlet-name>
+        <url-pattern>/executions/ending</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SetThreadPoolSizeServlet</servlet-name>
+        <servlet-class>servlet.SetThreadPoolSizeServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SetThreadPoolSizeServlet</servlet-name>
+        <url-pattern>/set/thread/pool/size</url-pattern>
+    </servlet-mapping>
+
 </web-app>

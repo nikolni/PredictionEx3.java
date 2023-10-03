@@ -75,8 +75,12 @@ public class ProgressAndResultController {
         });
         simulationProgressComponentController.setMembers(this, mainController.getUserName(),
                 requestsFromServer);
+
         UpdateListView updateListView = new UpdateListView(simulationsList, requestsFromServer, mainController.getUserName());
         new Thread(updateListView).start();
+
+        AddResultsControllers addResultsControllers = new AddResultsControllers(requestsFromServer, mainController.getUserName(), this);
+        new Thread(addResultsControllers).start();
     }
     private void clearSimulationProgressScreen(){
         if(oldUpdateUiThreadThread !=null && oldUpdateUiThreadThread.isAlive()){
@@ -156,7 +160,6 @@ public class ProgressAndResultController {
 
 
     public void createAndAddNewSimulationResultToList(DTOSimulationEndingForUi dtoSimulationEndingForUi) {
-
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/after/login/component/body/running/result/results.fxml"));
             HBox simulationResultNode = loader.load();
