@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox stylesheets="@../../../../main/adminGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.component.body.management.main.ManagementController">
+   <children>
+      <HBox prefHeight="49.0" prefWidth="600.0">
+         <children>
+            <Label fx:id="filePathLabel" prefHeight="43.0" prefWidth="298.0" text="path label" wrapText="true" />
+            <Button fx:id="loadFileButton" mnemonicParsing="false" onMouseClicked="#onLoadFileClick" prefHeight="28.0" prefWidth="85.0" styleClass="button-body" text="Load File">
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="setThreadsCountButton" mnemonicParsing="false" onMouseClicked="#onSetThreadsCount" styleClass="button-body" text="Set threads count">
+               <HBox.margin>
+                  <Insets left="70.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <HBox prefHeight="270.0" prefWidth="600.0">
+         <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="260.0" prefWidth="392.0" styleClass="background">
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+               <content>
+                  <TreeView fx:id="simulationsDetailsTree" prefHeight="200.0" prefWidth="200.0" />
+               </content>
+            </ScrollPane>
+            <GridPane fx:id="queueManagementGridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="258.0" prefWidth="179.0" styleClass="background">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.5" minWidth="10.0" prefWidth="140.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="39.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="waitingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="body-label" text="Waiting to be executed" GridPane.halignment="CENTER" />
+                  <Label fx:id="overLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="body-label" text="Over" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <Label fx:id="currentlyExecutingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="body-label" text="Currently underway" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <Label fx:id="valueWaitingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="label-queue" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="valueCurrentlyExecutingLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="label-queue" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Label fx:id="valueOverLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="label-queue" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+               </children>
+               <HBox.margin>
+                  <Insets left="20.0" top="10.0" />
+               </HBox.margin>
+            </GridPane>
+         </children>
+         <VBox.margin>
+            <Insets left="5.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>

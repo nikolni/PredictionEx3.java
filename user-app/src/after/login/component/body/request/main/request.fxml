@@ -47,7 +47,7 @@
                <children>
                   <Label styleClass="body-label" text="       Termination conditions   " textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" />
                   <Label prefHeight="26.0" prefWidth="175.0" text="(1-'by user', 2-'ticks', 3-seconds) " textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                  <Label text="  (e.g., 2=840,3=10)" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <Label text="  (e.g., 2=840,3=10 / 1)" wrapText="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>
