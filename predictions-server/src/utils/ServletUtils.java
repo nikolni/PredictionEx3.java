@@ -27,7 +27,9 @@ public class ServletUtils {
 	private static final String THREAD_POOL_ATTRIBUTE_NAME = "threadPool";
 	private static final String EXECUTION_COUNTER_ATTRIBUTE_NAME = "executionsCounter";
 	private static final String ENGINE_ATTRIBUTE_NAME = "engine";
-
+	private static final String COMPLETED_TASK_COUNT_ATTRIBUTE_NAME = "completedTaskCount";
+	private static final String ALL_TASK_COUNT_ATTRIBUTE_NAME = "taskCount";
+	private static final String ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME = "activeThreadCount";
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/*
@@ -44,7 +46,9 @@ public class ServletUtils {
 	private static final Object threadPoolLock = new Object();
 	private static final Object executionsCounterLock = new Object();
 	private static final Object engineLock = new Object();
-
+	private static final Object completedTaskCountCountLock = new Object();
+	private static final Object taskCountLock = new Object();
+	private static final Object activeThreadCountLock = new Object();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static UserManager getUserManager(ServletContext servletContext) {
@@ -220,10 +224,67 @@ public class ServletUtils {
 	public static void setSizeOfThreadPool(ServletContext servletContext, Integer size) {
 		synchronized (threadPoolSizeLock) {
 			if (servletContext.getAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME, size);
+				servletContext.setAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME, 1);
 			}
+			servletContext.setAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME, size);
 		}
 	}
 
+	public static Integer getCompletedTaskCountCount(ServletContext servletContext) {
+
+		synchronized (completedTaskCountCountLock) {
+			if (servletContext.getAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME, 0);
+			}
+			return ((Integer)servletContext.getAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME));
+		}
+	}
+	public static void increaseCompletedTaskCount(ServletContext servletContext){
+		synchronized (completedTaskCountCountLock) {
+			if (servletContext.getAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME, 0);
+			}
+			Integer value = ((Integer) servletContext.getAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME));
+			value++;
+			servletContext.setAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME, value);
+		}
+	}
+	public static Integer getTaskCount(ServletContext servletContext) {
+
+		synchronized (taskCountLock) {
+			if (servletContext.getAttribute(ALL_TASK_COUNT_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(ALL_TASK_COUNT_ATTRIBUTE_NAME, 0);
+			}
+			return ((Integer)servletContext.getAttribute(ALL_TASK_COUNT_ATTRIBUTE_NAME));
+		}
+	}
+	public static Integer getActiveThreadCountLock(ServletContext servletContext) {
+
+		synchronized (activeThreadCountLock) {
+			if (servletContext.getAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME, 0);
+			}
+			return ((Integer)servletContext.getAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME));
+		}
+	}
+	public static void increaseActiveCount(ServletContext servletContext){
+		synchronized (activeThreadCountLock) {
+			if (servletContext.getAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME, 0);
+			}
+			Integer value = ((Integer) servletContext.getAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME));
+			value++;
+			servletContext.setAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME, value);
+		}
+	}
+	public static void decreaseActiveCount(ServletContext servletContext){
+
+		//if we got here, ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME already exist.
+		synchronized (activeThreadCountLock) {
+			Integer value = ((Integer) servletContext.getAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME));
+			value--;
+			servletContext.setAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME, value);
+		}
+	}
 
 }

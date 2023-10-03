@@ -8,6 +8,7 @@ import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImp
 import dto.include.DTOIncludeForResultsAdditionalForUi;
 import dto.include.DTOIncludeForResultsPrimaryForUi;
 import dto.primary.DTOSecTicksForUi;
+import dto.primary.DTOSimulationEndingForUi;
 import dto.primary.DTOSimulationProgressForUi;
 import javafx.application.Platform;
 import okhttp3.*;
@@ -102,55 +103,6 @@ public class RequestsFromServer {
             }
         });
         return dtoSimulationProgressForUi[0];
-    }
-
-    public List<TerminationConditionsDTO> getTerminationConditionsFromServer(String userName, Integer executionID) {
-        final List<TerminationConditionsDTO>[] terminationConditionsDTOList = new List[]{null};
-
-        String finalUrl = HttpUrl
-                .parse(Constants.TERMINATION_CONDITIONS_PAGE)
-                .newBuilder()
-                .addQueryParameter("user_name", userName)
-                .addQueryParameter("executionID", executionID.toString())
-                .build()
-                .toString();
-
-        HttpClientUtil.runAsync(finalUrl, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
-                } else {
-                    // Read and process the response content
-                    try (ResponseBody responseBody = response.body()) {
-                        if (responseBody != null) {
-                            String json = response.body().string();
-                            Type listType = new TypeToken<List<TerminationConditionsDTO>>() {}.getType();
-                            terminationConditionsDTOList[0] = Constants.GSON_INSTANCE.fromJson(response.body().string(), listType);
-                            for (TerminationConditionsDTO item : terminationConditionsDTOList[0]) {
-                                // Determine the actual type of TerminationConditionsDTO
-                                if (item instanceof ByUserTerminationConditionDTOImpl) {
-                                    // Handle ByUserTerminationConditionDTOImpl
-                                } else if (item instanceof TicksTerminationConditionsDTOImpl) {
-                                    // Handle TicksTerminationConditionsDTOImpl
-                                } else if (item instanceof TimeTerminationConditionsDTOImpl) {
-                                    // Handle TimeTerminationConditionsDTOImpl
-                                }
-                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        return terminationConditionsDTOList[0];
     }
 
     public void postControlRequestToServer(String userName, Integer executionID, String action){
@@ -294,4 +246,68 @@ public class RequestsFromServer {
         });
         return dtoIncludeForResultsAdditionalForUi[0];
     }
+    public List<DTOSimulationEndingForUi> getSimulationEndingListFromServer(String userName) {
+        final List<DTOSimulationEndingForUi>[] simulationEndingList = new List[]{null};
+
+        String finalUrl = HttpUrl
+                .parse(Constants.EXECUTIONS_ENDING_PAGE)
+                .newBuilder()
+                .addQueryParameter("user_name", userName)
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                } else {
+                    // Read and process the response content
+                    try (ResponseBody responseBody = response.body()) {
+                        if (responseBody != null) {
+                            String json = response.body().string();
+                            Type listType = new TypeToken<List<DTOSimulationEndingForUi>>() {}.getType();
+                            simulationEndingList[0] = Constants.GSON_INSTANCE.fromJson(response.body().string(), listType);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        return simulationEndingList[0];
+    }
+
+    public void updateServerOnExecutionDoneForUpdateThreadPoolStatus(){
+        String body = "";
+
+        Request request = new Request.Builder()
+                .url(Constants.THREAD_POOL_STATUS_PAGE)
+                .post(RequestBody.create(body.getBytes()))
+                .build();
+
+        Call call = HTTP_CLIENT_PUBLIC.newCall(request);
+        call.enqueue( new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                }
+            }
+        });
+    }
+
+
 }
