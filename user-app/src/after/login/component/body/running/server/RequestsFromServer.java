@@ -283,4 +283,41 @@ public class RequestsFromServer {
         });
         return simulationEndingList[0];
     }
+    public List<TerminationConditionsDTO> getTerminationConditionsFromServer(String userName, Integer executionID) {
+        final List<TerminationConditionsDTO>[] terminationConditionsDTOList = new List[]{null};
+        String finalUrl = HttpUrl
+                .parse(Constants.TERMINATION_CONDITIONS_PAGE)
+                .newBuilder()
+                .addQueryParameter("user_name", userName)
+                .addQueryParameter("executionID", executionID.toString())
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                } else {
+                    // Read and process the response content
+                    try (ResponseBody responseBody = response.body()) {
+                        if (responseBody != null) {
+                            String json = response.body().string();
+                            Type listType = new TypeToken<List<TerminationConditionsDTO>>() {}.getType();
+                            terminationConditionsDTOList[0] = Constants.GSON_INSTANCE.fromJson(response.body().string(), listType);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        return terminationConditionsDTOList[0];
+    }
 }
