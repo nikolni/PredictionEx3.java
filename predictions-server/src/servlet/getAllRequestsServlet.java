@@ -6,7 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import user.request.UserRequest;
+import allocation.request.UserRequest;
 import utils.ServletUtils;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class getAllRequestsServlet extends HttpServlet {
         resp.setContentType("application/json");
         try (PrintWriter out = resp.getWriter()) {
             Gson gson = new Gson();
-            List<UserRequest> allAdminRequests = ServletUtils.getAllUsersRequestsList(getServletContext());
+            List<UserRequest> allAdminRequests = ServletUtils.getAllocationsManager(getServletContext()).getAllUsersRequestsList();
             List<DTOUserRequestForUi> dtoUserRequestForUiList=new ArrayList<>();
             DTOUserRequestForUi dtoUserRequestForUi;
             for(UserRequest userRequest:allAdminRequests){

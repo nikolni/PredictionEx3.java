@@ -1,16 +1,14 @@
 package servlet;
 
+import allocation.request.UserRequest;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import dto.definition.user.request.DTOUserRequestForUi;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import user.request.UserRequest;
 import utils.ServletUtils;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +20,8 @@ public class UserRequestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        Map<UserRequest, List<Integer>> userRequestsMap = ServletUtils.getRequestsMapByUserName(
-                getServletContext(), request.getParameter("user_name"));
+        Map<UserRequest, List<Integer>> userRequestsMap = ServletUtils.getAllocationsManager(getServletContext()).
+                getRequestsMapByUserName(request.getParameter("user_name"));
 
         List<DTOUserRequestForUi> userRequestForUiList = new ArrayList<>();
         for(UserRequest userRequest : userRequestsMap.keySet()){
@@ -50,8 +48,8 @@ public class UserRequestServlet extends HttpServlet {
         String terminationConditions = prop.getProperty("termination_conditions");
 
         UserRequest userRequest = new UserRequest(simulationName,numberOfExecutions,terminationConditions,request.getHeader("user name"));
-        userRequest.setRequestID(ServletUtils.getAllUserRequestsListSize(getServletContext()));
-        ServletUtils.addRequestToAllUsersRequestsList(getServletContext(), userRequest);
-        ServletUtils.addRequestByUserName(getServletContext(), request.getHeader("user name"), userRequest);
+        userRequest.setRequestID(ServletUtils.getAllocationsManager(getServletContext()).getAllUsersRequestsList().size());
+        ServletUtils.getAllocationsManager(getServletContext()).addRequest(userRequest);
+        ServletUtils.getAllocationsManager(getServletContext()).addRequestByUserName(request.getHeader("user name"), userRequest);
     }
 }
