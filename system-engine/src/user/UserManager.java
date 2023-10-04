@@ -1,4 +1,4 @@
-package user.manager;
+package user;
 
 import java.util.Collections;
 import java.util.HashSet;

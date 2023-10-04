@@ -39,6 +39,7 @@ import engine.per.file.engine.world.api.WorldDefinition;
 import engine.per.file.engine.world.api.WorldInstance;
 import engine.per.file.engine.world.rule.enums.Type;
 import engine.per.file.jaxb2.generated.PRDWorld;
+import thread.pool.ThreadsPoolManager;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -208,19 +209,23 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     @Override
     public void runSimulation(Integer simulationID, List<TerminationCondition> terminationConditionList) throws IllegalArgumentException{
-            int[] terminationConditionArr;
+        ThreadsPoolManager.increaseActiveCount();
 
-            RunSimulation runSimulationInstance = new RunSimulationImpl(simulationIdToWorldInstance.get(simulationID),
-                     terminationConditionList);
-            runSimulationManager.addSimulationIdToRunSimulation(simulationID, runSimulationInstance);
-            runSimulationManager.addTerminationConditionsList(simulationID, terminationConditionList);
-            terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
-                    simulationIdToWorldInstance.get(simulationID));
+        int[] terminationConditionArr;
+        RunSimulation runSimulationInstance = new RunSimulationImpl(simulationIdToWorldInstance.get(simulationID),
+                terminationConditionList);
+        runSimulationManager.addSimulationIdToRunSimulation(simulationID, runSimulationInstance);
+        runSimulationManager.addTerminationConditionsList(simulationID, terminationConditionList);
+        terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
+                simulationIdToWorldInstance.get(simulationID));
 
-            runSimulationManager.addSimulationEndingDto(simulationID,
-                    new DTOSimulationEndingForUi(simulationID, terminationConditionArr));
+        runSimulationManager.addSimulationEndingDto(simulationID,
+                new DTOSimulationEndingForUi(simulationID, terminationConditionArr));
 
+        ThreadsPoolManager.increaseCompletedTaskCount();
+        ThreadsPoolManager.decreaseActiveCount();
     }
+
     /*@Override
     public DTOThreadsPoolStatusForUi getThreadsPoolStatus(){
         return runSimulationManager.getThreadsPoolStatus();

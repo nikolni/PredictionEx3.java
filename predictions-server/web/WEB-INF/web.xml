@@ -123,7 +123,6 @@
     <servlet>
         <servlet-name>SetThreadPoolSizeServlet</servlet-name>
         <servlet-class>servlet.SetThreadPoolSizeServlet</servlet-class>
-        <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>SetThreadPoolSizeServlet</servlet-name>

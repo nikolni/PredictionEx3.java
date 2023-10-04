@@ -1,13 +1,17 @@
 package servlet;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import utils.ServletUtils;
 
-public class SetThreadPoolSizeServlet extends HttpServlet {
+import java.io.IOException;
 
+public class SetThreadPoolSizeServlet extends HttpServlet {
     @Override
-    public void init() throws ServletException {
-        ServletUtils.setSizeOfThreadPool(getServletContext(), 1);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //returning JSON objects, not HTML
+        int threadsPoolSize = Integer.parseInt(request.getParameter("size"));
+        ServletUtils.getThreadPoolManager(getServletContext()).setSizeOfThreadPool(threadsPoolSize);
     }
 }

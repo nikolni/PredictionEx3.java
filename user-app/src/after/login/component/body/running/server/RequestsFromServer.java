@@ -283,31 +283,4 @@ public class RequestsFromServer {
         });
         return simulationEndingList[0];
     }
-
-    public void updateServerOnExecutionDoneForUpdateThreadPoolStatus(){
-        String body = "";
-
-        Request request = new Request.Builder()
-                .url(Constants.THREAD_POOL_STATUS_PAGE)
-                .post(RequestBody.create(body.getBytes()))
-                .build();
-
-        Call call = HTTP_CLIENT_PUBLIC.newCall(request);
-        call.enqueue( new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
-                }
-            }
-        });
-    }
-
-
 }

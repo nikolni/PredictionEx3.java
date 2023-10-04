@@ -47,7 +47,7 @@ public class ExecutionServlet extends HttpServlet {
         ServletUtils.increaseExecutionCounter(getServletContext());
 
         systemEngineAccess.prepareForExecution(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, executionID);
-        ServletUtils.addRunnableToThreadPool(getServletContext(), () -> systemEngineAccess.runSimulation(executionID,
+        ServletUtils.getThreadPoolManager(getServletContext()).addTaskToQueue(() -> systemEngineAccess.runSimulation(executionID,
                 terminationConditionsList));
     }
 
