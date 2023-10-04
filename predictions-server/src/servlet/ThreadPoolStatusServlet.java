@@ -24,4 +24,10 @@ public class ThreadPoolStatusServlet extends HttpServlet {
             out.flush();
         }
     }
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //returning JSON objects, not HTML
+        int threadsPoolSize = Integer.parseInt(request.getParameter("size"));
+        ServletUtils.getThreadPoolManager(getServletContext()).setSizeOfThreadPool(threadsPoolSize);
+    }
 }
