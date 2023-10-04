@@ -1,4 +1,4 @@
-package user.request;
+package allocation.request;
 
 import engine.per.file.engine.world.termination.condition.api.TerminationCondition;
 import engine.per.file.engine.world.termination.condition.impl.ByUserTerminationConditionImpl;
@@ -22,7 +22,7 @@ public class UserRequest {
     private Integer numOfSimulationsDone = 0;
 
     public UserRequest(String simulationName, Integer numOfSimulations,
-                       String terminationConditions,String userName) {
+                       String terminationConditions, String userName) {
         this.simulationName = simulationName;
         this.numOfSimulations = numOfSimulations;
         this.terminationConditionList = buildTerminationConditionList(terminationConditions);

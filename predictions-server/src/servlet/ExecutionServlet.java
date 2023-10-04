@@ -37,14 +37,14 @@ public class ExecutionServlet extends HttpServlet {
         String userName= request.getHeader("user_name");
         Integer requestID=Integer.parseInt(request.getHeader("requestID"));
 
-        List<TerminationCondition> terminationConditionsList = ServletUtils.getAllUsersRequestsList(getServletContext()).
-                get(requestID -1).getTerminationConditionList();
+        List<TerminationCondition> terminationConditionsList = ServletUtils.getAllocationsManager(getServletContext()).
+                getAllUsersRequestsList().get(requestID -1).getTerminationConditionList();
 
         SystemEngineAccess systemEngineAccess = ServletUtils.getSEInstanceBySimulationName
                 (getServletContext(), simulationName);
-        Integer executionID = ServletUtils.getExecutionCounter(getServletContext());
-        ServletUtils.addExecutionByUserNameAndRequestID(getServletContext(), userName, requestID);
-        ServletUtils.increaseExecutionCounter(getServletContext());
+        Integer executionID = ServletUtils.getAllocationsManager(getServletContext()).getExecutionsCounter();
+        ServletUtils.getAllocationsManager(getServletContext()).addExecutionByUserNameAndRequestID(userName, requestID);
+        ServletUtils.getAllocationsManager(getServletContext()).increaseExecutionCounter();
 
         systemEngineAccess.prepareForExecution(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, executionID);
         ServletUtils.getThreadPoolManager(getServletContext()).addTaskToQueue(() -> systemEngineAccess.runSimulation(executionID,
@@ -57,7 +57,7 @@ public class ExecutionServlet extends HttpServlet {
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
-            Integer executionID = (ServletUtils.getExecutionCounter(getServletContext()));
+            Integer executionID = (ServletUtils.getAllocationsManager(getServletContext()).getExecutionsCounter());
             String json = gson.toJson(executionID);
             out.println(json);
             out.flush();

@@ -6,7 +6,7 @@ import engine.per.file.engine.api.SystemEngineAccess;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import user.request.UserRequest;
+import allocation.request.UserRequest;
 import utils.ServletUtils;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class ExecutionEndingServlet extends HttpServlet {
 
         String userName = request.getHeader("user_name");
 
-        Map<UserRequest, List<Integer>> userExecutions = ServletUtils.getRequestsMapByUserName(getServletContext(), userName);
+        Map<UserRequest, List<Integer>> userExecutions = ServletUtils.getAllocationsManager(getServletContext()).getRequestsMapByUserName(userName);
 
         for(UserRequest userRequest : userExecutions.keySet()){
             String simulationName = userRequest.getSimulationName();

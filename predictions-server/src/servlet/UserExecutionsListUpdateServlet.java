@@ -2,7 +2,7 @@ package servlet;
 
 import com.google.gson.Gson;
 import engine.per.file.engine.api.SystemEngineAccess;
-import user.request.UserRequest;
+import allocation.request.UserRequest;
 import utils.CommonServletsUtils;
 import utils.ServletUtils;
 
