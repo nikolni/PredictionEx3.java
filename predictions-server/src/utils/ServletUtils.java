@@ -1,35 +1,27 @@
 package utils;
 
-
 import engine.per.file.engine.api.SystemEngineAccess;
-import engine.per.file.engine.impl.SystemEngineAccessImpl;
 import jakarta.servlet.ServletContext;
-import user.manager.UserManager;
+import thread.pool.ThreadsPoolManager;
+import user.UserManager;
 import user.request.UserRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 
 public class ServletUtils {
 
 	private static final String USER_MANAGER_ATTRIBUTE_NAME = "userManager";
+	private static final String THREADS_POOL_MANAGER_ATTRIBUTE_NAME = "threadPoolManager";
 	private static final String ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME = "userRequestList";
 	private static final String ALL_USERS_REQUESTS_LIST_SIZE_ATTRIBUTE_NAME = "userRequestListSize";
 	private static final String SIMULATION_NAMES_LIST_ATTRIBUTE_NAME = "simulationNamesList";
 	private static final String USER_NAME_TO_REQUESTS_MAP_ATTRIBUTE_NAME = "mapOfUserNameToRequestsMap"; 	//Map<String, Map<UserRequest, List<Integer>>>
 	private static final String SIMULATION_NAME_TO_SE_MAP_ATTRIBUTE_NAME = "simulationNameToSE";
 	private static final String THREAD_POOL_SIZE_ATTRIBUTE_NAME = "threadPoolSize";
-	private static final String THREAD_POOL_ATTRIBUTE_NAME = "threadPool";
 	private static final String EXECUTION_COUNTER_ATTRIBUTE_NAME = "executionsCounter";
-	private static final String ENGINE_ATTRIBUTE_NAME = "engine";
-	private static final String COMPLETED_TASK_COUNT_ATTRIBUTE_NAME = "completedTaskCount";
-	private static final String ALL_TASK_COUNT_ATTRIBUTE_NAME = "taskCount";
-	private static final String ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME = "activeThreadCount";
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/*
@@ -37,18 +29,13 @@ public class ServletUtils {
 	the actual fetch of them is remained un-synchronized for performance POV
 	 */
 	private static final Object userManagerLock = new Object();
+	private static final Object threadPoolManagerLock = new Object();
 	private static final Object allUsersRequestsListLock = new Object();
 	private static final Object allUsersRequestsListSizeLock = new Object();
 	private static final Object simulationNamesListLock = new Object();
 	private static final Object userNameToRequestsMapLock = new Object();
 	private static final Object simulationNameToSELock = new Object();
-	private static final Object threadPoolSizeLock = new Object();
-	private static final Object threadPoolLock = new Object();
 	private static final Object executionsCounterLock = new Object();
-	private static final Object engineLock = new Object();
-	private static final Object completedTaskCountCountLock = new Object();
-	private static final Object taskCountLock = new Object();
-	private static final Object activeThreadCountLock = new Object();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static UserManager getUserManager(ServletContext servletContext) {
@@ -60,15 +47,21 @@ public class ServletUtils {
 		}
 		return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
 	}
+	public static ThreadsPoolManager getThreadPoolManager(ServletContext servletContext) {
+
+		synchronized (threadPoolManagerLock) {
+			if (servletContext.getAttribute(THREADS_POOL_MANAGER_ATTRIBUTE_NAME) == null) {
+				servletContext.setAttribute(THREADS_POOL_MANAGER_ATTRIBUTE_NAME, new ThreadsPoolManager(1));
+			}
+		}
+		return (ThreadsPoolManager) servletContext.getAttribute(THREADS_POOL_MANAGER_ATTRIBUTE_NAME);
+	}
 	/*public static SystemEngineAccess initEngineAttributeName(ServletContext servletContext){
 		synchronized (engineLock) {
 			servletContext.setAttribute(ENGINE_ATTRIBUTE_NAME,new SystemEngineAccessImpl());
 		}
 		return (SystemEngineAccessImpl) servletContext.getAttribute(ENGINE_ATTRIBUTE_NAME);
 	}*/
-
-
-
 
 	public static void addRequestToAllUsersRequestsList(ServletContext servletContext, UserRequest userRequest) {
 		synchronized (allUsersRequestsListLock) {
@@ -210,81 +203,4 @@ public class ServletUtils {
 		}
 		((Map<String, SystemEngineAccess>) servletContext.getAttribute(ALL_USERS_REQUESTS_LIST_ATTRIBUTE_NAME)).put(simulationName,systemEngineAccess);
 	}
-
-	public static void addRunnableToThreadPool(ServletContext servletContext, Runnable runnable) {
-
-		synchronized (threadPoolLock) {
-			if (servletContext.getAttribute(THREAD_POOL_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(THREAD_POOL_ATTRIBUTE_NAME, Executors.newFixedThreadPool(
-						(Integer) servletContext.getAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME)));
-			}
-			((ExecutorService)servletContext.getAttribute(THREAD_POOL_ATTRIBUTE_NAME)).submit(runnable);
-		}
-	}
-	public static void setSizeOfThreadPool(ServletContext servletContext, Integer size) {
-		synchronized (threadPoolSizeLock) {
-			if (servletContext.getAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME, 1);
-			}
-			servletContext.setAttribute(THREAD_POOL_SIZE_ATTRIBUTE_NAME, size);
-		}
-	}
-
-	public static Integer getCompletedTaskCountCount(ServletContext servletContext) {
-
-		synchronized (completedTaskCountCountLock) {
-			if (servletContext.getAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME, 0);
-			}
-			return ((Integer)servletContext.getAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME));
-		}
-	}
-	public static void increaseCompletedTaskCount(ServletContext servletContext){
-		synchronized (completedTaskCountCountLock) {
-			if (servletContext.getAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME, 0);
-			}
-			Integer value = ((Integer) servletContext.getAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME));
-			value++;
-			servletContext.setAttribute(COMPLETED_TASK_COUNT_ATTRIBUTE_NAME, value);
-		}
-	}
-	public static Integer getTaskCount(ServletContext servletContext) {
-
-		synchronized (taskCountLock) {
-			if (servletContext.getAttribute(ALL_TASK_COUNT_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(ALL_TASK_COUNT_ATTRIBUTE_NAME, 0);
-			}
-			return ((Integer)servletContext.getAttribute(ALL_TASK_COUNT_ATTRIBUTE_NAME));
-		}
-	}
-	public static Integer getActiveThreadCountLock(ServletContext servletContext) {
-
-		synchronized (activeThreadCountLock) {
-			if (servletContext.getAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME, 0);
-			}
-			return ((Integer)servletContext.getAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME));
-		}
-	}
-	public static void increaseActiveCount(ServletContext servletContext){
-		synchronized (activeThreadCountLock) {
-			if (servletContext.getAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME) == null) {
-				servletContext.setAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME, 0);
-			}
-			Integer value = ((Integer) servletContext.getAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME));
-			value++;
-			servletContext.setAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME, value);
-		}
-	}
-	public static void decreaseActiveCount(ServletContext servletContext){
-
-		//if we got here, ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME already exist.
-		synchronized (activeThreadCountLock) {
-			Integer value = ((Integer) servletContext.getAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME));
-			value--;
-			servletContext.setAttribute(ACTIVE_THREAD_COUNT_ATTRIBUTE_NAME, value);
-		}
-	}
-
 }

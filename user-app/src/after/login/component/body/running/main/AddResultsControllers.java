@@ -38,7 +38,6 @@ public class AddResultsControllers implements Runnable {
                 if(!alreadyDone){
                     progressAndResultController.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi);
                     executionDone.add(dtoSimulationEndingForUi.getSimulationID());
-                    requestsFromServer.updateServerOnExecutionDoneForUpdateThreadPoolStatus();
                 }
             }
             try {
