@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class SetThreadPoolSizeServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //returning JSON objects, not HTML
         int threadsPoolSize = Integer.parseInt(request.getParameter("size"));
         ServletUtils.getThreadPoolManager(getServletContext()).setSizeOfThreadPool(threadsPoolSize);

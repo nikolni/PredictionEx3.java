@@ -1,6 +1,6 @@
-package admin.component.body.management.update.thread.status;
+package admin.component.body.management.thread.pool.update;
 
-import admin.component.body.management.update.thread.status.server.RequestsFromServer;
+import admin.component.body.management.server.RequestsFromServer;
 import admin.component.body.management.main.ManagementController;
 import dto.primary.DTOThreadsPoolStatusForUi;
 import javafx.application.Platform;

@@ -1,14 +1,18 @@
 package admin.component.body.management.main;
 
-import admin.component.body.management.update.thread.status.UpdateThreadsPoolDetails;
-import admin.component.body.management.update.thread.status.server.RequestsFromServer;
+import admin.component.body.management.thread.pool.size.ThreadsPoolSizeController;
+import admin.component.body.management.thread.pool.update.UpdateThreadsPoolDetails;
+import admin.component.body.management.server.RequestsFromServer;
 import admin.main.AdminController;
 import admin.util.constants.Constants;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -113,7 +117,22 @@ public class ManagementController {
 
     @FXML
     void onSetThreadsCount(MouseEvent event) {
+        Stage primaryStage = new Stage();
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/component/body/management/thread/pool/size/threadsPool.fxml"));
+            GridPane root = loader.load();
 
+            ThreadsPoolSizeController threadsPoolSizeController = loader.getController();
+            threadsPoolSizeController.setRequestsFromServer(requestsFromServer);
+
+
+            Scene scene = new Scene(root, 300, 200);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setCurrentlyExecutingLabel(String currentlyExecutingLabel) {

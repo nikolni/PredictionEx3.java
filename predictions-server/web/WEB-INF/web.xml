@@ -120,13 +120,4 @@
         <servlet-name>ExecutionEndingServlet</servlet-name>
         <url-pattern>/executions/ending</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>SetThreadPoolSizeServlet</servlet-name>
-        <servlet-class>servlet.SetThreadPoolSizeServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SetThreadPoolSizeServlet</servlet-name>
-        <url-pattern>/set/thread/pool/size</url-pattern>
-    </servlet-mapping>
-
 </web-app>
