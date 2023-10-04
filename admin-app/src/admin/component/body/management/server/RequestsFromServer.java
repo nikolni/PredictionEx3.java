@@ -1,6 +1,7 @@
 package admin.component.body.management.server;
 
 import admin.util.constants.Constants;
+import dto.definition.user.request.DTOUserRequestForUi;
 import dto.primary.DTOThreadsPoolStatusForUi;
 import javafx.application.Platform;
 import okhttp3.*;
@@ -8,14 +9,22 @@ import org.jetbrains.annotations.NotNull;
 import admin.util.http.HttpClientUtil;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static admin.util.constants.Constants.popUpWindow;
 import static admin.util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class RequestsFromServer {
 
-    public DTOThreadsPoolStatusForUi getThreadPoolStatusFromServer() {
-        final DTOThreadsPoolStatusForUi[] dtoThreadsPoolStatusForUis = {null};
+    private Consumer<DTOThreadsPoolStatusForUi> dtoThreadsPoolStatusConsumer;
+
+    public void setConsumer(Consumer<DTOThreadsPoolStatusForUi> dtoThreadsPoolStatusConsumer){
+        this.dtoThreadsPoolStatusConsumer = dtoThreadsPoolStatusConsumer;
+    }
+
+    public void getThreadPoolStatusFromServer() {
+
         String finalUrl = HttpUrl
                 .parse(Constants.THREAD_POOL_STATUS_PAGE)
                 .newBuilder()
@@ -38,7 +47,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            dtoThreadsPoolStatusForUis[0] = Constants.GSON_INSTANCE.fromJson(json, DTOThreadsPoolStatusForUi.class);
+                            DTOThreadsPoolStatusForUi dtoThreadsPoolStatusForUis = Constants.GSON_INSTANCE.fromJson(json, DTOThreadsPoolStatusForUi.class);
+                            dtoThreadsPoolStatusConsumer.accept(dtoThreadsPoolStatusForUis);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -46,7 +56,6 @@ public class RequestsFromServer {
                 }
             }
         });
-        return dtoThreadsPoolStatusForUis[0];
     }
 
     public void setThreadsPoolSizeToServer(Integer size){

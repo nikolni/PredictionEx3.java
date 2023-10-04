@@ -20,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import util.http.HttpClientUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,9 +40,9 @@ public class LoginController {
     @FXML
     public void initialize() {
         errorMessageLabel.textProperty().bind(errorMessageProperty);
-        HttpClientUtil.setCookieManagerLoggingFacility(line ->
+        /*HttpClientUtil.setCookieManagerLoggingFacility(line ->
                 Platform.runLater(() ->
-                        updateHttpStatusLine(line)));
+                        updateHttpStatusLine(line)));*/
     }
 
     @FXML

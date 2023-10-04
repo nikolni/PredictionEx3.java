@@ -14,10 +14,6 @@ public class AdminController {
     @FXML private TabPane tabPaneAdminBodyComponent;
     @FXML private TabPaneAdminBodyController tabPaneAdminBodyComponentController;
 
-
-
-
-
     @FXML
     public void initialize() {
         if (headerComponentController != null && tabPaneAdminBodyComponentController != null) {

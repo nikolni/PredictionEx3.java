@@ -16,10 +16,12 @@ public class ThreadPoolStatusServlet extends HttpServlet {
         //returning JSON objects, not HTML
         DTOThreadsPoolStatusForUi dtoThreadsPoolStatus = ServletUtils.getThreadPoolManager(getServletContext()).getThreadsPoolStatus();
 
+        Gson gson = new Gson();
+        String json = gson.toJson(dtoThreadsPoolStatus);
+
         response.setContentType("application/json");
         try (PrintWriter out = response.getWriter()) {
-            Gson gson = new Gson();
-            String json = gson.toJson(dtoThreadsPoolStatus);
+
             out.println(json);
             out.flush();
         }

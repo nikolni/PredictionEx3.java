@@ -2,6 +2,7 @@ package after.login.component.body.request.server;
 
 import com.google.gson.reflect.TypeToken;
 import dto.definition.user.request.DTOUserRequestForUi;
+import dto.primary.DTOThreadsPoolStatusForUi;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
@@ -12,12 +13,24 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static util.constants.Constants.LINE_SEPARATOR;
 import static util.constants.Constants.popUpWindow;
 import static util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class RequestsFromServer {
+
+    private Consumer<List<String>> simulationNamesConsumer;
+
+    public void setSimulationNamesConsumer(Consumer<List<String>> simulationNamesConsumer){
+        this.simulationNamesConsumer = simulationNamesConsumer;
+    }
+    private Consumer<List<DTOUserRequestForUi>> userRequestsConsumer;
+
+    public void setUserRequestsConsumer(Consumer<List<DTOUserRequestForUi>> userRequestsConsumer){
+        this.userRequestsConsumer = userRequestsConsumer;
+    }
     public void postRequestToServer(String simulationName, String numberOfExecutions, String terminationConditions,
                                     String userName){
         String body = "simulation_name="+simulationName + LINE_SEPARATOR +
@@ -48,8 +61,7 @@ public class RequestsFromServer {
             }
         });
     }
-    public List<String> getSimulationNamesFromServer() {
-        final List<String>[] simulationNames = new List[]{null};
+    public void getSimulationNamesFromServer() {
 
         String finalUrl = HttpUrl
                 .parse(Constants.SIMULATION_NAMES_LIST_PAGE)
@@ -73,7 +85,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            simulationNames[0] = Arrays.asList(Constants.GSON_INSTANCE.fromJson(json, String[].class));
+                            List<String> simulationNames = Arrays.asList(Constants.GSON_INSTANCE.fromJson(json, String[].class));
+                            simulationNamesConsumer.accept(simulationNames);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -81,11 +94,9 @@ public class RequestsFromServer {
                 }
             }
         });
-        return simulationNames[0];
     }
 
-    public List<DTOUserRequestForUi> getUserRequestListFromServer(String userName) {
-        final List<DTOUserRequestForUi>[] userRequestList = new List[]{null};
+    public void getUserRequestListFromServer(String userName) {
         String finalUrl = HttpUrl
                 .parse(Constants.USER_REQUEST_PAGE)
                 .newBuilder()
@@ -111,7 +122,8 @@ public class RequestsFromServer {
                             String json = response.body().string();
                             Type listType = new TypeToken<List<DTOUserRequestForUi>>() {
                             }.getType();
-                            userRequestList[0] = Constants.GSON_INSTANCE.fromJson(json, listType);
+                            List<DTOUserRequestForUi> userRequestsList = Constants.GSON_INSTANCE.fromJson(json, listType);
+                            userRequestsConsumer.accept(userRequestsList);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -119,6 +131,5 @@ public class RequestsFromServer {
                 }
             }
         });
-        return userRequestList[0];
     }
 }

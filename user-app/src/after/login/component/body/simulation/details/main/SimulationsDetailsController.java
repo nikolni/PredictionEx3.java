@@ -53,7 +53,8 @@ public class SimulationsDetailsController {
         detailsTreeView.getSelectionModel().selectedItemProperty().
                 addListener((observable, oldValue, newValue) -> handleSelectedItemChange(newValue));
 
-        UpdateSimulationsTreeView updateSimulationsTreeView = new UpdateSimulationsTreeView(this);
+        UpdateSimulationsTreeView updateSimulationsTreeView = new UpdateSimulationsTreeView(this,
+                requestsFromServer);
         new Thread(updateSimulationsTreeView).start();
     }
 

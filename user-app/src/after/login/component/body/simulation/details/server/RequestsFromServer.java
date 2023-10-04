@@ -1,6 +1,7 @@
 package after.login.component.body.simulation.details.server;
 
 import dto.include.DTOIncludeSimulationDetailsForUi;
+import dto.primary.DTOThreadsPoolStatusForUi;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
@@ -8,13 +9,25 @@ import util.constants.Constants;
 import util.http.HttpClientUtil;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static util.constants.Constants.popUpWindow;
 import static util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class RequestsFromServer {
-    public DTOIncludeSimulationDetailsForUi getSimulationDetailsFromServer(String simulationName) {
-        final DTOIncludeSimulationDetailsForUi[] simulationDetails = {null};
+    private Consumer<DTOIncludeSimulationDetailsForUi> dtoIncludeSimulationDetailsForUiConsumer;
+
+    public void setDTOIncludeSimulationDetailsForUi(Consumer<DTOIncludeSimulationDetailsForUi> dtoIncludeSimulationDetailsForUiConsumer){
+        this.dtoIncludeSimulationDetailsForUiConsumer = dtoIncludeSimulationDetailsForUiConsumer;
+    }
+    private Consumer<List<String>> newSimulationsNamesConsumer;
+
+    public void setNewSimulationsNamesConsumer(Consumer<List<String>> newSimulationsNamesConsumer){
+        this.newSimulationsNamesConsumer = newSimulationsNamesConsumer;
+    }
+    public void getSimulationDetailsFromServer(String simulationName) {
         String finalUrl = HttpUrl
                 .parse(Constants.SIMULATION_DETAILS_PAGE)
                 .newBuilder()
@@ -38,7 +51,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            simulationDetails[0] = Constants.GSON_INSTANCE.fromJson(json, DTOIncludeSimulationDetailsForUi.class);
+                            DTOIncludeSimulationDetailsForUi simulationDetails = Constants.GSON_INSTANCE.fromJson(json, DTOIncludeSimulationDetailsForUi.class);
+                            dtoIncludeSimulationDetailsForUiConsumer.accept(simulationDetails);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -46,11 +60,9 @@ public class RequestsFromServer {
                 }
             }
         });
-        return simulationDetails[0];
     }
 
-    public String[] getNewSimulationsNames(String[] simulationsArray){
-        final String[][] newSimulationsArray = new String[1][1];
+    public void getNewSimulationsNames(String[] simulationsArray){
         String json = Constants.GSON_INSTANCE.toJson(simulationsArray);
 
         Request request = new Request.Builder()
@@ -74,13 +86,13 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            newSimulationsArray[0] = Constants.GSON_INSTANCE.fromJson(json, String[].class);
+                            String[] newSimulationsArray = Constants.GSON_INSTANCE.fromJson(json, String[].class);
+                            newSimulationsNamesConsumer.accept(Arrays.asList(newSimulationsArray));
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }                }
             }
         });
-        return newSimulationsArray[0];
     }
 }

@@ -13,6 +13,7 @@ import after.login.main.UserController;
 import dto.definition.property.definition.PropertyDefinitionDTO;
 import dto.include.DTOIncludeForExecutionForUi;
 import dto.primary.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -60,6 +61,8 @@ public class ExecutionController {
     private final RequestsFromServer requestsFromServer = new RequestsFromServer();
     private String requestID;
     private UserController mainController;
+    private DTOIncludeForExecutionForUi dtoIncludeForExecutionForUi;
+    private DTORerunValuesForUi dtoRerunValuesForUi;
 
 
     public ExecutionController() {
@@ -82,13 +85,16 @@ public class ExecutionController {
         envVarNameToSelectedInitValue.clear();
         entityNameToSelectedPopulationValue.clear();
         VBox.setVgrow(vBoxComponent, Priority.ALWAYS);
-        DTOIncludeForExecutionForUi dtoIncludeForExecutionForUi = requestsFromServer.
-                getDataForExecutionFromServer(simulationName);
+        requestsFromServer.getDataForExecutionFromServer(simulationName);
+        requestsFromServer.setDtoIncludeForExecutionConsumer(this::useDTOIncludeForExecution);
         DTOEnvVarsDefForUi dtoEnvVarsDefForUi = dtoIncludeForExecutionForUi.getDtoEnvVarsDefForUi();
         createEnvVarsChildrenInFlowPane(envVarsList = dtoEnvVarsDefForUi.getEnvironmentVars());
         entitiesNames = dtoIncludeForExecutionForUi.getDtoNamesListForUi().getNames();
         dtoWorldGridForUi = dtoIncludeForExecutionForUi.getDtoWorldGridForUi();
         createEntitiesPopulationChildrenInFlowPane(entitiesNames);
+    }
+    private void useDTOIncludeForExecution(DTOIncludeForExecutionForUi dtoIncludeForExecutionConsumer){
+        Platform.runLater(()->dtoIncludeForExecutionForUi = dtoIncludeForExecutionConsumer);
     }
     public void disableController(){
         for(EnvironmentVariableController tile : envVarNameToTileController.values()){
@@ -307,8 +313,14 @@ public class ExecutionController {
         DTOPopulationValuesForSE dtoPopulationValuesForSE = new CreateDTOPopulationForSE().getData(entityNameToTileController);
         requestsFromServer.postRequestExecutionToServer(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, simulationName,
                 mainController.getUserName(), requestID);
-        progressAndResultController.addItemToSimulationListView(requestsFromServer.getExecutionIDFromServer());
+        requestsFromServer.getExecutionIDFromServer();
+        requestsFromServer.setExecutionIDConsumer(this::useExecutionID);
         clearScreen();
+    }
+    private void useExecutionID(Integer executionID){
+        Platform.runLater(() -> {
+            progressAndResultController.addItemToSimulationListView(executionID);
+        });
     }
 
     public void setProgressAndResultController(ProgressAndResultController progressAndResultController) {
@@ -316,7 +328,8 @@ public class ExecutionController {
     }
 
     public void setTilesByRerun(Integer executionID){
-        DTORerunValuesForUi dtoRerunValuesForUi= requestsFromServer.getRerunValuesFromServer(simulationName, executionID);
+        requestsFromServer.getRerunValuesFromServer(simulationName, executionID);
+        requestsFromServer.setDTORerunValuesConsumer(this::useDTORerun);
         Map<String, Object> environmentVarsValues =dtoRerunValuesForUi.getEnvironmentVarsValues();
         Map<String, Integer> entitiesPopulations = dtoRerunValuesForUi.getEntitiesPopulations();
 
@@ -335,6 +348,9 @@ public class ExecutionController {
             }
 
         }
+    }
+    private void useDTORerun(DTORerunValuesForUi dtoRerunValuesConsumer){
+        Platform.runLater(()-> dtoRerunValuesForUi = dtoRerunValuesConsumer);
     }
 }
 

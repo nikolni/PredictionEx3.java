@@ -10,14 +10,26 @@ import util.constants.Constants;
 import util.http.HttpClientUtil;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import static util.constants.Constants.popUpWindow;
 import static util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class RequestsFromServer {
+    private Consumer<Integer> executionIDConsumer;
+    public void setExecutionIDConsumer(Consumer<Integer> executionIDConsumer){
+        this.executionIDConsumer = executionIDConsumer;
+    }
+    private Consumer<DTOIncludeForExecutionForUi> dtoIncludeForExecutionConsumer;
+    public void setDtoIncludeForExecutionConsumer(Consumer<DTOIncludeForExecutionForUi> dtoIncludeForExecutionConsumer){
+        this.dtoIncludeForExecutionConsumer = dtoIncludeForExecutionConsumer;
+    }
+    private Consumer<DTORerunValuesForUi> dtoRerunValuesForUiConsumer;
+    public void setDTORerunValuesConsumer(Consumer<DTORerunValuesForUi> dtoRerunValuesForUiConsumer){
+        this.dtoRerunValuesForUiConsumer = dtoRerunValuesForUiConsumer;
+    }
 
-    public Integer getExecutionIDFromServer() {
-        final Integer[] executionID = new Integer[1];
+    public void getExecutionIDFromServer() {
         String finalUrl = HttpUrl
                 .parse(Constants.RERUN_PAGE)
                 .newBuilder()
@@ -40,7 +52,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            executionID[0] = Constants.GSON_INSTANCE.fromJson(json, Integer.class);
+                            Integer executionID = Constants.GSON_INSTANCE.fromJson(json, Integer.class);
+                            executionIDConsumer.accept(executionID);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -48,10 +61,8 @@ public class RequestsFromServer {
                 }
             }
         });
-        return executionID[0];
     }
-    public DTOIncludeForExecutionForUi getDataForExecutionFromServer(String simulationName) {
-        final DTOIncludeForExecutionForUi[] dtoIncludeForExecutionForUi = {null};
+    public void getDataForExecutionFromServer(String simulationName) {
         String finalUrl = HttpUrl
                 .parse(Constants.DATA_EXECUTION_PAGE)
                 .newBuilder()
@@ -75,7 +86,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            dtoIncludeForExecutionForUi[0] = Constants.GSON_INSTANCE.fromJson(json, DTOIncludeForExecutionForUi.class);
+                            DTOIncludeForExecutionForUi dtoIncludeForExecutionForUi = Constants.GSON_INSTANCE.fromJson(json, DTOIncludeForExecutionForUi.class);
+                            dtoIncludeForExecutionConsumer.accept(dtoIncludeForExecutionForUi);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -83,7 +95,6 @@ public class RequestsFromServer {
                 }
             }
         });
-        return dtoIncludeForExecutionForUi[0];
     }
 
     public void postRequestExecutionToServer(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE ,
@@ -120,8 +131,7 @@ public class RequestsFromServer {
         });
     }
 
-    public DTORerunValuesForUi getRerunValuesFromServer(String simulationName, Integer executionID) {
-        final DTORerunValuesForUi[] dtoRerunValuesForUi = {null};
+    public void getRerunValuesFromServer(String simulationName, Integer executionID) {
         String finalUrl = HttpUrl
                 .parse(Constants.RERUN_PAGE)
                 .newBuilder()
@@ -146,7 +156,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            dtoRerunValuesForUi[0] = Constants.GSON_INSTANCE.fromJson(json, DTORerunValuesForUi.class);
+                            DTORerunValuesForUi dtoRerunValuesForUi = Constants.GSON_INSTANCE.fromJson(json, DTORerunValuesForUi.class);
+                            dtoRerunValuesForUiConsumer.accept(dtoRerunValuesForUi);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -154,6 +165,5 @@ public class RequestsFromServer {
                 }
             }
         });
-        return dtoRerunValuesForUi[0];
     }
 }
