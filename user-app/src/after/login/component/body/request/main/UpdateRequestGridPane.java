@@ -24,8 +24,8 @@ public class UpdateRequestGridPane implements Runnable{
     @Override
     public void run() {
         while(Thread.currentThread().isAlive()) {
-            List<DTOUserRequestForUi> userRequestList = requestsFromServer.getUserRequestListFromServer(userName);
-            updateRequestGridPane(userRequestList);
+            requestsFromServer.getUserRequestListFromServer(userName);
+            requestsFromServer.setUserRequestsConsumer(this::updateRequestGridPane);
             }
             try {
                 sleep(300);

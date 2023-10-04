@@ -197,7 +197,8 @@ public class RequestController {
     }
 
     private boolean isSimulationNameExist() {
-        simulationNames = requestsFromServer.getSimulationNamesFromServer();
+        requestsFromServer.getSimulationNamesFromServer();
+        requestsFromServer.setSimulationNamesConsumer(this::useSimulationsNames);
         if(simulationNames != null) {
             for (String name : simulationNames) {
                 if (name.equals(simulationNameTextField.getText())) {
@@ -206,6 +207,9 @@ public class RequestController {
             }
         }
         return false;
+    }
+    private void useSimulationsNames(List<String> simulationNamesConsumer){
+        simulationNames = simulationNamesConsumer;
     }
     private boolean isTerminationConditionsValid(){
         String[] sentences = terminationConditionsTextField.getText().split(",");

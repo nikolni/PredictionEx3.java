@@ -10,9 +10,8 @@
           <element id="module-output" name="DTO" />
         </element>
         <element id="directory" name="lib">
-          <element id="file-copy" path="$USER_HOME$/gson-2.8.8.jar" />
-          <element id="library" level="project" name="gson-2" />
           <element id="library" level="project" name="ok-http" />
+          <element id="library" level="project" name="gson-2.1" />
         </element>
       </element>
     </root>

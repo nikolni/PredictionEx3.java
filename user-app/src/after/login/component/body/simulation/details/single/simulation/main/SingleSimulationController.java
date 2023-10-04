@@ -53,6 +53,8 @@ public class SingleSimulationController {
     private final FlowPane detailsFlowPane;
     private final ScrollPane detailsScrollPane;
     private final RequestsFromServer requestsFromServer;
+    private DTOIncludeSimulationDetailsForUi simulationDetails;
+
     public SingleSimulationController(SimulationsDetailsController simulationsDetailsController, RequestsFromServer requestsFromServer){
         detailsTreeView = simulationsDetailsController.getDetailsTreeView();
         valueDefLabel= simulationsDetailsController.getValueDefLabel();  //for population
@@ -70,7 +72,8 @@ public class SingleSimulationController {
         valueDefText.setVisible(false);
         detailsFlowPane.getChildren().clear();
 
-        DTOIncludeSimulationDetailsForUi simulationDetails = requestsFromServer.getSimulationDetailsFromServer(simulationName);
+        requestsFromServer.getSimulationDetailsFromServer(simulationName);
+        requestsFromServer.setDTOIncludeSimulationDetailsForUi(this::useSimulationDetailsConsumer);
 
         TreeItem<String> rootItem = new TreeItem<>(simulationName);
         TreeItem<String> entitiesBranch = createEntitiesSubTree(simulationDetails);
@@ -84,12 +87,13 @@ public class SingleSimulationController {
 
 
     }
+    private void useSimulationDetailsConsumer(DTOIncludeSimulationDetailsForUi simulationDetailsConsumer){
+        simulationDetails = simulationDetailsConsumer;
+    }
 
     public void handleSelectedItemChange(TreeItem<String> selectedItem, String simulationName) {
         detailsTreeView.setVisible(true);
         detailsScrollPane.setVisible(true);
-
-        DTOIncludeSimulationDetailsForUi simulationDetails = requestsFromServer.getSimulationDetailsFromServer(simulationName);
 
         // Check if the selected item is a leaf (entity)
         if (selectedItem != null && selectedItem.isLeaf()) {
