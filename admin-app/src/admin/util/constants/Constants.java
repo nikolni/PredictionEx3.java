@@ -29,6 +29,7 @@ public class Constants {
     public final static String DATA_EXECUTION_PAGE = FULL_SERVER_PATH + "/dataexecution";
     public final static String EXECUTION_PAGE = FULL_SERVER_PATH + "/execution";
     public final static String ALL_REQUESTS_PAGE = FULL_SERVER_PATH + "/adminallrequests";
+    public final static String SIMULATION_DETAILS_PAGE = FULL_SERVER_PATH + "/simulation/details";
     public final static String THREAD_POOL_STATUS_PAGE = FULL_SERVER_PATH + "/thread/pool";
 
     public final static OkHttpClient HTTP_CLIENT = new OkHttpClient();
