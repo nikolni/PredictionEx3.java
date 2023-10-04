@@ -70,7 +70,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     @Override
     public void fromFileToSE(PRDWorld prdWorld){
         WorldFromXml worldFromXml = new WorldFromXml();
-        worldDefinition = worldFromXml.createWorldDefinition(prdWorld);
+        worldDefinition = worldFromXml.createWorldDefinitionFromPRDWorld(prdWorld);
         runSimulationManager = new RunSimulationManager(simulationIdToWorldInstance);
         isHaveValidFileInSystem=true;
         simulationIdToWorldInstance.clear();
