@@ -57,6 +57,7 @@ public class TabPaneAdminBodyController {
 
     public void switchToTab2() {
         tabPaneBodyComponent.getSelectionModel().select(1);
+        allocationsComponentController.startListRefresher();
     }
 
     public void switchToTab3() {

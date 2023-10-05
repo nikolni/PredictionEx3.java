@@ -3,6 +3,7 @@ package servlet;
 import com.google.gson.Gson;
 import dto.definition.user.request.DTOUserRequestForUi;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +15,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
+@WebServlet(name="getAllRequestsServlet",urlPatterns = {"/adminallrequests"})
 public class getAllRequestsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

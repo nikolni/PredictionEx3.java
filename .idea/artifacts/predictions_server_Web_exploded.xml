@@ -10,8 +10,8 @@
           <element id="module-output" name="DTO" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="ok-http" />
           <element id="library" level="project" name="gson-2.1" />
+          <element id="artifact" artifact-name="systemengine" />
         </element>
       </element>
     </root>
