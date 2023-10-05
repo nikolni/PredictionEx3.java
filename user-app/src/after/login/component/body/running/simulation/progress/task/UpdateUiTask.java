@@ -33,14 +33,18 @@ public class UpdateUiTask extends Task<Boolean> {
                         RequestsFromServer requestsFromServer, String userName) {
         this.currentSimulationController = currentSimulationController;
         this.executionID = executionID;
-        this.requestsFromServer = requestsFromServer;
         this.userName = userName;
+
+        this.requestsFromServer = requestsFromServer;
+        requestsFromServer.setTotalSecAndTickConsumer(this::useDTOSecTicksForUi);
+        requestsFromServer.setExecutionProgressConsumer(this::useExecutionProgress);
+        requestsFromServer.setTerminationConditionsListConsumer(this::useTerminationConditions);
 
         this.secondsPast = new SimpleIntegerProperty(0);
         this.ticksPast = new SimpleIntegerProperty(0);
         this.entitiesLeft = new SimpleIntegerProperty(0);
         requestsFromServer.getTotalSecAndTickFromServer(userName, executionID);
-        requestsFromServer.setTotalSecAndTickConsumer(this::useDTOSecTicksForUi);
+
         this.totalTicksNumber = dtoSecTicksForUis.getTicks();
         this.totalSecondsNumber = dtoSecTicksForUis.getSeconds();
     }
@@ -51,10 +55,10 @@ public class UpdateUiTask extends Task<Boolean> {
     protected Boolean call()  {
         while(Thread.currentThread().isAlive()){
             requestsFromServer.getExecutionProgressFromServer( userName, executionID);
-            requestsFromServer.setExecutionProgressConsumer(this::useExecutionProgress);
+
 
             requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
-            requestsFromServer.setTerminationConditionsListConsumer(this::useTerminationConditions);
+
 
             updateSimulationProgress(dtoSimulationProgressForUi, terminationConditionsDTOList);
             try {

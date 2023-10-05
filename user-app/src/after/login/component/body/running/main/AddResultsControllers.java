@@ -16,10 +16,12 @@ public class AddResultsControllers implements Runnable {
     private List<DTOSimulationEndingForUi> executionDoneFromServer;
 
     public AddResultsControllers(RequestsFromServer requestsFromServer, String userName, ProgressAndResultController progressAndResultController) {
-        this.requestsFromServer = requestsFromServer;
         this.userName = userName;
         this.progressAndResultController = progressAndResultController;
         executionDone = new ArrayList<>();
+
+        this.requestsFromServer = requestsFromServer;
+        requestsFromServer.setSimulationEndingListConsumer(this::useExecutionDoneFromServer);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class AddResultsControllers implements Runnable {
         while (Thread.currentThread().isAlive()) {
 
             requestsFromServer.getSimulationEndingListFromServer(userName);
-            requestsFromServer.setSimulationEndingListConsumer(this::useExecutionDoneFromServer);
+
 
             for (DTOSimulationEndingForUi dtoSimulationEndingForUi : executionDoneFromServer) {
                 boolean alreadyDone = false;
