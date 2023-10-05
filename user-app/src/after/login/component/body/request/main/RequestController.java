@@ -42,8 +42,12 @@ public class RequestController {
     private final RequestsFromServer requestsFromServer = new RequestsFromServer();
 
 
-    @FXML
+    /*@FXML
     public void initialize() {
+        UpdateRequestGridPane updateRequestGridPane = new UpdateRequestGridPane(requestGridPane, requestsFromServer, mainController.getUserName());
+        new Thread(updateRequestGridPane).start();
+    }*/
+    public void primaryInitialize() {
         UpdateRequestGridPane updateRequestGridPane = new UpdateRequestGridPane(requestGridPane, requestsFromServer, mainController.getUserName());
         new Thread(updateRequestGridPane).start();
     }

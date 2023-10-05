@@ -2,9 +2,6 @@ package after.login.component.body.running.server;
 
 import com.google.gson.reflect.TypeToken;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
-import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
-import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
-import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
 import dto.include.DTOIncludeForResultsAdditionalForUi;
 import dto.include.DTOIncludeForResultsPrimaryForUi;
 import dto.primary.DTOSecTicksForUi;
@@ -20,15 +17,18 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static util.constants.Constants.LINE_SEPARATOR;
 import static util.constants.Constants.popUpWindow;
 import static util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class RequestsFromServer {
-    public Map<Integer, String> getSimulationsStatusesFromServer(String userName, List<Integer> executionsIdList) {
-        final Map<Integer, String>[] simulationIdToStatuses = new Map[]{null};
-
+    private Consumer<Map<Integer, String>> simulationsStatusesConsumer;
+    public void setSimulationsStatusesConsumer(Consumer<Map<Integer, String>> simulationsStatusesConsumer){
+        this.simulationsStatusesConsumer = simulationsStatusesConsumer;
+    }
+    public void getSimulationsStatusesFromServer(String userName, List<Integer> executionsIdList) {
         Integer[] list = executionsIdList.toArray(new Integer[0]);
         String json = Constants.GSON_INSTANCE.toJson(list);
 
@@ -57,7 +57,8 @@ public class RequestsFromServer {
                             String json = response.body().string();
                             Type mapType = new TypeToken<Map<Integer, String>>() {
                             }.getType();
-                            simulationIdToStatuses[0] = Constants.GSON_INSTANCE.fromJson(json, mapType);
+                            Map<Integer, String> simulationIdToStatuses = Constants.GSON_INSTANCE.fromJson(json, mapType);
+                            simulationsStatusesConsumer.accept(simulationIdToStatuses);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -65,11 +66,13 @@ public class RequestsFromServer {
                 }
             }
         });
-        return simulationIdToStatuses[0];
     }
-
-    public DTOSimulationProgressForUi getExecutionProgressFromServer(String userName, Integer executionID) {
-        final DTOSimulationProgressForUi[] dtoSimulationProgressForUi = {null};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Consumer<DTOSimulationProgressForUi> executionProgressConsumer;
+    public void setExecutionProgressConsumer(Consumer<DTOSimulationProgressForUi> executionProgressConsumer){
+        this.executionProgressConsumer = executionProgressConsumer;
+    }
+    public void getExecutionProgressFromServer(String userName, Integer executionID) {
         String finalUrl = HttpUrl
                 .parse(Constants.UPDATE_EXECUTION_PROGRESS_PAGE)
                 .newBuilder()
@@ -94,7 +97,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            dtoSimulationProgressForUi[0] = Constants.GSON_INSTANCE.fromJson(json, DTOSimulationProgressForUi.class);
+                            DTOSimulationProgressForUi dtoSimulationProgressForUi = Constants.GSON_INSTANCE.fromJson(json, DTOSimulationProgressForUi.class);
+                            executionProgressConsumer.accept(dtoSimulationProgressForUi);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -102,8 +106,8 @@ public class RequestsFromServer {
                 }
             }
         });
-        return dtoSimulationProgressForUi[0];
     }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void postControlRequestToServer(String userName, Integer executionID, String action){
         String body = "user_name="+userName + LINE_SEPARATOR +
@@ -133,8 +137,12 @@ public class RequestsFromServer {
             }
         });
     }
-    public DTOSecTicksForUi getTotalSecAndTickFromServer(String userName, Integer executionID) {
-        final DTOSecTicksForUi[] dtoSecTicksForUis = {null};
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Consumer<DTOSecTicksForUi> totalSecAndTickConsumer;
+    public void setTotalSecAndTickConsumer(Consumer<DTOSecTicksForUi> totalSecAndTickConsumer){
+        this.totalSecAndTickConsumer = totalSecAndTickConsumer;
+    }
+    public void getTotalSecAndTickFromServer(String userName, Integer executionID) {
         String finalUrl = HttpUrl
                 .parse(Constants.SEC_TICK_PAGE)
                 .newBuilder()
@@ -159,7 +167,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            dtoSecTicksForUis[0] = Constants.GSON_INSTANCE.fromJson(json, DTOSecTicksForUi.class);
+                            DTOSecTicksForUi dtoSecTicksForUis = Constants.GSON_INSTANCE.fromJson(json, DTOSecTicksForUi.class);
+                            totalSecAndTickConsumer.accept(dtoSecTicksForUis);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -167,11 +176,13 @@ public class RequestsFromServer {
                 }
             }
         });
-        return dtoSecTicksForUis[0];
     }
-
-    public DTOIncludeForResultsPrimaryForUi getPrimaryResults (String userName, Integer executionID) {
-        final DTOIncludeForResultsPrimaryForUi[] dtoIncludeForResultsPrimaryForUis = {null};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Consumer<DTOIncludeForResultsPrimaryForUi> resultsPrimaryConsumer;
+    public void setResultsPrimaryForUiConsumer(Consumer<DTOIncludeForResultsPrimaryForUi> resultsPrimaryConsumer){
+        this.resultsPrimaryConsumer = resultsPrimaryConsumer;
+    }
+    public void getPrimaryResults (String userName, Integer executionID) {
         String finalUrl = HttpUrl
                 .parse(Constants.RESULTS_PAGE)
                 .newBuilder()
@@ -196,7 +207,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            dtoIncludeForResultsPrimaryForUis[0] = Constants.GSON_INSTANCE.fromJson(json, DTOIncludeForResultsPrimaryForUi.class);
+                            DTOIncludeForResultsPrimaryForUi dtoIncludeForResultsPrimaryForUis = Constants.GSON_INSTANCE.fromJson(json, DTOIncludeForResultsPrimaryForUi.class);
+                            resultsPrimaryConsumer.accept(dtoIncludeForResultsPrimaryForUis);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -204,12 +216,13 @@ public class RequestsFromServer {
                 }
             }
         });
-        return dtoIncludeForResultsPrimaryForUis[0];
     }
-
-    public DTOIncludeForResultsAdditionalForUi getAdditionalResults(String userName, Integer executionID, String entityName, String propertyName){
-        final DTOIncludeForResultsAdditionalForUi[] dtoIncludeForResultsAdditionalForUi = {null};
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Consumer<DTOIncludeForResultsAdditionalForUi> additionalResultsConsumer;
+    public void setAdditionalResultsConsumer(Consumer<DTOIncludeForResultsAdditionalForUi> additionalResultsConsumer){
+        this.additionalResultsConsumer = additionalResultsConsumer;
+    }
+    public void getAdditionalResults(String userName, Integer executionID, String entityName, String propertyName){
         String body = "user_name="+userName + LINE_SEPARATOR +
                 "executionID="+executionID + LINE_SEPARATOR +
                 "entity_name="+entityName + LINE_SEPARATOR +
@@ -237,17 +250,21 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            dtoIncludeForResultsAdditionalForUi[0] = Constants.GSON_INSTANCE.fromJson(json, DTOIncludeForResultsAdditionalForUi.class);
+                            DTOIncludeForResultsAdditionalForUi dtoIncludeForResultsAdditionalForUi = Constants.GSON_INSTANCE.fromJson(json, DTOIncludeForResultsAdditionalForUi.class);
+                            additionalResultsConsumer.accept(dtoIncludeForResultsAdditionalForUi);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }                }
             }
         });
-        return dtoIncludeForResultsAdditionalForUi[0];
     }
-    public List<DTOSimulationEndingForUi> getSimulationEndingListFromServer(String userName) {
-        final List<DTOSimulationEndingForUi>[] simulationEndingList = new List[]{null};
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Consumer<List<DTOSimulationEndingForUi>> simulationEndingListConsumer;
+    public void setSimulationEndingListConsumer(Consumer<List<DTOSimulationEndingForUi>> simulationEndingListConsumer){
+        this.simulationEndingListConsumer = simulationEndingListConsumer;
+    }
+    public void getSimulationEndingListFromServer(String userName) {
 
         String finalUrl = HttpUrl
                 .parse(Constants.EXECUTIONS_ENDING_PAGE)
@@ -273,7 +290,8 @@ public class RequestsFromServer {
                         if (responseBody != null) {
                             String json = response.body().string();
                             Type listType = new TypeToken<List<DTOSimulationEndingForUi>>() {}.getType();
-                            simulationEndingList[0] = Constants.GSON_INSTANCE.fromJson(response.body().string(), listType);
+                            List<DTOSimulationEndingForUi> simulationEndingList = Constants.GSON_INSTANCE.fromJson(response.body().string(), listType);
+                            simulationEndingListConsumer.accept(simulationEndingList);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -281,10 +299,13 @@ public class RequestsFromServer {
                 }
             }
         });
-        return simulationEndingList[0];
     }
-    public List<TerminationConditionsDTO> getTerminationConditionsFromServer(String userName, Integer executionID) {
-        final List<TerminationConditionsDTO>[] terminationConditionsDTOList = new List[]{null};
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Consumer<List<TerminationConditionsDTO>> terminationConditionsListConsumer;
+    public void setTerminationConditionsListConsumer(Consumer<List<TerminationConditionsDTO>> terminationConditionsListConsumer){
+        this.terminationConditionsListConsumer = terminationConditionsListConsumer;
+    }
+    public void getTerminationConditionsFromServer(String userName, Integer executionID) {
         String finalUrl = HttpUrl
                 .parse(Constants.TERMINATION_CONDITIONS_PAGE)
                 .newBuilder()
@@ -310,7 +331,8 @@ public class RequestsFromServer {
                         if (responseBody != null) {
                             String json = response.body().string();
                             Type listType = new TypeToken<List<TerminationConditionsDTO>>() {}.getType();
-                            terminationConditionsDTOList[0] = Constants.GSON_INSTANCE.fromJson(response.body().string(), listType);
+                            List<TerminationConditionsDTO> terminationConditionsDTOList = Constants.GSON_INSTANCE.fromJson(response.body().string(), listType);
+                            terminationConditionsListConsumer.accept(terminationConditionsDTOList);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -318,6 +340,5 @@ public class RequestsFromServer {
                 }
             }
         });
-        return terminationConditionsDTOList[0];
     }
 }
