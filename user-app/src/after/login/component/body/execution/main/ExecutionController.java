@@ -74,6 +74,10 @@ public class ExecutionController {
         entityNameToSelectedPopulationValue = new HashMap<>();
         simulationEntitiesPopulationFlowPane.getChildren().clear();
         simulationEnvironmentInputsFlowPane.getChildren().clear();
+
+        requestsFromServer.setDtoIncludeForExecutionConsumer(this::useDTOIncludeForExecution);
+        requestsFromServer.setExecutionIDConsumer(this::useExecutionID);
+        requestsFromServer.setDTORerunValuesConsumer(this::useDTORerun);
     }
 
 
@@ -86,7 +90,7 @@ public class ExecutionController {
         entityNameToSelectedPopulationValue.clear();
         VBox.setVgrow(vBoxComponent, Priority.ALWAYS);
         requestsFromServer.getDataForExecutionFromServer(simulationName);
-        requestsFromServer.setDtoIncludeForExecutionConsumer(this::useDTOIncludeForExecution);
+
         DTOEnvVarsDefForUi dtoEnvVarsDefForUi = dtoIncludeForExecutionForUi.getDtoEnvVarsDefForUi();
         createEnvVarsChildrenInFlowPane(envVarsList = dtoEnvVarsDefForUi.getEnvironmentVars());
         entitiesNames = dtoIncludeForExecutionForUi.getDtoNamesListForUi().getNames();
@@ -314,7 +318,7 @@ public class ExecutionController {
         requestsFromServer.postRequestExecutionToServer(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, simulationName,
                 mainController.getUserName(), requestID);
         requestsFromServer.getExecutionIDFromServer();
-        requestsFromServer.setExecutionIDConsumer(this::useExecutionID);
+
         clearScreen();
     }
     private void useExecutionID(Integer executionID){
@@ -329,7 +333,7 @@ public class ExecutionController {
 
     public void setTilesByRerun(Integer executionID){
         requestsFromServer.getRerunValuesFromServer(simulationName, executionID);
-        requestsFromServer.setDTORerunValuesConsumer(this::useDTORerun);
+
         Map<String, Object> environmentVarsValues =dtoRerunValuesForUi.getEnvironmentVarsValues();
         Map<String, Integer> entitiesPopulations = dtoRerunValuesForUi.getEntitiesPopulations();
 

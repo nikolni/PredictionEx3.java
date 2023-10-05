@@ -53,7 +53,10 @@ public class ResultsController {
                            RequestsFromServer requestsFromServer) {
         this.progressAndResultController = progressAndResultController;
         this.userName = userName;
+
         this.requestsFromServer = requestsFromServer;
+        requestsFromServer.setResultsPrimaryForUiConsumer(this::useResultsPrimary);
+        requestsFromServer.setAdditionalResultsConsumer(this::useAdditionalResults);
     }
 
     public TreeView<String> getEntityPropTreeView() {
@@ -99,7 +102,6 @@ public class ResultsController {
 
     public void handleSimulationSelection(int simulationID) {
         requestsFromServer.getPrimaryResults(userName, simulationID);
-        requestsFromServer.setResultsPrimaryForUiConsumer(this::useResultsPrimary);
 
         entityTimeGraphPane.setContent(createEntitiesByTickGraph(primaryResults.getEntitiesAfterSimulationByQuantity()));
         entityTimeGraphPane.setVisible(true);
@@ -167,7 +169,7 @@ public class ResultsController {
         viewComboBox.setPromptText("select option");
 
         requestsFromServer.getAdditionalResults(userName, simulationID, selectedItem.getParent().getValue(), selectedItem.getValue());
-        requestsFromServer.setAdditionalResultsConsumer(this::useAdditionalResults);
+
 
         if(additionalResults.getDtoSimulationProgress().getEntitiesLeft().get(selectedItem.getParent().getValue())>0){
             if(primaryResults.getDtoDefinitions().getPropertyDefinitionByName(selectedItem.getParent().getValue(),

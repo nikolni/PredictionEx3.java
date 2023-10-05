@@ -83,6 +83,9 @@ public class ProgressAndResultController {
 
         AddResultsControllers addResultsControllers = new AddResultsControllers(requestsFromServer, mainController.getUserName(), this);
         new Thread(addResultsControllers).start();
+
+        requestsFromServer.setTotalSecAndTickConsumer(this::useDTOSecTicksForUi);
+        requestsFromServer.setSimulationsStatusesConsumer(this::useSimulationIdToStatuses);
     }
     private void clearSimulationProgressScreen(){
         if(oldUpdateUiThreadThread !=null && oldUpdateUiThreadThread.isAlive()){
@@ -121,7 +124,7 @@ public class ProgressAndResultController {
         simulationProgressComponentController.setExecutionID(simulationID);
 
         requestsFromServer.getTotalSecAndTickFromServer(mainController.getUserName(), simulationID);
-        requestsFromServer.setTotalSecAndTickConsumer(this::useDTOSecTicksForUi);
+
         simulationProgressComponentController.setTotalSeconds(dtoSecTicksForUis.getSeconds());
 
         simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
@@ -134,7 +137,7 @@ public class ProgressAndResultController {
         boolean flag = false;
         List<Integer> executionsIdList = buildListFromExistingSimulations();
         requestsFromServer.getSimulationsStatusesFromServer( mainController.getUserName(), executionsIdList);
-        requestsFromServer.setSimulationsStatusesConsumer(this::useSimulationIdToStatuses);
+
 
         for (Integer id : simulationIdToStatuses.keySet()) {
             if(id.equals(simulationID) && simulationIdToStatuses.get(id).equals("terminated because of an error!")){

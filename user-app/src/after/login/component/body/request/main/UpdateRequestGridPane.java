@@ -17,15 +17,17 @@ public class UpdateRequestGridPane implements Runnable{
 
     public UpdateRequestGridPane(GridPane requestGridPane, RequestsFromServer requestsFromServer, String userName) {
         this.requestGridPane = requestGridPane;
-        this.requestsFromServer = requestsFromServer;
         this.userName = userName;
+
+        this.requestsFromServer = requestsFromServer;
+        requestsFromServer.setUserRequestsConsumer(this::updateRequestGridPane);
     }
 
     @Override
     public void run() {
         while(Thread.currentThread().isAlive()) {
             requestsFromServer.getUserRequestListFromServer(userName);
-            requestsFromServer.setUserRequestsConsumer(this::updateRequestGridPane);
+
             }
             try {
                 sleep(300);

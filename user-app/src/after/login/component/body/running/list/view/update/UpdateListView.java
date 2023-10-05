@@ -21,8 +21,10 @@ public class UpdateListView implements Runnable{
     public UpdateListView(ListView<String> simulationsList, RequestsFromServer requestsFromServer,
                           String userName) {
         this.simulationsList = simulationsList;
-        this.requestsFromServer = requestsFromServer;
         this.userName = userName;
+
+        this.requestsFromServer = requestsFromServer;
+        requestsFromServer.setSimulationsStatusesConsumer(this::useSimulationIdToStatuses);
     }
 
     @Override
@@ -30,7 +32,7 @@ public class UpdateListView implements Runnable{
         while(Thread.currentThread().isAlive()) {
             List<Integer> executionsIdList = buildListFromExistingSimulations();
             requestsFromServer.getSimulationsStatusesFromServer(userName, executionsIdList);
-            requestsFromServer.setSimulationsStatusesConsumer(this::useSimulationIdToStatuses);
+
 
             for (Integer id : simulationIdToStatuses.keySet()) {
                 String status = simulationIdToStatuses.get(id);
