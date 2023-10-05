@@ -1,5 +1,6 @@
 package admin.component.body.management.main;
 
+import admin.component.body.management.simulation.details.main.SimulationsDetailsController;
 import admin.component.body.management.thread.pool.size.ThreadsPoolSizeController;
 import admin.component.body.management.thread.pool.update.UpdateThreadsPoolDetails;
 import admin.component.body.management.server.RequestsFromServer;
@@ -13,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -35,7 +37,7 @@ public class ManagementController {
     private Button setThreadsCountButton;
 
     @FXML
-    private TreeView<String> simulationsDetailsTree;
+    private ScrollPane simulationsDetailsScrollPane;
 
     @FXML
     private Label valueWaitingLabel;
@@ -46,8 +48,10 @@ public class ManagementController {
     @FXML
     private Label valueOverLabel;
     private AdminController mainController;
-    private final RequestsFromServer requestsFromServer = new RequestsFromServer();
 
+    private final RequestsFromServer requestsFromServer = new RequestsFromServer();
+    @FXML private HBox simulationDetailsComponent;
+    @FXML private SimulationsDetailsController simulationDetailsComponentController;
 
 
 
@@ -55,15 +59,13 @@ public class ManagementController {
         this.mainController = mainController;
     }
 
-    public ManagementController() {
+    public ManagementController() throws IOException {
         selectedFileProperty = new SimpleStringProperty();
     }
 
     @FXML
     private void initialize() {
         filePathLabel.textProperty().bind(selectedFileProperty);
-        TreeItem<String> rootItem = new TreeItem<>("Simulations");
-        simulationsDetailsTree.setRoot(rootItem);
 
         UpdateThreadsPoolDetails updateThreadsPoolDetails = new UpdateThreadsPoolDetails(requestsFromServer, this);
         new Thread(updateThreadsPoolDetails).start();
@@ -101,6 +103,17 @@ public class ManagementController {
                 String responseBody = response.body().string();
                 Platform.runLater(() -> Constants.popUpWindow(responseBody, "Error!"));
             }
+            else{ //successful file upload
+                try (ResponseBody responseBody = response.body()) {
+                    if (responseBody != null) {
+                        String json = response.body().string();
+                        String simulationName = Constants.GSON_INSTANCE.fromJson(json, String.class);
+                        simulationDetailsComponentController.addSimulationItemToTreeView(simulationName);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         } catch(RuntimeException | FileNotFoundException e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
@@ -112,7 +125,6 @@ public class ManagementController {
         if(!exceptionOccurred){
             selectedFileProperty.set(absolutePath);
         }
-
     }
 
     @FXML

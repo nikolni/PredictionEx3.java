@@ -2,8 +2,10 @@ package servlet;
 
 
 
+import com.google.gson.Gson;
 import engine.per.file.engine.api.SystemEngineAccess;
 import engine.per.file.engine.impl.SystemEngineAccessImpl;
+import engine.per.file.jaxb2.error.handling.validator.PRDWorldValidator;
 import engine.per.file.jaxb2.generated.PRDWorld;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -28,7 +30,6 @@ public class FileUploadServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
 
         Collection<Part> parts = request.getParts();
 
@@ -39,11 +40,20 @@ public class FileUploadServlet extends HttpServlet {
                     prdWorld =deserializeFrom(part.getInputStream());
                     String simulationName=prdWorld.getName();
                     if(ServletUtils.getSEInstanceBySimulationName(getServletContext(),simulationName)==null){ //the simulation not exist
+                        PRDWorldValidator prdWorldValidator=new PRDWorldValidator();
+                        prdWorldValidator.validatePRDWorld(prdWorld);
+                        //the file is valid
                         ServletUtils.addSEInstanceBySimulationName(getServletContext(),simulationName,new SystemEngineAccessImpl());
                         SystemEngineAccess systemEngineAccess = ServletUtils.getSEInstanceBySimulationName(
                                 getServletContext(), simulationName);
                         ServletUtils.addSimulationNamesToList(getServletContext(),simulationName);
                         systemEngineAccess.fromFileToSE(prdWorld);
+                        try (PrintWriter out = response.getWriter()) {
+                            Gson gson = new Gson();
+                            String json = gson.toJson(simulationName);
+                            out.println(json);
+                            out.flush();
+                        }
                     }
                     else
                         throw new RuntimeException("the simulation "+simulationName+" already exist in the system");

@@ -41,7 +41,7 @@ public class WorldFromXml {
 
 
 
-    WorldDefinition createWorldDefinitionFromPRDWorld(PRDWorld prdWorld){
+    public WorldDefinition createWorldDefinitionFromPRDWorld(PRDWorld prdWorld){
         //int threadPoolSize=prdWorld.getPRDThreadCount();
         WorldGrid worldGrid=new WorldGridImpl(prdWorld.getPRDGrid().getRows(),prdWorld.getPRDGrid().getColumns());
         EnvironmentVariableFromXML environmentVariableFromXML=new EnvironmentVariableFromXML(prdWorld.getPRDEnvironment());
