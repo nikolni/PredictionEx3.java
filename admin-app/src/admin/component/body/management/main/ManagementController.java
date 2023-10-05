@@ -131,12 +131,11 @@ public class ManagementController {
     void onSetThreadsCount(MouseEvent event) {
         Stage primaryStage = new Stage();
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/component/body/management/thread/pool/size/threadsPool.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin/component/body/management/thread/pool/size/threadsPoolSize.fxml"));
             GridPane root = loader.load();
 
             ThreadsPoolSizeController threadsPoolSizeController = loader.getController();
             threadsPoolSizeController.setRequestsFromServer(requestsFromServer);
-
 
             Scene scene = new Scene(root, 300, 200);
             primaryStage.setScene(scene);
