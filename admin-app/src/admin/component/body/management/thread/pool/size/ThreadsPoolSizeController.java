@@ -45,6 +45,7 @@ public class ThreadsPoolSizeController {
         } catch (NumberFormatException e) {
             inputIsNumber= false;
             errorLabel.setText("Only numbers!");
+            errorLabel.setVisible(true);
         }
         if(inputIsNumber){
             errorLabel.setVisible(false);
