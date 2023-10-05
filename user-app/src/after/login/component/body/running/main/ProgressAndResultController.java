@@ -53,6 +53,8 @@ public class ProgressAndResultController {
     private Thread oldUpdateUiThreadThread = null;
     private UserController mainController;
     private final RequestsFromServer requestsFromServer = new RequestsFromServer();
+    private Map<Integer, String> simulationIdToStatuses;
+    private DTOSecTicksForUi dtoSecTicksForUis;
 
 
     public ProgressAndResultController() {
@@ -118,7 +120,8 @@ public class ProgressAndResultController {
         simulationProgressComponentController.setSimulationIdLabel(simulationID.toString());
         simulationProgressComponentController.setExecutionID(simulationID);
 
-        DTOSecTicksForUi dtoSecTicksForUis  = requestsFromServer.getTotalSecAndTickFromServer(mainController.getUserName(), simulationID);
+        requestsFromServer.getTotalSecAndTickFromServer(mainController.getUserName(), simulationID);
+        requestsFromServer.setTotalSecAndTickConsumer(this::useDTOSecTicksForUi);
         simulationProgressComponentController.setTotalSeconds(dtoSecTicksForUis.getSeconds());
 
         simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
@@ -130,8 +133,9 @@ public class ProgressAndResultController {
 
         boolean flag = false;
         List<Integer> executionsIdList = buildListFromExistingSimulations();
-        Map<Integer, String> simulationIdToStatuses = requestsFromServer.getSimulationsStatusesFromServer(
-                mainController.getUserName(), executionsIdList);
+        requestsFromServer.getSimulationsStatusesFromServer( mainController.getUserName(), executionsIdList);
+        requestsFromServer.setSimulationsStatusesConsumer(this::useSimulationIdToStatuses);
+
         for (Integer id : simulationIdToStatuses.keySet()) {
             if(id.equals(simulationID) && simulationIdToStatuses.get(id).equals("terminated because of an error!")){
                 flag  = true;
@@ -142,6 +146,12 @@ public class ProgressAndResultController {
             ResultsController resultsController = simulationResultControllersMap.get(simulationID);
             resultsController.handleSimulationSelection(simulationID);
         }
+    }
+    private void useDTOSecTicksForUi(DTOSecTicksForUi secTicksConsumer){
+        dtoSecTicksForUis = secTicksConsumer;
+    }
+    private void useSimulationIdToStatuses(Map<Integer, String> simulationsStatusesConsumer){
+        simulationIdToStatuses = simulationsStatusesConsumer;
     }
     private List<Integer> buildListFromExistingSimulations(){
         List<Integer> executionsIdList = new ArrayList<>();

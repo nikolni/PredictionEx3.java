@@ -46,6 +46,8 @@ public class ResultsController {
     private ProgressAndResultController progressAndResultController;
     private RequestsFromServer requestsFromServer ;
     private String userName;
+    private DTOIncludeForResultsPrimaryForUi primaryResults;
+    private DTOIncludeForResultsAdditionalForUi additionalResults;
 
     public void setMembers(ProgressAndResultController progressAndResultController, String userName,
                            RequestsFromServer requestsFromServer) {
@@ -96,21 +98,24 @@ public class ResultsController {
     }
 
     public void handleSimulationSelection(int simulationID) {
-        DTOIncludeForResultsPrimaryForUi primaryResults =
-                requestsFromServer.getPrimaryResults(userName, simulationID);
+        requestsFromServer.getPrimaryResults(userName, simulationID);
+        requestsFromServer.setResultsPrimaryForUiConsumer(this::useResultsPrimary);
 
         entityTimeGraphPane.setContent(createEntitiesByTickGraph(primaryResults.getEntitiesAfterSimulationByQuantity()));
         entityTimeGraphPane.setVisible(true);
 
-        TreeItem<String> rootItem = createEntitiesSubTree(primaryResults);
+        TreeItem<String> rootItem = createEntitiesSubTree();
         entityPropTreeView.setRoot(rootItem);
         entityPropTreeView.setShowRoot(false);
         entityPropTreeView.setVisible(true);
 
         entityPropTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue!=null && newValue.isLeaf())
-                handleSelectedProperty(newValue,simulationID, primaryResults);
+                handleSelectedProperty(newValue,simulationID);
         });
+    }
+    private void useResultsPrimary(DTOIncludeForResultsPrimaryForUi primaryResultsConsumer){
+        primaryResults = primaryResultsConsumer;
     }
     public LineChart<Number, Number> createEntitiesByTickGraph(DTOEntitiesAfterSimulationByQuantityForUi dtoEntitiesAfterSimulationByQuantity) {
         NumberAxis xAxis = new NumberAxis();
@@ -145,7 +150,7 @@ public class ResultsController {
         /*for (Map.Entry<Integer, Integer> entry : systemEngine.getEntitiesDataAfterSimulationRunningByQuantity(simulationID).getEntitiesLeftByTicks().entrySet())
             series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));*/
     }
-    public TreeItem<String> createEntitiesSubTree(DTOIncludeForResultsPrimaryForUi primaryResults){
+    public TreeItem<String> createEntitiesSubTree(){
         List<String> entitiesNames = primaryResults.getEntitiesAfterSimulationByQuantity().getEntitiesNames();
 
         List<TreeItem<String>> entitiesBrunches = new ArrayList<>();
@@ -157,12 +162,12 @@ public class ResultsController {
         entitiesBranch.getChildren().addAll(entitiesBrunches);
         return entitiesBranch;
     }
-    public void handleSelectedProperty(TreeItem<String> selectedItem, int simulationID, DTOIncludeForResultsPrimaryForUi primaryResults){
+    public void handleSelectedProperty(TreeItem<String> selectedItem, int simulationID){
         viewComboBox.setVisible(true);
         viewComboBox.setPromptText("select option");
 
-        DTOIncludeForResultsAdditionalForUi additionalResults = requestsFromServer.getAdditionalResults(
-                userName, simulationID, selectedItem.getParent().getValue(), selectedItem.getValue());
+        requestsFromServer.getAdditionalResults(userName, simulationID, selectedItem.getParent().getValue(), selectedItem.getValue());
+        requestsFromServer.setAdditionalResultsConsumer(this::useAdditionalResults);
 
         if(additionalResults.getDtoSimulationProgress().getEntitiesLeft().get(selectedItem.getParent().getValue())>0){
             if(primaryResults.getDtoDefinitions().getPropertyDefinitionByName(selectedItem.getParent().getValue(),
@@ -185,6 +190,9 @@ public class ResultsController {
             histogramGraphPane.setContent(zeroPopulation);
         }
         ConsistencyValueLabel.setText(String.valueOf(additionalResults.getDtoEntityPropertyConsistency().getConsistency()));
+    }
+    private void useAdditionalResults(DTOIncludeForResultsAdditionalForUi additionalResultsConsumer){
+        additionalResults = additionalResultsConsumer;
     }
     public BarChart<String, Number> createHistogram(DTOPropertyHistogramForUi dtoPropertyHistogramForUi) {
 

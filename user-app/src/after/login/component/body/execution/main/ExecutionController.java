@@ -66,8 +66,8 @@ public class ExecutionController {
 
 
     public ExecutionController() {
-        //simulationEntitiesPopulationFlowPane = new FlowPane();
-        //simulationEnvironmentInputsFlowPane = new FlowPane();
+        simulationEntitiesPopulationFlowPane = new FlowPane();
+        simulationEnvironmentInputsFlowPane = new FlowPane();
         envVarNameToTileController =new HashMap<>();
         entityNameToTileController = new HashMap<>();
         envVarNameToSelectedInitValue =new HashMap<>();

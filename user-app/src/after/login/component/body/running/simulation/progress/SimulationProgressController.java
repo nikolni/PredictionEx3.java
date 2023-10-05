@@ -59,6 +59,7 @@ public class SimulationProgressController {
     private int totalSeconds;
     private RequestsFromServer requestsFromServer ;
     private String userName;
+    private List<TerminationConditionsDTO> terminationConditionsDTOList;
 
 
     public void setExecutionID(int executionID) {
@@ -98,7 +99,6 @@ public class SimulationProgressController {
         //entitiesLeftLabel.textProperty().bind(Bindings.format("%,d", uiTask.getEntitiesLeftProperty()));
         ticksLabel.textProperty().bind(Bindings.format("%,d", uiTask.getTicksPastProperty()));
 
-        List<TerminationConditionsDTO> terminationConditionsDTOList = requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
         if(terminationConditionsDTOList.get(0) instanceof TimeTerminationConditionsDTOImpl  ||
                 ( terminationConditionsDTOList.size() == 2 && terminationConditionsDTOList.get(1) instanceof TimeTerminationConditionsDTOImpl)){
             secondsProgressBar.progressProperty().bind(uiTask.secondsPast.divide((double) totalSeconds));
@@ -124,7 +124,9 @@ public class SimulationProgressController {
         // task message
         progressMassageLabel.textProperty().bind(uiTask.messageProperty());
 
-        List<TerminationConditionsDTO> terminationConditionsDTOList = requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
+        requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
+        requestsFromServer.setTerminationConditionsListConsumer(this::useTerminationConditions);
+
         if (terminationConditionsDTOList.get(0) instanceof ByUserTerminationConditionDTOImpl) {
             ticksProgressBar.setDisable(true);
             secondsProgressBar.setDisable(true);
@@ -151,6 +153,9 @@ public class SimulationProgressController {
             ticksProgressBar.setDisable(true);
             ticksPercentLabel.setDisable(true);
         }
+    }
+    private void useTerminationConditions(List<TerminationConditionsDTO> terminationConditionsConsumer){
+        terminationConditionsDTOList = terminationConditionsConsumer;
     }
 
     public void onTaskFinished() {

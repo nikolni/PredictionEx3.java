@@ -80,7 +80,10 @@ public class LoginController {
                             errorMessageProperty.set("Something went wrong: " + responseBody)
                     );
                 } else {
-                    openUserAppAfterLogin();
+                    Platform.runLater(() ->
+                            openUserAppAfterLogin()
+                    );
+
                 }
             }
         });
