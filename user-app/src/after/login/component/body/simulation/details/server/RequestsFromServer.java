@@ -66,7 +66,7 @@ public class RequestsFromServer {
         String json = Constants.GSON_INSTANCE.toJson(simulationsArray);
 
         Request request = new Request.Builder()
-                .url(Constants.EXECUTION_PAGE)
+                .url(Constants.SIMULATION_NAMES_LIST_PAGE)
                 .post(RequestBody.create(json.getBytes()))
                 .build();
 
