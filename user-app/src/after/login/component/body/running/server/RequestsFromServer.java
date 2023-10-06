@@ -290,7 +290,7 @@ public class RequestsFromServer {
                         if (responseBody != null) {
                             String json = response.body().string();
                             Type listType = new TypeToken<List<DTOSimulationEndingForUi>>() {}.getType();
-                            List<DTOSimulationEndingForUi> simulationEndingList = Constants.GSON_INSTANCE.fromJson(response.body().string(), listType);
+                            List<DTOSimulationEndingForUi> simulationEndingList = Constants.GSON_INSTANCE.fromJson(json, listType);
                             simulationEndingListConsumer.accept(simulationEndingList);
                         }
                     } catch (IOException e) {

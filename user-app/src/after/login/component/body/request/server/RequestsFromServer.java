@@ -21,16 +21,6 @@ import static util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class RequestsFromServer {
 
-    private Consumer<List<String>> simulationNamesConsumer;
-
-    public void setSimulationNamesConsumer(Consumer<List<String>> simulationNamesConsumer){
-        this.simulationNamesConsumer = simulationNamesConsumer;
-    }
-    private Consumer<List<DTOUserRequestForUi>> userRequestsConsumer;
-
-    public void setUserRequestsConsumer(Consumer<List<DTOUserRequestForUi>> userRequestsConsumer){
-        this.userRequestsConsumer = userRequestsConsumer;
-    }
     public void postRequestToServer(String simulationName, String numberOfExecutions, String terminationConditions,
                                     String userName){
         String body = "simulation_name="+simulationName + LINE_SEPARATOR +
@@ -60,6 +50,11 @@ public class RequestsFromServer {
                 }
             }
         });
+    }
+    private Consumer<List<String>> simulationNamesConsumer;
+
+    public void setSimulationNamesConsumer(Consumer<List<String>> simulationNamesConsumer){
+        this.simulationNamesConsumer = simulationNamesConsumer;
     }
     public void getSimulationNamesFromServer() {
 
@@ -96,6 +91,11 @@ public class RequestsFromServer {
         });
     }
 
+    private Consumer<List<DTOUserRequestForUi>> userRequestsConsumer;
+
+    public void setUserRequestsConsumer(Consumer<List<DTOUserRequestForUi>> userRequestsConsumer){
+        this.userRequestsConsumer = userRequestsConsumer;
+    }
     public void getUserRequestListFromServer(String userName) {
         String finalUrl = HttpUrl
                 .parse(Constants.USER_REQUEST_PAGE)
