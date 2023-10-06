@@ -63,7 +63,9 @@ public class SingleSimulationController {
         quantityOfSquaresText= simulationsDetailsController.getQuantityOfSquaresText();
         detailsFlowPane= simulationsDetailsController.getDetailsFlowPane();
         detailsScrollPane= simulationsDetailsController.getDetailsScrollPane();
+
         this.requestsFromServer = requestsFromServer;
+        requestsFromServer.setDTOIncludeSimulationDetailsForUi(this::useSimulationDetailsConsumer);
     }
     public void primaryInitialize(String simulationName){
         quantityOfSquaresLabel.setVisible(false);
@@ -73,7 +75,7 @@ public class SingleSimulationController {
         detailsFlowPane.getChildren().clear();
 
         requestsFromServer.getSimulationDetailsFromServer(simulationName);
-        requestsFromServer.setDTOIncludeSimulationDetailsForUi(this::useSimulationDetailsConsumer);
+
 
         TreeItem<String> rootItem = new TreeItem<>(simulationName);
         TreeItem<String> entitiesBranch = createEntitiesSubTree(simulationDetails);

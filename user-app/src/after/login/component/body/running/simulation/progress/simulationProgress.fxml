@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../../../../../main/userGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.running.progress.SimulationProgressController">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../../../../../main/userGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="after.login.component.body.running.simulation.progress.SimulationProgressController">
    <children>
       <GridPane maxHeight="1.7976931348623157E308" prefHeight="277.0" prefWidth="637.0" styleClass="my-gridPane">
          <columnConstraints>

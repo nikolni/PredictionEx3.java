@@ -17,13 +17,14 @@ public class UpdateThreadsPoolDetails implements Runnable {
     public UpdateThreadsPoolDetails(RequestsFromServer requestsFromServer, ManagementController managementController) {
         this.managementController = managementController;
         this.requestsFromServer = requestsFromServer;
+        requestsFromServer.setConsumer(this::update);
     }
 
     @Override
     public void run() {
         while (Thread.currentThread().isAlive()) {
             requestsFromServer.getThreadPoolStatusFromServer();
-            requestsFromServer.setConsumer(this::update);
+
         }
         try {
             sleep(300);

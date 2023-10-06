@@ -18,14 +18,16 @@ public class UpdateSimulationsTreeView implements Runnable{
                                      RequestsFromServer requestsFromServer) {
         this.simulationsDetailsController = simulationsDetailsController;
         this.simulationNamesList = new ArrayList<>();
+
         this.requestsFromServer = requestsFromServer;
+        requestsFromServer.setNewSimulationsNamesConsumer(this::useSimulationsNames);
     }
 
     @Override
     public void run() {
         while (Thread.currentThread().isAlive()) {
             requestsFromServer.getNewSimulationsNames(simulationNamesList.toArray(new String[0]));
-            requestsFromServer.setNewSimulationsNamesConsumer(this::useSimulationsNames);
+
             if(simulationsNumber < simulationNamesList.size()){
                 for(int i = simulationsNumber; i < simulationNamesList.size(); i++){
                     simulationsDetailsController.addSimulationItemToTreeView(simulationNamesList.get(i));

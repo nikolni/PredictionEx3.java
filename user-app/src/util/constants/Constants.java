@@ -44,7 +44,7 @@ public class Constants {
     public final static Gson GSON_INSTANCE = new Gson();
 
     public static void popUpWindow(String massage, String title){
-        Stage emptyFieldsErrorStage = new Stage();
+        Stage errorStage = new Stage();
 
         Label label = new Label(massage);
         Font font = new Font(16);
@@ -52,10 +52,10 @@ public class Constants {
         VBox vbox = new VBox(label);
         vbox.setAlignment(Pos.CENTER);
         StackPane root = new StackPane(vbox);
-        Scene scene = new Scene(root, 350, 250);
+        Scene scene = new Scene(root, 400, 150);
 
-        emptyFieldsErrorStage.setScene(scene);
-        emptyFieldsErrorStage.setTitle(title);
-        emptyFieldsErrorStage.show();
+        errorStage.setScene(scene);
+        errorStage.setTitle(title);
+        errorStage.show();
     }
 }

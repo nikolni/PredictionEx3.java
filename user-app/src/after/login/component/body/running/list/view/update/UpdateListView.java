@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static java.lang.Thread.sleep;
 
@@ -15,20 +16,23 @@ public class UpdateListView implements Runnable{
     private final ListView<String> simulationsList;
     private final RequestsFromServer requestsFromServer;
     private final String userName;
+    private Map<Integer, String> simulationIdToStatuses;
 
     public UpdateListView(ListView<String> simulationsList, RequestsFromServer requestsFromServer,
                           String userName) {
         this.simulationsList = simulationsList;
-        this.requestsFromServer = requestsFromServer;
         this.userName = userName;
+
+        this.requestsFromServer = requestsFromServer;
+        requestsFromServer.setSimulationsStatusesConsumer(this::useSimulationIdToStatuses);
     }
 
     @Override
     public void run() {
         while(Thread.currentThread().isAlive()) {
             List<Integer> executionsIdList = buildListFromExistingSimulations();
-            Map<Integer, String> simulationIdToStatuses = requestsFromServer.getSimulationsStatusesFromServer(
-                    userName, executionsIdList);
+            requestsFromServer.getSimulationsStatusesFromServer(userName, executionsIdList);
+
 
             for (Integer id : simulationIdToStatuses.keySet()) {
                 String status = simulationIdToStatuses.get(id);
@@ -40,6 +44,9 @@ public class UpdateListView implements Runnable{
                 throw new RuntimeException(e);
             }
         }
+    }
+    private void useSimulationIdToStatuses(Map<Integer, String> simulationsStatusesConsumer){
+        simulationIdToStatuses = simulationsStatusesConsumer;
     }
 
     private List<Integer> buildListFromExistingSimulations(){

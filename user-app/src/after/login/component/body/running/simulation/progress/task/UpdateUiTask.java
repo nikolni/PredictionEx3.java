@@ -25,27 +25,41 @@ public class UpdateUiTask extends Task<Boolean> {
     private final Integer totalSecondsNumber;
     private final RequestsFromServer requestsFromServer;
     private final String userName;
+    private DTOSimulationProgressForUi dtoSimulationProgressForUi;
+    private DTOSecTicksForUi dtoSecTicksForUis;
+    private List<TerminationConditionsDTO> terminationConditionsDTOList;
 
     public UpdateUiTask(SimulationProgressController currentSimulationController, Integer executionID,
                         RequestsFromServer requestsFromServer, String userName) {
         this.currentSimulationController = currentSimulationController;
         this.executionID = executionID;
-        this.requestsFromServer = requestsFromServer;
         this.userName = userName;
+
+        this.requestsFromServer = requestsFromServer;
+        requestsFromServer.setTotalSecAndTickConsumer(this::useDTOSecTicksForUi);
+        requestsFromServer.setExecutionProgressConsumer(this::useExecutionProgress);
+        requestsFromServer.setTerminationConditionsListConsumer(this::useTerminationConditions);
 
         this.secondsPast = new SimpleIntegerProperty(0);
         this.ticksPast = new SimpleIntegerProperty(0);
         this.entitiesLeft = new SimpleIntegerProperty(0);
-        DTOSecTicksForUi dtoSecTicksForUis  = requestsFromServer.getTotalSecAndTickFromServer(userName, executionID);
+        requestsFromServer.getTotalSecAndTickFromServer(userName, executionID);
+
         this.totalTicksNumber = dtoSecTicksForUis.getTicks();
         this.totalSecondsNumber = dtoSecTicksForUis.getSeconds();
     }
-
+    private void useDTOSecTicksForUi(DTOSecTicksForUi secTicksConsumer){
+        dtoSecTicksForUis = secTicksConsumer;
+    }
     @Override
     protected Boolean call()  {
         while(Thread.currentThread().isAlive()){
-            DTOSimulationProgressForUi dtoSimulationProgressForUi = requestsFromServer.getExecutionProgressFromServer( userName, executionID);
-            List<TerminationConditionsDTO> terminationConditionsDTOList = requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
+            requestsFromServer.getExecutionProgressFromServer( userName, executionID);
+
+
+            requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
+
+
             updateSimulationProgress(dtoSimulationProgressForUi, terminationConditionsDTOList);
             try {
                 sleep(200);
@@ -55,6 +69,13 @@ public class UpdateUiTask extends Task<Boolean> {
 
         }
         return null;
+    }
+
+    private void useExecutionProgress(DTOSimulationProgressForUi executionProgressConsumer){
+        dtoSimulationProgressForUi = executionProgressConsumer;
+    }
+    private void useTerminationConditions(List<TerminationConditionsDTO> terminationConditionsConsumer){
+        terminationConditionsDTOList = terminationConditionsConsumer;
     }
 
     public SimpleIntegerProperty getSecondsPastProperty() {
@@ -78,24 +99,22 @@ public class UpdateUiTask extends Task<Boolean> {
             secondsPast.set(dtoSimulationProgressForUi.getSecondsPast());
 
             currentSimulationController.updateEntitiesLeftGridPane(dtoSimulationProgressForUi.getEntitiesLeft());
-            if (dtoSimulationProgressForUi.getProgressMassage().equals("Getting ready...")){
-                currentSimulationController.toggleTaskButtons(false);
-            }
-            else if(dtoSimulationProgressForUi.getProgressMassage().equals("Done!")){
-                currentSimulationController.toggleTaskButtons(false);
-            }
-            else if(dtoSimulationProgressForUi.getProgressMassage().equals("Running!")){
-                currentSimulationController.toggleTaskButtons(true);
-                currentSimulationController.setResumeButtonDisable(false);
+            switch (dtoSimulationProgressForUi.getProgressMassage()) {
+                case "Getting ready...":
+                case "Done!":
+                case "Canceled!":
+                    currentSimulationController.toggleTaskButtons(false);
+                    break;
+                case "Running!":
+                    currentSimulationController.toggleTaskButtons(true);
+                    currentSimulationController.setResumeButtonDisable(false);
 
-            }
-            else if(dtoSimulationProgressForUi.getProgressMassage().equals("Paused!")){
-                currentSimulationController.setPauseButtonDisable(false);
-                currentSimulationController.setResumeButtonDisable(true);
-                currentSimulationController.setStopButtonDisable(true);
-            }
-            else if(dtoSimulationProgressForUi.getProgressMassage().equals("Canceled!")){
-                currentSimulationController.toggleTaskButtons(false);
+                    break;
+                case "Paused!":
+                    currentSimulationController.setPauseButtonDisable(false);
+                    currentSimulationController.setResumeButtonDisable(true);
+                    currentSimulationController.setStopButtonDisable(true);
+                    break;
             }
         });
     }
