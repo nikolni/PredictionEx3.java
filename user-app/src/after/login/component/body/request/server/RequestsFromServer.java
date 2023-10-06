@@ -11,6 +11,7 @@ import util.http.HttpClientUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -80,7 +81,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            List<String> simulationNames = Arrays.asList(Constants.GSON_INSTANCE.fromJson(json, String[].class));
+                            List<String> simulationNames = new ArrayList<>();
+                            simulationNames.addAll(Arrays.asList(Constants.GSON_INSTANCE.fromJson(json, String[].class)));
                             simulationNamesConsumer.accept(simulationNames);
                         }
                     } catch (IOException e) {
