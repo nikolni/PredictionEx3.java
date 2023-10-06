@@ -36,7 +36,6 @@ public class Constants {
     public final static String RESULTS_PAGE = FULL_SERVER_PATH + "/execution/results";
     public final static String SIMULATION_DETAILS_PAGE = FULL_SERVER_PATH + "/simulation/details";
     public final static String EXECUTIONS_ENDING_PAGE = FULL_SERVER_PATH + "/executions/ending";
-    public final static String THREAD_POOL_STATUS_PAGE = FULL_SERVER_PATH + "/thread/pool";
 
 
 
