@@ -19,10 +19,15 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
+
+import static admin.util.constants.Constants.popUpWindow;
+import static admin.util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class ManagementController {
 
@@ -67,8 +72,8 @@ public class ManagementController {
     private void initialize() {
         filePathLabel.textProperty().bind(selectedFileProperty);
 
-        UpdateThreadsPoolDetails updateThreadsPoolDetails = new UpdateThreadsPoolDetails(requestsFromServer, this);
-        new Thread(updateThreadsPoolDetails).start();
+       /* UpdateThreadsPoolDetails updateThreadsPoolDetails = new UpdateThreadsPoolDetails(requestsFromServer, this);
+        new Thread(updateThreadsPoolDetails).start();*/
     }
 
     @FXML
@@ -91,17 +96,53 @@ public class ManagementController {
                         .build();
 
         Request request = new Request.Builder()
-                .url(Constants.BASE_URL + RESOURCE)
+                .url(Constants.FULL_SERVER_PATH + RESOURCE)
                 .post(body)
                 .build();
 
-        Call call = Constants.HTTP_CLIENT.newCall(request);
+        //Call call = Constants.HTTP_CLIENT.newCall(request);
+        Call call = HTTP_CLIENT_PUBLIC.newCall(request);
+        try{
+            call.enqueue( new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+                }
 
-        try {
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    if (response.code() != 200) {
+                        String responseBody = response.body().string();
+                        Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                    } else {
+                        try (ResponseBody responseBody = response.body()) {
+                            if (responseBody != null) {
+                                String json = response.body().string();
+                                String simulationName = Constants.GSON_INSTANCE.fromJson(json, String.class);
+                                simulationDetailsComponentController.addSimulationItemToTreeView(simulationName);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            });
+        }catch(RuntimeException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Invalid XML file - Please load other file");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            exceptionOccurred=true;
+        }
+
+
+        /*try {
             Response response = call.execute();
             if (response.code() != 200) {
                 String responseBody = response.body().string();
-                Platform.runLater(() -> Constants.popUpWindow(responseBody, "Error!"));
+                Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
             }
             else{ //successful file upload
                 try (ResponseBody responseBody = response.body()) {
@@ -121,7 +162,7 @@ public class ManagementController {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
             exceptionOccurred=true;
-        }
+        }*/
         if(!exceptionOccurred){
             selectedFileProperty.set(absolutePath);
         }
