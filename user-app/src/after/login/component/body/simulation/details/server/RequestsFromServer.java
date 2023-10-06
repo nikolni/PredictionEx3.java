@@ -22,11 +22,6 @@ public class RequestsFromServer {
     public void setDTOIncludeSimulationDetailsForUi(Consumer<DTOIncludeSimulationDetailsForUi> dtoIncludeSimulationDetailsForUiConsumer){
         this.dtoIncludeSimulationDetailsForUiConsumer = dtoIncludeSimulationDetailsForUiConsumer;
     }
-    private Consumer<List<String>> newSimulationsNamesConsumer;
-
-    public void setNewSimulationsNamesConsumer(Consumer<List<String>> newSimulationsNamesConsumer){
-        this.newSimulationsNamesConsumer = newSimulationsNamesConsumer;
-    }
     public void getSimulationDetailsFromServer(String simulationName) {
         String finalUrl = HttpUrl
                 .parse(Constants.SIMULATION_DETAILS_PAGE)
@@ -61,7 +56,11 @@ public class RequestsFromServer {
             }
         });
     }
+    private Consumer<List<String>> newSimulationsNamesConsumer;
 
+    public void setNewSimulationsNamesConsumer(Consumer<List<String>> newSimulationsNamesConsumer){
+        this.newSimulationsNamesConsumer = newSimulationsNamesConsumer;
+    }
     public void getNewSimulationsNames(String[] simulationsArray){
         String json = Constants.GSON_INSTANCE.toJson(simulationsArray);
 

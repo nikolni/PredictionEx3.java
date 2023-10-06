@@ -20,18 +20,9 @@ public class RequestsFromServer {
     public void setExecutionIDConsumer(Consumer<Integer> executionIDConsumer){
         this.executionIDConsumer = executionIDConsumer;
     }
-    private Consumer<DTOIncludeForExecutionForUi> dtoIncludeForExecutionConsumer;
-    public void setDtoIncludeForExecutionConsumer(Consumer<DTOIncludeForExecutionForUi> dtoIncludeForExecutionConsumer){
-        this.dtoIncludeForExecutionConsumer = dtoIncludeForExecutionConsumer;
-    }
-    private Consumer<DTORerunValuesForUi> dtoRerunValuesForUiConsumer;
-    public void setDTORerunValuesConsumer(Consumer<DTORerunValuesForUi> dtoRerunValuesForUiConsumer){
-        this.dtoRerunValuesForUiConsumer = dtoRerunValuesForUiConsumer;
-    }
-
     public void getExecutionIDFromServer() {
         String finalUrl = HttpUrl
-                .parse(Constants.RERUN_PAGE)
+                .parse(Constants.EXECUTION_PAGE)
                 .newBuilder()
                 .build()
                 .toString();
@@ -61,6 +52,10 @@ public class RequestsFromServer {
                 }
             }
         });
+    }
+    private Consumer<DTOIncludeForExecutionForUi> dtoIncludeForExecutionConsumer;
+    public void setDtoIncludeForExecutionConsumer(Consumer<DTOIncludeForExecutionForUi> dtoIncludeForExecutionConsumer){
+        this.dtoIncludeForExecutionConsumer = dtoIncludeForExecutionConsumer;
     }
     public void getDataForExecutionFromServer(String simulationName) {
         String finalUrl = HttpUrl
@@ -129,6 +124,10 @@ public class RequestsFromServer {
                 }
             }
         });
+    }
+    private Consumer<DTORerunValuesForUi> dtoRerunValuesForUiConsumer;
+    public void setDTORerunValuesConsumer(Consumer<DTORerunValuesForUi> dtoRerunValuesForUiConsumer){
+        this.dtoRerunValuesForUiConsumer = dtoRerunValuesForUiConsumer;
     }
 
     public void getRerunValuesFromServer(String simulationName, Integer executionID) {
