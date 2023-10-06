@@ -6,6 +6,7 @@ import utils.ServletUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +41,8 @@ public class SimulationNamesServlet extends HttpServlet {
             }
         }
         String json = requestBody.toString();
-        List<String> simulationsNamesFromUser = Arrays.asList(new Gson().fromJson(json, String[].class));
+        List<String> simulationsNamesFromUser = new ArrayList<>();
+        simulationsNamesFromUser.addAll( Arrays.asList(new Gson().fromJson(json, String[].class)));
         List<String> simulationsNamesFromServer = ServletUtils.getSimulationNamesList(getServletContext());
         for(String nameFromServer: simulationsNamesFromServer){
             inUserList = false;

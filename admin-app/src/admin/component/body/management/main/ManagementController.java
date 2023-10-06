@@ -72,13 +72,13 @@ public class ManagementController {
     private void initialize() {
         filePathLabel.textProperty().bind(selectedFileProperty);
 
-       /* UpdateThreadsPoolDetails updateThreadsPoolDetails = new UpdateThreadsPoolDetails(requestsFromServer, this);
-        new Thread(updateThreadsPoolDetails).start();*/
+        UpdateThreadsPoolDetails updateThreadsPoolDetails = new UpdateThreadsPoolDetails(requestsFromServer, this);
+        new Thread(updateThreadsPoolDetails).start();
     }
 
     @FXML
     void onLoadFileClick(MouseEvent event) throws IOException {
-        String RESOURCE = "/upload-file";
+        //String RESOURCE = "/upload/file";
         Stage primaryStage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select XML file");
@@ -96,7 +96,7 @@ public class ManagementController {
                         .build();
 
         Request request = new Request.Builder()
-                .url(Constants.FULL_SERVER_PATH + RESOURCE)
+                .url(Constants.FILE_PAGE)
                 .post(body)
                 .build();
 
