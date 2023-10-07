@@ -37,7 +37,7 @@ public class UpdateRequestGridPane implements Runnable{
         }
 
     public void updateRequestGridPane(List<DTOUserRequestForUi> userRequestList) {
-        int row = 0;
+        int row = 1;
         if(userRequestList != null) {
             for (DTOUserRequestForUi userRequest : userRequestList) {
                 Label requestID = new Label(userRequest.getRequestID().toString());

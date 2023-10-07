@@ -53,11 +53,16 @@ public class SingleSimulationController {
     private final TextFlow quantityOfSquaresText;
     private final FlowPane detailsFlowPane;
     private final ScrollPane detailsScrollPane;
-    private final RequestsFromServer requestsFromServer;
+    private final RequestsFromServer requestsFromServer = new RequestsFromServer();
     private DTOIncludeSimulationDetailsForUi simulationDetails;
     private String simulationName;
 
-    public SingleSimulationController(SimulationsDetailsController simulationsDetailsController, RequestsFromServer requestsFromServer){
+    public String getSimulationName() {
+        return simulationName;
+    }
+
+
+    public SingleSimulationController(SimulationsDetailsController simulationsDetailsController, String simulationName){
         detailsTreeView = simulationsDetailsController.getDetailsTreeView();
         valueDefLabel= simulationsDetailsController.getValueDefLabel();  //for population
         quantityOfSquaresLabel= simulationsDetailsController.getQuantityOfSquaresLabel(); //for quantity of properties
@@ -66,7 +71,7 @@ public class SingleSimulationController {
         detailsFlowPane= simulationsDetailsController.getDetailsFlowPane();
         detailsScrollPane= simulationsDetailsController.getDetailsScrollPane();
 
-        this.requestsFromServer = requestsFromServer;
+        this.simulationName = simulationName;
         requestsFromServer.setDTOIncludeSimulationDetailsForUi(this::useSimulationDetailsConsumer);
     }
     public void primaryInitialize(String simulationName){
@@ -74,9 +79,9 @@ public class SingleSimulationController {
         quantityOfSquaresText.setVisible(false);
         valueDefLabel.setVisible(false);
         valueDefText.setVisible(false);
-        detailsFlowPane.getChildren().clear();
+        //detailsFlowPane.getChildren().clear();
 
-        this.simulationName = simulationName;
+        //this.simulationName = simulationName;
         requestsFromServer.getSimulationDetailsFromServer(simulationName);
 
 
@@ -93,8 +98,9 @@ public class SingleSimulationController {
 
     }
     private void useSimulationDetailsConsumer(DTOIncludeSimulationDetailsForUi simulationDetailsConsumer){
-        simulationDetails = simulationDetailsConsumer;
         Platform.runLater(() -> {
+            this.simulationDetails = new DTOIncludeSimulationDetailsForUi(simulationDetailsConsumer.getDefinitions(),
+                    simulationDetailsConsumer.getEnvVarsDef(), simulationDetailsConsumer.getWorldGridForUi());
             TreeItem<String> rootItem = new TreeItem<>(simulationName);
             TreeItem<String> entitiesBranch = createEntitiesSubTree(simulationDetails);
             TreeItem<String> ruleBranch = createRulesSubTree(simulationDetails);
@@ -107,7 +113,7 @@ public class SingleSimulationController {
         });
     }
 
-    public void handleSelectedItemChange(TreeItem<String> selectedItem, String simulationName) {
+    public void handleSelectedItemChange(TreeItem<String> selectedItem) {
         detailsTreeView.setVisible(true);
         detailsScrollPane.setVisible(true);
 
@@ -279,8 +285,15 @@ public class SingleSimulationController {
                     SetActionDTO setActionDTO = (SetActionDTO) action;
                     actionTileCreatorFactory.createSetActionChildren(setActionDTO, detailsFlowPane);
                     break;
-                case CALCULATION:
-                    if(action instanceof DivideActionDTO) {
+                case DIVIDE:
+                    DivideActionDTO divideAction = (DivideActionDTO) action;
+                    actionTileCreatorFactory.createDivideActionChildren(divideAction, detailsFlowPane);
+                    break;
+                case MULTIPLY:
+                    MultiplyActionDTO multiplyAction = (MultiplyActionDTO) action;
+                    actionTileCreatorFactory.createMultiplyActionChildren(multiplyAction, detailsFlowPane);
+                    break;
+                    /*if(action instanceof DivideActionDTO) {
                         DivideActionDTO divideAction = (DivideActionDTO) action;
                         actionTileCreatorFactory.createDivideActionChildren(divideAction, detailsFlowPane);
                     }
@@ -288,9 +301,16 @@ public class SingleSimulationController {
                         MultiplyActionDTO multiplyAction = (MultiplyActionDTO) action;
                         actionTileCreatorFactory.createMultiplyActionChildren(multiplyAction, detailsFlowPane);
                     }
+                    break;*/
+                case SINGLE:
+                    SingleConditionActionDTO singleConditionActionDTO = (SingleConditionActionDTO) action;
+                    actionTileCreatorFactory.createSingleConditionActionChildren(singleConditionActionDTO, detailsFlowPane);
                     break;
-                case CONDITION:
-                    if(action instanceof SingleConditionActionDTO) {
+                case MULTIPLE:
+                    MultipleConditionActionDTO multipleConditionActionDTO = (MultipleConditionActionDTO) action;
+                    actionTileCreatorFactory.createMultipleConditionActionChildren(multipleConditionActionDTO, detailsFlowPane);
+                    break;
+                    /*if(action instanceof SingleConditionActionDTO) {
                         SingleConditionActionDTO singleConditionActionDTO = (SingleConditionActionDTO) action;
                         actionTileCreatorFactory.createSingleConditionActionChildren(singleConditionActionDTO, detailsFlowPane);
                     }
@@ -298,7 +318,7 @@ public class SingleSimulationController {
                         MultipleConditionActionDTO multipleConditionActionDTO = (MultipleConditionActionDTO) action;
                         actionTileCreatorFactory.createMultipleConditionActionChildren(multipleConditionActionDTO, detailsFlowPane);
                     }
-                    break;
+                    break;*/
                 case KILL:
                     KillActionDTO killAction = (KillActionDTO)action;
                     actionTileCreatorFactory.createKillActionChildren(killAction, detailsFlowPane);

@@ -5,9 +5,6 @@ import dto.definition.rule.action.api.ActionType;
 
 public class ConditionActionDTO extends AbstractActionDTO {
     protected String singularity;
-
-
-
     protected Integer thenActionNumber;
     protected Integer elseActionNumber;
 

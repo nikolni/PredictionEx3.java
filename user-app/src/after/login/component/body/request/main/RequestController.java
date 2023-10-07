@@ -3,6 +3,7 @@ package after.login.component.body.request.main;
 import after.login.component.body.execution.main.ExecutionController;
 import after.login.component.body.request.server.RequestsFromServer;
 import after.login.main.UserController;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.fxml.FXML;
@@ -48,10 +49,14 @@ public class RequestController {
         new Thread(updateRequestGridPane).start();
     }*/
     public void primaryInitialize() {
+        simulationNames = new ArrayList<>();
+
         UpdateRequestGridPane updateRequestGridPane = new UpdateRequestGridPane(requestGridPane, requestsFromServer, mainController.getUserName());
         new Thread(updateRequestGridPane).start();
 
-        requestsFromServer.setSimulationNamesConsumer(this::useSimulationsNames);
+        UpdateSimulationsNames updateSimulationsNames = new UpdateSimulationsNames(this, requestsFromServer);
+        new Thread(updateSimulationsNames).start();
+
     }
     public void setExecutionController(ExecutionController executionController) {
         this.executionController = executionController;
@@ -60,6 +65,9 @@ public class RequestController {
         this.mainController = mainController;
     }
 
+    public void setSimulationsNamesList(List<String> simulationNames){
+        this.simulationNames = simulationNames;
+    }
     @FXML
     void onSubmitClick(MouseEvent event) {
         if(isAllFieldsFilledIn()){
@@ -115,11 +123,11 @@ public class RequestController {
         Label simulationNum= new Label(simulationNumTextField.getText());
         Label executionsLeftForExecute= new Label(simulationNumTextField.getText());
         Label terminationConditions= new Label(terminationConditionsTextField.getText());
-        requestGridPane.add(simulationName, 4, numOfRequests);
-        requestGridPane.add(simulationNum, 5, numOfRequests);
-        requestGridPane.add(terminationConditions, 6, numOfRequests);
+        requestGridPane.add(simulationName, 4, numOfRequests+1);
+        requestGridPane.add(simulationNum, 5, numOfRequests+1);
+        requestGridPane.add(terminationConditions, 6, numOfRequests+1);
         CheckBox checkBox = new CheckBox();
-        requestGridPane.add(checkBox, 7, numOfRequests);
+        requestGridPane.add(checkBox, 7, numOfRequests+1);
         if(checkBoxes == null){
             checkBoxes = new ArrayList<>();
         }
@@ -203,19 +211,13 @@ public class RequestController {
     }
 
     private boolean isSimulationNameExist() {
-        requestsFromServer.getSimulationNamesFromServer();
-
-        if(simulationNames != null) {
-            for (String name : simulationNames) {
-                if (name.equals(simulationNameTextField.getText())) {
-                    return true;
-                }
+        for (String name : simulationNames) {
+            if (name.equals(simulationNameTextField.getText())) {
+                return true;
             }
         }
+
         return false;
-    }
-    private void useSimulationsNames(List<String> simulationNamesConsumer){
-        simulationNames = simulationNamesConsumer;
     }
     private boolean isTerminationConditionsValid(){
         String[] sentences = terminationConditionsTextField.getText().split(",");

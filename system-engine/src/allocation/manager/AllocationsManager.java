@@ -11,10 +11,12 @@ public class AllocationsManager {
      private List<UserRequest> allUsersRequestsList = null;
     private Map<String, Map<UserRequest, List<Integer>>> mapOfUserNameToRequestsMap = null;
     private int executionsCounter = 0;
+    private int requestsCounter = 1;
 
     private static final Object allUsersRequestsListLock = new Object();
     private static final Object userNameToRequestsMapLock = new Object();
     private static final Object executionsCounterLock = new Object();
+    private static final Object requestsCounterLock = new Object();
 
     public List<UserRequest> getAllUsersRequestsList() {
         return allUsersRequestsList;
@@ -26,6 +28,9 @@ public class AllocationsManager {
                 allUsersRequestsList = new ArrayList<>();
             }
             allUsersRequestsList.add(userRequest);
+        }
+        synchronized (requestsCounterLock) {
+            requestsCounter++;
         }
     }
     public void addRequestByUserName(String userName ,UserRequest userRequest) {
@@ -76,6 +81,9 @@ public class AllocationsManager {
 
     public int getExecutionsCounter() {
         return executionsCounter;
+    }
+    public int getRequestsCounter() {
+        return requestsCounter;
     }
     public void increaseExecutionCounter() {
         synchronized (executionsCounterLock) {
