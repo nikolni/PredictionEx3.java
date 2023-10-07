@@ -111,6 +111,7 @@ public class LoginController {
             Parent root = fxmlLoader.load(url.openStream());
             UserController userController = fxmlLoader.getController();
             userController.setUserName(userNameTextField.getText());
+            userController.initialPrimaryForTabPaneComponenets();
 
             Scene scene = new Scene(root, 850, 680);
             primaryStage.setScene(scene);

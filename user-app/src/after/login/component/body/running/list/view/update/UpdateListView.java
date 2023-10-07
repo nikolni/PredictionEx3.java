@@ -33,10 +33,11 @@ public class UpdateListView implements Runnable{
             List<Integer> executionsIdList = buildListFromExistingSimulations();
             requestsFromServer.getSimulationsStatusesFromServer(userName, executionsIdList);
 
-
-            for (Integer id : simulationIdToStatuses.keySet()) {
-                String status = simulationIdToStatuses.get(id);
-                Platform.runLater(() -> changeStatusOfSimulationsListItem(id, status));
+            if(simulationIdToStatuses != null && simulationIdToStatuses.size() > 0) {
+                for (Integer id : simulationIdToStatuses.keySet()) {
+                    String status = simulationIdToStatuses.get(id);
+                    Platform.runLater(() -> changeStatusOfSimulationsListItem(id, status));
+                }
             }
             try {
                 sleep(300);
