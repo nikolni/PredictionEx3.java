@@ -71,7 +71,7 @@ public class SimulationsDetailsController {
     }
     public void addSimulationItemToTreeView(String simulationName){
         this.simulationName = simulationName;
-        SingleSimulationController singleSimulationController = new SingleSimulationController(this, requestsFromServer);
+        SingleSimulationController singleSimulationController = new SingleSimulationController(this, simulationName);
         singleSimulationController.primaryInitialize(simulationName);
         singleSimulationControllerList.add(singleSimulationController);
     }
@@ -80,13 +80,24 @@ public class SimulationsDetailsController {
         int count = 0;
         if (selectedItem != null) {
             for (TreeItem<String> item : detailsTreeView.getTreeItem(0).getChildren()) {
-                if (selectedItem.getParent().getParent().getValue().equals(item.getValue())) {
-                    singleSimulationControllerList.get(count).handleSelectedItemChange(selectedItem, simulationName);
-                    break;
+                if (selectedItem.getParent() != null && selectedItem.getParent().getParent() != null) {
+                    if (selectedItem.getParent().getParent().getValue().equals(item.getValue()) || selectedItem.getParent().getValue().equals(item.getValue())) {
+                        SingleSimulationController singleSimulationControllerHandle = findController(item.getValue());
+                        singleSimulationControllerHandle.handleSelectedItemChange(selectedItem);
+                        break;
+                    }
+                    count++;
                 }
-                count++;
             }
         }
+    }
+    private SingleSimulationController findController(String simulationName){
+        for(SingleSimulationController singleSimulationController: singleSimulationControllerList ){
+            if(singleSimulationController.getSimulationName().equals(simulationName)){
+                return singleSimulationController;
+            }
+        }
+        return null;
     }
     public TreeView<String> getDetailsTreeView() {
         return detailsTreeView;

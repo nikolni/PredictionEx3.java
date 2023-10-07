@@ -138,8 +138,7 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
         }
     }
     @Override
-    public  void createSingleConditionActionChildren(ConditionActionDTO conditionActionDTO, FlowPane detailsFlowPane){
-        SingleConditionActionDTO singleConditionActionDTO= (SingleConditionActionDTO)conditionActionDTO;
+    public  void createSingleConditionActionChildren(SingleConditionActionDTO singleConditionActionDTO, FlowPane detailsFlowPane) {
         try{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(ActionsResourcesConstants.SINGLE_CONDITION_FXML_URL);
@@ -162,8 +161,7 @@ public class ActionTileCreatorFactoryImpl implements ActionTileCreatorFactory{
     }
 
     @Override
-    public  void createMultipleConditionActionChildren(ConditionActionDTO conditionActionDTO, FlowPane detailsFlowPane){
-        MultipleConditionActionDTO multipleConditionActionDTO= (MultipleConditionActionDTO)conditionActionDTO;
+    public  void createMultipleConditionActionChildren(MultipleConditionActionDTO multipleConditionActionDTO, FlowPane detailsFlowPane){
         try{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(ActionsResourcesConstants.MULTIPLE_CONDITION_FXML_URL);

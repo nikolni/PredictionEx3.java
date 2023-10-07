@@ -4,7 +4,8 @@ import dto.definition.rule.action.KillActionDTO;
 import dto.definition.rule.action.ProximityActionDTO;
 import dto.definition.rule.action.ReplaceActionDTO;
 import dto.definition.rule.action.SetActionDTO;
-import dto.definition.rule.action.condition.ConditionActionDTO;
+import dto.definition.rule.action.condition.MultipleConditionActionDTO;
+import dto.definition.rule.action.condition.SingleConditionActionDTO;
 import dto.definition.rule.action.numeric.DecreaseActionDTO;
 import dto.definition.rule.action.numeric.IncreaseActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
@@ -19,9 +20,9 @@ public interface ActionTileCreatorFactory {
       void createDivideActionChildren(DivideActionDTO divideActionDTO, FlowPane detailsFlowPane);
       void createMultiplyActionChildren(MultiplyActionDTO multiplyActionDTO, FlowPane detailsFlowPane);
       void createKillActionChildren(KillActionDTO killActionDTO, FlowPane detailsFlowPane);
-      void createSingleConditionActionChildren(ConditionActionDTO conditionActionDTO, FlowPane detailsFlowPane);
+      void createSingleConditionActionChildren(SingleConditionActionDTO singleConditionActionDTO, FlowPane detailsFlowPane);
 
-      void createMultipleConditionActionChildren(ConditionActionDTO conditionActionDTO, FlowPane detailsFlowPane);
+      void createMultipleConditionActionChildren(MultipleConditionActionDTO multipleConditionActionDTO, FlowPane detailsFlowPane);
       void createProximityActionChildren(ProximityActionDTO proximityActionDTO, FlowPane detailsFlowPane);
       void createReplaceActionChildren(ReplaceActionDTO replaceActionDTO, FlowPane detailsFlowPane);
 }
