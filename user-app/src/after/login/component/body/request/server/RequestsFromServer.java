@@ -11,6 +11,7 @@ import util.http.HttpClientUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -21,16 +22,6 @@ import static util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class RequestsFromServer {
 
-    private Consumer<List<String>> simulationNamesConsumer;
-
-    public void setSimulationNamesConsumer(Consumer<List<String>> simulationNamesConsumer){
-        this.simulationNamesConsumer = simulationNamesConsumer;
-    }
-    private Consumer<List<DTOUserRequestForUi>> userRequestsConsumer;
-
-    public void setUserRequestsConsumer(Consumer<List<DTOUserRequestForUi>> userRequestsConsumer){
-        this.userRequestsConsumer = userRequestsConsumer;
-    }
     public void postRequestToServer(String simulationName, String numberOfExecutions, String terminationConditions,
                                     String userName){
         String body = "simulation_name="+simulationName + LINE_SEPARATOR +
@@ -61,6 +52,11 @@ public class RequestsFromServer {
             }
         });
     }
+    private Consumer<List<String>> simulationNamesConsumer;
+
+    public void setSimulationNamesConsumer(Consumer<List<String>> simulationNamesConsumer){
+        this.simulationNamesConsumer = simulationNamesConsumer;
+    }
     public void getSimulationNamesFromServer() {
 
         String finalUrl = HttpUrl
@@ -85,7 +81,8 @@ public class RequestsFromServer {
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            List<String> simulationNames = Arrays.asList(Constants.GSON_INSTANCE.fromJson(json, String[].class));
+                            List<String> simulationNames = new ArrayList<>();
+                            simulationNames.addAll(Arrays.asList(Constants.GSON_INSTANCE.fromJson(json, String[].class)));
                             simulationNamesConsumer.accept(simulationNames);
                         }
                     } catch (IOException e) {
@@ -96,6 +93,11 @@ public class RequestsFromServer {
         });
     }
 
+    private Consumer<List<DTOUserRequestForUi>> userRequestsConsumer;
+
+    public void setUserRequestsConsumer(Consumer<List<DTOUserRequestForUi>> userRequestsConsumer){
+        this.userRequestsConsumer = userRequestsConsumer;
+    }
     public void getUserRequestListFromServer(String userName) {
         String finalUrl = HttpUrl
                 .parse(Constants.USER_REQUEST_PAGE)
@@ -107,14 +109,14 @@ public class RequestsFromServer {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                popUpWindow(e.getMessage(), "Error!");
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    popUpWindow(responseBody, "Error!");
+                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {

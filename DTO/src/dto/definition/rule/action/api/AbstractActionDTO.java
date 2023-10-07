@@ -1,6 +1,8 @@
 package dto.definition.rule.action.api;
 
 
+import java.lang.reflect.Type;
+
 public abstract class AbstractActionDTO {
 
     private final ActionType actionType;
@@ -27,4 +29,6 @@ public abstract class AbstractActionDTO {
     public String getSecondEntityDefinitionDTO() {
         return secondEntityDefinitionDTO;
     }
+
+
 }

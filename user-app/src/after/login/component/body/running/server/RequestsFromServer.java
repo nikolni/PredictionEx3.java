@@ -15,6 +15,8 @@ import util.http.HttpClientUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -57,7 +59,9 @@ public class RequestsFromServer {
                             String json = response.body().string();
                             Type mapType = new TypeToken<Map<Integer, String>>() {
                             }.getType();
-                            Map<Integer, String> simulationIdToStatuses = Constants.GSON_INSTANCE.fromJson(json, mapType);
+                            Map<Integer, String> simulationIdToStatuses = new HashMap<>();
+                            simulationIdToStatuses.putAll(Constants.GSON_INSTANCE.fromJson(json, mapType));
+                            //Map<Integer, String> simulationIdToStatuses = Constants.GSON_INSTANCE.fromJson(json, mapType);
                             simulationsStatusesConsumer.accept(simulationIdToStatuses);
                         }
                     } catch (IOException e) {
@@ -290,7 +294,8 @@ public class RequestsFromServer {
                         if (responseBody != null) {
                             String json = response.body().string();
                             Type listType = new TypeToken<List<DTOSimulationEndingForUi>>() {}.getType();
-                            List<DTOSimulationEndingForUi> simulationEndingList = Constants.GSON_INSTANCE.fromJson(response.body().string(), listType);
+                            //List<DTOSimulationEndingForUi> simulationEndingList = new ArrayList<>();
+                            List<DTOSimulationEndingForUi> simulationEndingList = (Constants.GSON_INSTANCE.fromJson(json, listType));
                             simulationEndingListConsumer.accept(simulationEndingList);
                         }
                     } catch (IOException e) {

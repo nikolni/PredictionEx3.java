@@ -13,7 +13,7 @@ public class UserRequest {
     private Integer requestID = 0;
     private final String simulationName;
     private final String userName;
-    private Integer numOfSimulations=0;
+    private Integer numOfSimulations;
     private final List<TerminationCondition> terminationConditionList;
     private List<String> terminationConditionListString;
     private String requestStatus = "in process";
@@ -25,18 +25,18 @@ public class UserRequest {
                        String terminationConditions, String userName) {
         this.simulationName = simulationName;
         this.numOfSimulations = numOfSimulations;
-        this.terminationConditionList = buildTerminationConditionList(terminationConditions);
+        this.terminationConditionList = new ArrayList<>();
+        buildTerminationConditionList(terminationConditions);
         this.userName=userName;
     }
 
-    private List<TerminationCondition> buildTerminationConditionList(String terminationConditions) {
+    private void buildTerminationConditionList(String terminationConditions) {
         List<TerminationCondition> terminationConditionList = new ArrayList<>();
 
         String[] sentencesPrimary = terminationConditions.split(",");
         for (String sentence : sentencesPrimary) {
             splitSentence(sentence);
         }
-        return terminationConditionList;
     }
 
     private void splitSentence(String sentence) {

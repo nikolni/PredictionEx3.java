@@ -30,18 +30,19 @@ public class AddResultsControllers implements Runnable {
 
             requestsFromServer.getSimulationEndingListFromServer(userName);
 
-
-            for (DTOSimulationEndingForUi dtoSimulationEndingForUi : executionDoneFromServer) {
-                boolean alreadyDone = false;
-                for(Integer executionId : executionDone) {
-                    if (dtoSimulationEndingForUi.getSimulationID() == executionId){
-                        alreadyDone = true;
-                        break;
+            if(executionDoneFromServer != null) {
+                for (DTOSimulationEndingForUi dtoSimulationEndingForUi : executionDoneFromServer) {
+                    boolean alreadyDone = false;
+                    for (Integer executionId : executionDone) {
+                        if (dtoSimulationEndingForUi.getSimulationID() == executionId) {
+                            alreadyDone = true;
+                            break;
+                        }
                     }
-                }
-                if(!alreadyDone){
-                    progressAndResultController.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi);
-                    executionDone.add(dtoSimulationEndingForUi.getSimulationID());
+                    if (!alreadyDone) {
+                        progressAndResultController.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi);
+                        executionDone.add(dtoSimulationEndingForUi.getSimulationID());
+                    }
                 }
             }
             try {

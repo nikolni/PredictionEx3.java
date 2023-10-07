@@ -8,6 +8,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import okhttp3.OkHttpClient;
 
 public class Constants {
 
@@ -36,9 +37,8 @@ public class Constants {
     public final static String RESULTS_PAGE = FULL_SERVER_PATH + "/execution/results";
     public final static String SIMULATION_DETAILS_PAGE = FULL_SERVER_PATH + "/simulation/details";
     public final static String EXECUTIONS_ENDING_PAGE = FULL_SERVER_PATH + "/executions/ending";
-    public final static String THREAD_POOL_STATUS_PAGE = FULL_SERVER_PATH + "/thread/pool";
 
-
+    public final static OkHttpClient HTTP_CLIENT = new OkHttpClient();
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();

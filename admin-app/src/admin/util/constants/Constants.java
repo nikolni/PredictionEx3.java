@@ -31,6 +31,7 @@ public class Constants {
     public final static String ALL_REQUESTS_PAGE = FULL_SERVER_PATH + "/adminallrequests";
     public final static String SIMULATION_DETAILS_PAGE = FULL_SERVER_PATH + "/simulation/details";
     public final static String THREAD_POOL_STATUS_PAGE = FULL_SERVER_PATH + "/thread/pool";
+    public final static String FILE_PAGE = FULL_SERVER_PATH + "/upload/file";
 
     public final static OkHttpClient HTTP_CLIENT = new OkHttpClient();
     // GSON instance
@@ -40,6 +41,7 @@ public class Constants {
         Stage errorStage = new Stage();
 
         Label label = new Label(massage);
+        label.setWrapText(true);
         Font font = new Font(16);
         label.setFont(font);
         VBox vbox = new VBox(label);

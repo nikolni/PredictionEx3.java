@@ -37,20 +37,22 @@ public class UpdateRequestGridPane implements Runnable{
         }
 
     public void updateRequestGridPane(List<DTOUserRequestForUi> userRequestList) {
-        int row = 0;
-        for (DTOUserRequestForUi userRequest : userRequestList) {
-            Label requestID= new Label(userRequest.getRequestID().toString());
-            Label requestStatus= new Label(userRequest.getRequestStatus());
-            Label numOfSimulationsRunning= new Label(userRequest.getNumOfSimulationsRunning().toString());
-            Label numOfSimulationsDone= new Label(userRequest.getNumOfSimulationsDone().toString());
-            int finalRow = row;
-            Platform.runLater(() -> {
-                requestGridPane.add(requestID, 0, finalRow);
-                requestGridPane.add(requestStatus, 1, finalRow);
-                requestGridPane.add(numOfSimulationsRunning, 2, finalRow);
-                requestGridPane.add(numOfSimulationsDone, 3, finalRow);
-            });
-            row++;
+        int row = 1;
+        if(userRequestList != null) {
+            for (DTOUserRequestForUi userRequest : userRequestList) {
+                Label requestID = new Label(userRequest.getRequestID().toString());
+                Label requestStatus = new Label(userRequest.getRequestStatus());
+                Label numOfSimulationsRunning = new Label(userRequest.getNumOfSimulationsRunning().toString());
+                Label numOfSimulationsDone = new Label(userRequest.getNumOfSimulationsDone().toString());
+                int finalRow = row;
+                Platform.runLater(() -> {
+                    requestGridPane.add(requestID, 0, finalRow);
+                    requestGridPane.add(requestStatus, 1, finalRow);
+                    requestGridPane.add(numOfSimulationsRunning, 2, finalRow);
+                    requestGridPane.add(numOfSimulationsDone, 3, finalRow);
+                });
+                row++;
+            }
         }
     }
 

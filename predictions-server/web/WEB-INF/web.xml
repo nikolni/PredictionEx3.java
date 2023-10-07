@@ -14,7 +14,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>FileUploadServlet</servlet-name>
-        <url-pattern>/upload-file</url-pattern>
+        <url-pattern>/upload/file</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
