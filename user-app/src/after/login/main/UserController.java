@@ -27,6 +27,9 @@ public class UserController {
             tabPaneUserBodyComponentController.setMainController(this);
         }
     }
+    public void initialPrimaryForTabPaneComponenets(){
+        tabPaneUserBodyComponentController.initialChildren();
+    }
     public String getUserName() {
         return userName;
     }

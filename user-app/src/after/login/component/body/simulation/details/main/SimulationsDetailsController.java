@@ -58,6 +58,7 @@ public class SimulationsDetailsController {
         new Thread(updateSimulationsTreeView).start();*/
     }
     public void primaryInitialize() {
+        singleSimulationControllerList = new ArrayList<>();
         UpdateSimulationsTreeView updateSimulationsTreeView = new UpdateSimulationsTreeView(this,
                 requestsFromServer);
         new Thread(updateSimulationsTreeView).start();

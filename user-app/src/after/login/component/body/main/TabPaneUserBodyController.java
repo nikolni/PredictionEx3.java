@@ -31,10 +31,9 @@ public class TabPaneUserBodyController {
     public void setMainController(UserController mainUserController) {
         this.mainUserController = mainUserController;
         setControllersForChildren();
-        initialChildren();
     }
 
-    private void initialChildren(){
+    public void initialChildren(){
         resultsComponentController.primaryInitialize();
         requestsComponentController.primaryInitialize();
         simulationDetailsComponentController.primaryInitialize();

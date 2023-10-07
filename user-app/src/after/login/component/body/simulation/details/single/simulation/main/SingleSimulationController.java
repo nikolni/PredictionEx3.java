@@ -29,6 +29,7 @@ import dto.definition.termination.condition.manager.TerminationConditionsDTOMana
 import dto.include.DTOIncludeSimulationDetailsForUi;
 import dto.primary.DTODefinitionsForUi;
 import dto.primary.DTOEnvVarsDefForUi;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -54,6 +55,7 @@ public class SingleSimulationController {
     private final ScrollPane detailsScrollPane;
     private final RequestsFromServer requestsFromServer;
     private DTOIncludeSimulationDetailsForUi simulationDetails;
+    private String simulationName;
 
     public SingleSimulationController(SimulationsDetailsController simulationsDetailsController, RequestsFromServer requestsFromServer){
         detailsTreeView = simulationsDetailsController.getDetailsTreeView();
@@ -74,23 +76,35 @@ public class SingleSimulationController {
         valueDefText.setVisible(false);
         detailsFlowPane.getChildren().clear();
 
+        this.simulationName = simulationName;
         requestsFromServer.getSimulationDetailsFromServer(simulationName);
 
 
-        TreeItem<String> rootItem = new TreeItem<>(simulationName);
+        /*TreeItem<String> rootItem = new TreeItem<>(simulationName);
         TreeItem<String> entitiesBranch = createEntitiesSubTree(simulationDetails);
         TreeItem<String> ruleBranch = createRulesSubTree(simulationDetails);
-        TreeItem<String> terminationBranch = new TreeItem<>("Termination conditions");
+        //TreeItem<String> terminationBranch = new TreeItem<>("Termination conditions");
         TreeItem<String> environmentBranch = new TreeItem<>("Environment variables");
         TreeItem<String> worldGridBranch = new TreeItem<>("World grid sizes");
 
-        rootItem.getChildren().addAll(entitiesBranch, ruleBranch,terminationBranch,environmentBranch, worldGridBranch);
-        detailsTreeView.getTreeItem(0).getChildren().add(rootItem);
+        rootItem.getChildren().addAll(entitiesBranch, ruleBranch,environmentBranch, worldGridBranch);
+        detailsTreeView.getTreeItem(0).getChildren().add(rootItem);*/
 
 
     }
     private void useSimulationDetailsConsumer(DTOIncludeSimulationDetailsForUi simulationDetailsConsumer){
         simulationDetails = simulationDetailsConsumer;
+        Platform.runLater(() -> {
+            TreeItem<String> rootItem = new TreeItem<>(simulationName);
+            TreeItem<String> entitiesBranch = createEntitiesSubTree(simulationDetails);
+            TreeItem<String> ruleBranch = createRulesSubTree(simulationDetails);
+            //TreeItem<String> terminationBranch = new TreeItem<>("Termination conditions");
+            TreeItem<String> environmentBranch = new TreeItem<>("Environment variables");
+            TreeItem<String> worldGridBranch = new TreeItem<>("World grid sizes");
+
+            rootItem.getChildren().addAll(entitiesBranch, ruleBranch,environmentBranch, worldGridBranch);
+            detailsTreeView.getTreeItem(0).getChildren().add(rootItem);
+        });
     }
 
     public void handleSelectedItemChange(TreeItem<String> selectedItem, String simulationName) {
