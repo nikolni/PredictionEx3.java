@@ -21,21 +21,18 @@ public class UpdateUiTask extends Task<Boolean> {
     public final SimpleIntegerProperty secondsPast;
     private final SimpleIntegerProperty ticksPast;
     private final SimpleIntegerProperty entitiesLeft;
-    private final Integer totalTicksNumber;
-    private final Integer totalSecondsNumber;
-    private final RequestsFromServer requestsFromServer;
+    private Integer totalTicksNumber;
+    private Integer totalSecondsNumber;
+    private final RequestsFromServer requestsFromServer = new RequestsFromServer();
     private final String userName;
     private DTOSimulationProgressForUi dtoSimulationProgressForUi;
-    private DTOSecTicksForUi dtoSecTicksForUis;
-    private List<TerminationConditionsDTO> terminationConditionsDTOList;
 
     public UpdateUiTask(SimulationProgressController currentSimulationController, Integer executionID,
-                        RequestsFromServer requestsFromServer, String userName) {
+                         String userName) {
         this.currentSimulationController = currentSimulationController;
         this.executionID = executionID;
         this.userName = userName;
 
-        this.requestsFromServer = requestsFromServer;
         requestsFromServer.setTotalSecAndTickConsumer(this::useDTOSecTicksForUi);
         requestsFromServer.setExecutionProgressConsumer(this::useExecutionProgress);
         requestsFromServer.setTerminationConditionsListConsumer(this::useTerminationConditions);
@@ -44,23 +41,19 @@ public class UpdateUiTask extends Task<Boolean> {
         this.ticksPast = new SimpleIntegerProperty(0);
         this.entitiesLeft = new SimpleIntegerProperty(0);
         requestsFromServer.getTotalSecAndTickFromServer(userName, executionID);
-
-        this.totalTicksNumber = dtoSecTicksForUis.getTicks();
-        this.totalSecondsNumber = dtoSecTicksForUis.getSeconds();
     }
     private void useDTOSecTicksForUi(DTOSecTicksForUi secTicksConsumer){
-        dtoSecTicksForUis = secTicksConsumer;
+        this.totalTicksNumber = secTicksConsumer.getTicks();
+        this.totalSecondsNumber = secTicksConsumer.getSeconds();
+
     }
     @Override
     protected Boolean call()  {
         while(Thread.currentThread().isAlive()){
             requestsFromServer.getExecutionProgressFromServer( userName, executionID);
+            //requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
 
 
-            requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
-
-
-            updateSimulationProgress(dtoSimulationProgressForUi, terminationConditionsDTOList);
             try {
                 sleep(200);
             } catch (InterruptedException e) {
@@ -73,9 +66,12 @@ public class UpdateUiTask extends Task<Boolean> {
 
     private void useExecutionProgress(DTOSimulationProgressForUi executionProgressConsumer){
         dtoSimulationProgressForUi = executionProgressConsumer;
+        requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
     }
     private void useTerminationConditions(List<TerminationConditionsDTO> terminationConditionsConsumer){
-        terminationConditionsDTOList = terminationConditionsConsumer;
+        if(totalSecondsNumber != null) {
+            updateSimulationProgress(dtoSimulationProgressForUi, terminationConditionsConsumer);
+        }
     }
 
     public SimpleIntegerProperty getSecondsPastProperty() {

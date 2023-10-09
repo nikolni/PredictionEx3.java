@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -103,7 +102,6 @@
                   </Label>
                   <Label styleClass="body-label" text="Executions that done" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
                   <Label prefHeight="58.0" prefWidth="77.0" styleClass="body-label" text="Executions running at the moment" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-                  <CheckBox mnemonicParsing="false" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                   <Label id="range-label" alignment="CENTER" prefHeight="60.0" prefWidth="58.0" styleClass="body-label" text="  Executions left for execute" textAlignment="CENTER" textFill="WHITE" wrapText="true" GridPane.columnIndex="6" GridPane.halignment="CENTER">
                      <padding>
                         <Insets left="-15.0" />

@@ -27,10 +27,13 @@ public class ControlExecutionServlet extends CommonServletsUtils {
         switch (action){
             case "pause":
                 systemEngineAccess.pauseSimulation(executionID);
+                break;
             case "resume":
                 systemEngineAccess.resumeSimulation(executionID);
+                break;
             case "stop":
                 systemEngineAccess.cancelSimulation(executionID);
+                break;
         }
     }
 

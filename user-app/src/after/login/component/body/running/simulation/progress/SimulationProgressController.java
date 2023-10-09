@@ -7,6 +7,7 @@ import dto.definition.termination.condition.api.TerminationConditionsDTO;
 import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
 import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -60,6 +61,7 @@ public class SimulationProgressController {
     private RequestsFromServer requestsFromServer ;
     private String userName;
     private List<TerminationConditionsDTO> terminationConditionsDTOList;
+    private UpdateUiTask uiTask;
 
 
     public void setExecutionID(int executionID) {
@@ -75,6 +77,8 @@ public class SimulationProgressController {
         this.progressAndResultController = progressAndResultController;
         this.userName = userName;
         this.requestsFromServer = requestsFromServer;
+
+        requestsFromServer.setTerminationConditionsListConsumer(this::useTerminationConditions);
     }
     public void setSimulationIdLabel(String simulationIdLabel) {
         this.simulationIdLabel.setText(simulationIdLabel);
@@ -93,6 +97,46 @@ public class SimulationProgressController {
         entitiesLeftGridPane.getChildren().clear();
         ticksProgressBar.setProgress(0);
         secondsProgressBar.setProgress(0);
+    }
+    public void bindUiTaskToUiUpLevelComponents(UpdateUiTask uiTask) {
+        this.uiTask = uiTask;
+        // task message
+        progressMassageLabel.textProperty().bind(uiTask.messageProperty());
+
+        requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
+
+    }
+    private void useTerminationConditions(List<TerminationConditionsDTO> terminationConditionsConsumer){
+        terminationConditionsDTOList = terminationConditionsConsumer;
+        Platform.runLater(() -> {
+            if (terminationConditionsDTOList.get(0) instanceof ByUserTerminationConditionDTOImpl) {
+                ticksProgressBar.setDisable(true);
+                secondsProgressBar.setDisable(true);
+                ticksPercentLabel.setDisable(true);
+                secondsPercentLabel.setDisable(true);
+            } else if(terminationConditionsDTOList.get(0) instanceof TicksTerminationConditionsDTOImpl) {
+                // task progress bar
+                ticksProgressBar.progressProperty().bind(uiTask.progressProperty());
+
+                // task percent label
+                ticksPercentLabel.textProperty().bind(
+                        Bindings.concat(
+                                Bindings.format(
+                                        "%.0f",
+                                        Bindings.multiply(
+                                                uiTask.progressProperty(),
+                                                100)),
+                                " %"));
+
+                ticksProgressBar.setDisable(false);
+                ticksPercentLabel.setDisable(false);
+            }
+            else{
+                ticksProgressBar.setDisable(true);
+                ticksPercentLabel.setDisable(true);
+            }
+            bindUiTaskToUiDownLevelComponents(uiTask);
+        });
     }
     public void bindUiTaskToUiDownLevelComponents(UpdateUiTask uiTask) {
         secondsLabel.textProperty().bind(Bindings.format("%,d", uiTask.getSecondsPastProperty()));
@@ -120,43 +164,7 @@ public class SimulationProgressController {
 
     }
 
-    public void bindUiTaskToUiUpLevelComponents(Task<Boolean> uiTask) {
-        // task message
-        progressMassageLabel.textProperty().bind(uiTask.messageProperty());
 
-        requestsFromServer.getTerminationConditionsFromServer(userName, executionID);
-        requestsFromServer.setTerminationConditionsListConsumer(this::useTerminationConditions);
-
-        if (terminationConditionsDTOList.get(0) instanceof ByUserTerminationConditionDTOImpl) {
-            ticksProgressBar.setDisable(true);
-            secondsProgressBar.setDisable(true);
-            ticksPercentLabel.setDisable(true);
-            secondsPercentLabel.setDisable(true);
-        } else if(terminationConditionsDTOList.get(0) instanceof TicksTerminationConditionsDTOImpl) {
-            // task progress bar
-            ticksProgressBar.progressProperty().bind(uiTask.progressProperty());
-
-            // task percent label
-            ticksPercentLabel.textProperty().bind(
-                    Bindings.concat(
-                            Bindings.format(
-                                    "%.0f",
-                                    Bindings.multiply(
-                                            uiTask.progressProperty(),
-                                            100)),
-                            " %"));
-
-            ticksProgressBar.setDisable(false);
-            ticksPercentLabel.setDisable(false);
-        }
-        else{
-            ticksProgressBar.setDisable(true);
-            ticksPercentLabel.setDisable(true);
-        }
-    }
-    private void useTerminationConditions(List<TerminationConditionsDTO> terminationConditionsConsumer){
-        terminationConditionsDTOList = terminationConditionsConsumer;
-    }
 
     public void onTaskFinished() {
         this.progressMassageLabel.textProperty().unbind();

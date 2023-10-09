@@ -16,9 +16,11 @@ public abstract class CommonServletsUtils extends HttpServlet {
 
     private String getSimulationNameOfExecution(Integer executionId, Map<UserRequest, List<Integer>> userRequestListMap){
         for(UserRequest userRequest : userRequestListMap.keySet()){
-            for(Integer id : userRequestListMap.get(userRequest)){
-                if(id.equals(executionId)){
-                    return userRequest.getSimulationName();
+            if(userRequestListMap.get(userRequest) != null) {
+                for (Integer id : userRequestListMap.get(userRequest)) {
+                    if (id.equals(executionId)) {
+                        return userRequest.getSimulationName();
+                    }
                 }
             }
         }

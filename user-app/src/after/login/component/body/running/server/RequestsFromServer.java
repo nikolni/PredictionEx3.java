@@ -1,7 +1,24 @@
 package after.login.component.body.running.server;
 
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import dto.definition.rule.action.KillActionDTO;
+import dto.definition.rule.action.ProximityActionDTO;
+import dto.definition.rule.action.ReplaceActionDTO;
+import dto.definition.rule.action.SetActionDTO;
+import dto.definition.rule.action.api.AbstractActionDTO;
+import dto.definition.rule.action.condition.MultipleConditionActionDTO;
+import dto.definition.rule.action.condition.SingleConditionActionDTO;
+import dto.definition.rule.action.numeric.DecreaseActionDTO;
+import dto.definition.rule.action.numeric.IncreaseActionDTO;
+import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
+import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
 import dto.definition.termination.condition.api.TerminationConditionsDTO;
+import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
+import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
+import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
 import dto.include.DTOIncludeForResultsAdditionalForUi;
 import dto.include.DTOIncludeForResultsPrimaryForUi;
 import dto.primary.DTOSecTicksForUi;
@@ -15,7 +32,6 @@ import util.http.HttpClientUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,14 +60,14 @@ public class RequestsFromServer {
         call.enqueue( new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Simulations status failure!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "Simulations status error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
@@ -88,14 +104,14 @@ public class RequestsFromServer {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Execution progress failure!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "Execution progress error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
@@ -116,7 +132,7 @@ public class RequestsFromServer {
     public void postControlRequestToServer(String userName, Integer executionID, String action){
         String body = "user_name="+userName + LINE_SEPARATOR +
                 "executionID="+executionID + LINE_SEPARATOR +
-                "action"+action;
+                "action="+action;
 
         Request request = new Request.Builder()
                 .url(Constants.CONTROL_EXECUTION_PAGE)
@@ -127,16 +143,14 @@ public class RequestsFromServer {
         call.enqueue( new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Control request failure!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
-                } else {
-                    Platform.runLater(() -> popUpWindow("Your request has been received and is being processed", "Request was received"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "Control request error!"));
                 }
             }
         });
@@ -158,14 +172,14 @@ public class RequestsFromServer {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "TotalSecAndTick failure!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "TotalSecAndTick error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
@@ -198,20 +212,26 @@ public class RequestsFromServer {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Primary results failure!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "Primary results error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            DTOIncludeForResultsPrimaryForUi dtoIncludeForResultsPrimaryForUis = Constants.GSON_INSTANCE.fromJson(json, DTOIncludeForResultsPrimaryForUi.class);
+
+                            GsonBuilder gsonBuilder = new GsonBuilder();
+                            Gson gson = gsonBuilder.create();
+                            gsonBuilder.registerTypeAdapter(AbstractActionDTO.class, new AbstractActionDTOTypeAdapter(gson));
+                            gson = gsonBuilder.create();
+
+                            DTOIncludeForResultsPrimaryForUi dtoIncludeForResultsPrimaryForUis = gson.fromJson(json, DTOIncludeForResultsPrimaryForUi.class);
                             resultsPrimaryConsumer.accept(dtoIncludeForResultsPrimaryForUis);
                         }
                     } catch (IOException e) {
@@ -220,6 +240,56 @@ public class RequestsFromServer {
                 }
             }
         });
+    }
+    public class AbstractActionDTOTypeAdapter extends TypeAdapter<AbstractActionDTO> {
+        private final Gson gson;
+        public AbstractActionDTOTypeAdapter(Gson gson) {
+            this.gson = gson;
+        }
+        @Override
+        public void write(JsonWriter out, AbstractActionDTO value) throws IOException {
+            // Implement serialization logic here if needed
+        }
+
+        @Override
+        public AbstractActionDTO read(JsonReader in) throws IOException {
+            JsonElement jsonElement = gson.getAdapter(JsonElement.class).read(in);
+
+            if (jsonElement.isJsonObject()) {
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+                JsonElement actionTypeElement = jsonObject.get("actionType");
+
+                if (actionTypeElement != null && actionTypeElement.isJsonPrimitive()) {
+                    String actionType = actionTypeElement.getAsString();
+
+                    switch (actionType) {
+                        case "INCREASE":
+                            return gson.fromJson(jsonElement, IncreaseActionDTO.class);
+                        case "DECREASE":
+                            return gson.fromJson(jsonElement, DecreaseActionDTO.class);
+                        case "SET":
+                            return gson.fromJson(jsonElement, SetActionDTO.class);
+                        case "DIVIDE":
+                            return gson.fromJson(jsonElement, DivideActionDTO.class);
+                        case "MULTIPLY":
+                            return gson.fromJson(jsonElement, MultiplyActionDTO.class);
+                        case "SINGLE":
+                            return gson.fromJson(jsonElement, SingleConditionActionDTO.class);
+                        case "MULTIPLE":
+                            return gson.fromJson(jsonElement, MultipleConditionActionDTO.class);
+                        case "KILL":
+                            return gson.fromJson(jsonElement, KillActionDTO.class);
+                        case "PROXIMITY":
+                            return gson.fromJson(jsonElement, ProximityActionDTO.class);
+                        case "REPLACE":
+                            return gson.fromJson(jsonElement, ReplaceActionDTO.class);
+                    }
+
+                }
+            }
+
+            throw new JsonParseException("Invalid AbstractActionDTO JSON: " + jsonElement);
+        }
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private Consumer<DTOIncludeForResultsAdditionalForUi> additionalResultsConsumer;
@@ -241,14 +311,14 @@ public class RequestsFromServer {
         call.enqueue( new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Additional results failure!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "Additional results error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
@@ -280,14 +350,14 @@ public class RequestsFromServer {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Simulation ending failure!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "Simulation ending error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
@@ -322,21 +392,27 @@ public class RequestsFromServer {
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Termination conditions failure!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "Termination conditions error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
+                            GsonBuilder gsonBuilder = new GsonBuilder();
+                            Gson gson = gsonBuilder.create();
+                            gsonBuilder.registerTypeAdapter(TerminationConditionsDTO.class, new TerminationConditionsDTOTypeAdapter(gson));
+                            gson = gsonBuilder.create();
+
+
                             Type listType = new TypeToken<List<TerminationConditionsDTO>>() {}.getType();
-                            List<TerminationConditionsDTO> terminationConditionsDTOList = Constants.GSON_INSTANCE.fromJson(response.body().string(), listType);
+                            List<TerminationConditionsDTO> terminationConditionsDTOList = gson.fromJson(json, listType);
                             terminationConditionsListConsumer.accept(terminationConditionsDTOList);
                         }
                     } catch (IOException e) {
@@ -345,5 +421,42 @@ public class RequestsFromServer {
                 }
             }
         });
+    }
+
+    public class TerminationConditionsDTOTypeAdapter extends TypeAdapter<TerminationConditionsDTO> {
+        private final Gson gson;
+        public TerminationConditionsDTOTypeAdapter(Gson gson) {
+            this.gson = gson;
+        }
+        @Override
+        public void write(JsonWriter out, TerminationConditionsDTO value) throws IOException {
+            // Implement serialization logic here if needed
+        }
+
+        @Override
+        public TerminationConditionsDTO read(JsonReader in) throws IOException {
+            JsonElement jsonElement = gson.getAdapter(JsonElement.class).read(in);
+
+            if (jsonElement.isJsonObject()) {
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+                JsonElement actionTypeElement = jsonObject.get("type");
+
+                if (actionTypeElement != null && actionTypeElement.isJsonPrimitive()) {
+                    String actionType = actionTypeElement.getAsString();
+
+                    switch (actionType) {
+                        case "Seconds":
+                            return gson.fromJson(jsonElement, TimeTerminationConditionsDTOImpl.class);
+                        case "Ticks":
+                            return gson.fromJson(jsonElement, TicksTerminationConditionsDTOImpl.class);
+                        case "ByUser":
+                            return gson.fromJson(jsonElement, ByUserTerminationConditionDTOImpl.class);
+                    }
+
+                }
+            }
+
+            throw new JsonParseException("Invalid AbstractActionDTO JSON: " + jsonElement);
+        }
     }
 }

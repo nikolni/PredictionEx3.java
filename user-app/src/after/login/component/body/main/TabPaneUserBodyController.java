@@ -76,4 +76,7 @@ public class TabPaneUserBodyController {
         executionComponentController.setTilesByRerun(executionID);
 
     }
+    public void onStartClickFromExecution(Integer requestIndexInRequestController){
+        requestsComponentController.decreaseExecutionLeftLabel(requestIndexInRequestController);
+    }
 }

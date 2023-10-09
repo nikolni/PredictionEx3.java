@@ -46,8 +46,6 @@ public class RequestsFromServer {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
                     Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
-                } else {
-                    Platform.runLater(() -> popUpWindow("Your request has been received and is being processed", "Request was accepted"));
                 }
             }
         });

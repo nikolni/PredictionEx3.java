@@ -5,7 +5,7 @@ import dto.definition.termination.condition.tick.Tick;
 
 public class TicksTerminationConditionsDTOImpl implements TerminationConditionsDTO {
     private Tick ticks = new Tick();
-
+    private String type = "Ticks";
     public TicksTerminationConditionsDTOImpl(int tickNumber){
         ticks.setTick(tickNumber);
     }

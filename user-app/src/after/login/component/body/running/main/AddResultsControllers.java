@@ -2,6 +2,7 @@ package after.login.component.body.running.main;
 
 import after.login.component.body.running.server.RequestsFromServer;
 import dto.primary.DTOSimulationEndingForUi;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,6 @@ public class AddResultsControllers implements Runnable {
     private final List<Integer> executionDone;
     private final String userName;
     private final ProgressAndResultController progressAndResultController;
-    private List<DTOSimulationEndingForUi> executionDoneFromServer;
 
     public AddResultsControllers(RequestsFromServer requestsFromServer, String userName, ProgressAndResultController progressAndResultController) {
         this.userName = userName;
@@ -30,21 +30,6 @@ public class AddResultsControllers implements Runnable {
 
             requestsFromServer.getSimulationEndingListFromServer(userName);
 
-            if(executionDoneFromServer != null) {
-                for (DTOSimulationEndingForUi dtoSimulationEndingForUi : executionDoneFromServer) {
-                    boolean alreadyDone = false;
-                    for (Integer executionId : executionDone) {
-                        if (dtoSimulationEndingForUi.getSimulationID() == executionId) {
-                            alreadyDone = true;
-                            break;
-                        }
-                    }
-                    if (!alreadyDone) {
-                        progressAndResultController.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi);
-                        executionDone.add(dtoSimulationEndingForUi.getSimulationID());
-                    }
-                }
-            }
             try {
                 sleep(300);
             } catch (InterruptedException e) {
@@ -53,7 +38,19 @@ public class AddResultsControllers implements Runnable {
         }
     }
     private void useExecutionDoneFromServer(List<DTOSimulationEndingForUi> executionDoneConsumer){
-        executionDoneFromServer =  executionDoneConsumer;
+        for (DTOSimulationEndingForUi dtoSimulationEndingForUi : executionDoneConsumer) {
+            boolean alreadyDone = false;
+            for (Integer executionId : executionDone) {
+                if (dtoSimulationEndingForUi.getSimulationID() == executionId) {
+                    alreadyDone = true;
+                    break;
+                }
+            }
+            if (!alreadyDone) {
+                Platform.runLater(() -> progressAndResultController.createAndAddNewSimulationResultToList(dtoSimulationEndingForUi));
+                executionDone.add(dtoSimulationEndingForUi.getSimulationID());
+            }
+        }
     }
 
 }

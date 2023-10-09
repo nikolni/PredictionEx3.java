@@ -14,12 +14,15 @@ public class UserController {
     @FXML private TabPaneUserBodyController tabPaneUserBodyComponentController;
 
     private String userName;
+    private boolean duringExecution = false;
 
 
     public void setUserName(String userName){
         this.userName = userName;
     }
-
+    public void endExecutionInitialization(){
+        duringExecution = false;
+    }
     @FXML
     public void initialize() {
         if (headerComponentController != null && tabPaneUserBodyComponentController != null) {
@@ -27,7 +30,7 @@ public class UserController {
             tabPaneUserBodyComponentController.setMainController(this);
         }
     }
-    public void initialPrimaryForTabPaneComponenets(){
+    public void initialPrimaryForTabPaneComponents(){
         tabPaneUserBodyComponentController.initialChildren();
     }
     public String getUserName() {
@@ -37,9 +40,15 @@ public class UserController {
 
     public void onExecutionClickFromRequest() {
         tabPaneUserBodyComponentController.switchToTab3FromRequest();
+        duringExecution = true;
     }
     public void onExecutionClickFromHeader() {
-        tabPaneUserBodyComponentController.switchToTab3FromHeader();
+        if(duringExecution){
+            tabPaneUserBodyComponentController.switchToTab3FromRequest();
+        }
+        else{
+            tabPaneUserBodyComponentController.switchToTab3FromHeader();
+        }
     }
 
     public void onRequestClick() {
@@ -55,8 +64,11 @@ public class UserController {
     }
 
     public void onRerunClick(int executionID){
-        tabPaneUserBodyComponentController.switchToTab2();
+        tabPaneUserBodyComponentController.switchToTab3FromRequest();
         tabPaneUserBodyComponentController.onRerunClick(executionID);
+    }
+    public void onStartClickFromExecution(Integer requestIndexInRequestController){
+        tabPaneUserBodyComponentController.onStartClickFromExecution(requestIndexInRequestController);
     }
 
 }

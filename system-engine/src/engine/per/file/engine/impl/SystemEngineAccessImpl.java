@@ -215,7 +215,7 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
         RunSimulation runSimulationInstance = new RunSimulationImpl(simulationIdToWorldInstance.get(simulationID),
                 terminationConditionList);
         runSimulationManager.addSimulationIdToRunSimulation(simulationID, runSimulationInstance);
-        runSimulationManager.addTerminationConditionsList(simulationID, terminationConditionList);
+        //runSimulationManager.addTerminationConditionsList(simulationID, terminationConditionList);
         terminationConditionArr = runSimulationInstance.runSimulationOnLastWorldInstance(worldDefinition,
                 simulationIdToWorldInstance.get(simulationID));
 
@@ -224,6 +224,10 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
         ThreadsPoolManager.increaseCompletedTaskCount();
         ThreadsPoolManager.decreaseActiveCount();
+    }
+    @Override
+    public void addTerminationConditionsList(Integer simulationID, List<TerminationCondition>  terminationConditionsList){
+        runSimulationManager.addTerminationConditionsList(simulationID, terminationConditionsList);
     }
 
     /*@Override

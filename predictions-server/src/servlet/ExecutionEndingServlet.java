@@ -19,7 +19,7 @@ public class ExecutionEndingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<DTOSimulationEndingForUi> executionsDoneFromServer = new ArrayList<>();
 
-        String userName = request.getHeader("user_name");
+        String userName = request.getParameter("user_name");
 
         Map<UserRequest, List<Integer>> userExecutions = ServletUtils.getAllocationsManager(getServletContext()).getRequestsMapByUserName(userName);
 
@@ -28,10 +28,12 @@ public class ExecutionEndingServlet extends HttpServlet {
             SystemEngineAccess systemEngineAccess = ServletUtils.getSEInstanceBySimulationName(getServletContext(), simulationName);
             Collection<DTOSimulationEndingForUi> executionsDone = systemEngineAccess.getExecutionsDone();
 
-            for(Integer executionID : userExecutions.get(userRequest)) {
-                for(DTOSimulationEndingForUi dtoSimulationEndingForUi: executionsDone){
-                    if(executionID == dtoSimulationEndingForUi.getSimulationID()){
-                        executionsDoneFromServer.add(dtoSimulationEndingForUi);
+            if(userExecutions.get(userRequest) != null) {
+                for (Integer executionID : userExecutions.get(userRequest)) {
+                    for (DTOSimulationEndingForUi dtoSimulationEndingForUi : executionsDone) {
+                        if (executionID == dtoSimulationEndingForUi.getSimulationID()) {
+                            executionsDoneFromServer.add(dtoSimulationEndingForUi);
+                        }
                     }
                 }
             }

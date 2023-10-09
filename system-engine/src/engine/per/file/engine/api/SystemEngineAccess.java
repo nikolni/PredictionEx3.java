@@ -61,4 +61,5 @@ public interface SystemEngineAccess {
     void prepareForExecution(DTOEnvVarDefValuesForSE dtoEnvVarDefValuesForSE ,
                         DTOPopulationValuesForSE dtoPopulationValuesForSE, Integer executionID);
     Collection<DTOSimulationEndingForUi> getExecutionsDone();
+    void addTerminationConditionsList(Integer simulationID, List<TerminationCondition>  terminationConditionsList);
 }
