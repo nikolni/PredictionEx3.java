@@ -10,7 +10,7 @@ import java.util.Map;
 public class AllocationsManager {
      private List<UserRequest> allUsersRequestsList = null;
     private Map<String, Map<UserRequest, List<Integer>>> mapOfUserNameToRequestsMap = null;
-    private int executionsCounter = 0;
+    private int executionsCounter = 1;
     private int requestsCounter = 1;
 
     private static final Object allUsersRequestsListLock = new Object();

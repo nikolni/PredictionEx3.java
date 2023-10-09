@@ -9,6 +9,7 @@ import dto.include.DTOIncludeForResultsPrimaryForUi;
 import dto.primary.DTODefinitionsForUi;
 import dto.primary.DTOEntitiesAfterSimulationByQuantityForUi;
 import dto.primary.DTOPropertyHistogramForUi;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
@@ -48,6 +49,8 @@ public class ResultsController {
     private String userName;
     private DTOIncludeForResultsPrimaryForUi primaryResults;
     private DTOIncludeForResultsAdditionalForUi additionalResults;
+    private Integer executionID;
+    private TreeItem<String> selectedItemMember;
 
     public void setMembers(ProgressAndResultController progressAndResultController, String userName,
                            RequestsFromServer requestsFromServer) {
@@ -101,23 +104,26 @@ public class ResultsController {
     }
 
     public void handleSimulationSelection(int simulationID) {
+        this.executionID = simulationID;
         requestsFromServer.getPrimaryResults(userName, simulationID);
-
-        entityTimeGraphPane.setContent(createEntitiesByTickGraph(primaryResults.getEntitiesAfterSimulationByQuantity()));
-        entityTimeGraphPane.setVisible(true);
-
-        TreeItem<String> rootItem = createEntitiesSubTree();
-        entityPropTreeView.setRoot(rootItem);
-        entityPropTreeView.setShowRoot(false);
-        entityPropTreeView.setVisible(true);
-
-        entityPropTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue!=null && newValue.isLeaf())
-                handleSelectedProperty(newValue,simulationID);
-        });
     }
     private void useResultsPrimary(DTOIncludeForResultsPrimaryForUi primaryResultsConsumer){
         primaryResults = primaryResultsConsumer;
+
+        Platform.runLater(() -> {
+            entityTimeGraphPane.setContent(createEntitiesByTickGraph(primaryResults.getEntitiesAfterSimulationByQuantity()));
+            entityTimeGraphPane.setVisible(true);
+
+            TreeItem<String> rootItem = createEntitiesSubTree();
+            entityPropTreeView.setRoot(rootItem);
+            entityPropTreeView.setShowRoot(false);
+            entityPropTreeView.setVisible(true);
+
+            entityPropTreeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null && newValue.isLeaf())
+                    handleSelectedProperty(newValue, executionID);
+            });
+        });
     }
     public LineChart<Number, Number> createEntitiesByTickGraph(DTOEntitiesAfterSimulationByQuantityForUi dtoEntitiesAfterSimulationByQuantity) {
         NumberAxis xAxis = new NumberAxis();
@@ -168,33 +174,34 @@ public class ResultsController {
         viewComboBox.setVisible(true);
         viewComboBox.setPromptText("select option");
 
+        selectedItemMember = selectedItem;
         requestsFromServer.getAdditionalResults(userName, simulationID, selectedItem.getParent().getValue(), selectedItem.getValue());
-
-
-        if(additionalResults.getDtoSimulationProgress().getEntitiesLeft().get(selectedItem.getParent().getValue())>0){
-            if(primaryResults.getDtoDefinitions().getPropertyDefinitionByName(selectedItem.getParent().getValue(),
-                    selectedItem.getValue()).getType().toLowerCase().equals("float")) {
-                PropertyAverageValueLabel.setText(String.valueOf(calculatePropertyAverage(additionalResults.getDtoPropertyHistogram())));
-            }else{
-                PropertyAverageValueLabel.setText("Property's type is not numeric");
-                PropertyAverageValueLabel.setWrapText(true);
-            }
-
-            BarChart<String, Number> histogram = createHistogram(additionalResults.getDtoPropertyHistogram());
-            histogramGraphPane.setContent(histogram);
-        }
-        else{
-
-            PropertyAverageValueLabel.setText("Entity's population is 0");
-            PropertyAverageValueLabel.setWrapText(true);
-            Label zeroPopulation=new Label("Entity's population is 0 - no data to show");
-            zeroPopulation.setWrapText(true);
-            histogramGraphPane.setContent(zeroPopulation);
-        }
-        ConsistencyValueLabel.setText(String.valueOf(additionalResults.getDtoEntityPropertyConsistency().getConsistency()));
     }
     private void useAdditionalResults(DTOIncludeForResultsAdditionalForUi additionalResultsConsumer){
         additionalResults = additionalResultsConsumer;
+        Platform.runLater(() -> {
+            if(additionalResults.getDtoSimulationProgress().getEntitiesLeft().get(selectedItemMember.getParent().getValue())>0){
+                if(primaryResults.getDtoDefinitions().getPropertyDefinitionByName(selectedItemMember.getParent().getValue(),
+                        selectedItemMember.getValue()).getType().toLowerCase().equals("float")) {
+                    PropertyAverageValueLabel.setText(String.valueOf(calculatePropertyAverage(additionalResults.getDtoPropertyHistogram())));
+                }else{
+                    PropertyAverageValueLabel.setText("Property's type is not numeric");
+                    PropertyAverageValueLabel.setWrapText(true);
+                }
+
+                BarChart<String, Number> histogram = createHistogram(additionalResults.getDtoPropertyHistogram());
+                histogramGraphPane.setContent(histogram);
+            }
+            else{
+
+                PropertyAverageValueLabel.setText("Entity's population is 0");
+                PropertyAverageValueLabel.setWrapText(true);
+                Label zeroPopulation=new Label("Entity's population is 0 - no data to show");
+                zeroPopulation.setWrapText(true);
+                histogramGraphPane.setContent(zeroPopulation);
+            }
+            ConsistencyValueLabel.setText(String.valueOf(additionalResults.getDtoEntityPropertyConsistency().getConsistency()));
+        });
     }
     public BarChart<String, Number> createHistogram(DTOPropertyHistogramForUi dtoPropertyHistogramForUi) {
 

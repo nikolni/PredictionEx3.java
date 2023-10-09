@@ -7,6 +7,7 @@ import after.login.component.body.running.simulation.progress.SimulationProgress
 import after.login.component.body.running.simulation.progress.task.UpdateUiTask;
 import dto.primary.DTOSecTicksForUi;
 import dto.primary.DTOSimulationEndingForUi;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,7 +55,6 @@ public class ProgressAndResultController {
     private UserController mainController;
     private final RequestsFromServer requestsFromServer = new RequestsFromServer();
     private Map<Integer, String> simulationIdToStatuses;
-    private DTOSecTicksForUi dtoSecTicksForUis;
 
 
     public ProgressAndResultController() {
@@ -118,17 +118,16 @@ public class ProgressAndResultController {
             simulationID = (Integer.parseInt(words[words.length - 3]));
         }
         UpdateUiTask updateUiTask = new UpdateUiTask(simulationProgressComponentController, simulationID,
-                requestsFromServer, mainController.getUserName());
+                mainController.getUserName());
 
         simulationProgressComponentController.setSimulationIdLabel(simulationID.toString());
         simulationProgressComponentController.setExecutionID(simulationID);
 
         requestsFromServer.getTotalSecAndTickFromServer(mainController.getUserName(), simulationID);
 
-        simulationProgressComponentController.setTotalSeconds(dtoSecTicksForUis.getSeconds());
 
         simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
-        simulationProgressComponentController.bindUiTaskToUiDownLevelComponents(updateUiTask);
+        //simulationProgressComponentController.bindUiTaskToUiDownLevelComponents(updateUiTask);
 
 
         oldUpdateUiThreadThread  = new Thread(updateUiTask);
@@ -151,7 +150,9 @@ public class ProgressAndResultController {
         }
     }
     private void useDTOSecTicksForUi(DTOSecTicksForUi secTicksConsumer){
-        dtoSecTicksForUis = secTicksConsumer;
+        Platform.runLater(() ->{
+            simulationProgressComponentController.setTotalSeconds(secTicksConsumer.getSeconds());
+        });
     }
     private void useSimulationIdToStatuses(Map<Integer, String> simulationsStatusesConsumer){
         simulationIdToStatuses = simulationsStatusesConsumer;
@@ -160,7 +161,8 @@ public class ProgressAndResultController {
         List<Integer> executionsIdList = new ArrayList<>();
         ObservableList<String> items = simulationsList.getItems();
         for(String id : items){
-            executionsIdList.add(Integer.parseInt(id));
+            String[] words = id.split("\\s+");
+            executionsIdList.add(Integer.parseInt(words[2]));
         }
         return executionsIdList;
     }

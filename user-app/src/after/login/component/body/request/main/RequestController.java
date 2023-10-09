@@ -3,8 +3,6 @@ package after.login.component.body.request.main;
 import after.login.component.body.execution.main.ExecutionController;
 import after.login.component.body.request.server.RequestsFromServer;
 import after.login.main.UserController;
-import javafx.application.Platform;
-import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -41,17 +39,12 @@ public class RequestController {
     private List<CheckBox> checkBoxes = null;
     private List<String> simulationNames;
     private final RequestsFromServer requestsFromServer = new RequestsFromServer();
+    private final List<Label> helperList = new ArrayList<>();
 
-
-    /*@FXML
-    public void initialize() {
-        UpdateRequestGridPane updateRequestGridPane = new UpdateRequestGridPane(requestGridPane, requestsFromServer, mainController.getUserName());
-        new Thread(updateRequestGridPane).start();
-    }*/
     public void primaryInitialize() {
         simulationNames = new ArrayList<>();
 
-        UpdateRequestGridPane updateRequestGridPane = new UpdateRequestGridPane(requestGridPane, requestsFromServer, mainController.getUserName());
+        UpdateRequestGridPane updateRequestGridPane = new UpdateRequestGridPane(requestGridPane, requestsFromServer, mainController.getUserName(), helperList);
         new Thread(updateRequestGridPane).start();
 
         UpdateSimulationsNames updateSimulationsNames = new UpdateSimulationsNames(this, requestsFromServer);
@@ -78,9 +71,9 @@ public class RequestController {
                         String simulationName = simulationNameTextField.getText();
                         String numberOfExecutions = simulationNumTextField.getText();
                         String terminationConditions = terminationConditionsTextField.getText();
+                        addNewRequestToGridPane();
                         requestsFromServer.postRequestToServer(simulationName, numberOfExecutions, terminationConditions,
                                 mainController.getUserName());
-                        addNewRequestToGridPane();
                         clearTextFields();
                     }
                 } catch (NumberFormatException e) {
@@ -100,10 +93,9 @@ public class RequestController {
     void onExecuteClick(MouseEvent event) {
         Integer requestIndex = getRequestForExecution();
         if(requestIndex != null && isExecutionLeft(requestIndex)) {
-            decreaseExecutionLeftLabel(requestIndex);
             String simulationName = getSimulationNameChosen(requestIndex);
             String requestID = getRequestIDChosen(requestIndex);
-            executionController.setSimulationNameAndRequestID(simulationName, requestID);
+            executionController.setMembers(simulationName, requestID, requestIndex);
             executionController.primaryInitialize();
             mainController.onExecutionClickFromRequest();
         }
@@ -112,10 +104,10 @@ public class RequestController {
         String executionsLeftForExecute = getExecutionsLeftOfRequestChosen(requestIndex).getText();
         return (Integer.parseInt(executionsLeftForExecute) > 0);
     }
-    private void decreaseExecutionLeftLabel(int requestIndex){
+    public void decreaseExecutionLeftLabel(int requestIndex){
         Label executionsLeftForExecute = getExecutionsLeftOfRequestChosen(requestIndex);
-        Integer newValue = Integer.parseInt(executionsLeftForExecute.getText()) - 1;
-        executionsLeftForExecute.setText(newValue.toString());
+        int newValue = Integer.parseInt(executionsLeftForExecute.getText()) - 1;
+        executionsLeftForExecute.setText(Integer.toString(newValue));
     }
 
     private void addNewRequestToGridPane() {
@@ -125,13 +117,21 @@ public class RequestController {
         Label terminationConditions= new Label(terminationConditionsTextField.getText());
         requestGridPane.add(simulationName, 4, numOfRequests+1);
         requestGridPane.add(simulationNum, 5, numOfRequests+1);
-        requestGridPane.add(terminationConditions, 6, numOfRequests+1);
+        requestGridPane.add(executionsLeftForExecute, 6, numOfRequests+1);
+        requestGridPane.add(terminationConditions, 7, numOfRequests+1);
+
         CheckBox checkBox = new CheckBox();
-        requestGridPane.add(checkBox, 7, numOfRequests+1);
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkBox.setSelected(newValue));
+        requestGridPane.add(checkBox, 8, numOfRequests+1);
         if(checkBoxes == null){
             checkBoxes = new ArrayList<>();
         }
         checkBoxes.add(checkBox);
+
+        helperList.add(null);
+        helperList.add(simulationName);
+        helperList.add(executionsLeftForExecute);
+
         numOfRequests++;
     }
     private void clearTextFields(){
@@ -141,7 +141,7 @@ public class RequestController {
     }
     private Integer getRequestForExecution(){
         Integer requestIndex = null;
-        int index = 0;
+        int index = 1;
         for(CheckBox checkBox: checkBoxes){
             if(checkBox.isSelected()){
                 if(requestIndex == null) {
@@ -157,52 +157,13 @@ public class RequestController {
         return requestIndex;
     }
     private Label getExecutionsLeftOfRequestChosen(int row){
-        int targetRow = row;
-        int targetColumn = 6;
-        Node childInGridPane = null;
-
-        for (Node child : requestGridPane.getChildren()) {
-            Integer rowIndex = GridPane.getRowIndex(child);
-            Integer columnIndex = GridPane.getColumnIndex(child);
-
-            if (rowIndex != null && columnIndex != null && rowIndex == targetRow && columnIndex == targetColumn) {
-                childInGridPane = child;
-                break;
-            }
-        }
-        return ((Label) childInGridPane);
+        return helperList.get(row*3 -1);
     }
     private String getSimulationNameChosen(int row){
-        int targetRow = row;
-        int targetColumn = 4;
-        Node childInGridPane = null;
-
-        for (Node child : requestGridPane.getChildren()) {
-            Integer rowIndex = GridPane.getRowIndex(child);
-            Integer columnIndex = GridPane.getColumnIndex(child);
-
-            if (rowIndex != null && columnIndex != null && rowIndex == targetRow && columnIndex == targetColumn) {
-                childInGridPane = child;
-                break;
-            }
-        }
-        return ((Label) childInGridPane).getText();
+        return helperList.get(row*3 -2).getText();
     }
     private String getRequestIDChosen(int row){
-        int targetRow = row;
-        int targetColumn = 0;
-        Node childInGridPane = null;
-
-        for (Node child : requestGridPane.getChildren()) {
-            Integer rowIndex = GridPane.getRowIndex(child);
-            Integer columnIndex = GridPane.getColumnIndex(child);
-
-            if (rowIndex != null && columnIndex != null && rowIndex == targetRow && columnIndex == targetColumn) {
-                childInGridPane = child;
-                break;
-            }
-        }
-        return ((Label) childInGridPane).getText();
+        return helperList.get(row*3 -3).getText();
     }
 
     private boolean isAllFieldsFilledIn(){
@@ -224,11 +185,14 @@ public class RequestController {
 
         // Process the sentences
         for (String sentence : sentences) {
-            if(!sentence.equals("1") && !sentence.equals("2") && !sentence.equals("3")){
-                popUpWindow("Termination conditions are not valid!", "Error!");
-                return false;
+            if(!sentence.equals("1")){
+                String[] subSentences = sentence.split("=");
+                if(subSentences.length != 2 || (!subSentences[0].equals("2") && !subSentences[0].equals("3"))){
+                    popUpWindow("Termination conditions are not valid!", "Error!");
+                    return false;
+                }
             }
-            if(sentence.equals("3") && sentences.length > 1){
+            else if(sentences.length > 1){
                 popUpWindow("You can't choose 'by user' with another termination condition!", "Error!");
                 return false;
             }

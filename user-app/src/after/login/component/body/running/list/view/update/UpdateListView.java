@@ -8,7 +8,6 @@ import javafx.scene.control.ListView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static java.lang.Thread.sleep;
 
@@ -54,7 +53,8 @@ public class UpdateListView implements Runnable{
         List<Integer> executionsIdList = new ArrayList<>();
         ObservableList<String> items = simulationsList.getItems();
         for(String id : items){
-            executionsIdList.add(Integer.parseInt(id));
+            String[] words = id.split("\\s+");
+            executionsIdList.add(Integer.parseInt(words[2]));
         }
         return executionsIdList;
     }
@@ -63,7 +63,8 @@ public class UpdateListView implements Runnable{
         ObservableList<String> items = simulationsList.getItems();
         if(simulationStatus.equals("terminated because of an error!")){
             for(String id : items){
-                if(id.equals(simulationID.toString())){
+                String[] words = id.split("\\s+");
+                if(words[2].equals(simulationID.toString())){
                     items.set(simulationID -1, "Simulation ID: " + simulationID + " (error)");
                 }
             }
@@ -71,7 +72,8 @@ public class UpdateListView implements Runnable{
         else {
             if(! items.isEmpty()) {
                 for(String id : items){
-                    if(id.equals(simulationID.toString())){
+                    String[] words = id.split("\\s+");
+                    if(words[2].equals(simulationID.toString())){
                         items.set(simulationID - 1, "Simulation ID: " + simulationID + " (" + simulationStatus + ")");
                     }
                 }

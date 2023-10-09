@@ -47,6 +47,7 @@ public class ExecutionServlet extends HttpServlet {
         ServletUtils.getAllocationsManager(getServletContext()).increaseExecutionCounter();
 
         systemEngineAccess.prepareForExecution(dtoEnvVarDefValuesForSE, dtoPopulationValuesForSE, executionID);
+        systemEngineAccess.addTerminationConditionsList(executionID, terminationConditionsList);
         ServletUtils.getThreadPoolManager(getServletContext()).addTaskToQueue(() -> systemEngineAccess.runSimulation(executionID,
                 terminationConditionsList));
     }

@@ -100,6 +100,7 @@ public class ServletUtils {
 				servletContext.setAttribute(SIMULATION_NAME_TO_SE_MAP_ATTRIBUTE_NAME, new HashMap<>());
 			}
 		}
-		((Map<String, SystemEngineAccess>) servletContext.getAttribute(SIMULATION_NAME_TO_SE_MAP_ATTRIBUTE_NAME)).put(simulationName,systemEngineAccess);
+		((Map<String, SystemEngineAccess>) servletContext.getAttribute(SIMULATION_NAME_TO_SE_MAP_ATTRIBUTE_NAME)).
+				put(simulationName,systemEngineAccess);
 	}
 }
