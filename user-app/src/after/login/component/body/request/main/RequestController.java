@@ -92,7 +92,8 @@ public class RequestController {
     @FXML
     void onExecuteClick(MouseEvent event) {
         Integer requestIndex = getRequestForExecution();
-        if(requestIndex != null && isExecutionLeft(requestIndex)) {
+       // if(requestIndex != null && isRequestApproved(requestIndex) && isExecutionLeft(requestIndex)) {
+            if(requestIndex != null && isExecutionLeft(requestIndex)) {
             String simulationName = getSimulationNameChosen(requestIndex);
             String requestID = getRequestIDChosen(requestIndex);
             executionController.setMembers(simulationName, requestID, requestIndex);
@@ -100,8 +101,17 @@ public class RequestController {
             mainController.onExecutionClickFromRequest();
         }
     }
+    private boolean isRequestApproved(int requestIndex){
+        if(! (helperList.get(requestIndex*4 -3).getText().equals("Approved!"))){
+            popUpWindow("The request was not approved ", "Error");
+        }
+        return helperList.get(requestIndex*4 -3).getText().equals("Approved!");
+    }
     private boolean isExecutionLeft(int requestIndex){
         String executionsLeftForExecute = getExecutionsLeftOfRequestChosen(requestIndex).getText();
+        if(! (Integer.parseInt(executionsLeftForExecute) > 0)){
+            popUpWindow("No executions left of this request.", "Error");
+        }
         return (Integer.parseInt(executionsLeftForExecute) > 0);
     }
     public void decreaseExecutionLeftLabel(int requestIndex){
@@ -114,11 +124,10 @@ public class RequestController {
         Label simulationName= new Label(simulationNameTextField.getText());
         Label simulationNum= new Label(simulationNumTextField.getText());
         Label executionsLeftForExecute= new Label(simulationNumTextField.getText());
-        Label terminationConditions= new Label(terminationConditionsTextField.getText());
+
         requestGridPane.add(simulationName, 4, numOfRequests+1);
         requestGridPane.add(simulationNum, 5, numOfRequests+1);
         requestGridPane.add(executionsLeftForExecute, 6, numOfRequests+1);
-        requestGridPane.add(terminationConditions, 7, numOfRequests+1);
 
         CheckBox checkBox = new CheckBox();
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> checkBox.setSelected(newValue));
@@ -128,7 +137,13 @@ public class RequestController {
         }
         checkBoxes.add(checkBox);
 
-        helperList.add(null);
+        GridPane.setHalignment(simulationName, javafx.geometry.HPos.CENTER);
+        GridPane.setHalignment(simulationNum, javafx.geometry.HPos.CENTER);
+        GridPane.setHalignment(executionsLeftForExecute, javafx.geometry.HPos.CENTER);
+        GridPane.setHalignment(checkBox, javafx.geometry.HPos.CENTER);
+
+        helperList.add(null);  //id
+        helperList.add(null);  //status
         helperList.add(simulationName);
         helperList.add(executionsLeftForExecute);
 
@@ -157,13 +172,13 @@ public class RequestController {
         return requestIndex;
     }
     private Label getExecutionsLeftOfRequestChosen(int row){
-        return helperList.get(row*3 -1);
+        return helperList.get(row*4 -1);
     }
     private String getSimulationNameChosen(int row){
-        return helperList.get(row*3 -2).getText();
+        return helperList.get(row*4 -2).getText();
     }
     private String getRequestIDChosen(int row){
-        return helperList.get(row*3 -3).getText();
+        return helperList.get(row*4 -4).getText();
     }
 
     private boolean isAllFieldsFilledIn(){

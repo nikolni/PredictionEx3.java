@@ -4,7 +4,7 @@ import java.net.URL;
 
 public class ActionsResourcesConstants {
 
-    private static final String BASE_PACKAGE = "/after/login/component/body/simulation/details/single/simulation/tile/rule/action";
+    private static final String BASE_PACKAGE = "/admin/component/body/management/simulation/details/single/simulation/tile/rule/action";
     private static final  String IDS_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/increase/decrease/set/idsAction.fxml";
     private static final  String CALCULATION_FXML_RESOURCE_IDENTIFIER = BASE_PACKAGE + "/calculation/calculationAction.fxml";
 

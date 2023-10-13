@@ -22,9 +22,7 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static admin.util.constants.Constants.popUpWindow;
 import static admin.util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
@@ -55,16 +53,15 @@ public class ManagementController {
     private AdminController mainController;
 
     private final RequestsFromServer requestsFromServer = new RequestsFromServer();
+
     @FXML private HBox simulationDetailsComponent;
     @FXML private SimulationsDetailsController simulationDetailsComponentController;
-
-
 
     public void setMainController(AdminController mainController) {
         this.mainController = mainController;
     }
 
-    public ManagementController() throws IOException {
+    public ManagementController(){
         selectedFileProperty = new SimpleStringProperty();
     }
 
@@ -74,21 +71,23 @@ public class ManagementController {
 
         UpdateThreadsPoolDetails updateThreadsPoolDetails = new UpdateThreadsPoolDetails(requestsFromServer, this);
         new Thread(updateThreadsPoolDetails).start();
+
+        simulationDetailsComponentController.primaryInitialize();
     }
 
     @FXML
-    void onLoadFileClick(MouseEvent event) throws IOException {
+    void onLoadFileClick(MouseEvent event){
         //String RESOURCE = "/upload/file";
         Stage primaryStage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select XML file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files", "*.xml"));
         File f = fileChooser.showOpenDialog(primaryStage);
-        String absolutePath = f.getAbsolutePath();
         if (f == null) {
             return;
         }
-        boolean exceptionOccurred = false;
+        String absolutePath = f.getAbsolutePath();
+        final boolean[] exceptionOccurred = {false};
 
         RequestBody body =
                 new MultipartBody.Builder()
@@ -100,70 +99,41 @@ public class ManagementController {
                 .post(body)
                 .build();
 
-        //Call call = Constants.HTTP_CLIENT.newCall(request);
         Call call = HTTP_CLIENT_PUBLIC.newCall(request);
-        try{
-            call.enqueue( new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    Platform.runLater(() -> popUpWindow(e.getMessage(), "Error!"));
-                }
+        call.enqueue( new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "File failure!"));
+            }
 
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    if (response.code() != 200) {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    if(response.code() == 400){
+                        Platform.runLater(() -> {
+                            popUpWindow("the simulation already exist in the system", "File error!");
+                            exceptionOccurred[0] =true;
+                        });
+                    }
+                    else {
                         String responseBody = response.body().string();
-                        Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
-                    } else {
-                        try (ResponseBody responseBody = response.body()) {
-                            if (responseBody != null) {
-                                String json = response.body().string();
-                                String simulationName = Constants.GSON_INSTANCE.fromJson(json, String.class);
-                                simulationDetailsComponentController.addSimulationItemToTreeView(simulationName);
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        Platform.runLater(() -> popUpWindow(responseBody, "File error!"));
+                    }
+                } else {
+                    try (ResponseBody responseBody = response.body()) {
+                        if (responseBody != null) {
+                            String json = response.body().string();
+                            String simulationName = Constants.GSON_INSTANCE.fromJson(json, String.class);
                         }
-
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                }
-            });
-        }catch(RuntimeException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Invalid XML file - Please load other file");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-            exceptionOccurred=true;
-        }
 
-
-        /*try {
-            Response response = call.execute();
-            if (response.code() != 200) {
-                String responseBody = response.body().string();
-                Platform.runLater(() -> popUpWindow(responseBody, "Error!"));
-            }
-            else{ //successful file upload
-                try (ResponseBody responseBody = response.body()) {
-                    if (responseBody != null) {
-                        String json = response.body().string();
-                        String simulationName = Constants.GSON_INSTANCE.fromJson(json, String.class);
-                        simulationDetailsComponentController.addSimulationItemToTreeView(simulationName);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
-        } catch(RuntimeException | FileNotFoundException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Invalid XML file - Please load other file");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-            exceptionOccurred=true;
-        }*/
-        if(!exceptionOccurred){
+        });
+
+        if(!exceptionOccurred[0]){
             selectedFileProperty.set(absolutePath);
         }
     }
@@ -198,5 +168,4 @@ public class ManagementController {
     public void setOverLabel(String overLabel) {
         this.valueOverLabel.setText(overLabel);
     }
-
 }

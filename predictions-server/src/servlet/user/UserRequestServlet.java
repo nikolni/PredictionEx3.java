@@ -1,4 +1,4 @@
-package servlet;
+package servlet.user;
 
 import allocation.request.UserRequest;
 import com.google.gson.GsonBuilder;

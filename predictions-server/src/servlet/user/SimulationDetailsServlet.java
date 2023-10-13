@@ -1,4 +1,4 @@
-package servlet;
+package servlet.user;
 
 import com.google.gson.Gson;
 import dto.include.DTOIncludeForExecutionForServer;
@@ -22,6 +22,7 @@ public class SimulationDetailsServlet extends HttpServlet {
         SystemEngineAccess systemEngineAccess = ServletUtils.getSEInstanceBySimulationName(
                 getServletContext(), simulationName);
 
+        while(systemEngineAccess.getWorldDefinition() == null){}
         DTODefinitionsForUi definitions = systemEngineAccess.getDefinitionsDataFromSE();
         DTOEnvVarsDefForUi envVarsDefForUi = systemEngineAccess.getEVDFromSE();
         DTOWorldGridForUi worldGridForUi = systemEngineAccess.getDTOWorldGridForUi();

@@ -54,7 +54,7 @@ public class ProgressAndResultController {
     private Thread oldUpdateUiThreadThread = null;
     private UserController mainController;
     private final RequestsFromServer requestsFromServer = new RequestsFromServer();
-    private Map<Integer, String> simulationIdToStatuses;
+    private Integer executionID;
 
 
     public ProgressAndResultController() {
@@ -78,7 +78,7 @@ public class ProgressAndResultController {
         simulationProgressComponentController.setMembers(this, mainController.getUserName(),
                 requestsFromServer);
 
-        UpdateListView updateListView = new UpdateListView(simulationsList, requestsFromServer, mainController.getUserName());
+        UpdateListView updateListView = new UpdateListView(simulationsList, mainController.getUserName());
         new Thread(updateListView).start();
 
         AddResultsControllers addResultsControllers = new AddResultsControllers(requestsFromServer, mainController.getUserName(), this);
@@ -117,6 +117,9 @@ public class ProgressAndResultController {
         else{
             simulationID = (Integer.parseInt(words[words.length - 3]));
         }
+
+        this.executionID = simulationID;
+
         UpdateUiTask updateUiTask = new UpdateUiTask(simulationProgressComponentController, simulationID,
                 mainController.getUserName());
 
@@ -127,27 +130,16 @@ public class ProgressAndResultController {
 
 
         simulationProgressComponentController.bindUiTaskToUiUpLevelComponents(updateUiTask);
-        //simulationProgressComponentController.bindUiTaskToUiDownLevelComponents(updateUiTask);
 
 
         oldUpdateUiThreadThread  = new Thread(updateUiTask);
         oldUpdateUiThreadThread.start();
 
-        boolean flag = false;
         List<Integer> executionsIdList = buildListFromExistingSimulations();
         requestsFromServer.getSimulationsStatusesFromServer( mainController.getUserName(), executionsIdList);
 
 
-        for (Integer id : simulationIdToStatuses.keySet()) {
-            if(id.equals(simulationID) && simulationIdToStatuses.get(id).equals("terminated because of an error!")){
-                flag  = true;
-            }
-        }
-        if(simulationResultsNodesMap.get(simulationID) != null && !flag){
-            simulationResultScrollPane.setContent(simulationResultsNodesMap.get(simulationID));
-            ResultsController resultsController = simulationResultControllersMap.get(simulationID);
-            resultsController.handleSimulationSelection(simulationID);
-        }
+
     }
     private void useDTOSecTicksForUi(DTOSecTicksForUi secTicksConsumer){
         Platform.runLater(() ->{
@@ -155,7 +147,17 @@ public class ProgressAndResultController {
         });
     }
     private void useSimulationIdToStatuses(Map<Integer, String> simulationsStatusesConsumer){
-        simulationIdToStatuses = simulationsStatusesConsumer;
+        boolean flag = false;
+        for (Integer id : simulationsStatusesConsumer.keySet()) {
+            if(id.equals(executionID) && simulationsStatusesConsumer.get(id).equals("terminated because of an error!")){
+                flag  = true;
+            }
+        }
+        if(simulationResultsNodesMap.get(executionID) != null && !flag){
+            simulationResultScrollPane.setContent(simulationResultsNodesMap.get(executionID));
+            ResultsController resultsController = simulationResultControllersMap.get(executionID);
+            resultsController.handleSimulationSelection(executionID);
+        }
     }
     private List<Integer> buildListFromExistingSimulations(){
         List<Integer> executionsIdList = new ArrayList<>();

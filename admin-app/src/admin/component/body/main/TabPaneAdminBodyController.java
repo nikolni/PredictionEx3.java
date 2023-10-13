@@ -38,15 +38,12 @@ public class TabPaneAdminBodyController {
     public void setControllersForChildren(){
         managementComponentController.setMainController(mainAdminController);
         allocationsComponentController.setMainController(mainAdminController);
-        executionHistoryComponentController.setMainController(mainAdminController);
+        initialChildren();
     }
 
 
     private void initialChildren(){
-        //managementComponentController.primaryInitialize();
-        //allocationsComponentController.primaryInitialize();
-        //executionHistoryComponentController.primaryInitialize();
-        //body2ComponentController.setBody3Controller(body3ComponentController);
+        executionHistoryComponentController.primaryInitialize();
     }
 
 

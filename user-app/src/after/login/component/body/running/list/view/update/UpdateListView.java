@@ -13,16 +13,14 @@ import static java.lang.Thread.sleep;
 
 public class UpdateListView implements Runnable{
     private final ListView<String> simulationsList;
-    private final RequestsFromServer requestsFromServer;
+    private final RequestsFromServer requestsFromServer = new RequestsFromServer();
     private final String userName;
     private Map<Integer, String> simulationIdToStatuses;
 
-    public UpdateListView(ListView<String> simulationsList, RequestsFromServer requestsFromServer,
-                          String userName) {
+    public UpdateListView(ListView<String> simulationsList,String userName) {
         this.simulationsList = simulationsList;
         this.userName = userName;
 
-        this.requestsFromServer = requestsFromServer;
         requestsFromServer.setSimulationsStatusesConsumer(this::useSimulationIdToStatuses);
     }
 
@@ -48,7 +46,6 @@ public class UpdateListView implements Runnable{
     private void useSimulationIdToStatuses(Map<Integer, String> simulationsStatusesConsumer){
         simulationIdToStatuses = simulationsStatusesConsumer;
     }
-
     private List<Integer> buildListFromExistingSimulations(){
         List<Integer> executionsIdList = new ArrayList<>();
         ObservableList<String> items = simulationsList.getItems();
@@ -60,13 +57,15 @@ public class UpdateListView implements Runnable{
     }
 
     private void changeStatusOfSimulationsListItem(Integer simulationID, String simulationStatus) {
+        int index = 0;
         ObservableList<String> items = simulationsList.getItems();
         if(simulationStatus.equals("terminated because of an error!")){
             for(String id : items){
                 String[] words = id.split("\\s+");
                 if(words[2].equals(simulationID.toString())){
-                    items.set(simulationID -1, "Simulation ID: " + simulationID + " (error)");
+                    items.set(index, "Simulation ID: " + simulationID + " (error)");
                 }
+                index++;
             }
         }
         else {
@@ -74,8 +73,9 @@ public class UpdateListView implements Runnable{
                 for(String id : items){
                     String[] words = id.split("\\s+");
                     if(words[2].equals(simulationID.toString())){
-                        items.set(simulationID - 1, "Simulation ID: " + simulationID + " (" + simulationStatus + ")");
+                        items.set(index, "Simulation ID: " + simulationID + " (" + simulationStatus + ")");
                     }
+                    index++;
                 }
             }
         }

@@ -42,7 +42,9 @@
     -fx-border-color: BLACK;
 }
 
-
+.tab-header-area {
+    -fx-opacity: 0.0;
+}
 
 
 

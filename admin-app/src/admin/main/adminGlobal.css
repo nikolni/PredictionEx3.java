@@ -41,7 +41,9 @@
     -fx-background-color: #1a6883;
     -fx-border-color: BLACK;
 }
-
+.tab-header-area {
+    -fx-opacity: 0.0;
+}
 
 
 

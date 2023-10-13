@@ -52,7 +52,7 @@ public class Constants {
         VBox vbox = new VBox(label);
         vbox.setAlignment(Pos.CENTER);
         StackPane root = new StackPane(vbox);
-        Scene scene = new Scene(root, 400, 150);
+        Scene scene = new Scene(root, 450, 150);
 
         errorStage.setScene(scene);
         errorStage.setTitle(title);

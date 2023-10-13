@@ -1,6 +1,7 @@
 
 package engine.per.file.engine.impl;
 
+import allocation.manager.AllocationsManager;
 import dto.definition.termination.condition.impl.ByUserTerminationConditionDTOImpl;
 import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOImpl;
 import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
@@ -56,7 +57,6 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
     public SystemEngineAccessImpl() {
         this.simulationIdToWorldInstance = new HashMap<>();
-
     }
 
     @Override
@@ -84,16 +84,15 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     public DTODefinitionsForUi getDefinitionsDataFromSE() {
         return new CreateDTODefinitionsForUi().getData(worldDefinition);
     }
+    @Override
+    public WorldDefinition getWorldDefinition() {
+        return worldDefinition;
+    }
 
     @Override
     public DTOEnvVarsDefForUi getEVDFromSE() {
         return new CreateDTOEVDForUi().getData(worldDefinition);
     }
-
-   /* @Override
-    public DTOEnvVarsInsForUi getEVIFromSE() {
-        return new CreateDTOEVIForUi().getData(envVariablesInstanceManager);
-    }*/
 
     @Override
     public DTOSimulationsTimeRunDataForUi getSimulationsTimeRunDataFromSE() {
@@ -208,8 +207,10 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
     }
 
     @Override
-    public void runSimulation(Integer simulationID, List<TerminationCondition> terminationConditionList) throws IllegalArgumentException{
+    public void runSimulation(Integer simulationID, List<TerminationCondition> terminationConditionList, Integer requestID)
+            throws IllegalArgumentException{
         ThreadsPoolManager.increaseActiveCount();
+        AllocationsManager.increaseNumOfSimulationsRunning(requestID);
 
         int[] terminationConditionArr;
         RunSimulation runSimulationInstance = new RunSimulationImpl(simulationIdToWorldInstance.get(simulationID),
@@ -224,21 +225,13 @@ public class SystemEngineAccessImpl implements SystemEngineAccess {
 
         ThreadsPoolManager.increaseCompletedTaskCount();
         ThreadsPoolManager.decreaseActiveCount();
+        AllocationsManager.decreaseNumOfSimulationsRunning(requestID);
+        AllocationsManager.increaseNumOfSimulationsDone(requestID);
     }
     @Override
-    public void addTerminationConditionsList(Integer simulationID, List<TerminationCondition>  terminationConditionsList){
+    public void addTerminationConditionsList(Integer simulationID, List<TerminationCondition>  terminationConditionsList) {
         runSimulationManager.addTerminationConditionsList(simulationID, terminationConditionsList);
     }
-
-    /*@Override
-    public DTOThreadsPoolStatusForUi getThreadsPoolStatus(){
-        return runSimulationManager.getThreadsPoolStatus();
-    }*/
-
-    /*@Override
-    public void addTaskToQueue(Runnable runSimulationRunnable){
-        runSimulationManager.addTaskToQueue(runSimulationRunnable);
-    }*/
 
     @Override
     public int getTotalTicksNumber(Integer executionID){

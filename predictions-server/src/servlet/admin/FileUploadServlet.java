@@ -1,4 +1,4 @@
-package servlet;
+package servlet.admin;
 
 
 
@@ -56,7 +56,9 @@ public class FileUploadServlet extends HttpServlet {
                         }
                     }
                     else
-                        throw new RuntimeException("the simulation "+simulationName+" already exist in the system");
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The simulation " + simulationName + " already exists in the system");
+
+                    //throw new RuntimeException("the simulation "+simulationName+" already exist in the system");
                 } catch (JAXBException e) {
                     throw new RuntimeException(e);
                 }

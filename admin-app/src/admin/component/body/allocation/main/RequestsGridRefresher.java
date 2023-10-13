@@ -36,7 +36,7 @@ public class RequestsGridRefresher extends TimerTask {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Platform.runLater(() -> {
-                    Constants.popUpWindow(e.getMessage(), "Error!");
+                    Constants.popUpWindow(e.getMessage(), "Requests update failure!");
                 });
             }
 

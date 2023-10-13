@@ -17,7 +17,7 @@ import static java.lang.Thread.sleep;
 public class UpdateUiTask extends Task<Boolean> {
 
     private final SimulationProgressController currentSimulationController;
-    private final Integer executionID;
+    private Integer executionID;
     public final SimpleIntegerProperty secondsPast;
     private final SimpleIntegerProperty ticksPast;
     private final SimpleIntegerProperty entitiesLeft;
@@ -73,6 +73,9 @@ public class UpdateUiTask extends Task<Boolean> {
             updateSimulationProgress(dtoSimulationProgressForUi, terminationConditionsConsumer);
         }
     }
+    public void setExecutionID(Integer executionID){
+        this.executionID = executionID;
+    }
 
     public SimpleIntegerProperty getSecondsPastProperty() {
         return secondsPast;
@@ -85,6 +88,9 @@ public class UpdateUiTask extends Task<Boolean> {
                                          List<TerminationConditionsDTO> terminationConditionsDTOList) {
         if (!(terminationConditionsDTOList.get(0) instanceof ByUserTerminationConditionDTOImpl)) {
             updateProgress(dtoSimulationProgressForUi.getTicksPast(), totalTicksNumber);
+        }
+        else{
+            updateProgress(0,0);
         }
         Platform.runLater(() -> {
             updateMessage(dtoSimulationProgressForUi.getProgressMassage());
@@ -104,7 +110,6 @@ public class UpdateUiTask extends Task<Boolean> {
                 case "Running!":
                     currentSimulationController.toggleTaskButtons(true);
                     currentSimulationController.setResumeButtonDisable(false);
-
                     break;
                 case "Paused!":
                     currentSimulationController.setPauseButtonDisable(false);

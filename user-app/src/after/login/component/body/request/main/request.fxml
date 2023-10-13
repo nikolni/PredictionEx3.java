@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox styleClass="background" stylesheets="@../../../../main/userGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="after.login.component.body.request.main.RequestController">
+<VBox alignment="CENTER" styleClass="background" stylesheets="@../../../../main/userGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="after.login.component.body.request.main.RequestController">
    <children>
-      <GridPane prefHeight="127.0" prefWidth="808.0" styleClass="background">
+      <GridPane alignment="TOP_CENTER" prefHeight="127.0" prefWidth="808.0" styleClass="background" VBox.vgrow="NEVER">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="320.0" minWidth="10.0" prefWidth="320.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.5" minWidth="10.0" prefWidth="315.0" />
@@ -51,9 +51,9 @@
             </GridPane>
          </children>
       </GridPane>
-      <ScrollPane fitToHeight="true" fitToWidth="true">
+      <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
          <content>
-            <GridPane fx:id="requestGridPane" gridLinesVisible="true" prefHeight="108.0" prefWidth="806.0">
+            <GridPane fx:id="requestGridPane" alignment="TOP_CENTER" gridLinesVisible="true">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="85.0" minWidth="10.0" prefWidth="54.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="97.0" minWidth="10.0" prefWidth="80.0" />
@@ -67,7 +67,6 @@
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints maxHeight="97.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="25.5" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
                   <Label prefHeight="46.0" prefWidth="68.0" styleClass="body-label" text="Request ID" textAlignment="CENTER" wrapText="true" GridPane.halignment="CENTER" />
@@ -114,12 +113,12 @@
             <Insets top="10.0" />
          </VBox.margin>
       </ScrollPane>
-      <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="background">
+      <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="background" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets top="5.0" />
          </VBox.margin>
          <content>
-            <GridPane styleClass="background">
+            <GridPane alignment="CENTER" styleClass="background">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="584.0" minWidth="10.0" prefWidth="584.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="363.0" minWidth="10.0" prefWidth="156.0" />

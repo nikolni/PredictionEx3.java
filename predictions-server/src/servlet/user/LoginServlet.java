@@ -1,4 +1,4 @@
-package servlet;
+package servlet.user;
 
 import utils.ServletUtils;
 import utils.SessionUtils;

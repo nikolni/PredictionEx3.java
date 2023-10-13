@@ -4,22 +4,22 @@
 <?import javafx.scene.control.TabPane?>
 
 <TabPane id="tab-pane-id" fx:id="tabPaneBodyComponent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../../../main/userGlobal.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="after.login.component.body.main.TabPaneUserBodyController">
-    <Tab id="tab1" text="Tab 1">
+    <Tab id="tab1" closable="false" text="Tab 1">
         <content>
             <fx:include fx:id="simulationDetailsComponent" source="../simulation/details/main/simulationsDetails.fxml" />
         </content>
     </Tab>
-    <Tab id="tab2" text="Tab 2">
+    <Tab id="tab2" closable="false" text="Tab 2">
         <content>
             <fx:include fx:id="requestsComponent" source="../request/main/request.fxml" />
         </content>
     </Tab>
-    <Tab id="tab3" text="Tab 3">
+    <Tab id="tab3" closable="false" text="Tab 3">
         <content>
             <fx:include fx:id="executionComponent" source="../execution/main/executionController.fxml" />
         </content>
     </Tab>
-    <Tab id="tab4" text="Tab 4">
+    <Tab id="tab4" closable="false" text="Tab 4">
         <content>
             <fx:include fx:id="resultsComponent" source="../running/main/progressAndResult.fxml" />
         </content>
