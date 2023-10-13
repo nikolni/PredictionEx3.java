@@ -9,6 +9,7 @@ import dto.definition.termination.condition.impl.TicksTerminationConditionsDTOIm
 import dto.definition.termination.condition.impl.TimeTerminationConditionsDTOImpl;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -110,31 +111,37 @@ public class SimulationProgressController {
         terminationConditionsDTOList = terminationConditionsConsumer;
         Platform.runLater(() -> {
             if (terminationConditionsDTOList.get(0) instanceof ByUserTerminationConditionDTOImpl) {
+                /*ticksProgressBar = new ProgressBar(0.0);
+                secondsProgressBar = new ProgressBar(0.0);*/
+                ticksPercentLabel.setVisible(false);
+                secondsPercentLabel.setVisible(false);
                 ticksProgressBar.setDisable(true);
                 secondsProgressBar.setDisable(true);
-                ticksPercentLabel.setDisable(true);
-                secondsPercentLabel.setDisable(true);
-            } else if(terminationConditionsDTOList.get(0) instanceof TicksTerminationConditionsDTOImpl) {
-                // task progress bar
-                ticksProgressBar.progressProperty().bind(uiTask.progressProperty());
-
-                // task percent label
-                ticksPercentLabel.textProperty().bind(
-                        Bindings.concat(
-                                Bindings.format(
-                                        "%.0f",
-                                        Bindings.multiply(
-                                                uiTask.progressProperty(),
-                                                100)),
-                                " %"));
+            } else if(terminationConditionsDTOList.get(0) instanceof TicksTerminationConditionsDTOImpl ||
+                    (terminationConditionsDTOList.size() == 2 && terminationConditionsDTOList.get(1) instanceof TicksTerminationConditionsDTOImpl)) {
 
                 ticksProgressBar.setDisable(false);
                 ticksPercentLabel.setDisable(false);
+                ticksPercentLabel.setVisible(true);
+
             }
-            else{
+            else{  //no ticks
+                //ticksProgressBar.setProgress(0.0);
                 ticksProgressBar.setDisable(true);
                 ticksPercentLabel.setDisable(true);
+                ticksPercentLabel.setVisible(false);
             }
+            ticksProgressBar.progressProperty().bind(uiTask.progressProperty());
+
+            // task percent label
+            ticksPercentLabel.textProperty().bind(
+                    Bindings.concat(
+                            Bindings.format(
+                                    "%.0f",
+                                    Bindings.multiply(
+                                            uiTask.progressProperty(),
+                                            100)),
+                            " %"));
             bindUiTaskToUiDownLevelComponents(uiTask);
         });
     }
@@ -146,21 +153,28 @@ public class SimulationProgressController {
         if(terminationConditionsDTOList.get(0) instanceof TimeTerminationConditionsDTOImpl  ||
                 ( terminationConditionsDTOList.size() == 2 && terminationConditionsDTOList.get(1) instanceof TimeTerminationConditionsDTOImpl)){
             secondsProgressBar.progressProperty().bind(uiTask.secondsPast.divide((double) totalSeconds));
-            secondsPercentLabel.textProperty().bind(
-                    Bindings.concat(
-                            Bindings.format(
-                                    "%.0f",
-                                    Bindings.multiply(
-                                            secondsProgressBar.progressProperty(),
-                                            100)),
-                            " %"));
+
             secondsProgressBar.setDisable(false);
             secondsPercentLabel.setDisable(false);
+            secondsPercentLabel.setVisible(true);
         }
-        else{
+        else{ // no seconds
+            SimpleIntegerProperty progressPropertyHelper = new SimpleIntegerProperty(0);
+            secondsProgressBar.progressProperty().bind(progressPropertyHelper.divide((double) totalSeconds));
+            //secondsProgressBar.setProgress(0.0);
             secondsProgressBar.setDisable(true);
             secondsPercentLabel.setDisable(true);
+            secondsPercentLabel.setVisible(false);
         }
+
+        secondsPercentLabel.textProperty().bind(
+                Bindings.concat(
+                        Bindings.format(
+                                "%.0f",
+                                Bindings.multiply(
+                                        secondsProgressBar.progressProperty(),
+                                        100)),
+                        " %"));
 
     }
 

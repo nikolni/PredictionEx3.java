@@ -11,6 +11,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.TextFlow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SimulationsDetailsController {
@@ -51,8 +52,15 @@ public class SimulationsDetailsController {
 
         detailsTreeView.getSelectionModel().selectedItemProperty().
                 addListener((observable, oldValue, newValue) -> handleSelectedItemChange(newValue));
+    }
 
+    public void primaryInitialize() {
+        singleSimulationControllerList = new ArrayList<>();
+        setVisibleTab();
 
+        UpdateSimulationsTreeView updateSimulationsTreeView = new UpdateSimulationsTreeView(this,
+                requestsFromServer);
+        new Thread(updateSimulationsTreeView).start();
     }
 
     public void setVisibleTab(){
@@ -62,7 +70,7 @@ public class SimulationsDetailsController {
     }
     public void addSimulationItemToTreeView(String simulationName){
         this.simulationName = simulationName;
-        SingleSimulationController singleSimulationController = new SingleSimulationController(this, requestsFromServer);
+        SingleSimulationController singleSimulationController = new SingleSimulationController(this, simulationName);
         singleSimulationController.primaryInitialize(simulationName);
         singleSimulationControllerList.add(singleSimulationController);
     }
@@ -71,13 +79,24 @@ public class SimulationsDetailsController {
         int count = 0;
         if (selectedItem != null) {
             for (TreeItem<String> item : detailsTreeView.getTreeItem(0).getChildren()) {
-                if (selectedItem.getParent().getParent().getValue().equals(item.getValue())) {
-                    singleSimulationControllerList.get(count).handleSelectedItemChange(selectedItem, simulationName);
-                    break;
+                if (selectedItem.getParent() != null && selectedItem.getParent().getParent() != null) {
+                    if (selectedItem.getParent().getParent().getValue().equals(item.getValue()) || selectedItem.getParent().getValue().equals(item.getValue())) {
+                        SingleSimulationController singleSimulationControllerHandle = findController(item.getValue());
+                        singleSimulationControllerHandle.handleSelectedItemChange(selectedItem);
+                        break;
+                    }
+                    count++;
                 }
-                count++;
             }
         }
+    }
+    private SingleSimulationController findController(String simulationName){
+        for(SingleSimulationController singleSimulationController: singleSimulationControllerList ){
+            if(singleSimulationController.getSimulationName().equals(simulationName)){
+                return singleSimulationController;
+            }
+        }
+        return null;
     }
     public TreeView<String> getDetailsTreeView() {
         return detailsTreeView;

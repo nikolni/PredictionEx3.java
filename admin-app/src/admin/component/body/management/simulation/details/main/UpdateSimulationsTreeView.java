@@ -1,7 +1,7 @@
-package after.login.component.body.simulation.details.main;
+package admin.component.body.management.simulation.details.main;
 
 
-import after.login.component.body.simulation.details.server.RequestsFromServer;
+import admin.component.body.management.server.RequestsFromServer;
 import javafx.application.Platform;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package servlet;
+package servlet.user;
 
 import engine.per.file.engine.api.SystemEngineAccess;
 import jakarta.servlet.http.HttpServlet;

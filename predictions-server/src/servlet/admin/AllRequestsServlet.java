@@ -1,4 +1,4 @@
-package servlet;
+package servlet.admin;
 
 import com.google.gson.Gson;
 import dto.definition.user.request.DTOUserRequestForUi;
@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 @WebServlet(name="getAllRequestsServlet",urlPatterns = {"/adminallrequests"})
-public class getAllRequestsServlet extends HttpServlet {
+public class AllRequestsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //returning JSON objects, not HTML
@@ -26,11 +26,13 @@ public class getAllRequestsServlet extends HttpServlet {
             List<UserRequest> allAdminRequests = ServletUtils.getAllocationsManager(getServletContext()).getAllUsersRequestsList();
             List<DTOUserRequestForUi> dtoUserRequestForUiList=new ArrayList<>();
             DTOUserRequestForUi dtoUserRequestForUi;
-            for(UserRequest userRequest:allAdminRequests){
-                dtoUserRequestForUi=new DTOUserRequestForUi(userRequest.getRequestStatus(),
-                        userRequest.getNumOfSimulationsRunning(), userRequest.getNumOfSimulationsDone(), userRequest.getRequestID(), userRequest.getSimulationName(),userRequest.getUserName(),
-                        userRequest.getTerminationConditionListString(),userRequest.getNumOfSimulations());
-                dtoUserRequestForUiList.add(dtoUserRequestForUi);
+            if(allAdminRequests != null) {
+                for (UserRequest userRequest : allAdminRequests) {
+                    dtoUserRequestForUi = new DTOUserRequestForUi(userRequest.getRequestStatus(),
+                            userRequest.getNumOfSimulationsRunning(), userRequest.getNumOfSimulationsDone(), userRequest.getRequestID(), userRequest.getSimulationName(), userRequest.getUserName(),
+                            userRequest.getTerminationConditionListString(), userRequest.getNumOfSimulations());
+                    dtoUserRequestForUiList.add(dtoUserRequestForUi);
+                }
             }
             String json = gson.toJson(dtoUserRequestForUiList);
             out.println(json);

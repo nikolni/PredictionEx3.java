@@ -3,12 +3,18 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
-<HBox id="body1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="background" stylesheets="@../../../../../../main/adminGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.component.body.management.simulation.details.main.SimulationsDetailsController">
+
+<HBox id="body1" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="background" stylesheets="@../../../../../../main/adminGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.component.body.management.simulation.details.main.SimulationsDetailsController">
    <children>
       <TreeView fx:id="detailsTreeView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="app-background" HBox.hgrow="NEVER" />
-      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="app-background" HBox.hgrow="ALWAYS">
+      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
          <children>
             <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" vgap="5.0" VBox.vgrow="ALWAYS">
                <columnConstraints>

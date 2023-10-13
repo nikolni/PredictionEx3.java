@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AllocationsManager {
-     private List<UserRequest> allUsersRequestsList = null;
+     private static List<UserRequest> allUsersRequestsList = null;
     private Map<String, Map<UserRequest, List<Integer>>> mapOfUserNameToRequestsMap = null;
     private int executionsCounter = 1;
     private int requestsCounter = 1;
@@ -20,6 +20,10 @@ public class AllocationsManager {
 
     public List<UserRequest> getAllUsersRequestsList() {
         return allUsersRequestsList;
+    }
+
+    public Map<String, Map<UserRequest, List<Integer>>> getMapOfUserNameToRequests(){
+        return mapOfUserNameToRequestsMap;
     }
 
     public void addRequest(UserRequest userRequest) {
@@ -89,5 +93,18 @@ public class AllocationsManager {
         synchronized (executionsCounterLock) {
            executionsCounter++;
         }
+    }
+    public static void increaseNumOfSimulationsDone(Integer requestId) {
+        allUsersRequestsList.get(requestId-1).increaseNumOfSimulationsDone();
+    }
+    public static void increaseNumOfSimulationsRunning(Integer requestId) {
+        allUsersRequestsList.get(requestId-1).increaseNumOfSimulationsRunning();
+    }
+    public static void decreaseNumOfSimulationsRunning(Integer requestId) {
+        allUsersRequestsList.get(requestId-1).decreaseNumOfSimulationsRunning();
+    }
+
+    public static void setRequestStatus(Integer requestId, String requestStatus) {
+        allUsersRequestsList.get(requestId-1).setRequestStatus(requestStatus);
     }
 }

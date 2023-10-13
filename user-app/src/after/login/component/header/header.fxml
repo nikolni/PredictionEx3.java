@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="600.0" stylesheets="@../../main/userGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="after.login.component.header.HeaderController">
+<VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="600.0" stylesheets="@../../main/userGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="after.login.component.header.HeaderController">
    <children>
       <Label styleClass="title-label" text="Predictions - Client">
          <VBox.margin>
-            <Insets left="220.0" />
+            <Insets />
          </VBox.margin>
       </Label>
-      <HBox prefHeight="43.0" prefWidth="600.0">
+      <HBox alignment="TOP_CENTER" prefHeight="43.0" prefWidth="600.0">
          <VBox.margin>
             <Insets />
          </VBox.margin>
@@ -24,7 +24,7 @@
                   <Font size="15.0" />
                </font>
                <HBox.margin>
-                  <Insets left="65.0" top="20.0" />
+                  <Insets top="20.0" />
                </HBox.margin>
             </Button>
             <Button fx:id="requestButton" mnemonicParsing="false" onMouseClicked="#onRequestClick" styleClass="button-header" text="Request">

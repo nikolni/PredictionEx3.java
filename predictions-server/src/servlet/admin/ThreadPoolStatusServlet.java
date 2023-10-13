@@ -1,4 +1,4 @@
-package servlet;
+package servlet.admin;
 
 import com.google.gson.Gson;
 import dto.primary.DTOThreadsPoolStatusForUi;

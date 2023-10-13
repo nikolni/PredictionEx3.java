@@ -7,22 +7,21 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="600.0" stylesheets="@../../main/adminGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.component.header.HeaderController">
+<VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="600.0" stylesheets="@../../main/adminGlobal.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.component.header.HeaderController">
    <children>
       <Label styleClass="title-label" text="Predictions - Administrator">
          <VBox.margin>
-            <Insets left="170.0" />
+            <Insets />
          </VBox.margin>
       </Label>
-      <HBox prefHeight="43.0" prefWidth="600.0">
+      <HBox alignment="CENTER" prefHeight="43.0" prefWidth="600.0">
          <VBox.margin>
             <Insets />
          </VBox.margin>
          <children>
             <Button fx:id="managementButton" mnemonicParsing="false" onMouseClicked="#onManagementClick" styleClass="button-header" text="Management">
                <HBox.margin>
-                  <Insets left="100.0" top="20.0" />
+                  <Insets top="20.0" />
                </HBox.margin>
                <font>
                   <Font size="15.0" />

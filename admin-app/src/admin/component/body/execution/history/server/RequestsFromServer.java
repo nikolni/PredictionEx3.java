@@ -1,7 +1,7 @@
-package admin.component.body.management.server;
+package admin.component.body.execution.history.server;
 
-import admin.util.constants.Constants;
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import dto.definition.rule.action.KillActionDTO;
@@ -15,56 +15,59 @@ import dto.definition.rule.action.numeric.DecreaseActionDTO;
 import dto.definition.rule.action.numeric.IncreaseActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
 import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
-import dto.definition.user.request.DTOUserRequestForUi;
-import dto.include.DTOIncludeSimulationDetailsForUi;
-import dto.primary.DTOThreadsPoolStatusForUi;
+import dto.include.DTOIncludeForResultsAdditionalForUi;
+import dto.include.DTOIncludeForResultsPrimaryForUi;
+import dto.primary.DTOSimulationEndingForUi;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import admin.util.constants.Constants;
 import admin.util.http.HttpClientUtil;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
+import static admin.util.constants.Constants.LINE_SEPARATOR;
 import static admin.util.constants.Constants.popUpWindow;
 import static admin.util.http.HttpClientUtil.HTTP_CLIENT_PUBLIC;
 
 public class RequestsFromServer {
-
-    private Consumer<DTOThreadsPoolStatusForUi> dtoThreadsPoolStatusConsumer;
-
-    public void setConsumer(Consumer<DTOThreadsPoolStatusForUi> dtoThreadsPoolStatusConsumer){
-        this.dtoThreadsPoolStatusConsumer = dtoThreadsPoolStatusConsumer;
+    private Consumer<Map<Integer,String>> simulationsStatusesConsumer;
+    public void setSimulationsStatusesConsumer(Consumer<Map<Integer,String>> simulationsStatusesConsumer){
+        this.simulationsStatusesConsumer = simulationsStatusesConsumer;
     }
+    public void getSimulationsStatusesFromServer() {
 
-    public void getThreadPoolStatusFromServer() {
+        Request request = new Request.Builder()
+                .url(Constants.ALL_EXECUTIONS_STATUSES_PAGE)
+                .build();
 
-        String finalUrl = HttpUrl
-                .parse(Constants.THREAD_POOL_STATUS_PAGE)
-                .newBuilder()
-                .build()
-                .toString();
-
-        HttpClientUtil.runAsync(finalUrl, new Callback() {
+        Call call = HTTP_CLIENT_PUBLIC.newCall(request);
+        call.enqueue( new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Thread pool failure!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Simulations status failure!"));
+
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Thread pool error!"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "Simulations status error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            DTOThreadsPoolStatusForUi dtoThreadsPoolStatusForUis = Constants.GSON_INSTANCE.fromJson(json, DTOThreadsPoolStatusForUi.class);
-                            dtoThreadsPoolStatusConsumer.accept(dtoThreadsPoolStatusForUis);
+                            Type mapType = new TypeToken<Map<Integer,String>>() {
+                            }.getType();
+                            Map<Integer,String> simulationsStatuses = new HashMap<>();
+                            simulationsStatuses.putAll(Constants.GSON_INSTANCE.fromJson(json, mapType));
+                            simulationsStatusesConsumer.accept(simulationsStatuses);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -74,58 +77,31 @@ public class RequestsFromServer {
         });
     }
 
-    public void setThreadsPoolSizeToServer(Integer size){
-        String body = "";
-
-        Request request = new Request.Builder()
-                .url(Constants.THREAD_POOL_STATUS_PAGE)
-                .post(RequestBody.create(body.getBytes()))
-                .addHeader("size", size.toString())
-                .build();
-
-        Call call = HTTP_CLIENT_PUBLIC.newCall(request);
-        call.enqueue( new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> popUpWindow(e.getMessage(), "Thread pool size failure!"));
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.code() != 200) {
-                    String responseBody = response.body().string();
-                    Platform.runLater(() -> popUpWindow(responseBody, "Thread pool size error!"));
-                } else {
-                    Platform.runLater(() -> popUpWindow("Your request has been received and is being processed", "Request was accepted"));
-                }
-            }
-        });
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Consumer<DTOIncludeForResultsPrimaryForUi> resultsPrimaryConsumer;
+    public void setResultsPrimaryForUiConsumer(Consumer<DTOIncludeForResultsPrimaryForUi> resultsPrimaryConsumer){
+        this.resultsPrimaryConsumer = resultsPrimaryConsumer;
     }
-
-    private Consumer<DTOIncludeSimulationDetailsForUi> dtoIncludeSimulationDetailsForUiConsumer;
-
-    public void setDTOIncludeSimulationDetailsForUi(Consumer<DTOIncludeSimulationDetailsForUi> dtoIncludeSimulationDetailsForUiConsumer){
-        this.dtoIncludeSimulationDetailsForUiConsumer = dtoIncludeSimulationDetailsForUiConsumer;
-    }
-    public void getSimulationDetailsFromServer(String simulationName) {
+    public void getPrimaryResults (String userName, Integer executionID) {
         String finalUrl = HttpUrl
-                .parse(Constants.SIMULATION_DETAILS_PAGE)
+                .parse(Constants.RESULTS_PAGE)
                 .newBuilder()
-                .addQueryParameter("simulation_name", simulationName)
+                .addQueryParameter("user_name", userName)
+                .addQueryParameter("executionID", executionID.toString())
                 .build()
                 .toString();
 
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> Constants.popUpWindow(e.getMessage(), "Simulation details failure!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Primary results failure!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> Constants.popUpWindow(responseBody, "Simulation details error!"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "Primary results error!"));
                 } else {
                     // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
@@ -137,8 +113,8 @@ public class RequestsFromServer {
                             gsonBuilder.registerTypeAdapter(AbstractActionDTO.class, new AbstractActionDTOTypeAdapter(gson));
                             gson = gsonBuilder.create();
 
-                            DTOIncludeSimulationDetailsForUi simulationDetails = gson.fromJson(json, DTOIncludeSimulationDetailsForUi.class);
-                            dtoIncludeSimulationDetailsForUiConsumer.accept(simulationDetails);
+                            DTOIncludeForResultsPrimaryForUi dtoIncludeForResultsPrimaryForUis = gson.fromJson(json, DTOIncludeForResultsPrimaryForUi.class);
+                            resultsPrimaryConsumer.accept(dtoIncludeForResultsPrimaryForUis);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -197,37 +173,41 @@ public class RequestsFromServer {
             throw new JsonParseException("Invalid AbstractActionDTO JSON: " + jsonElement);
         }
     }
-    private Consumer<List<String>> newSimulationsNamesConsumer;
-
-    public void setNewSimulationsNamesConsumer(Consumer<List<String>> newSimulationsNamesConsumer){
-        this.newSimulationsNamesConsumer = newSimulationsNamesConsumer;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Consumer<DTOIncludeForResultsAdditionalForUi> additionalResultsConsumer;
+    public void setAdditionalResultsConsumer(Consumer<DTOIncludeForResultsAdditionalForUi> additionalResultsConsumer){
+        this.additionalResultsConsumer = additionalResultsConsumer;
     }
-    public void getNewSimulationsNames(String[] simulationsArray){
-        String json = Constants.GSON_INSTANCE.toJson(simulationsArray);
+    public void getAdditionalResults(String userName, Integer executionID, String entityName, String propertyName){
+        String body = "user_name="+userName + LINE_SEPARATOR +
+                "executionID="+executionID + LINE_SEPARATOR +
+                "entity_name="+entityName + LINE_SEPARATOR +
+                "property_name="+propertyName;
 
         Request request = new Request.Builder()
-                .url(Constants.SIMULATION_NAMES_LIST_PAGE)
-                .post(RequestBody.create(json.getBytes()))
+                .url(Constants.RESULTS_PAGE)
+                .post(RequestBody.create(body.getBytes()))
                 .build();
 
-        Call call = HttpClientUtil.HTTP_CLIENT_PUBLIC.newCall(request);
+        Call call = HTTP_CLIENT_PUBLIC.newCall(request);
         call.enqueue( new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Platform.runLater(() -> Constants.popUpWindow(e.getMessage(), "New simulations names failure!"));
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Additional results failure!"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() -> Constants.popUpWindow(responseBody, "New simulations names error!"));
+                    Platform.runLater(() -> popUpWindow(responseBody, "Additional results error!"));
                 } else {
+                    // Read and process the response content
                     try (ResponseBody responseBody = response.body()) {
                         if (responseBody != null) {
                             String json = response.body().string();
-                            String[] newSimulationsArray = Constants.GSON_INSTANCE.fromJson(json, String[].class);
-                            newSimulationsNamesConsumer.accept(Arrays.asList(newSimulationsArray));
+                            DTOIncludeForResultsAdditionalForUi dtoIncludeForResultsAdditionalForUi = Constants.GSON_INSTANCE.fromJson(json, DTOIncludeForResultsAdditionalForUi.class);
+                            additionalResultsConsumer.accept(dtoIncludeForResultsAdditionalForUi);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -235,5 +215,46 @@ public class RequestsFromServer {
             }
         });
     }
-}
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private Consumer<Map<String, DTOSimulationEndingForUi>> simulationEndingMapConsumer;
+    public void setExecutionsResultsConsumer(Consumer<Map<String, DTOSimulationEndingForUi>> simulationEndingMapConsumer){
+        this.simulationEndingMapConsumer = simulationEndingMapConsumer;
+    }
+    public void getExecutionsResultsFromServer() {
 
+        String finalUrl = HttpUrl
+                .parse(Constants.ALL_EXECUTIONS_RESULTS_PAGE)
+                .newBuilder()
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> popUpWindow(e.getMessage(), "Simulation ending failure!"));
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() -> popUpWindow(responseBody, "Simulation ending error!"));
+                } else {
+                    // Read and process the response content
+                    try (ResponseBody responseBody = response.body()) {
+                        if (responseBody != null) {
+                            String json = response.body().string();
+                            Type mapType = new TypeToken<Map<String,DTOSimulationEndingForUi>>() {}.getType();
+                            //List<DTOSimulationEndingForUi> simulationEndingList = new ArrayList<>();
+                            Map<String,DTOSimulationEndingForUi> simulationEndingMap = (Constants.GSON_INSTANCE.fromJson(json, mapType));
+                            simulationEndingMapConsumer.accept(simulationEndingMap);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}

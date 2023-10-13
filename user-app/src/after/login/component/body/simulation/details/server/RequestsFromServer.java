@@ -13,6 +13,7 @@ import dto.definition.rule.action.numeric.IncreaseActionDTO;
 import dto.definition.rule.action.numeric.calculation.DivideActionDTO;
 import dto.definition.rule.action.numeric.calculation.MultiplyActionDTO;
 import dto.include.DTOIncludeSimulationDetailsForUi;
+
 import javafx.application.Platform;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;

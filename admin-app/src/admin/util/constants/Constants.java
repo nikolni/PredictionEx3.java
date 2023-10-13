@@ -23,15 +23,14 @@ public class Constants {
     public final static String CONTEXT_PATH = "/predictionsApp";
     public final static String FULL_SERVER_PATH = BASE_URL + CONTEXT_PATH;
 
-    public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/login";
-    public final static String USER_REQUEST_PAGE = FULL_SERVER_PATH + "/userrequest";
-    public final static String SIMULATION_NAMES_LIST_PAGE = FULL_SERVER_PATH + "/simulationnames";
-    public final static String DATA_EXECUTION_PAGE = FULL_SERVER_PATH + "/dataexecution";
-    public final static String EXECUTION_PAGE = FULL_SERVER_PATH + "/execution";
+    public final static String SIMULATION_NAMES_LIST_PAGE = FULL_SERVER_PATH + "/simulation/names";
     public final static String ALL_REQUESTS_PAGE = FULL_SERVER_PATH + "/adminallrequests";
     public final static String SIMULATION_DETAILS_PAGE = FULL_SERVER_PATH + "/simulation/details";
     public final static String THREAD_POOL_STATUS_PAGE = FULL_SERVER_PATH + "/thread/pool";
     public final static String FILE_PAGE = FULL_SERVER_PATH + "/upload/file";
+    public final static String ALL_EXECUTIONS_RESULTS_PAGE = FULL_SERVER_PATH + "/all/executions/results";
+    public final static String ALL_EXECUTIONS_STATUSES_PAGE = FULL_SERVER_PATH + "/all/executions/statuses";
+    public final static String RESULTS_PAGE = FULL_SERVER_PATH + "/execution/results";
 
     public final static OkHttpClient HTTP_CLIENT = new OkHttpClient();
     // GSON instance
@@ -47,7 +46,7 @@ public class Constants {
         VBox vbox = new VBox(label);
         vbox.setAlignment(Pos.CENTER);
         StackPane root = new StackPane(vbox);
-        Scene scene = new Scene(root, 400, 150);
+        Scene scene = new Scene(root, 450, 150);
 
         errorStage.setScene(scene);
         errorStage.setTitle(title);

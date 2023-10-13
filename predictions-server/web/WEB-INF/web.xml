@@ -2,7 +2,7 @@
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <servlet>
         <servlet-name>UserRequestServlet</servlet-name>
-        <servlet-class>servlet.UserRequestServlet</servlet-class>
+        <servlet-class>servlet.user.UserRequestServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserRequestServlet</servlet-name>
@@ -10,7 +10,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>FileUploadServlet</servlet-name>
-        <servlet-class>servlet.FileUploadServlet</servlet-class>
+        <servlet-class>servlet.admin.FileUploadServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>FileUploadServlet</servlet-name>
@@ -18,7 +18,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>servlet.LoginServlet</servlet-class>
+        <servlet-class>servlet.user.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -26,7 +26,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>SimulationNamesServlet</servlet-name>
-        <servlet-class>servlet.SimulationNamesServlet</servlet-class>
+        <servlet-class>servlet.user.SimulationNamesServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SimulationNamesServlet</servlet-name>
@@ -34,7 +34,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>DataForExecutionServlet</servlet-name>
-        <servlet-class>servlet.DataForExecutionServlet</servlet-class>
+        <servlet-class>servlet.user.DataForExecutionServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DataForExecutionServlet</servlet-name>
@@ -42,7 +42,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ExecutionServlet</servlet-name>
-        <servlet-class>servlet.ExecutionServlet</servlet-class>
+        <servlet-class>servlet.user.ExecutionServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ExecutionServlet</servlet-name>
@@ -50,7 +50,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>RerunServlet</servlet-name>
-        <servlet-class>servlet.RerunServlet</servlet-class>
+        <servlet-class>servlet.user.RerunServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RerunServlet</servlet-name>
@@ -58,7 +58,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>UserExecutionsListUpdateServlet</servlet-name>
-        <servlet-class>servlet.UserExecutionsListUpdateServlet</servlet-class>
+        <servlet-class>servlet.user.UserExecutionsListUpdateServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserExecutionsListUpdateServlet</servlet-name>
@@ -66,7 +66,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>TerminationConditionsServlet</servlet-name>
-        <servlet-class>servlet.TerminationConditionsServlet</servlet-class>
+        <servlet-class>servlet.user.TerminationConditionsServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>TerminationConditionsServlet</servlet-name>
@@ -74,7 +74,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ExecutionProgressServlet</servlet-name>
-        <servlet-class>servlet.ExecutionProgressServlet</servlet-class>
+        <servlet-class>servlet.user.ExecutionProgressServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ExecutionProgressServlet</servlet-name>
@@ -82,7 +82,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ControlExecutionServlet</servlet-name>
-        <servlet-class>servlet.ControlExecutionServlet</servlet-class>
+        <servlet-class>servlet.user.ControlExecutionServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ControlExecutionServlet</servlet-name>
@@ -90,7 +90,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>SecTicksServlet</servlet-name>
-        <servlet-class>servlet.SecTicksServlet</servlet-class>
+        <servlet-class>servlet.user.SecTicksServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SecTicksServlet</servlet-name>
@@ -98,7 +98,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ExecutionResultsServlet</servlet-name>
-        <servlet-class>servlet.ExecutionResultsServlet</servlet-class>
+        <servlet-class>servlet.user.ExecutionResultsServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ExecutionResultsServlet</servlet-name>
@@ -106,7 +106,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>SimulationDetailsServlet</servlet-name>
-        <servlet-class>servlet.SimulationDetailsServlet</servlet-class>
+        <servlet-class>servlet.user.SimulationDetailsServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SimulationDetailsServlet</servlet-name>
@@ -114,7 +114,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ThreadPoolStatusServlet</servlet-name>
-        <servlet-class>servlet.ThreadPoolStatusServlet</servlet-class>
+        <servlet-class>servlet.admin.ThreadPoolStatusServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ThreadPoolStatusServlet</servlet-name>
@@ -122,10 +122,26 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ExecutionEndingServlet</servlet-name>
-        <servlet-class>servlet.ExecutionEndingServlet</servlet-class>
+        <servlet-class>servlet.user.ExecutionEndingServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ExecutionEndingServlet</servlet-name>
         <url-pattern>/executions/ending</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AllExecutionsResultsServlet</servlet-name>
+        <servlet-class>servlet.admin.AllExecutionsResultsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AllExecutionsResultsServlet</servlet-name>
+        <url-pattern>/all/executions/results</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AllExecutionsStatusesServlet</servlet-name>
+        <servlet-class>servlet.admin.AllExecutionsStatusesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AllExecutionsStatusesServlet</servlet-name>
+        <url-pattern>/all/executions/statuses</url-pattern>
     </servlet-mapping>
 </web-app>

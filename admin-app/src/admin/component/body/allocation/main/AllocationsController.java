@@ -19,12 +19,10 @@ public class AllocationsController {
     private TimerTask requestGridRefresher;
     private final IntegerProperty totalRequests;
     @FXML
-    private GridPane executionRequesGridPane;
+    private GridPane executionRequestGridPane;
 
     private AdminController mainController;
-
-
-
+    private int numOfRequest = 0;
 
     public void setMainController(AdminController mainController) {
         this.mainController = mainController;
@@ -35,27 +33,36 @@ public class AllocationsController {
     }
 
     private void updateUsersList(List<DTOUserRequestForUi> userRequests) {
+        if(numOfRequest < userRequests.size()) {
+            Platform.runLater(() -> {
+                totalRequests.set(userRequests.size());
+                for (int i = numOfRequest; i < userRequests.size(); i++) {
+                    DTOUserRequestForUi request = userRequests.get(i);
 
-        Platform.runLater(() -> {
-            totalRequests.set(userRequests.size());
-            executionRequesGridPane.getChildren().clear();
-            for (int i = 0; i < userRequests.size(); i++) {
-                DTOUserRequestForUi request = userRequests.get(i);
+                    Label requestIDLabel = new Label(String.valueOf(request.getRequestID()));
+                    Label requestStatusLabel = new Label(String.valueOf(request.getRequestStatus()));
+                    Label exeRunningNowLabel = new Label(String.valueOf(request.getNumOfSimulationsRunning()));
+                    Label exeDoneLabel = new Label(String.valueOf(request.getNumOfSimulationsDone()));
+                    Label simulationNameLabel = new Label(String.valueOf(request.getSimulationName()));
+                    Label userNameLabel = new Label(String.valueOf(request.getUserName()));
+                    Label exeTotalLabel = new Label(String.valueOf(request.getNumOfCycles()));
+                    Label terminationLabel = new Label(String.valueOf(request.getTerminationCause()));
 
-                Label requestIDLabel = new Label(String.valueOf(request.getRequestID()));
-                Label requestStatusLabel=new Label(String.valueOf(request.getRequestStatus()));
-                Label exeRunningNowLabel=new Label(String.valueOf(request.getNumOfSimulationsRunning()));
-                Label exeDoneLabel=new Label(String.valueOf(request.getNumOfSimulationsDone()));
-                Label simulationNameLabel=new Label(String.valueOf(request.getSimulationName()));
-                Label userNameLabel=new Label(String.valueOf(request.getUserName()));
-                Label exeTotalLabel=new Label(String.valueOf(request.getNumOfCycles()));
-                Label terminationLabel=new Label(String.valueOf(request.getTerminationCause()));
+                    GridPane.setHalignment(requestIDLabel, javafx.geometry.HPos.CENTER);
+                    GridPane.setHalignment(requestStatusLabel, javafx.geometry.HPos.CENTER);
+                    GridPane.setHalignment(exeRunningNowLabel, javafx.geometry.HPos.CENTER);
+                    GridPane.setHalignment(exeDoneLabel, javafx.geometry.HPos.CENTER);
+                    GridPane.setHalignment(simulationNameLabel, javafx.geometry.HPos.CENTER);
+                    GridPane.setHalignment(userNameLabel, javafx.geometry.HPos.CENTER);
+                    GridPane.setHalignment(exeTotalLabel, javafx.geometry.HPos.CENTER);
+                    GridPane.setHalignment(terminationLabel, javafx.geometry.HPos.CENTER);
 
-                executionRequesGridPane.addRow(i + 1, requestIDLabel,requestStatusLabel,exeRunningNowLabel,exeDoneLabel,
-                        simulationNameLabel,userNameLabel,exeTotalLabel,terminationLabel);
-            }
-        });
-
+                    executionRequestGridPane.addRow(i + 1, requestIDLabel, requestStatusLabel, exeRunningNowLabel, exeDoneLabel,
+                            simulationNameLabel, userNameLabel, exeTotalLabel, terminationLabel);
+                }
+                numOfRequest = userRequests.size();
+            });
+        }
     }
 
     public void startListRefresher() {

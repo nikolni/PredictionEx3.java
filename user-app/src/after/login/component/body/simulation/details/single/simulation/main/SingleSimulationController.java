@@ -136,6 +136,10 @@ public class SingleSimulationController {
     }
 
     private void handleWorldGridSizesSelection(DTOIncludeSimulationDetailsForUi simulationDetails) {
+        quantityOfSquaresLabel.setVisible(false);
+        quantityOfSquaresText.setVisible(false);
+        valueDefLabel.setVisible(false);
+        valueDefText.setVisible(false);
         try{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(ResourceConstants.WORLD_GRID_FXML_RESOURCE);
@@ -293,15 +297,6 @@ public class SingleSimulationController {
                     MultiplyActionDTO multiplyAction = (MultiplyActionDTO) action;
                     actionTileCreatorFactory.createMultiplyActionChildren(multiplyAction, detailsFlowPane);
                     break;
-                    /*if(action instanceof DivideActionDTO) {
-                        DivideActionDTO divideAction = (DivideActionDTO) action;
-                        actionTileCreatorFactory.createDivideActionChildren(divideAction, detailsFlowPane);
-                    }
-                    else{
-                        MultiplyActionDTO multiplyAction = (MultiplyActionDTO) action;
-                        actionTileCreatorFactory.createMultiplyActionChildren(multiplyAction, detailsFlowPane);
-                    }
-                    break;*/
                 case SINGLE:
                     SingleConditionActionDTO singleConditionActionDTO = (SingleConditionActionDTO) action;
                     actionTileCreatorFactory.createSingleConditionActionChildren(singleConditionActionDTO, detailsFlowPane);
@@ -310,15 +305,6 @@ public class SingleSimulationController {
                     MultipleConditionActionDTO multipleConditionActionDTO = (MultipleConditionActionDTO) action;
                     actionTileCreatorFactory.createMultipleConditionActionChildren(multipleConditionActionDTO, detailsFlowPane);
                     break;
-                    /*if(action instanceof SingleConditionActionDTO) {
-                        SingleConditionActionDTO singleConditionActionDTO = (SingleConditionActionDTO) action;
-                        actionTileCreatorFactory.createSingleConditionActionChildren(singleConditionActionDTO, detailsFlowPane);
-                    }
-                    else{
-                        MultipleConditionActionDTO multipleConditionActionDTO = (MultipleConditionActionDTO) action;
-                        actionTileCreatorFactory.createMultipleConditionActionChildren(multipleConditionActionDTO, detailsFlowPane);
-                    }
-                    break;*/
                 case KILL:
                     KillActionDTO killAction = (KillActionDTO)action;
                     actionTileCreatorFactory.createKillActionChildren(killAction, detailsFlowPane);
@@ -352,48 +338,6 @@ public class SingleSimulationController {
                 }
             }
 
-    }
-
-
-    /*private void handleTerminationConditionsSelection(TreeItem<String> terminationConditionsSelectedItem, DTOIncludeSimulationDetailsForUi simulationDetails){
-        quantityOfSquaresLabel.setVisible(false);
-        quantityOfSquaresText.setVisible(false);
-        valueDefLabel.setVisible(false);
-        valueDefText.setVisible(false);
-        if (terminationConditionsSelectedItem != null) {
-            DTODefinitionsForUi dtoDefinitionsForUi = simulationDetails.getDefinitions();
-            TerminationConditionsDTOManager terminationConditionsDTOManager = dtoDefinitionsForUi.getTerminationConditionsDTOManager();
-            List<TerminationConditionsDTO> terminationConditionsDTOList = terminationConditionsDTOManager.getTerminationConditionsDTOList();
-            detailsFlowPane.getChildren().clear();
-            createTerminationConditionsChildrenInFlowPane(terminationConditionsDTOList);
-        }
-    }*/
-
-    private void createTerminationConditionsChildrenInFlowPane(List<TerminationConditionsDTO> terminationConditionsDTOList) {
-        try{
-            for(TerminationConditionsDTO terminationConditionsDTO : terminationConditionsDTOList) {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(ResourceConstants.TERMINATION_CONDITION_FXML_RESOURCE);
-                Node terminationCondition = loader.load();
-                TerminationConditionsController terminationConditionsController = loader.getController(); //Node terminationCondition = loader.load();
-                if (terminationConditionsDTO instanceof TicksTerminationConditionsDTOImpl) {
-                    terminationConditionsController.setTicksSecDefLabel("ticks:");
-                    terminationConditionsController.setTicksSecValueLabel
-                            (((Integer) terminationConditionsDTO.getTerminationCondition()).toString());
-                } else if(terminationConditionsDTO instanceof TimeTerminationConditionsDTOImpl){
-                    terminationConditionsController.setTicksSecDefLabel("seconds:");
-                    terminationConditionsController.setTicksSecValueLabel
-                            (((Integer) terminationConditionsDTO.getTerminationCondition()).toString());
-                } else{
-                    terminationConditionsController.setTicksSecDefLabel("byUser");
-                    terminationConditionsController.setTicksSecValueLabel("");
-                }
-                detailsFlowPane.getChildren().add(terminationCondition);
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
 
